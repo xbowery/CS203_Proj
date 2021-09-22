@@ -16,8 +16,8 @@ public class G2T4Application {
 		UserRepository users = ctx.getBean(UserRepository.class);
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
         System.out.println("[Add user]: " + users.save(
-            new User("admin", encoder.encode("goodpassword"), true, "ROLE_ADMIN")).getUsername());
-		users.save(new User("user1", encoder.encode("testing123"), false, "ROLE_USER")).getUsername();
+            new User("admin@test.com", "admin", encoder.encode("goodpassword"), true, "ROLE_ADMIN")).getUsername());
+		users.save(new User("user@test.com", "user1", encoder.encode("testing123"), false, "ROLE_USER")).getUsername();
 	}
 
 }

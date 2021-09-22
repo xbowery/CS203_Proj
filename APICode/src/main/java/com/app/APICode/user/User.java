@@ -20,6 +20,9 @@ public class User implements UserDetails {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     
+    @NotNull(message = "Email should not be null")
+    private String email;
+
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
     private String username;
@@ -34,7 +37,8 @@ public class User implements UserDetails {
     @NotNull(message = "Authorities should not be null")
     private String authorities;
 
-    public User(String username, String password, boolean isVaccinated, String authorities) {
+    public User(String email, String username, String password, boolean isVaccinated, String authorities) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.isVaccinated = isVaccinated;
@@ -83,5 +87,21 @@ public class User implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public boolean getVaccinationStatus() {
+        return isVaccinated;
+    }
+
+    public void setVaccinationStatus(boolean isVaccinated) {
+        this.isVaccinated = isVaccinated;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
