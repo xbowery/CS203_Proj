@@ -1,11 +1,16 @@
 package com.app.APICode.restaurant;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
 public class Restaurant {
+
+    @Id @GeneratedValue
+    private long id;
 
     @NotNull(message = "Restaurant name should not be null")
     @Size(min = 3, max = 20, message = "Restaurant name should be between 3 and 20 characters")
@@ -89,7 +94,7 @@ public class Restaurant {
     }
 
     public void setCrowdLevel() {
-        int utilization = this.currentCapacity/this.maxCapacity;
+        double utilization = (double)this.currentCapacity/this.maxCapacity;
         if (utilization <= 0.4) {
             this.crowdLevel = "Low";
         } else if (utilization >= 0.4 && utilization <= 0.6)  {
