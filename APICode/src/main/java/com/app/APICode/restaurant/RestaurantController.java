@@ -1,4 +1,4 @@
-package restaurant;
+package com.app.APICode.restaurant;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
