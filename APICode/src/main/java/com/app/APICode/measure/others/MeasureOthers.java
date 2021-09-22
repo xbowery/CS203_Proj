@@ -1,15 +1,18 @@
-package com.app.APICode.measure;
+package com.app.APICode.measure.others;
 
-import java.sql.Date;
-import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class MeasureOthers {
+    private @Id @GeneratedValue Long id;
+
     @NotNull(message = "Created date should not be null")
     private @Temporal(TemporalType.TIMESTAMP) Date creationDateTime;
 
@@ -27,10 +30,10 @@ public class MeasureOthers {
     private boolean maskStatus;
 
     @NotNull(message = "Details of measure should not be null")
-    private List<String> details;
+    private String details;
 
     public MeasureOthers(Date creationDateTime, String businessType, int maxCapacity, boolean vaccinationStatus,
-    boolean maskStatus, List<String> details) {
+    boolean maskStatus, String details) {
         this.creationDateTime = creationDateTime;
         this.businessType = businessType;
         this.maxCapacity = maxCapacity;
@@ -79,14 +82,12 @@ public class MeasureOthers {
         this.maskStatus = maskStatus;
     }
 
-    public List<String> getDetails() {
+    public String getDetails() {
         return details;
     }
 
-    public void setDetails(List<String> details) {
+    public void setDetails(String details) {
         this.details = details;
     }
-
-    
 
 }
