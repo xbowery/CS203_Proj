@@ -26,6 +26,7 @@ public class Restaurant {
 
     @NotNull(message = "Max capacity should not be null")
     private int maxCapacity;
+    
     private String crowdLevel;
 
     public Restaurant(String name, String location, String cuisine, String description, int maxCapacity) {
