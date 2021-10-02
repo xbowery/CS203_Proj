@@ -14,6 +14,22 @@ const routes = [
     component: () => import('@/views/Home.vue'),
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/user-management/Login.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/user-management/Register.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),

@@ -1,6 +1,9 @@
 const { mergeSassVariables } = require('@vuetify/cli-plugin-utils')
 
 module.exports = {
+  devServer: {
+    port: 3000,
+  },
   publicPath: '/',
   transpileDependencies: ['vuetify'],
   chainWebpack: config => {
