@@ -41,6 +41,11 @@ const routes = [
     path: '*',
     redirect: 'error-404',
   },
+  {
+    path: '/restaurants',
+    name: 'restaurants',
+    component: () => import('@/views/business/Restaurants.vue'),
+  }
 ]
 
 const router = new VueRouter({
