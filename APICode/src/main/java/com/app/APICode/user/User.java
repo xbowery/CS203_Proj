@@ -18,7 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id;
     
     @NotNull(message = "Email must not be null")
     private String email;
