@@ -1,5 +1,7 @@
 package com.app.APICode.security;
 
+import com.app.APICode.security.jwt.JWTAuthenticationFilter;
+import com.app.APICode.security.jwt.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,11 +30,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/users").permitAll()
-                .antMatchers(HttpMethod.POST, "/users").permitAll().antMatchers(HttpMethod.POST, "/records").permitAll()
-                .anyRequest().authenticated().and().addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager())).sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().formLogin().disable();
+        http.csrf().disable().authorizeRequests()
+
+                .antMatchers(HttpMethod.GET, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/records").permitAll()
+
+                .anyRequest().authenticated().and()
+
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and().formLogin().disable();
     }
 
     @Bean

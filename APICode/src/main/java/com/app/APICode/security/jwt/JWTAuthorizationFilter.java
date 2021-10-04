@@ -1,6 +1,6 @@
-package com.app.APICode.security;
+package com.app.APICode.security.jwt;
 
-import static com.app.APICode.security.SecurityConstants.*;
+import static com.app.APICode.security.jwt.SecurityConstants.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -15,7 +15,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JWTAuthorizationFilter(AuthenticationManager authManager) {
@@ -23,8 +25,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
+            FilterChain chain) throws IOException, ServletException {
         String header = req.getHeader(HEADER_STRING);
 
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
