@@ -34,10 +34,4 @@ public class UserController {
         return users.save(user);
     }
 
-    @PostMapping("/records")
-    public void signUp(@RequestBody User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        users.save(user);
-    }
-
 }

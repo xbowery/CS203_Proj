@@ -1,7 +1,7 @@
-package com.app.APICode.security;
+package com.app.APICode.security.jwt;
 
-import static com.app.APICode.security.SecurityConstants.EXPIRATION_TIME;
-import static com.app.APICode.security.SecurityConstants.SECRET;
+import static com.app.APICode.security.jwt.SecurityConstants.EXPIRATION_TIME;
+import static com.app.APICode.security.jwt.SecurityConstants.SECRET;
 
 import java.io.IOException;
 import java.util.Date;
@@ -45,8 +45,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
-            Authentication auth) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res,
+            FilterChain chain, Authentication auth) throws IOException {
         String token = JWT.create().withSubject(((User) auth.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
