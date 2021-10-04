@@ -1,4 +1,5 @@
 GET http://localhost:8080/users
+Authorization: Basic admin:goodpassword
 
 ###
 POST http://localhost:8080/users
@@ -49,3 +50,36 @@ Authorization: Basic user2@test.com:testing12345
 ###
 DELETE http://localhost:8080/users/test5@test.com
 Authorization: Basic user2@test.com:testing12345
+
+###
+GET http://localhost:8080/restaurants
+
+###
+GET http://localhost:8080/restaurants/Astons/Cathay
+
+###
+POST http://localhost:8080/restaurants
+Content-Type: application/json
+
+{
+    "name": "Collin's",
+    "location": "Funan",
+    "cuisine": "Western",
+    "description": "Western Food",
+    "maxCapacity": 50
+}
+
+###
+PUT http://localhost:8080/restaurants/Astons/Cathay
+Content-Type: application/json
+
+{
+    "name": "Popeye",
+    "location": "Plaza Sing",
+    "cuisine": "Western",
+    "description": "Western Food",
+    "maxCapacity": 75
+}
+
+###
+DELETE http://localhost:8080/restaurants/Popeye/Plaza%20Sing

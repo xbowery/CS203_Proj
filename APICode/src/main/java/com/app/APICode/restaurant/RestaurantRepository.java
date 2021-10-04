@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     // define a derived query to find user by username
-    Optional<Restaurant> findByName(String name);
+    Optional<Restaurant> findByNameAndLocation(String name, String location);
+    Long deleteByNameAndLocation(String name, String location);
 }
 

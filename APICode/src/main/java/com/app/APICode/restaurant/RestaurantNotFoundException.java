@@ -4,7 +4,7 @@ public class RestaurantNotFoundException extends RuntimeException {
     
     private static final long serialVersionUID = 1L;
 
-    public RestaurantNotFoundException(Long id) {
-        super("Could not find restaurant " + id);
+    public RestaurantNotFoundException(String name, String location) {
+        super("Could not find restaurant name: " + name + " at this location: " + location);
     }
 }
