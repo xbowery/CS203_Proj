@@ -13,7 +13,7 @@ public class MeasureOthersController {
         this.measureOthers = measureOthers;
     }
 
-    @GetMapping("/measureHawkers")
+    @GetMapping("/measureOthers")
     public List<MeasureOthers> getMeasureOthers(){
         return measureOthers.findAll();
     }
