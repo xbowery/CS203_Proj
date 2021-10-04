@@ -29,6 +29,7 @@
     <!-- Navigation Items -->
     <v-list expand shaped class="vertical-nav-menu-items pr-5">
       <nav-menu-link title="Home" :to="{ name: 'home' }" :icon="icons.mdiHomeOutline"></nav-menu-link>
+      <nav-menu-link title="Restaurants" :to="{ name: 'restaurants' }" :icon="icons.mdiHomeOutline"></nav-menu-link>
     </v-list>
   </v-navigation-drawer>
 </template>
