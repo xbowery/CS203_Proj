@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -16,31 +17,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userSvc){
+    public SecurityConfig(UserDetailsService userSvc) {
         this.userDetailsService = userSvc;
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-        throws Exception {
-        auth
-        .userDetailsService(userDetailsService)
-        .passwordEncoder(encoder());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-        .httpBasic()
-            .and() //  "and()"" method allows us to continue configuring the parent
-        .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/users").permitAll()
-            .antMatchers(HttpMethod.POST, "/users").permitAll()
-            
-            .and()
-        .csrf().disable() // CSRF protection is needed only for browser based attacks
-        .formLogin().disable()
-        .headers().disable(); // Disable the security headers, as we do not return HTML in our service
+        http // "and()"" method allows us to continue configuring the parent
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll().antMatchers(HttpMethod.POST, "/login").permitAll()
+                .anyRequest().authenticated().and().addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager())).sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable().formLogin().disable();
+        // .headers().disable(); // Disable the security headers, as we do not return
+        // HTML in our service
     }
 
     @Bean
