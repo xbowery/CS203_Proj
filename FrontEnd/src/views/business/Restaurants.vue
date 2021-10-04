@@ -60,7 +60,6 @@
           </template>
         </v-toolbar>
       </template>
-
       <template v-slot:default="props">
         <v-row>
           <v-col
@@ -71,7 +70,9 @@
             md="4"
             lg="3"
           >
+
             <v-card>
+              <v-img class="misc-tree" src="@/assets/images/misc/restaurant.jpg" align="center" justify="center"></v-img>
               <v-card-title class="subheading font-weight-bold">
                 {{ item.name }}
               </v-card-title>
@@ -172,7 +173,7 @@
         filter: {},
         sortDesc: false,
         page: 1,
-        itemsPerPage: 4,
+        itemsPerPage: 8,
         sortBy: 'name',
         keys: [
           'Name',
@@ -187,73 +188,70 @@
             location: 159,
             cuisine: 'Chinese',
             description: 24,
-            crowd: 4.0,
+            crowd: 'High',
           },
           {
             name: 'Tipo Pasta Bar',
             location: 237,
             cuisine: 9.0,
             description: 37,
-            crowd: 4.3,
-            sodium: 129,
-            calcium: '8%',
-            iron: '1%',
+            crowd: 'Low',
           },
           {
             name: 'Astons',
             location: 262,
-            cuisine: 16.0,
+            cuisine: 'Western',
             description: 23,
-            crowd: 6.0,
+            crowd: 'Medium',
           },
           {
             name: 'Tanuki Raw',
             location: 305,
-            cuisine: 3.7,
+            cuisine: 'Japanese',
             description: 67,
-            crowd: 4.3,
+            crowd: 'Low',
           },
           {
             name: 'Sushi Tei',
             location: 356,
             cuisine: 16.0,
             description: 49,
-            crowd: 3.9,
+            crowd: 'Low',
           },
           {
             name: 'Crystal Jade',
             location: 375,
-            cuisine: 0.0,
+            cuisine: 'Chinese',
             description: 94,
-            crowd: 0.0,
+            crowd: 'Low',
           },
           {
             name: 'HaiDiLao',
             location: 392,
-            cuisine: 0.2,
+            cuisine: 'Chinese',
             description: 98,
-            crowd: 0,
+            crowd: 'Medium',
           },
           {
             name: 'Beauty in the pot',
             location: 408,
-            cuisine: 3.2,
+            cuisine: 'Chinese',
             description: 87,
-            crowd: 6.5,
+            crowd: 'High',
           },
           {
             name: 'Sakae Sushi',
             location: 452,
-            cuisine: 25.0,
+            cuisine: 'Japanese',
             description: 51,
-            crowd: 4.9,
+            crowd: 'Medium',
           },
           {
             name: 'Trapizza',
             location: 518,
-            cuisine: 26.0,
+            cuisine: 'Western',
             description: 65,
-            crowd: 7,
+            crowd: 'Low',
           },
         ],
       }
