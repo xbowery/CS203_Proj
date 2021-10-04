@@ -103,5 +103,7 @@ public class Restaurant {
             this.crowdLevel = "High";
         }
     }
+
+    public Restaurant() {}
 }
 
