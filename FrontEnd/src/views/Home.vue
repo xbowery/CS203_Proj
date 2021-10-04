@@ -5,7 +5,7 @@
     <v-container>
       <v-row>
           <v-item >
-              <v-card class="mx-auto my-12" max-width="275">
+              <v-card class="mx-auto my-12" max-width="260">
                 <template slot="progress">
                   <v-progress-linear
                     height="10"
@@ -24,7 +24,7 @@
           </v-item>
 
                     <v-item >
-              <v-card class="mx-auto my-12" max-width="275">
+              <v-card class="mx-auto my-12" max-width="270">
                 <template slot="progress">
                   <v-progress-linear
                     height="10"
@@ -42,7 +42,7 @@
               </v-card>
           </v-item>
                     <v-item >
-              <v-card class="mx-auto my-12" max-width="275">
+              <v-card class="mx-auto my-12" max-width="270">
                 <template slot="progress">
                   <v-progress-linear
                     height="10"
@@ -60,7 +60,7 @@
               </v-card>
           </v-item>
                     <v-item >
-              <v-card class="mx-auto my-12" max-width="275">
+              <v-card class="mx-auto my-12" max-width="270">
                 <template slot="progress">
                   <v-progress-linear
                     height="10"
@@ -68,7 +68,7 @@
                 </template>
 
                 <v-img
-                  height="250"
+                  height="260"
                   src="https://cdn.pixabay.com/photo/2015/03/26/10/28/restaurant-691397_1280.jpg"
                 ></v-img>
                 <v-card-title>{{headingDining}}</v-card-title>
