@@ -11,16 +11,16 @@
             justify="center"
           >
             <v-btn-toggle>
-              <v-btn @click="toggleModal">
+              <v-btn @click="toggleModalGathering">
                 Gatherings
               </v-btn>
-              <v-btn>
+              <v-btn @click="toggleModalGym">
                 Gym
               </v-btn>
-              <v-btn>
+              <v-btn @click="toggleModalEvents">
                 Events
               </v-btn>
-              <v-btn>
+              <v-btn @click="toggleModalDining">
                 Dining
               </v-btn>
             </v-btn-toggle>
@@ -28,8 +28,20 @@
         </v-card-text>
       </v-card>
 
-    <div v-if="showModal">
-      <Modal :heading="heading" :text="text" theme="sale" @close="toggleModal" />
+    <div v-if="showModalGathering">
+      <Modal :heading="headingGathering" :text="textGathering" theme="sale" @close="toggleModalGathering" />
+    </div>
+
+    <div v-if="showModalGym">
+      <Modal :heading="headingGym" :text="textGym" theme="sale" @close="toggleModalGym" />
+    </div>
+
+    <div v-if="showModalEvents">
+      <Modal :heading="headingEvents" :text="textEvents" theme="sale" @close="toggleModalEvents" />
+    </div>
+
+    <div v-if="showModalDining">
+      <Modal :heading="headingDining" :text="textDining" theme="sale" @close="toggleModalDining" />
     </div>
   </div>
 </template>
@@ -44,15 +56,35 @@ export default {
   },
   data(){
       return {
-      heading: 'Gatherings',
-      text: 'Max of 2 pax',
-      showModal: false,
+      headingGathering: 'Gatherings',
+      textGathering: 'Max of 2 pax',
+      headingGym: 'Gym',
+      textGym: 'Max of 2 pax',
+      headingEvents: 'Events',
+      textEvents: 'Up to vaccinated 100 persons',
+      headingDining: 'Dining',
+      textDining: 'Max of 2 vaccinated pax per table',
+
+
+      showModalGathering: false,
+      showModalGym: false,
+      showModalEvents: false,
+      showModalDining: false,
     }
   },
   methods: {
-    toggleModal() {
-      this.showModal = !this.showModal
-    }
+    toggleModalGathering() {
+      this.showModalGathering = !this.showModalGathering
+    },
+    toggleModalGym() {
+      this.showModalGym = !this.showModalGym
+    },
+    toggleModalEvents() {
+      this.showModalEvents = !this.showModalEvents
+    },
+    toggleModalDining() {
+      this.showModalDining = !this.showModalDining
+    },
   },
 }
 </script>
