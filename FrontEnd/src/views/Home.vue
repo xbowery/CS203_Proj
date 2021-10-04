@@ -1,59 +1,91 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-      <v-card
-        flat
-        class="py-12"
-      >
-        <v-card-text>
-          <v-row
-            align="center"
-            justify="center"
-          >
-            <v-btn-toggle>
-              <v-btn @click="toggleModalGathering">
-                Gatherings
-              </v-btn>
-              <v-btn @click="toggleModalGym">
-                Gym
-              </v-btn>
-              <v-btn @click="toggleModalEvents">
-                Events
-              </v-btn>
-              <v-btn @click="toggleModalDining">
-                Dining
-              </v-btn>
-            </v-btn-toggle>
-          </v-row>
-        </v-card-text>
-      </v-card>
+    <v-item-group>
+    <v-container>
+      <v-row>
+          <v-item >
+              <v-card class="mx-auto my-12" max-width="260">
+                <template slot="progress">
+                  <v-progress-linear
+                    height="10"
+                  ></v-progress-linear>
+                </template>
 
-    <div v-if="showModalGathering">
-      <Modal :heading="headingGathering" :text="textGathering" theme="sale" @close="toggleModalGathering" />
-    </div>
+                <v-img
+                  height="250"
+                  src="https://cdn.pixabay.com/photo/2015/09/02/12/29/pedestrians-918471_1280.jpg"
+                ></v-img>
+                <v-card-title>{{headingGathering}}</v-card-title>
+                <v-card-text>
+                  <div>{{textGathering}}</div>
+                </v-card-text>
+              </v-card>
+          </v-item>
 
-    <div v-if="showModalGym">
-      <Modal :heading="headingGym" :text="textGym" theme="sale" @close="toggleModalGym" />
-    </div>
+                    <v-item >
+              <v-card class="mx-auto my-12" max-width="270">
+                <template slot="progress">
+                  <v-progress-linear
+                    height="10"
+                  ></v-progress-linear>
+                </template>
 
-    <div v-if="showModalEvents">
-      <Modal :heading="headingEvents" :text="textEvents" theme="sale" @close="toggleModalEvents" />
-    </div>
+                <v-img
+                  height="250"
+                  src="https://cdn.pixabay.com/photo/2015/01/09/11/22/fitness-594143_1280.jpg"
+                ></v-img>
+                <v-card-title>{{headingGym}}</v-card-title>
+                <v-card-text>
+                  <div>{{textGym}}</div>
+                </v-card-text>
+              </v-card>
+          </v-item>
+                    <v-item >
+              <v-card class="mx-auto my-12" max-width="270">
+                <template slot="progress">
+                  <v-progress-linear
+                    height="10"
+                  ></v-progress-linear>
+                </template>
 
-    <div v-if="showModalDining">
-      <Modal :heading="headingDining" :text="textDining" theme="sale" @close="toggleModalDining" />
-    </div>
+                <v-img
+                  height="250"
+                  src="https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg"
+                ></v-img>
+                <v-card-title>{{headingEvents}}</v-card-title>
+                <v-card-text>
+                  <div>{{textEvents}}</div>
+                </v-card-text>
+              </v-card>
+          </v-item>
+                    <v-item >
+              <v-card class="mx-auto my-12" max-width="270">
+                <template slot="progress">
+                  <v-progress-linear
+                    height="10"
+                  ></v-progress-linear>
+                </template>
+
+                <v-img
+                  height="260"
+                  src="https://cdn.pixabay.com/photo/2015/03/26/10/28/restaurant-691397_1280.jpg"
+                ></v-img>
+                <v-card-title>{{headingDining}}</v-card-title>
+                <v-card-text>
+                  <div>{{textDining}}</div>
+                </v-card-text>
+              </v-card>
+          </v-item>
+      </v-row>
+    </v-container>
+  </v-item-group>
   </div>
 </template>
 
 <script>
-import Modal from '../components/Modal'
-
 export default {
   name: 'Home',
-  components: {
-    Modal
-  },
   data(){
       return {
       headingGathering: 'Gatherings',
@@ -64,27 +96,7 @@ export default {
       textEvents: 'Up to vaccinated 100 persons',
       headingDining: 'Dining',
       textDining: 'Max of 2 vaccinated pax per table',
-
-
-      showModalGathering: false,
-      showModalGym: false,
-      showModalEvents: false,
-      showModalDining: false,
     }
-  },
-  methods: {
-    toggleModalGathering() {
-      this.showModalGathering = !this.showModalGathering
-    },
-    toggleModalGym() {
-      this.showModalGym = !this.showModalGym
-    },
-    toggleModalEvents() {
-      this.showModalEvents = !this.showModalEvents
-    },
-    toggleModalDining() {
-      this.showModalDining = !this.showModalDining
-    },
   },
 }
 </script>

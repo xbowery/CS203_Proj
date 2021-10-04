@@ -45,7 +45,17 @@ const routes = [
     path: '/restaurants',
     name: 'restaurants',
     component: () => import('@/views/business/Restaurants.vue'),
-  }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@/views/user-management/Settings.vue'),
+  },
+  {
+    path: '/bDashboard',
+    name: 'bDashboard',
+    component: () => import('@/views/business/BDashboard.vue'),
+  },
 ]
 
 const router = new VueRouter({
