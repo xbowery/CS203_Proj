@@ -26,12 +26,12 @@ public class UserController {
     }
 
     // need to do the mapping properly
-    @GetMapping("/users/{email}")
-    public User getUser(@PathVariable String email) {
-        User user = userService.getUser(email);
+    @GetMapping("/users/{username}")
+    public User getUser(@PathVariable String username) {
+        User user = userService.getUser(username);
 
-        if (user == null) throw new UserNotFoundException(email);
-        return userService.getUser(email);
+        if (user == null) throw new UserNotFoundException(username);
+        return userService.getUser(username);
     }
 
     /**
@@ -54,21 +54,21 @@ public class UserController {
      * @param newUserInfo
      * @return the updated user
      */
-    @PutMapping("/users/{email}")
-    public User updateUser(@PathVariable String email, @Valid @RequestBody User newUserInfo) {
-        User user = userService.updateUser(email, newUserInfo);
-        if (user == null) throw new UserNotFoundException(email);
+    @PutMapping("/users/{username}")
+    public User updateUser(@PathVariable String username, @Valid @RequestBody User newUserInfo) {
+        User user = userService.updateUserByUsername(username, newUserInfo);
+        if (user == null) throw new UserNotFoundException(username);
 
         return user;
     }
 
     @Transactional
-    @DeleteMapping("/users/{email}")
-    public void deleteUser(@PathVariable String email) {
+    @DeleteMapping("/users/{username}")
+    public void deleteUser(@PathVariable String username) {
         try {
-            userService.deleteUser(email);
+            userService.deleteUser(username);
         } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(email);
+            throw new UserNotFoundException(username);
         }
     }
 }

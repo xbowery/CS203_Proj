@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface UserService {
     List<User> listUsers();
-    User getUser(String email);
+    User getUser(String username);
     User addUser(User user);
-    User updateUser(String email, User user);
+    User updateUserByUsername(String username, User user);
 
-    void deleteUser(String email);
+    void deleteUser(String username);
 }

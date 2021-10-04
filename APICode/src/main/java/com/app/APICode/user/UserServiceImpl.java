@@ -18,17 +18,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String email) {
-        return users.findByEmail(email).orElse(null);
+    public User getUser(String username) {
+        return users.findByUsername(username).orElse(null);
     }
 
     @Override
     public User addUser(User user) {
-        List<User> sameUserEmails = users.findByEmail(user.getEmail())
+        List<User> sameUsernames = users.findByUsername(user.getUsername())
         .map(Collections::singletonList)
         .orElseGet(Collections::emptyList);
 
-        if (sameUserEmails.size() == 0) {
+        if (sameUsernames.size() == 0) {
             return users.save(user);
         } else {
             return null;
@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String email, User newUserInfo) {
-        return users.findByEmail(email).map(user -> {
+    public User updateUserByUsername(String username, User newUserInfo) {
+        return users.findByUsername(username).map(user -> {
             user.setEmail(newUserInfo.getEmail());
             user.setFirstName(newUserInfo.getFirstName());
             user.setLastName(newUserInfo.getLastName());
@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String email) {
-        users.deleteByEmail(email);
+    public void deleteUser(String username) {
+        users.deleteByUsername(username);
     }
     
 }
