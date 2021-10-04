@@ -12,7 +12,7 @@ public class UserController {
     private UserRepository users;
     private BCryptPasswordEncoder encoder;
 
-    public UserController(UserRepository users, BCryptPasswordEncoder encoder){
+    public UserController(UserRepository users, BCryptPasswordEncoder encoder) {
         this.users = users;
         this.encoder = encoder;
     }
@@ -23,15 +23,21 @@ public class UserController {
     }
 
     /**
-    * Using BCrypt encoder to encrypt the password for storage 
-    * @param user
-    * @return
-    */
+     * Using BCrypt encoder to encrypt the password for storage
+     * 
+     * @param user
+     * @return
+     */
     @PostMapping("/users")
-    public User addUser(@Valid @RequestBody User user){
+    public User addUser(@Valid @RequestBody User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         return users.save(user);
     }
-   
-}
 
+    @PostMapping("/records")
+    public void signUp(@RequestBody User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        users.save(user);
+    }
+
+}
