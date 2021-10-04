@@ -29,8 +29,9 @@
           <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
           <validation-observer v-slot="{ handleSubmit, invalid }">
             <v-form @submit.prevent="handleSubmit(handleLogin)">
+              <!-- Commented out email validation for dev purposes -->
+              <!-- <validation-provider name="Email" rules="required|email" v-slot="{ errors }"> -->
               <validation-provider name="Email" rules="required" v-slot="{ errors }">
-                <!-- <validation-provider name="Email" rules="required|email" v-slot="{ errors }"> -->
                 <v-text-field
                   v-model="user.email"
                   outlined
@@ -65,7 +66,9 @@
                 <a href="javascript:void(0)" class="mt-1"> Forgot Password? </a>
               </div>
 
-              <v-btn block color="primary" class="mt-6" :disabled="invalid" type="submit"> Login </v-btn>
+              <v-btn block color="primary" class="mt-6" :disabled="invalid" :loading="loading" type="submit">
+                Login
+              </v-btn>
             </v-form>
           </validation-observer>
         </v-card-text>
@@ -114,16 +117,17 @@ export default {
     }
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
+      this.loading = true
       if (this.user.email && this.user.password) {
-        this.$store.dispatch('auth/login', this.user).then(
-          () => {
-            this.$router.push('/')
-          },
-          error => {
-            this.message = (error.response && error.response.data && error.response.data.message) || error.toString()
-          },
-        )
+        try {
+          await this.$store.dispatch('auth/login', this.user)
+          this.$router.push('/')
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+        } finally {
+          this.loading = false
+        }
       }
     },
   },
@@ -131,6 +135,7 @@ export default {
     const user = new User('', '')
     const isPasswordVisible = ref(false)
     const message = null
+    const loading = ref(false)
     return {
       user,
       isPasswordVisible,
@@ -139,6 +144,7 @@ export default {
         mdiEyeOffOutline,
       },
       message,
+      loading,
     }
   },
 }
