@@ -34,6 +34,6 @@ public class Employee extends User {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade=CascadeType.ALL)
-    private List<Ctest> ctests;
+    // @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade=CascadeType.ALL)
+    // private List<Ctest> ctests;
 }
