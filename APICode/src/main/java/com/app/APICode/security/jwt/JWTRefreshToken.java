@@ -1,7 +1,5 @@
 package com.app.APICode.security.jwt;
 
-import static com.app.APICode.security.jwt.SecurityConstants.TOKEN_PREFIX;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -15,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.app.APICode.user.CustomUserDetailsService;
 import com.app.APICode.user.User;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +29,9 @@ public class JWTRefreshToken {
     JWTHelper jwtHelper;
 
     public void refreshJwtToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        String tokenHeader = req.getHeader(AUTHORIZATION);
-        
-        if (tokenHeader == null || !tokenHeader.startsWith(TOKEN_PREFIX)) {
-            throw new RuntimeException("Refresh token is missing");
-        }
-
-        String refreshToken = tokenHeader.replace(TOKEN_PREFIX, "");
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
+        Map<String, String> tokensMap = new ObjectMapper().readValue(req.getInputStream(), typeRef);
+        String refreshToken = tokensMap.get("refreshToken");
 
         try {
             DecodedJWT decodedJWT = jwtHelper.decodeJwt(refreshToken);

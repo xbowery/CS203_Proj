@@ -3,7 +3,7 @@ package com.app.APICode.security.jwt;
 import static com.app.APICode.security.jwt.SecurityConstants.TOKEN_PREFIX;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             res.setContentType(APPLICATION_JSON_VALUE);
-            res.setStatus(FORBIDDEN.value());
+            res.setStatus(UNAUTHORIZED.value());
             Map<String, String> error = new HashMap<>();
             error.put("error_message", e.getMessage());
             new ObjectMapper().writeValue(res.getOutputStream(), error);

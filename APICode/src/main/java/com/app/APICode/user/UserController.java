@@ -44,7 +44,7 @@ public class UserController {
         return users.save(user);
     }
 
-    @GetMapping("/refreshToken")
+    @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException{
         refreshToken.refreshJwtToken(req, res);
     }
