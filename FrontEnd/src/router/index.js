@@ -50,7 +50,12 @@ const routes = [
     path: '/settings',
     name: 'settings',
     component: () => import('@/views/user-management/user-settings/AccountSettings.vue'),
-  }
+  },
+  {
+    path: '/bDashboard',
+    name: 'bDashboard',
+    component: () => import('@/views/business/BDashboard.vue'),
+  },
 ]
 
 const router = new VueRouter({
