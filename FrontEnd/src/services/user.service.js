@@ -1,23 +1,20 @@
 import axios from 'axios'
-import authHeader from './auth-header'
-
-const API_URL = process.env.VUE_APP_API_ENDPOINT + 'test/'
 
 class UserService {
   getPublicContent() {
-    return axios.get(API_URL + 'all')
+    return axios.get('all')
   }
 
   getUserBoard() {
-    return axios.get(API_URL + 'user', { headers: authHeader() })
+    return axios.get('user')
   }
 
   getModeratorBoard() {
-    return axios.get(API_URL + 'mod', { headers: authHeader() })
+    return axios.get('mod')
   }
 
   getAdminBoard() {
-    return axios.get(API_URL + 'admin', { headers: authHeader() })
+    return axios.get('admin')
   }
 }
 

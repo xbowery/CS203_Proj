@@ -151,6 +151,7 @@ import {
   mdiLogoutVariant,
   mdiBellOutline,
 } from '@mdi/js'
+import EventBus from '@/common/EventBus'
 
 export default {
   computed: {
@@ -160,14 +161,7 @@ export default {
   },
   methods: {
     handleLogout() {
-      this.$store.dispatch('auth/logout').then(
-        () => {
-          this.$router.go()
-        },
-        error => {
-          this.message = (error.response && error.response.data && error.response.data.message) || error.toString()
-        },
-      )
+      EventBus.dispatch("logout")
     },
   },
   setup() {

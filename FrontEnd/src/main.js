@@ -6,10 +6,13 @@ import vuetify from '@/plugins/vuetify'
 import router from '@/router'
 import store from '@/store'
 import * as VeeValidate from 'vee-validate'
+import setupInterceptors from '@/services/setupInterceptors';
 
 Vue.config.productionTip = false
 
 Vue.use(VeeValidate)
+
+setupInterceptors(store)
 
 new Vue({
   router,

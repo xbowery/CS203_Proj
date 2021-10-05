@@ -35,6 +35,9 @@ export const auth = {
         },
       )
     },
+    refreshToken({ commit }, accessToken) {
+      commit('refreshToken', accessToken);
+    },
   },
   mutations: {
     loginSuccess(state, user) {
@@ -55,5 +58,9 @@ export const auth = {
     registerFailure(state) {
       state.status.loggedIn = false
     },
+    refreshToken(state, accessToken) {
+      state.status.loggedIn = true;
+      state.user = { ...state.user, accessToken: accessToken };
+    }
   },
 }

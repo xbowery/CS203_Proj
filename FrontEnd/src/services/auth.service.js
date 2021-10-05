@@ -1,19 +1,20 @@
-import axios from 'axios'
+import api from "@/services/api";
 
-// const API_URL =
-const API_URL = process.env.VUE_APP_API_ENDPOINT + 'auth/'
+import TokenService from '@/services/token.service'
 
 class AuthService {
   async login(user) {
     try {
-      const response = await axios.post(API_URL + 'login', {
+      const response = await api.post('/login', {
         username: user.email,
         password: user.password,
       })
+
       if (response.data.accessToken) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+        TokenService.setUser(response.data)
         return Promise.resolve(response.data)
       }
+
       return Promise.reject(new Error('Malformed request'))
     } catch (error) {
       return Promise.reject(error)
@@ -25,7 +26,7 @@ class AuthService {
   }
 
   register(user) {
-    return axios.post(API_URL + 'signup', {
+    return api.post('/signup', {
       username: user.username,
       email: user.email,
       password: user.password,
