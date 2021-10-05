@@ -2,9 +2,13 @@ package com.app.APICode.security.jwt;
 
 import static com.app.APICode.security.jwt.SecurityConstants.EXPIRATION_TIME;
 import static com.app.APICode.security.jwt.SecurityConstants.SECRET;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,9 +21,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -37,8 +43,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             try {
                 creds = new ObjectMapper().readValue(req.getInputStream(), User.class);
             } catch (Exception e) {
-                // Should be handled by an exception
-                System.out.println(e);
+                System.out.println(e.getMessage());
             }
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(creds.getUsername(), creds.getPassword());
             return authenticationManager.authenticate(token);
@@ -47,16 +52,21 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res,
             FilterChain chain, Authentication auth) throws IOException {
-        String token = JWT.create().withSubject(((User) auth.getPrincipal()).getUsername())
+        
+        User user = (User) auth.getPrincipal();
+        String token = JWT.create()
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .withIssuer(req.getServerName().toString())
+                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
-
+                
         res.setStatus(HttpServletResponse.SC_OK);
-        res.setContentType("application/json");
-        res.setCharacterEncoding("UTF-8");
-        res.getWriter().write(String.format("{\"username\": \"%s\", \"accessToken\": \"%s\"}",
-                ((User) auth.getPrincipal()).getEmail(), token));
-        res.getWriter().flush();
+        res.setContentType(APPLICATION_JSON_VALUE);
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", token);
+        tokens.put("username", user.getUsername());
+        new ObjectMapper().writeValue(res.getOutputStream(), tokens);
     }
 
     @Override
@@ -64,9 +74,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             AuthenticationException failed) throws IOException, ServletException {
 
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        res.setContentType("application/json");
-        res.setCharacterEncoding("UTF-8");
-        res.getWriter().write(String.format("{ \"message\": \"%s\" }","Incorrect email or password"));
-        res.getWriter().flush();
+        res.setContentType(APPLICATION_JSON_VALUE);
+        Map<String, String> error = new HashMap<>();
+        error.put("error_message", "Incorrect email or password");
+        new ObjectMapper().writeValue(res.getOutputStream(), error);
     }
 }

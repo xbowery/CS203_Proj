@@ -58,7 +58,7 @@ public class JwtIntegrationTest {
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uri,
                 new LoginDetails("admin@test.com", "goodpassword"), TokenDetails.class);
         assertEquals(200, result.getStatusCode().value());
-        assertEquals("admin@test.com", result.getBody().getUsername());
+        assertEquals("admin", result.getBody().getUsername());
         assertNull(result.getBody().getMessage());
     }
     
