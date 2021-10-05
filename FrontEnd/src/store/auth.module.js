@@ -36,7 +36,7 @@ export const auth = {
       )
     },
     refreshToken({ commit }, accessToken) {
-      commit('refreshToken', accessToken);
+      commit('refreshToken', accessToken)
     },
   },
   mutations: {
@@ -59,8 +59,8 @@ export const auth = {
       state.status.loggedIn = false
     },
     refreshToken(state, accessToken) {
-      state.status.loggedIn = true;
-      state.user = { ...state.user, accessToken: accessToken };
-    }
+      state.status.loggedIn = true
+      state.user = { ...state.user, accessToken: accessToken }
+    },
   },
 }

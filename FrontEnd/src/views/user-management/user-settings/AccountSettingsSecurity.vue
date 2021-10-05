@@ -1,22 +1,15 @@
 <template>
-  <v-card
-    flat
-    class="mt-5"
-  >
+  <v-card flat class="mt-5">
     <v-form>
       <div class="px-3">
         <v-card-text class="pt-5">
           <v-row>
-            <v-col
-              cols="12"
-              sm="8"
-              md="6"
-            >
+            <v-col cols="12" sm="8" md="6">
               <!-- current password -->
               <v-text-field
                 v-model="currentPassword"
                 :type="isCurrentPasswordVisible ? 'text' : 'password'"
-                :append-icon="isCurrentPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
+                :append-icon="isCurrentPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
                 label="Current Password"
                 outlined
                 dense
@@ -27,7 +20,7 @@
               <v-text-field
                 v-model="newPassword"
                 :type="isNewPasswordVisible ? 'text' : 'password'"
-                :append-icon="isNewPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
+                :append-icon="isNewPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
                 label="New Password"
                 outlined
                 dense
@@ -40,7 +33,7 @@
               <v-text-field
                 v-model="cPassword"
                 :type="isCPasswordVisible ? 'text' : 'password'"
-                :append-icon="isCPasswordVisible ? icons.mdiEyeOffOutline:icons.mdiEyeOutline"
+                :append-icon="isCPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline"
                 label="Confirm New Password"
                 outlined
                 dense
@@ -49,12 +42,7 @@
               ></v-text-field>
             </v-col>
 
-            <v-col
-              cols="12"
-              sm="4"
-              md="6"
-              class="d-none d-sm-flex justify-center position-relative"
-            >
+            <v-col cols="12" sm="4" md="6" class="d-none d-sm-flex justify-center position-relative">
               <v-img
                 contain
                 max-width="170"
@@ -78,43 +66,22 @@
         </v-card-title>
 
         <v-card-text class="two-factor-auth text-center mx-auto">
-          <v-avatar
-            color="primary"
-            class="primary mb-4"
-            rounded
-          >
-            <v-icon
-              size="25"
-              color="white"
-            >
+          <v-avatar color="primary" class="primary mb-4" rounded>
+            <v-icon size="25" color="white">
               {{ icons.mdiLockOpenOutline }}
             </v-icon>
           </v-avatar>
-          <p class="text-base text--primary font-weight-semibold">
-            Two factor authentication is not enabled yet.
-          </p>
+          <p class="text-base text--primary font-weight-semibold">Two factor authentication is not enabled yet.</p>
           <p class="text-sm text--primary">
-            Two-factor authentication adds an additional layer of
-            security to your account by requiring more than just a
+            Two-factor authentication adds an additional layer of security to your account by requiring more than just a
             password to log in. Learn more.
           </p>
         </v-card-text>
 
         <!-- action buttons -->
         <v-card-text>
-          <v-btn
-            color="primary"
-            class="me-3 mt-3"
-          >
-            Save changes
-          </v-btn>
-          <v-btn
-            color="secondary"
-            outlined
-            class="mt-3"
-          >
-            Cancel
-          </v-btn>
+          <v-btn color="primary" class="me-3 mt-3"> Save changes </v-btn>
+          <v-btn color="secondary" outlined class="mt-3"> Cancel </v-btn>
         </v-card-text>
       </div>
     </v-form>
@@ -122,7 +89,6 @@
 </template>
 
 <script>
-
 import { mdiKeyOutline, mdiLockOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 

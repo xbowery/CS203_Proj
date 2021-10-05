@@ -161,7 +161,7 @@ export default {
   },
   methods: {
     handleLogout() {
-      EventBus.dispatch("logout")
+      EventBus.dispatch('logout')
     },
   },
   setup() {

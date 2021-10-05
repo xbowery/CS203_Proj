@@ -9,7 +9,7 @@ import { computed } from '@vue/composition-api'
 import { useRouter } from '@/utils'
 import LayoutBlank from '@/layouts/Blank.vue'
 import LayoutContent from '@/layouts/Content.vue'
-import EventBus from "@/common/EventBus";
+import EventBus from '@/common/EventBus'
 
 export default {
   components: {
@@ -18,18 +18,18 @@ export default {
   },
   methods: {
     logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    }
+      this.$store.dispatch('auth/logout')
+      this.$router.push('/login')
+    },
   },
   mounted() {
-    EventBus.on("logout", () => {
-      this.logOut();
-    });
+    EventBus.on('logout', () => {
+      this.logOut()
+    })
   },
   beforeDestroy() {
-    EventBus.remove("logout");
-  }, 
+    EventBus.remove('logout')
+  },
   setup() {
     const { route } = useRouter()
 
