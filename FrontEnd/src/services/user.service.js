@@ -1,20 +1,24 @@
-import axios from 'axios'
+// import axios from 'axios'
+import api from './api'
 
 class UserService {
-  getPublicContent() {
-    return axios.get('all')
-  }
+  // getPublicContent() {
+  //   return axios.get('all')
+  // }
 
-  getUserBoard() {
-    return axios.get('user')
-  }
+  // getUserBoard() {
+  //   return axios.get('user')
+  // }
 
-  getModeratorBoard() {
-    return axios.get('mod')
-  }
+  // getModeratorBoard() {
+  //   return axios.get('mod')
+  // }
 
-  getAdminBoard() {
-    return axios.get('admin')
+  // getAdminBoard() {
+  //   return axios.get('admin')
+  // }
+  async getUsers() {
+    return api.get('users')
   }
 }
 
