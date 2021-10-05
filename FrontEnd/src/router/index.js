@@ -49,7 +49,7 @@ const routes = [
   {
     path: '/settings',
     name: 'settings',
-    component: () => import('@/views/user-management/Settings.vue'),
+    component: () => import('@/views/user-management/user-settings/AccountSettings.vue'),
   }
 ]
 
