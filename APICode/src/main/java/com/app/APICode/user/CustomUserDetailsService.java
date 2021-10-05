@@ -14,11 +14,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(UserRepository users) {
         this.users = users;
     }
-    @Override
+    
     /** To return a UserDetails for Spring Security 
      *  Note that the method takes only a username.
         The UserDetails interface has methods to get the password.
     */
+    @Override
     public UserDetails loadUserByUsername(String email)  throws EmailNotFoundException {
         return users.findByEmail(email)
             .orElseThrow(() -> new EmailNotFoundException("No user found with email address:" + email));

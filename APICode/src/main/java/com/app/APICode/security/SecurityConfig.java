@@ -2,6 +2,7 @@ package com.app.APICode.security;
 
 import com.app.APICode.security.jwt.JWTAuthenticationFilter;
 import com.app.APICode.security.jwt.JWTAuthorizationFilter;
+import com.app.APICode.security.jwt.JWTHelper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +24,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
+    private JWTHelper jwtHelper;
 
-    public SecurityConfig(UserDetailsService userSvc) {
+    public SecurityConfig(UserDetailsService userSvc, JWTHelper jwtHelper) {
         this.userDetailsService = userSvc;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -39,11 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/refreshToken").permitAll()
 
                 .anyRequest().authenticated().and()
 
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
+                .addFilterBefore(new JWTAuthorizationFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 

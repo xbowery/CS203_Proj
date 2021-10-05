@@ -1,6 +1,5 @@
 package com.app.APICode.security.jwt;
 
-import static com.app.APICode.security.jwt.SecurityConstants.SECRET;
 import static com.app.APICode.security.jwt.SecurityConstants.TOKEN_PREFIX;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -18,8 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,12 +26,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
+    JWTHelper jwtHelper;
+    
+    public JWTAuthorizationFilter(JWTHelper jwtHelper) {
+        this.jwtHelper = jwtHelper;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        if (req.getServletPath().equals("/login")) {
+        if (req.getServletPath().equals("/login") || req.getServletPath().equals("/refreshToken")) {
             chain.doFilter(req, res);
             return;
         }
@@ -54,7 +56,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             res.setContentType(APPLICATION_JSON_VALUE);
             res.setStatus(FORBIDDEN.value());
             Map<String, String> error = new HashMap<>();
-            error.put("error_message", "Invalid JWT Token");
+            error.put("error_message", e.getMessage());
             new ObjectMapper().writeValue(res.getOutputStream(), error);
         }
     }
@@ -68,7 +70,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
         String token = tokenHeader.replace(TOKEN_PREFIX, "");
 
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SECRET.getBytes())).build().verify(token);
+        DecodedJWT decodedJWT = jwtHelper.decodeJwt(token);
         
         String user = decodedJWT.getSubject();
         String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
