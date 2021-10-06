@@ -77,7 +77,10 @@ export default {
     },
     methods:{
         increment(count){
-            this.current+=count
+            if(this.current + count >= 0){
+                this.current+=count
+            }
+
         }
     }
 }
