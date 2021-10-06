@@ -2,24 +2,13 @@
   <v-card class="greeting-card">
     <v-row class="ma-0 pa-0">
       <v-col cols="8">
-        <v-card-title class="text-no-wrap pt-1 ps-2">
-          Good Morning, John 🥳
-        </v-card-title>
-        <v-card-subtitle class="text-no-wrap ps-2">
-          Covid Suisse Business Dashboard 
-        </v-card-subtitle>
+        <v-card-title class="text-no-wrap pt-1 ps-2"> Good Morning, John 🥳 </v-card-title>
+        <v-card-subtitle class="text-no-wrap ps-2"> Covid Suisse Business Dashboard </v-card-subtitle>
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
-            <p class="text-xl font-weight-semibold primary--text mb-2">
-              09:00
-            </p>
+            <p class="text-xl font-weight-semibold primary--text mb-2">09:00</p>
 
-            <v-btn
-              small
-              color="primary"
-            >
-              Astons
-            </v-btn>
+            <v-btn small color="primary"> Astons </v-btn>
           </div>
         </v-card-text>
       </v-col>
@@ -29,7 +18,7 @@
           contain
           height="180"
           width="159"
-          :src="require(`@/assets/images/misc/triangle-${$vuetify.theme.dark ? 'dark':'light'}.png`)"
+          :src="require(`@/assets/images/misc/triangle-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
           class="greeting-card-bg"
         ></v-img>
         <v-img
