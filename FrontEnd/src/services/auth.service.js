@@ -5,10 +5,18 @@ import TokenService from '@/services/token.service'
 class AuthService {
   async login(user) {
     try {
-      const response = await api.post('/login', {
-        username: user.email,
-        password: user.password,
-      })
+      const response = await api.post(
+        '/login',
+        {
+          username: user.email,
+          password: user.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
 
       if (response.data.accessToken) {
         TokenService.setUser(response.data)
@@ -26,11 +34,19 @@ class AuthService {
   }
 
   register(user) {
-    return api.post('/signup', {
-      username: user.username,
-      email: user.email,
-      password: user.password,
-    })
+    return api.post(
+      '/signup',
+      {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
   }
 }
 
