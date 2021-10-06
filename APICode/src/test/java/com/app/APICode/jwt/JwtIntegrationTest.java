@@ -41,9 +41,9 @@ public class JwtIntegrationTest {
 
     @BeforeAll
     void setupDB() {
-        String username = "admin@test.com";
+        String email = "admin@test.com";
         String password = "goodpassword";
-        User user = new User(username, "admin", encoder.encode(password), true, "ROLE_ADMIN");
+        User user = new User(email, "admin", "admin1", null, encoder.encode(password), true, "ROLE_ADMIN");
         user = userRepository.save(user);
     }
 
@@ -56,7 +56,7 @@ public class JwtIntegrationTest {
     void login_Success() throws Exception {
         URI uri = new URI(baseUrl + port + "/api/v1/login");
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uri,
-                new LoginDetails("admin@test.com", "goodpassword"), TokenDetails.class);
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
         assertEquals(200, result.getStatusCode().value());
         assertEquals("admin", result.getBody().getUsername());
         assertNull(result.getBody().getMessage());

@@ -40,10 +40,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
 
-                .antMatchers(HttpMethod.GET, "/users").permitAll()
-                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/users", "users/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/users", "users/*").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.DELETE, "/users", "users/*").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 
+                .antMatchers(HttpMethod.GET, "/restaurants").permitAll()
+                .antMatchers(HttpMethod.POST, "/restaurants").permitAll()
+                
                 .anyRequest().authenticated().and()
 
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))

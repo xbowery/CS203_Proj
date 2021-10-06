@@ -1,10 +1,15 @@
 package com.app.APICode.restaurant;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import com.app.APICode.employee.Employee;
 
 @Entity
 public class Restaurant {
@@ -13,26 +18,26 @@ public class Restaurant {
     private long id;
 
     @NotNull(message = "Restaurant name should not be null")
-    @Size(min = 3, max = 20, message = "Restaurant name should be between 3 and 20 characters")
     private String name;
 
     @NotNull(message = "Location should not be null")
-    @Size(min = 3, max = 20, message = "Location should be between 3 and 25 characters")
     private String location;
 
     @NotNull(message = "Cuisine should not be null")
-    @Size(min = 3, max = 20, message = "Cuisine should be between 3 and 25 characters")
     private String cuisine;
 
     @NotNull(message = "Description should not be null")
-    @Size(min = 5, max = 20, message = "Description should be between 5 and 20 characters")
     private String description;
+
     private int currentCapacity;
 
     @NotNull(message = "Max capacity should not be null")
     private int maxCapacity;
 
     private String crowdLevel;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
+    private List<Employee> employees;
 
     public Restaurant(String name, String location, String cuisine, String description, int maxCapacity) {
         this.name = name;
@@ -103,5 +108,7 @@ public class Restaurant {
             this.crowdLevel = "High";
         }
     }
+
+    public Restaurant() {}
 }
 

@@ -58,7 +58,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken);
-        tokens.put("username", user.getEmail());
+        tokens.put("username", user.getUsername());
         new ObjectMapper().writeValue(res.getOutputStream(), tokens);
     }
 

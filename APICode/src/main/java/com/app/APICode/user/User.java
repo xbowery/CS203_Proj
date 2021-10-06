@@ -18,31 +18,39 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
-
-    @NotNull(message = "Email should not be null")
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id;
+    
+    @NotNull(message = "Email must not be null")
     private String email;
 
-    @NotNull(message = "Username should not be null")
-    @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
+    @NotNull(message = "Username must not be null")
+    @Size(min = 5, max = 20, message = "Username must be between 5 and 20 characters")
     private String username;
 
-    @NotNull(message = "Password should not be null")
-    @Size(min = 8, message = "Password should be at least 8 characters")
+    @NotNull(message = "First name must not be null")
+    private String firstName;
+
+    private String lastName;
+    
+    @NotNull(message = "Password must not be null")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
     @NotNull(message = "Vaccination status must not be null")
     private boolean isVaccinated;
 
-    @NotNull(message = "Authorities should not be null")
+    @NotNull(message = "Authorities must not be null")
     private String authorities;
 
     public User() {}
 
-    public User(String email, String username, String password, boolean isVaccinated,
-            String authorities) {
+    public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated, String authorities) {
         this.email = email;
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.isVaccinated = isVaccinated;
         this.authorities = authorities;
@@ -74,21 +82,37 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean getVaccinationStatus() {

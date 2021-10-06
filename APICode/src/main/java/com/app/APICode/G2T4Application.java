@@ -18,8 +18,9 @@ public class G2T4Application {
 		UserRepository users = ctx.getBean(UserRepository.class);
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
         System.out.println("[Add user]: " + users.save(
-            new User("admin@test.com", "admin", encoder.encode("goodpassword"), true, "ROLE_ADMIN")).getUsername());
-		users.save(new User("user@test.com", "user1", encoder.encode("testing123"), false, "ROLE_USER")).getUsername();
+            new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN")).getUsername());
+		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
+		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false, "ROLE_BUSINESS"));
 		
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
