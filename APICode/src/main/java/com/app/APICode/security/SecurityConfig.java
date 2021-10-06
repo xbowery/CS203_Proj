@@ -42,12 +42,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/users", "users/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/users", "users/*").hasAnyRole("ADMIN", "BUSINESS")
-                .antMatchers(HttpMethod.DELETE, "/users", "users/*").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.DELETE, "users/*").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN", "BUSINESS")
+
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/restaurants").permitAll()
-                .antMatchers(HttpMethod.POST, "/restaurants").permitAll()
+                .antMatchers(HttpMethod.GET, "/restaurants", "/restaurants/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.POST, "/restaurants", "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.DELETE, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 
                 .anyRequest().authenticated().and()
 
