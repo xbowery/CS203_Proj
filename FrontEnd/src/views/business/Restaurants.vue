@@ -8,6 +8,8 @@
       :sort-by="sortBy.toLowerCase()"
       :sort-desc="sortDesc"
       hide-default-footer
+      loading
+      loading-text="Loading"
     >
       <template v-slot:header>
         <v-toolbar dark color="blue darken-3" class="mb-1">
@@ -109,6 +111,7 @@
 </template>
 
 <script>
+import UserService from '@/services/user.service'
 export default {
   data() {
     return {
@@ -119,79 +122,16 @@ export default {
       page: 1,
       itemsPerPage: 8,
       sortBy: 'name',
+      items: [],
       keys: ['Name', 'Location', 'Cuisine', 'Description', 'Crowd'],
-      items: [
-        {
-          name: 'Dian Xiao Er',
-          location: 159,
-          cuisine: 'Chinese',
-          description: 24,
-          crowd: 'High',
-        },
-        {
-          name: 'Tipo Pasta Bar',
-          location: 237,
-          cuisine: 9.0,
-          description: 37,
-          crowd: 'Low',
-        },
-        {
-          name: 'Astons',
-          location: 262,
-          cuisine: 'Western',
-          description: 23,
-          crowd: 'Medium',
-        },
-        {
-          name: 'Tanuki Raw',
-          location: 305,
-          cuisine: 'Japanese',
-          description: 67,
-          crowd: 'Low',
-        },
-        {
-          name: 'Sushi Tei',
-          location: 356,
-          cuisine: 16.0,
-          description: 49,
-          crowd: 'Low',
-        },
-        {
-          name: 'Crystal Jade',
-          location: 375,
-          cuisine: 'Chinese',
-          description: 94,
-          crowd: 'Low',
-        },
-        {
-          name: 'HaiDiLao',
-          location: 392,
-          cuisine: 'Chinese',
-          description: 98,
-          crowd: 'Medium',
-        },
-        {
-          name: 'Beauty in the pot',
-          location: 408,
-          cuisine: 'Chinese',
-          description: 87,
-          crowd: 'High',
-        },
-        {
-          name: 'Sakae Sushi',
-          location: 452,
-          cuisine: 'Japanese',
-          description: 51,
-          crowd: 'Medium',
-        },
-        {
-          name: 'Trapizza',
-          location: 518,
-          cuisine: 'Western',
-          description: 65,
-          crowd: 'Low',
-        },
-      ],
+    }
+  },
+  async mounted() {
+    try {
+      const res = await UserService.getRestaurants()
+      this.items = res.data
+    } catch (error) {
+      console.error(error)
     }
   },
   computed: {
