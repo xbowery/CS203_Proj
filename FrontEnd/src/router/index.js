@@ -61,6 +61,11 @@ const routes = [
     name: 'crowdControl',
     component: () => import('@/views/business/CrowdControl.vue'),
   },
+  {
+    path: '/Dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/Dashboard.vue'),
+  },
 ]
 
 const router = new VueRouter({

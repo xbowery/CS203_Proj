@@ -33,6 +33,7 @@
       <nav-menu-link title="Settings" :to="{ name: 'settings' }" :icon="icons.mdiAccountCog"></nav-menu-link>
       <nav-menu-link title="Business Dashboard" :to="{ name: 'bDashboard' }" :icon="icons.mdiDomain"></nav-menu-link>
       <nav-menu-link title="Crowd Control" :to="{ name: 'crowdControl' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
+      <nav-menu-link title="Dashboard" :to="{ name: 'Dashboard' }" :icon="icons.mdiDomain"></nav-menu-link>
     </v-list>
   </v-navigation-drawer>
 </template>
