@@ -42,10 +42,10 @@ public class UserController {
     // need to do the mapping properly
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
-        User user = userService.getUser(username);
+        User user = userService.getUserByUsername(username);
 
         if (user == null) throw new UserNotFoundException(username);
-        return userService.getUser(username);
+        return userService.getUserByUsername(username);
     }
 
     /**
