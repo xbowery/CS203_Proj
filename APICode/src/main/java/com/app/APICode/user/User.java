@@ -137,4 +137,12 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 }

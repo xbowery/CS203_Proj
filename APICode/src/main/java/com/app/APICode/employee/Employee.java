@@ -1,5 +1,8 @@
 package com.app.APICode.employee;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,8 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.user.User;
 
@@ -29,6 +34,6 @@ public class Employee extends User {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    // @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade=CascadeType.ALL)
-    // private List<Ctest> ctests;
+    @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade=CascadeType.ALL)
+    private List<Ctest> ctests;
 }
