@@ -4,7 +4,9 @@ import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RandomPassword {
     public String generatePassayPassword() {
         PasswordGenerator gen = new PasswordGenerator();
