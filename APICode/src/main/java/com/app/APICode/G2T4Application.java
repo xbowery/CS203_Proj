@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Date;
+
+import com.app.APICode.measure.hawker.MeasureHawker;
+import com.app.APICode.measure.hawker.MeasureHawkerRepository;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -30,6 +34,10 @@ public class G2T4Application {
 		testRestaurant.setCurrentCapacity(0);
 		testRestaurant.setCrowdLevel();
 
+		MeasureHawkerRepository measureHawkers = ctx.getBean(MeasureHawkerRepository.class);
+		MeasureHawker testHawker = new MeasureHawker(new Date(), 2, false);
+		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawker).getCreationDateTime());
+	
 	}
 
 }
