@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.NotNull;
 
-import com.app.APICode.user.User;
+import com.app.APICode.employee.Employee;
 
 @Entity
 public class Ctest {
@@ -20,8 +20,8 @@ public class Ctest {
     // One test result has only one user linked to it
     // but one user can have multiple tests
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 
     @NotNull(message = "type of test should not be null")
     @Pattern(regexp = "(PCR|ART)")
@@ -34,11 +34,15 @@ public class Ctest {
     @Pattern(regexp = "(Positive|Negative)")
     private String result;
 
-    public Ctest (User user, String type, Date date, String result){
-        this.user = user;
+    public Ctest (Employee employee, String type, Date date, String result){
+        this.employee = employee;
         this.type = type;
         this.date = date;
         this.result = result;
+    }
+
+    public void setEmployee(Employee employee){
+        this.employee = employee;
     }
 
 }

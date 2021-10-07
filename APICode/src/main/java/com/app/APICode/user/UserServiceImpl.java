@@ -106,4 +106,13 @@ public class UserServiceImpl implements UserService {
         users.deleteByUsername(username);
     }
 
+    @Override
+    public Long getUserIdByUsername(String username) {
+        return users.findIdByUsername(username);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return users.getById(id);
+    }
 }

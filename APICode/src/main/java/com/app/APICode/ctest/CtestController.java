@@ -23,10 +23,10 @@ public class CtestController {
     }
     
     // @GetMapping("/user/{userid}/ctests")
-    // public List<Ctest> getAllReviewsByUserId(@PathVariable (value = "userId") Long userId) {
-    //     if(!users.existsById(userId)) {
-    //         throw new UserNotFoundException(userId);
+    // public List<Ctest> getAllReviewsByUserName(@PathVariable (value = "userId") String username) {
+    //     if(!users.findByUsername(username).isPresent()) {
+    //         throw new UserNotFoundException(username);
     //     }
-    //     return ctests.findByUserId(userId);
+    //     return ctests.findByEmployee(users.findByUsername(username).get().getEmployee());
     // }
 }

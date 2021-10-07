@@ -18,4 +18,8 @@ public interface UserService {
     void createTempPassword(String email) throws EmailNotFoundException;
 
     void deleteUser(String username);
+
+    Long getUserIdByUsername(String username);
+
+    User getUserById(Long id);
 }
