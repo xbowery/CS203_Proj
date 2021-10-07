@@ -12,8 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByRestaurantAndUser(Long restaurant_id, Long user_id);
 
-    @Query("SELECT restaurant_id FROM Employee e WHERE e.user_id = :user_id")
-    Optional<Long> findRestaurantByUser(@Param("user_id") Long user_id);
+    Optional<Long> findRestaurantIdByUserId(@Param("user_id") Long user_id);
 
     Optional<List<Employee>> findByRestaurant(Long restaurant_id);
 }
