@@ -22,6 +22,14 @@ const routes = [
     },
   },
   {
+    path: '/ForgotPassword',
+    name: 'login',
+    component: () => import('@/views/user-management/ForgotPassword.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/register',
     name: 'register',
     component: () => import('@/views/user-management/Register.vue'),

@@ -63,7 +63,7 @@
                 <v-checkbox label="Remember Me" hide-details class="me-3 mt-1"> </v-checkbox>
 
                 <!-- forgot link -->
-                <a href="javascript:void(0)" class="mt-1"> Forgot Password? </a>
+                <a href="/ForgotPassword" class="mt-1"> Forgot Password? </a>
               </div>
 
               <v-btn block color="primary" class="mt-6" :disabled="invalid" :loading="loading" type="submit">
