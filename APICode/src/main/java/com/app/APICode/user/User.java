@@ -87,6 +87,9 @@ public class User implements UserDetails {
     }
 
 
+    public Long getId() {
+        return this.id;
+    }
 
     @Override
     public String getUsername() {
