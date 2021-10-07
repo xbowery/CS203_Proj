@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeasureHawkerController {
     private MeasureHawkerRepository measureHawkers;
 
-    // public MeasureHawkerController(MeasureHawkerRepository measureHawkers) {
-    //     this.measureHawkers = measureHawkers;
-    // }
+    public MeasureHawkerController(MeasureHawkerRepository measureHawkers) {
+        this.measureHawkers = measureHawkers;
+    }
 
-    // @GetMapping("/measureHawkers")
-    // public List<MeasureHawker> getMeasureHawkers(){
-    //     return measureHawkers.findAll();
-    // }
+    @GetMapping("/measureHawkers")
+    public List<MeasureHawker> getMeasureHawkers(){
+        return measureHawkers.findAll();
+    }
 }

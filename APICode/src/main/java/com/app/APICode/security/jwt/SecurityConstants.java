@@ -1,0 +1,11 @@
+package com.app.APICode.security.jwt;
+
+public class SecurityConstants {
+    public static final String SECRET = "hVmYp3s6v9y$B&E)H@McQfTjWnZr4t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+Kb";
+    public static final long REFRESH_EXPIRATION_TIME = 3_600_000; // 60 mins
+    public static final long EXPIRATION_TIME = 900_000; // 15 mins
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_STRING = "Authorization";
+    public static final String SIGN_UP_URL = "/register";
+    public static final String ISSUER = "Covid Suisse";
+}

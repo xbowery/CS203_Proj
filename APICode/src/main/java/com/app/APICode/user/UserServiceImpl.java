@@ -24,7 +24,8 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder encoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository users, EmailerService emailerService, RandomPassword randomPasswordGenerator, BCryptPasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository users, EmailerService emailerService, RandomPassword randomPasswordGenerator,
+            BCryptPasswordEncoder encoder) {
         this.users = users;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
@@ -48,9 +49,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
-        List<User> sameUsernames = users.findByUsername(user.getUsername())
-        .map(Collections::singletonList)
-        .orElseGet(Collections::emptyList);
+        List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)
+                .orElseGet(Collections::emptyList);
 
         if (sameUsernames.size() == 0) {
             return users.save(user);
@@ -82,14 +82,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createTempPassword(String email) throws EmailNotFoundException {
+        if (users.findByEmail(email) == null) {
+            throw new EmailNotFoundException(email);
+        }
+
         String tempPassword = randomPasswordGenerator.generatePassayPassword();
         Map<String, Object> dataModel = emailerService.getDataModel();
         dataModel.put("requestPasswordChange", true);
         dataModel.put("password", tempPassword);
-        
-        if (users.findByEmail(email) == null) {
-            throw new EmailNotFoundException(email);
-        }
 
         try {
             emailerService.sendMessage(email, dataModel);
@@ -115,5 +115,4 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return users.getById(id);
     }
-    
 }
