@@ -1,9 +1,13 @@
 package com.app.APICode.user;
 
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class EmailNotFoundException extends AuthenticationException {
-    public EmailNotFoundException(String message) {
-        super(message);
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class EmailNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    public EmailNotFoundException(String email) {
+        super("This email does not exist: " + email);
     }
 }

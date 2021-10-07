@@ -15,7 +15,7 @@ public class MeasureHawker {
     private @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
 
     @NotNull(message = "Created date should not be null")
-    private @Temporal(TemporalType.TIMESTAMP) Date creationDateTime;
+    private Date creationDateTime;
 
     @NotNull(message = "Max capacity should not be null")
     private int maxPerTable;

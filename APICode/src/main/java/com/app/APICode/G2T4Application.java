@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Date;
+
+import com.app.APICode.measure.hawker.MeasureHawker;
+import com.app.APICode.measure.hawker.MeasureHawkerRepository;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -16,17 +20,23 @@ public class G2T4Application {
 		ApplicationContext ctx = SpringApplication.run(G2T4Application.class, args);
 
 		UserRepository users = ctx.getBean(UserRepository.class);
-        BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-        System.out.println("[Add user]: " + users.save(
-            new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN")).getUsername());
+		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+		System.out.println("[Add user]: " + users.save(
+				new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN"))
+				.getUsername());
 		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
-		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false, "ROLE_BUSINESS"));
-		
+		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,
+				"ROLE_BUSINESS"));
+
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 		testRestaurant.setCurrentCapacity(0);
 		testRestaurant.setCrowdLevel();
+
+		MeasureHawkerRepository measureHawkers = ctx.getBean(MeasureHawkerRepository.class);
+		MeasureHawker testHawker = new MeasureHawker(new Date(), 2, false);
+		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawker).getCreationDateTime());
 	
 	}
 

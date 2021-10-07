@@ -29,19 +29,19 @@ public class JWTRefreshToken {
     JWTHelper jwtHelper;
 
     public void refreshJwtToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+        };
         Map<String, String> tokensMap = new ObjectMapper().readValue(req.getInputStream(), typeRef);
         String refreshToken = tokensMap.get("refreshToken");
 
         try {
             DecodedJWT decodedJWT = jwtHelper.decodeJwt(refreshToken);
             String email = decodedJWT.getSubject();
-            
+
             User user = (User) userService.loadUserByUsername(email);
 
-            String issuer = req.getServerName().toString();
-            String accessToken = jwtHelper.generateAccessToken(user, issuer);
-            
+            String accessToken = jwtHelper.generateAccessToken(user);
+
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType(APPLICATION_JSON_VALUE);
             Map<String, String> tokens = new HashMap<>();

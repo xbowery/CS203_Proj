@@ -8,8 +8,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -20,14 +22,21 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * This filter will be filtering every single request to check if the token
+ * exists If the token exists, it will verify if the token is valid and not
+ * tampered
+ */
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     JWTHelper jwtHelper;
-    
+
+    @Autowired
     public JWTAuthorizationFilter(JWTHelper jwtHelper) {
         this.jwtHelper = jwtHelper;
     }
@@ -36,11 +45,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        if (req.getServletPath().equals("/login") || req.getServletPath().equals("/refreshToken")) {
-            chain.doFilter(req, res);
-            return;
-        }
-
+        // If the token is not avilable or the Authorization header is incorrect, skip
+        // this filter
         String tokenHeader = req.getHeader(AUTHORIZATION);
         if (tokenHeader == null || !tokenHeader.startsWith(TOKEN_PREFIX)) {
             chain.doFilter(req, res);
@@ -55,14 +61,39 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             res.setContentType(APPLICATION_JSON_VALUE);
             res.setStatus(UNAUTHORIZED.value());
+
             Map<String, String> error = new HashMap<>();
-            error.put("error_message", e.getMessage());
+            error.put("error_message", "Invalid or missing token");
+
             new ObjectMapper().writeValue(res.getOutputStream(), error);
         }
     }
 
     /**
-     * Verifies JWT and return a {@link UsernamePasswordAuthenticationToken}
+     * Check against a list of URI that will bypass this filter
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest req) throws ServletException {
+        String url = req.getServletPath().toString();
+        return isResourceUrl(url);
+    }
+
+    private boolean isResourceUrl(String url) {
+        List<String> resourceRequests = Arrays.asList("/login", "/register", "/refreshToken");
+
+        // If it is a match, return true
+        for (String resourceRequest : resourceRequests) {
+            if (url.equals(resourceRequest)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Verifies JWT and return a {@link UsernamePasswordAuthenticationToken} This
+     * function converts a JWT into this token which is recognised by Spring Boot to
+     * perform further filters or to perform more Authorization checks
      * 
      * @param tokenHeader A header value containing the keyword "Bearer" and JWT
      * @return {@link UsernamePasswordAuthenticationToken} Authentication Token
@@ -71,9 +102,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         String token = tokenHeader.replace(TOKEN_PREFIX, "");
 
         DecodedJWT decodedJWT = jwtHelper.decodeJwt(token);
-        
+
         String user = decodedJWT.getSubject();
         String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         stream(roles).forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role));

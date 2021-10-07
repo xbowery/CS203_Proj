@@ -3,12 +3,16 @@ package com.app.APICode.user;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.app.APICode.employee.Employee;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,10 +22,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotNull(message = "Email must not be null")
     private String email;
 
@@ -33,7 +37,7 @@ public class User implements UserDetails {
     private String firstName;
 
     private String lastName;
-    
+
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
@@ -44,9 +48,14 @@ public class User implements UserDetails {
     @NotNull(message = "Authorities must not be null")
     private String authorities;
 
-    public User() {}
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Employee employee;
 
-    public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated, String authorities) {
+    public User() {
+    }
+
+    public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
+            String authorities) {
         this.email = email;
         this.username = username;
         this.firstName = firstName;
@@ -79,6 +88,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 
     @Override
@@ -129,5 +142,13 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

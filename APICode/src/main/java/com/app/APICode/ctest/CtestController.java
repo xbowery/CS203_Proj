@@ -2,7 +2,7 @@ package com.app.APICode.ctest;
 
 import java.util.List;
 
-import com.app.APICode.user.UserRepository;
+import com.app.APICode.employee.EmployeeRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CtestController {
     private CtestRepository ctests;
-    private UserRepository users;
+    private EmployeeRepository employees;
 
-    public CtestController(CtestRepository ctests, UserRepository users){
+    public CtestController(CtestRepository ctests, EmployeeRepository employees){
         this.ctests = ctests;
-        this.users = users;
+        this.employees = employees;
     }
 
     @GetMapping("/ctests")
@@ -23,10 +23,10 @@ public class CtestController {
     }
     
     // @GetMapping("/user/{userid}/ctests")
-    // public List<Ctest> getAllReviewsByUserId(@PathVariable (value = "userId") Long userId) {
-    //     if(!users.existsById(userId)) {
-    //         throw new UserNotFoundException(userId);
+    // public List<Ctest> getAllReviewsByUserName(@PathVariable (value = "userId") String username) {
+    //     if(!users.findByUsername(username).isPresent()) {
+    //         throw new UserNotFoundException(username);
     //     }
-    //     return ctests.findByUserId(userId);
+    //     return ctests.findByEmployee(users.findByUsername(username).get().getEmployee());
     // }
 }
