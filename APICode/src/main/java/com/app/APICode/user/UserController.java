@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -94,6 +95,15 @@ public class UserController {
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
         refreshToken.refreshJwtToken(req, res);
+    }
+
+    @PostMapping("/ForgotPassword")
+    public void resetPassword(HttpServletRequest req, @ModelAttribute(name="user") User userInput) {
+        User user = userService.getUserByEmail(userInput.getEmail());
+        if (user == null) {
+            throw new UserNotFoundException(userInput.getEmail());
+        }
+        userService.createTempPassword(userInput.getEmail());
     }
 
 }
