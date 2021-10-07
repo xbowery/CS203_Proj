@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
     // define a derived query to find user by username
     Optional<User> findByUsername(String username);
+
     Long deleteByUsername(String username);
+
     Optional<User> findByEmail(String email);
 }

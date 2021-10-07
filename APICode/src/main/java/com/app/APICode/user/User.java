@@ -22,10 +22,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotNull(message = "Email must not be null")
     private String email;
 
@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private String firstName;
 
     private String lastName;
-    
+
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
@@ -48,12 +48,14 @@ public class User implements UserDetails {
     @NotNull(message = "Authorities must not be null")
     private String authorities;
 
-    @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employee employee;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated, String authorities) {
+    public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
+            String authorities) {
         this.email = email;
         this.username = username;
         this.firstName = firstName;

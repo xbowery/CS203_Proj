@@ -4,10 +4,12 @@ import com.app.APICode.security.jwt.JWTAuthenticationFilter;
 import com.app.APICode.security.jwt.JWTAuthorizationFilter;
 import com.app.APICode.security.jwt.JWTHelper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,11 +23,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @Configuration
-
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     private JWTHelper jwtHelper;
 
+    @Autowired
     public SecurityConfig(UserDetailsService userSvc, JWTHelper jwtHelper) {
         this.userDetailsService = userSvc;
         this.jwtHelper = jwtHelper;
@@ -38,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
+        http.cors().and().csrf().disable().httpBasic().disable().authorizeRequests()
 
                 .antMatchers(HttpMethod.GET, "/users", "users/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/users", "users/*").hasAnyRole("ADMIN", "BUSINESS")
@@ -51,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.POST, "/restaurants", "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
-                
+
                 .anyRequest().authenticated().and()
 
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
