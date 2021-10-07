@@ -31,16 +31,16 @@
             <v-form @submit.prevent="handleSubmit(handleLogin)">
               <!-- Commented out email validation for dev purposes -->
               <!-- <validation-provider name="Email" rules="required|email" v-slot="{ errors }"> -->
-              <validation-provider name="Email" rules="required" v-slot="{ errors }">
+              <validation-provider name="Username" rules="required" v-slot="{ errors }">
                 <v-text-field
-                  v-model="user.email"
+                  v-model="user.username"
                   outlined
-                  label="Email"
-                  placeholder="john@example.com"
+                  label="Username"
+                  placeholder="JohnDoe"
                   hide-details="auto"
                   class="mb-3"
                   :error-messages="errors[0]"
-                  requred
+                  required
                 ></v-text-field>
               </validation-provider>
 
@@ -119,7 +119,7 @@ export default {
   methods: {
     async handleLogin() {
       this.loading = true
-      if (this.user.email && this.user.password) {
+      if (this.user.username && this.user.password) {
         try {
           await this.$store.dispatch('auth/login', this.user)
           this.$router.push('/')
