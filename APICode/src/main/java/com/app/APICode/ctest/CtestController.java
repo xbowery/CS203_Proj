@@ -2,7 +2,7 @@ package com.app.APICode.ctest;
 
 import java.util.List;
 
-import com.app.APICode.user.UserRepository;
+import com.app.APICode.employee.EmployeeRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CtestController {
     private CtestRepository ctests;
-    private UserRepository users;
+    private EmployeeRepository employees;
 
-    public CtestController(CtestRepository ctests, UserRepository users){
+    public CtestController(CtestRepository ctests, EmployeeRepository employees){
         this.ctests = ctests;
-        this.users = users;
+        this.employees = employees;
     }
 
     @GetMapping("/ctests")
