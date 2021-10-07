@@ -16,18 +16,20 @@ public class G2T4Application {
 		ApplicationContext ctx = SpringApplication.run(G2T4Application.class, args);
 
 		UserRepository users = ctx.getBean(UserRepository.class);
-        BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-        System.out.println("[Add user]: " + users.save(
-            new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN")).getUsername());
+		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+		System.out.println("[Add user]: " + users.save(
+				new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN"))
+				.getUsername());
 		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
-		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false, "ROLE_BUSINESS"));
-		
+		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,
+				"ROLE_BUSINESS"));
+
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 		testRestaurant.setCurrentCapacity(0);
 		testRestaurant.setCrowdLevel();
-	
+
 	}
 
 }
