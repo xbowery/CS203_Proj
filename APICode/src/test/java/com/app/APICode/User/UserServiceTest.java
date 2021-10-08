@@ -42,14 +42,14 @@ public class UserServiceTest {
         when(users.save(any(User.class))).thenReturn(user);
 
         // Act
-        User savedUser = userService.addUser(user);
+        User savedUser = userService.addUser(user, true);
 
         // Assert
         assertNotNull(savedUser);
         verify(users).findByUsername(user.getUsername());
         verify(users).save(user);
     }
-    
+
     @Test
     void addUser_ExistingUser_ReturnNull() {
         // Arrange
@@ -58,7 +58,7 @@ public class UserServiceTest {
         when(users.findByUsername(any(String.class))).thenReturn(Optional.of(user));
 
         // Act
-        User savedUser = userService.addUser(user);
+        User savedUser = userService.addUser(user, true);
 
         // Assert
         assertNull(savedUser);

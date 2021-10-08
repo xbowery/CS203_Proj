@@ -43,10 +43,10 @@ public class User implements UserDetails {
     private String password;
 
     @NotNull(message = "Vaccination status must not be null")
-    private boolean isVaccinated;
+    private boolean isVaccinated = false;
 
     @NotNull(message = "Authorities must not be null")
-    private String authorities;
+    private String authorities = UserRole.USER.role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employee employee;
@@ -56,6 +56,7 @@ public class User implements UserDetails {
 
     public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
             String authorities) {
+        System.out.println("cde");
         this.email = email;
         this.username = username;
         this.firstName = firstName;
@@ -68,6 +69,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority(authorities));
+    }
+
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
     }
 
     @Override
@@ -128,11 +133,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public boolean getVaccinationStatus() {
+    public boolean getIsVaccinated() {
         return isVaccinated;
     }
 
-    public void setVaccinationStatus(boolean isVaccinated) {
+    public void setIsVaccinated(boolean isVaccinated) {
         this.isVaccinated = isVaccinated;
     }
 

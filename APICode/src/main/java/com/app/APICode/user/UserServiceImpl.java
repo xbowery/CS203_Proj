@@ -48,9 +48,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
+    public User addUser(User user, Boolean isAdmin) {
         List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)
                 .orElseGet(Collections::emptyList);
+
+        // If the user is not admin, force the default authorities to be ROLE_USER and
+        // vaccination to false instead of allowing them to arbitrary set it
+        if (!isAdmin) {
+            user.setAuthorities(UserRole.USER.role);
+            user.setIsVaccinated(false);
+        }
 
         if (sameUsernames.size() == 0) {
             return users.save(user);
@@ -67,7 +74,7 @@ public class UserServiceImpl implements UserService {
             user.setLastName(newUserInfo.getLastName());
             user.setPassword(encoder.encode(newUserInfo.getPassword()));
             user.setUsername(newUserInfo.getUsername());
-            user.setVaccinationStatus(newUserInfo.getVaccinationStatus());
+            user.setIsVaccinated(newUserInfo.getIsVaccinated());
             return users.save(user);
         }).orElse(null);
     }
