@@ -45,4 +45,25 @@ public class Ctest {
         this.employee = employee;
     }
 
+    public String getType(){
+        return type;
+    }
+    public void setType(String type){
+        this.type = type;
+    }
+
+    public Date getDate(){
+        return date;
+    }
+    public void setDate(Date date){
+        this.date = date;
+    }
+
+    public String getResult(){
+        return result;
+    }
+    public void setResult(String result){
+        this.result = result;
+    }
+
 }
