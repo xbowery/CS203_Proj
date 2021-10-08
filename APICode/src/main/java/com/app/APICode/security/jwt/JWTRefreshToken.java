@@ -19,6 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class JWTRefreshToken {
 
@@ -28,6 +31,8 @@ public class JWTRefreshToken {
     @Autowired
     JWTHelper jwtHelper;
 
+    Logger logger = LoggerFactory.getLogger(JWTRefreshToken.class);
+
     public void refreshJwtToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
         TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
         };
@@ -35,27 +40,41 @@ public class JWTRefreshToken {
         String refreshToken = tokensMap.get("refreshToken");
 
         try {
-            DecodedJWT decodedJWT = jwtHelper.decodeJwt(refreshToken);
-            String email = decodedJWT.getSubject();
+            if (refreshToken == null) {
+                throw new RuntimeException("No JWT Refresh Token provided");
+            }
 
-            User user = (User) userService.loadUserByUsername(email);
+            DecodedJWT decodedJWT = jwtHelper.decodeJwt(refreshToken);
+            String username = decodedJWT.getSubject();
+
+            User user = (User) userService.loadUserByUsername(username);
+
+            // Checks if the user is eligible for a new accessToken by checking if account
+            // is still enabled
+            if (!user.isEnabled()) {
+                throw new RuntimeException("user " + username + " account is disabled");
+            }
 
             String accessToken = jwtHelper.generateAccessToken(user);
 
             res.setStatus(HttpServletResponse.SC_OK);
             res.setContentType(APPLICATION_JSON_VALUE);
+
             Map<String, String> tokens = new HashMap<>();
             tokens.put("accessToken", accessToken);
             tokens.put("refreshToken", refreshToken);
             tokens.put("username", user.getUsername());
+
             new ObjectMapper().writeValue(res.getOutputStream(), tokens);
 
         } catch (Exception e) {
-            System.out.println(e);
+            logger.info(e.getMessage());
             res.setContentType(APPLICATION_JSON_VALUE);
             res.setStatus(FORBIDDEN.value());
+
             Map<String, String> error = new HashMap<>();
-            error.put("error_message", e.getMessage());
+            error.put("error_message", "JWT token cannot be refreshed. Please try again.");
+
             new ObjectMapper().writeValue(res.getOutputStream(), error);
         }
     }
