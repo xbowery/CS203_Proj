@@ -150,7 +150,6 @@
       item-key="full_name"
       class="table-rounded"
       hide-default-footer
-      disable-sort
     >
       <!-- name -->
       <template #[`item.full_name`]="{ item }">

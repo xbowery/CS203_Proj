@@ -6,7 +6,6 @@
       item-key="full_name"
       class="table-rounded"
       hide-default-footer
-      disable-sort
     >
       <!-- name -->
       <template #[`item.full_name`]="{ item }">
@@ -47,8 +46,8 @@ export default {
         { text: 'NAME', value: 'full_name' },
         { text: 'VACCINATED?', value: 'vaccination_status' },
         { text: 'LATEST COVID TEST DATE', value: 'covid_date' },
-        { text: 'NEXT COVID TEST DATE', value: 'next_covid_date' },
         { text: 'TEST RESULT', value: 'status' },
+        { text: 'NEXT COVID TEST DATE', value: 'next_covid_date' },
       ],
       usreList: data,
       status: {

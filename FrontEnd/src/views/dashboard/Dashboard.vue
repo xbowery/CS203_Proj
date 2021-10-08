@@ -15,43 +15,43 @@
       <v-row class="match-height">
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="totalProfit.change"
-            :color="totalProfit.color"
-            :icon="totalProfit.icon"
-            :statistics="totalProfit.statistics"
-            :stat-title="totalProfit.statTitle"
-            :subtitle="totalProfit.subtitle"
+            :change="totalNumEmployees.change"
+            :color="totalNumEmployees.color"
+            :icon="totalNumEmployees.icon"
+            :statistics="totalNumEmployees.statistics"
+            :stat-title="totalNumEmployees.statTitle"
+            :subtitle="totalNumEmployees.subtitle"
           ></statistics-card-vertical>
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="totalSales.change"
-            :color="totalSales.color"
-            :icon="totalSales.icon"
-            :statistics="totalSales.statistics"
-            :stat-title="totalSales.statTitle"
-            :subtitle="totalSales.subtitle"
+            :change="employeesQuarantine.change"
+            :color="employeesQuarantine.color"
+            :icon="employeesQuarantine.icon"
+            :statistics="employeesQuarantine.statistics"
+            :stat-title="employeesQuarantine.statTitle"
+            :subtitle="employeesQuarantine.subtitle"
           ></statistics-card-vertical>
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="newProject.change"
-            :color="newProject.color"
-            :icon="newProject.icon"
-            :statistics="newProject.statistics"
-            :stat-title="newProject.statTitle"
-            :subtitle="newProject.subtitle"
+            :change="employeesInfected.change"
+            :color="employeesInfected.color"
+            :icon="employeesInfected.icon"
+            :statistics="employeesInfected.statistics"
+            :stat-title="employeesInfected.statTitle"
+            :subtitle="employeesInfected.subtitle"
           ></statistics-card-vertical>
         </v-col>
 
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="salesQueries.change"
-            :color="salesQueries.color"
-            :icon="salesQueries.icon"
-            :statistics="salesQueries.statistics"
-            :stat-title="salesQueries.statTitle"
-            :subtitle="salesQueries.subtitle"
+            :change="employeesRecovered.change"
+            :color="employeesRecovered.color"
+            :icon="employeesRecovered.icon"
+            :statistics="employeesRecovered.statistics"
+            :stat-title="employeesRecovered.statTitle"
+            :subtitle="employeesRecovered.subtitle"
           ></statistics-card-vertical>
         </v-col>
       </v-row>
@@ -65,7 +65,7 @@
 
 <script>
 // eslint-disable-next-line object-curly-newline
-import { mdiPoll, mdiLabelVariantOutline, mdiCurrencyUsd, mdiHelpCircleOutline } from '@mdi/js'
+import { mdiAccountGroup, mdiNeedle, mdiHospitalBoxOutline, mdiThumbUp } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 
 // demos
@@ -83,18 +83,18 @@ export default {
     DashboardDatatable,
   },
   setup() {
-    const totalProfit = {
-      statTitle: 'Number of Employees',
-      icon: mdiPoll,
+    const totalNumEmployees = {
+      statTitle: 'Num of Employees',
+      icon: mdiAccountGroup,
       color: 'success',
       subtitle: 'in total',
       statistics: '100',
       change: '+5%',
     }
 
-    const totalSales = {
-      statTitle: 'Number of employees',
-      icon: mdiCurrencyUsd,
+    const employeesQuarantine = {
+      statTitle: 'Num of employees',
+      icon: mdiHospitalBoxOutline,
       color: 'secondary',
       subtitle: 'on quarantine currently',
       statistics: '2',
@@ -102,18 +102,18 @@ export default {
     }
 
     // vertical card options
-    const newProject = {
-      statTitle: 'Number of employees',
-      icon: mdiLabelVariantOutline,
+    const employeesInfected = {
+      statTitle: 'Num of employees',
+      icon: mdiNeedle,
       color: 'primary',
       subtitle: 'infected currently',
       statistics: '0',
       change: '',
     }
 
-    const salesQueries = {
-      statTitle: 'Number of employees',
-      icon: mdiHelpCircleOutline,
+    const employeesRecovered = {
+      statTitle: 'Num of employees',
+      icon: mdiThumbUp,
       color: 'warning',
       subtitle: 'recovered from Covid',
       statistics: '1',
@@ -121,10 +121,10 @@ export default {
     }
 
     return {
-      totalProfit,
-      totalSales,
-      newProject,
-      salesQueries,
+      totalNumEmployees,
+      employeesQuarantine,
+      employeesInfected,
+      employeesRecovered,
     }
   },
 }
