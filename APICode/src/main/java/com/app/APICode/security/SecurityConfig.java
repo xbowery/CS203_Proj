@@ -41,12 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().httpBasic().disable().authorizeRequests()
+        http.cors().and().csrf().disable().headers().disable().httpBasic().disable().authorizeRequests()
 
                 .antMatchers(HttpMethod.GET, "/users", "users/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/users", "users/*").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "users/*").hasAnyRole("ADMIN", "BUSINESS")
-                .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN")
 
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 
@@ -54,6 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.POST, "/restaurants", "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
+
+                .antMatchers(HttpMethod.POST, "/register").permitAll().antMatchers("/h2-console/**").permitAll()
 
                 .anyRequest().authenticated().and()
 

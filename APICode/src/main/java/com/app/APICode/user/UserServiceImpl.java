@@ -48,26 +48,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
+    public User addUser(User user, Boolean isAdmin) {
         List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)
                 .orElseGet(Collections::emptyList);
+
+        if (getUserByEmail(user.getEmail()) != null) {
+            throw new UserOrEmailExistsException("This email already exists. Please sign in instead.");
+        }
+
+        // If the user is not admin, force the default authorities to be ROLE_USER and
+        // vaccination to false instead of allowing them to arbitrary set it
+        if (!isAdmin) {
+            user.setAuthorities(UserRole.USER.role);
+            user.setIsVaccinated(false);
+        }
 
         if (sameUsernames.size() == 0) {
             return users.save(user);
         } else {
-            return null;
+            throw new UserOrEmailExistsException("This username is already in used. Please choose another username");
         }
     }
 
     @Override
     public User updateUserByUsername(String username, User newUserInfo) {
         return users.findByUsername(username).map(user -> {
+            // Check if email exists to prevent a unique index violation
+            if (getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username)) {
+                return null;
+            }
+
             user.setEmail(newUserInfo.getEmail());
             user.setFirstName(newUserInfo.getFirstName());
             user.setLastName(newUserInfo.getLastName());
             user.setPassword(encoder.encode(newUserInfo.getPassword()));
             user.setUsername(newUserInfo.getUsername());
-            user.setVaccinationStatus(newUserInfo.getVaccinationStatus());
+            user.setIsVaccinated(newUserInfo.getIsVaccinated());
             return users.save(user);
         }).orElse(null);
     }

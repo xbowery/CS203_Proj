@@ -9,7 +9,7 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
-    User addUser(User user);
+    User addUser(User user, Boolean isAdmin);
 
     User updateUserByUsername(String username, User user);
 

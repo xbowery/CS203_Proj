@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,6 +28,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Email
+    @Column(unique = true)
     @NotNull(message = "Email must not be null")
     private String email;
 
@@ -43,10 +47,10 @@ public class User implements UserDetails {
     private String password;
 
     @NotNull(message = "Vaccination status must not be null")
-    private boolean isVaccinated;
+    private boolean isVaccinated = false;
 
     @NotNull(message = "Authorities must not be null")
-    private String authorities;
+    private String authorities = UserRole.USER.role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employee employee;
@@ -56,6 +60,7 @@ public class User implements UserDetails {
 
     public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
             String authorities) {
+        System.out.println("cde");
         this.email = email;
         this.username = username;
         this.firstName = firstName;
@@ -68,6 +73,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority(authorities));
+    }
+
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
     }
 
     @Override
@@ -128,11 +137,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public boolean getVaccinationStatus() {
+    public boolean getIsVaccinated() {
         return isVaccinated;
     }
 
-    public void setVaccinationStatus(boolean isVaccinated) {
+    public void setIsVaccinated(boolean isVaccinated) {
         this.isVaccinated = isVaccinated;
     }
 

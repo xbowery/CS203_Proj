@@ -23,10 +23,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This filter will be filtering every single request to check if the token
@@ -35,6 +39,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     JWTHelper jwtHelper;
+
+    Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     @Autowired
     public JWTAuthorizationFilter(JWTHelper jwtHelper) {
@@ -59,6 +65,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             chain.doFilter(req, res);
 
         } catch (Exception e) {
+            logger.info(e.getMessage());
+
             res.setContentType(APPLICATION_JSON_VALUE);
             res.setStatus(UNAUTHORIZED.value());
 
@@ -102,6 +110,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         String token = tokenHeader.replace(TOKEN_PREFIX, "");
 
         DecodedJWT decodedJWT = jwtHelper.decodeJwt(token);
+
+        // Check if it is an accessToken, since only access tokens have their roles
+        if (!decodedJWT.getClaim("type").asString().equals("access")) {
+            throw new BadCredentialsException("Incorrect token type");
+        }
 
         String user = decodedJWT.getSubject();
         String[] roles = decodedJWT.getClaim("roles").asArray(String.class);

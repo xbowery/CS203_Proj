@@ -29,7 +29,7 @@ public class JWTHelper {
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).withIssuer(ISSUER)
                 .withClaim("roles",
                         user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(getSigningAlgorithm());
+                .withClaim("type", "access").sign(getSigningAlgorithm());
     }
 
     /**
@@ -42,7 +42,7 @@ public class JWTHelper {
     public String generateRefreshToken(User user) {
         return JWT.create().withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME)).withIssuer(ISSUER)
-                .sign(getSigningAlgorithm());
+                .withClaim("type", "refresh").sign(getSigningAlgorithm());
     }
 
     /**

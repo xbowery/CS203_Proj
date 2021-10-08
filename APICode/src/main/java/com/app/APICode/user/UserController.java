@@ -60,9 +60,8 @@ public class UserController {
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        User savedUser = userService.addUser(user);
-        if (savedUser == null)
-            throw new UserExistsException(user.getEmail());
+        Boolean isAdmin = true;
+        User savedUser = userService.addUser(user, isAdmin);
         return savedUser;
     }
 
@@ -98,12 +97,23 @@ public class UserController {
     }
 
     @PostMapping("/ForgotPassword")
-    public void resetPassword(HttpServletRequest req, @ModelAttribute(name="user") User userInput) {
+    public void resetPassword(HttpServletRequest req, @ModelAttribute(name = "user") User userInput) {
         User user = userService.getUserByEmail(userInput.getEmail());
         if (user == null) {
             throw new UserNotFoundException(userInput.getEmail());
         }
         userService.createTempPassword(userInput.getEmail());
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/register")
+    public User register(@Valid @RequestBody User newUser) {
+        newUser.setPassword(encoder.encode(newUser.getPassword()));
+        Boolean isAdmin = false;
+        final User savedUser = userService.addUser(newUser, isAdmin);
+        if (savedUser == null)
+            throw new UserOrEmailExistsException(newUser.getUsername());
+        return savedUser;
     }
 
 }
