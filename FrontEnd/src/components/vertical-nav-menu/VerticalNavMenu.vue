@@ -30,10 +30,9 @@
     <v-list expand shaped class="vertical-nav-menu-items pr-5">
       <nav-menu-link title="Home" :to="{ name: 'home' }" :icon="icons.mdiHomeOutline"></nav-menu-link>
       <nav-menu-link title="Restaurants" :to="{ name: 'restaurants' }" :icon="icons.mdiFood"></nav-menu-link>
-      <nav-menu-link title="Business Dashboard" :to="{ name: 'bDashboard' }" :icon="icons.mdiDomain"></nav-menu-link>
-      <nav-menu-link title="Crowd Control" :to="{ name: 'crowdControl' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
       <nav-menu-link title="Dashboard" :to="{ name: 'Dashboard' }" :icon="icons.mdiDomain"></nav-menu-link>
       <nav-menu-link title="Employees List" :to="{ name: 'Employees' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
+      <nav-menu-link title="Covid Testing" :to="{ name: 'CovidTesting' }" :icon="icons.mdiHospitalBoxOutline"></nav-menu-link>
       <nav-menu-link title="Settings" :to="{ name: 'settings' }" :icon="icons.mdiAccountCog"></nav-menu-link>
     </v-list>
   </v-navigation-drawer>
@@ -54,6 +53,7 @@ import {
   mdiAccountCog,
   mdiDomain,
   mdiAccountGroup,
+  mdiHospitalBoxOutline,
 } from '@mdi/js'
 // import NavMenuSectionTitle from './NavMenuSectionTitle.vue'
 // import NavMenuGroup from './NavMenuGroup.vue'
@@ -86,6 +86,7 @@ export default {
         mdiAccountCog,
         mdiDomain,
         mdiAccountGroup,
+        mdiHospitalBoxOutline,
       },
     }
   },

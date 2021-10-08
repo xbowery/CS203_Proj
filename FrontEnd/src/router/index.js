@@ -68,16 +68,6 @@ const routes = [
     component: () => import('@/views/user-management/user-settings/AccountSettings.vue'),
   },
   {
-    path: '/bDashboard',
-    name: 'bDashboard',
-    component: () => import('@/views/business/BDashboard.vue'),
-  },
-  {
-    path: '/crowdControl',
-    name: 'crowdControl',
-    component: () => import('@/views/business/CrowdControl.vue'),
-  },
-  {
     path: '/Dashboard',
     name: 'Dashboard',
     component: () => import('@/views/dashboard/Dashboard.vue'),
@@ -86,6 +76,11 @@ const routes = [
     path: '/Employees',
     name: 'Employees',
     component: () => import('@/views/business/EmployeeUsers.vue'),
+  },
+  {
+    path: '/CovidTesting',
+    name: 'CovidTesting',
+    component: () => import('@/views/Employee/CovidTesting.vue'),
   },
 ]
 
