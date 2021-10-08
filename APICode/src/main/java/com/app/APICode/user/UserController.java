@@ -62,8 +62,6 @@ public class UserController {
         user.setPassword(encoder.encode(user.getPassword()));
         Boolean isAdmin = true;
         User savedUser = userService.addUser(user, isAdmin);
-        if (savedUser == null)
-            throw new UserExistsException(user.getUsername());
         return savedUser;
     }
 
@@ -114,7 +112,7 @@ public class UserController {
         Boolean isAdmin = false;
         final User savedUser = userService.addUser(newUser, isAdmin);
         if (savedUser == null)
-            throw new UserExistsException(newUser.getUsername());
+            throw new UserOrEmailExistsException(newUser.getUsername());
         return savedUser;
     }
 

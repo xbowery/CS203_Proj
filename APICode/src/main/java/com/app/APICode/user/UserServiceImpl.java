@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
         List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)
                 .orElseGet(Collections::emptyList);
 
+        if (getUserByEmail(user.getEmail()) != null) {
+            throw new UserOrEmailExistsException("This email already exists. Please sign in instead.");
+        }
+
         // If the user is not admin, force the default authorities to be ROLE_USER and
         // vaccination to false instead of allowing them to arbitrary set it
         if (!isAdmin) {
@@ -62,13 +66,18 @@ public class UserServiceImpl implements UserService {
         if (sameUsernames.size() == 0) {
             return users.save(user);
         } else {
-            return null;
+            throw new UserOrEmailExistsException("This username is already in used. Please choose another username");
         }
     }
 
     @Override
     public User updateUserByUsername(String username, User newUserInfo) {
         return users.findByUsername(username).map(user -> {
+            // Check if email exists to prevent a unique index violation
+            if (getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username)) {
+                return null;
+            }
+
             user.setEmail(newUserInfo.getEmail());
             user.setFirstName(newUserInfo.getFirstName());
             user.setLastName(newUserInfo.getLastName());
