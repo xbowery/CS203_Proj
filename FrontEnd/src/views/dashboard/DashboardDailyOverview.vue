@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span>Weekly Overview</span>
+      <span>Daily Overview</span>
 
       <v-spacer></v-spacer>
 
@@ -17,8 +17,8 @@
       <vue-apex-charts :options="chartOptions" :series="chartData" height="210"></vue-apex-charts>
 
       <div class="d-flex align-center">
-        <h3 class="text-2xl font-weight-semibold me-4">95%</h3>
-        <span>95% of your employees have completed their ART test in the past week</span>
+        <h3 class="text-2xl font-weight-semibold me-4">30</h3>
+        <span>individuals have visited your restaurant in the past hour</span>
       </div>
 
       <v-btn block color="primary" class="mt-6" outlined> Details </v-btn>
@@ -74,7 +74,7 @@ export default {
         show: false,
       },
       xaxis: {
-        categories: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+        categories: ['0900', '1000', '1100', '1200', '1300', '1400', '1500','1600'],
         axisBorder: {
           show: false,
         },
@@ -83,7 +83,7 @@ export default {
         },
         tickPlacement: 'on',
         labels: {
-          show: false,
+          show: true,
           style: {
             fontSize: '12px',
           },
@@ -110,7 +110,7 @@ export default {
 
     const chartData = [
       {
-        data: [80, 85, 90, 95, 95, 95, 95, 95],
+        data: [10, 10, 10, 25, 30, 0, 0, 0,0],
       },
     ]
 

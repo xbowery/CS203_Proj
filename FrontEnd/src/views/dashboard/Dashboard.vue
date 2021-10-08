@@ -8,7 +8,7 @@
     </v-col>
 
     <v-col cols="12" sm="6" md="8">
-      <dashboard-weekly-overview></dashboard-weekly-overview>
+      <dashboard-daily-overview></dashboard-daily-overview>
     </v-col>
 
     <v-col cols="12" md="4">
@@ -71,7 +71,7 @@ import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardV
 // demos
 import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
 import CrowdLevel from './CrowdLevel.vue'
-import DashboardWeeklyOverview from './DashboardWeeklyOverview.vue'
+import DashboardDailyOverview from './DashboardDailyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
 
 export default {
@@ -79,7 +79,7 @@ export default {
     StatisticsCardVertical,
     DashboardCongratulationJohn,
     CrowdLevel,
-    DashboardWeeklyOverview,
+    DashboardDailyOverview,
     DashboardDatatable,
   },
   setup() {
