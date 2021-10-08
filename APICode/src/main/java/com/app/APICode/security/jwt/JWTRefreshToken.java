@@ -45,6 +45,12 @@ public class JWTRefreshToken {
             }
 
             DecodedJWT decodedJWT = jwtHelper.decodeJwt(refreshToken);
+
+            // Check if it is an accessToken, since only access tokens have their roles
+            if (!decodedJWT.getClaim("type").asString().equals("refresh")) {
+                throw new RuntimeException("Incorrect token type");
+            }
+
             String username = decodedJWT.getSubject();
 
             User user = (User) userService.loadUserByUsername(username);
