@@ -1,4 +1,3 @@
-package com.app.APICode.measure.others;
 
 import java.util.Date;
 
@@ -8,7 +7,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class MeasureOthers {
+public class Measure {
+    public Measure() {}
+
     private @Id @GeneratedValue Long id;
 
     @NotNull(message = "Created date should not be null")
@@ -24,13 +25,11 @@ public class MeasureOthers {
     private boolean vaccinationStatus;
 
     // indicates whether mask needs to be worn at the venue
-    @NotNull(message = "Mask status should not be null")
     private boolean maskStatus;
 
-    @NotNull(message = "Details of measure should not be null")
     private String details;
 
-    public MeasureOthers(Date creationDateTime, String businessType, int maxCapacity, boolean vaccinationStatus,
+    public Measure(Date creationDateTime, String businessType, int maxCapacity, boolean vaccinationStatus,
     boolean maskStatus, String details) {
         this.creationDateTime = creationDateTime;
         this.businessType = businessType;
@@ -38,6 +37,14 @@ public class MeasureOthers {
         this.vaccinationStatus = vaccinationStatus;
         this.maskStatus = maskStatus;
         this.details = details;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getCreationDateTime() {
@@ -87,5 +94,6 @@ public class MeasureOthers {
     public void setDetails(String details) {
         this.details = details;
     }
+
 
 }

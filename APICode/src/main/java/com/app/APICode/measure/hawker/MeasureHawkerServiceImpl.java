@@ -15,7 +15,6 @@ public class MeasureHawkerServiceImpl implements MeasureHawkerService{
         this.measureHawkers = measureHawkers;
         measureHawkers.save(new MeasureHawker(new Date(), 2, true));
         measureHawkers.save(new MeasureHawker(new Date(), 5, false));
-
     }
 
     @Override
