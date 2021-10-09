@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface MeasureHawkerRepository extends JpaRepository<MeasureHawker, Long> {
     // define a derived query to find MeasureHawker by created datetime
     Optional<MeasureHawker> findByCreationDateTime(Date creationDateTime);
+    Long deleteByCreationDateTime (Date creationDateTime);
 }

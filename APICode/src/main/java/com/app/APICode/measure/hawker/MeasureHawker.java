@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity 
 public class MeasureHawker {
+    public MeasureHawker() {}
+    
     private @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
 
     @NotNull(message = "Created date should not be null")

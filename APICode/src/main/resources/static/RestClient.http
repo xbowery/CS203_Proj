@@ -10,3 +10,10 @@ Content-Type: application/json
     "password": "password123",
     "authorities": "ROLE_USER"
 }
+
+###
+GET http://localhost:8080/measureHawkers
+
+
+
+

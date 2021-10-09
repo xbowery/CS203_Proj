@@ -39,13 +39,13 @@ public class G2T4Application {
 		MeasureHawker testHawkerMeasure = new MeasureHawker(new Date(), 2, true);
 		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawkerMeasure).getCreationDateTime());
 	
-		MeasureOthersRepository measureOthers = ctx.getBean(MeasureOthersRepository.class);
-		MeasureOthers testOthersMeasure = new MeasureOthers(new Date(), "book store", 50, true, true, "2 per table");
-		System.out.println("[Add others measure]:" + measureOthers.save(testOthersMeasure).getCreationDateTime());
+		// MeasureOthersRepository measureOthers = ctx.getBean(MeasureOthersRepository.class);
+		// MeasureOthers testOthersMeasure = new MeasureOthers(new Date(), "book store", 50, true, true, "2 per table");
+		// System.out.println("[Add others measure]:" + measureOthers.save(testOthersMeasure).getCreationDateTime());
 
-		MeasureRestaurantRepository measureRestaurants = ctx.getBean(MeasureRestaurantRepository.class);
-		MeasureRestaurant testRestaurantMeasure = new MeasureRestaurant(new Date(), 2, true, true);
-		System.out.println("[Add restaurant measure]:" + measureRestaurants.save(testRestaurantMeasure).getCreationDateTime());
+		// MeasureRestaurantRepository measureRestaurants = ctx.getBean(MeasureRestaurantRepository.class);
+		// MeasureRestaurant testRestaurantMeasure = new MeasureRestaurant(new Date(), 2, true, true);
+		// System.out.println("[Add restaurant measure]:" + measureRestaurants.save(testRestaurantMeasure).getCreationDateTime());
 
 	}
 
