@@ -1,17 +1,10 @@
 <template>
   <section id="knowledge-base">
     <!-- seach banner  -->
-    <v-card
-      flat
-      class="knowledge-base-bg d-flex align-center justify-center text-center mb-7"
-    >
+    <v-card flat class="knowledge-base-bg d-flex align-center justify-center text-center mb-7">
       <v-card-text>
-        <p class="kb-title text-2xl font-weight-semibold primary--text mb-2">
-          Hello, how can we help?
-        </p>
-        <p class="mb-7">
-          or choose a category to quickly find the help you need
-        </p>
+        <p class="kb-title text-2xl font-weight-semibold primary--text mb-2">Hello, how can we help?</p>
+        <p class="mb-7">or choose a category to quickly find the help you need</p>
 
         <v-form class="kb-search-input mx-auto">
           <v-text-field
@@ -22,10 +15,7 @@
             class="kb-search-input"
           >
             <template #prepend-inner>
-              <v-icon
-                size="23"
-                class="mx-1"
-              >
+              <v-icon size="23" class="mx-1">
                 {{ icons.mdiMagnify }}
               </v-icon>
             </template>
@@ -37,25 +27,13 @@
     <!-- kb search content -->
     <div id="knowledge-base-content">
       <v-row class="kb-search-content-info match-height">
-        <v-col
-          v-for="item in filteredKB"
-          :key="item.character"
-          md="4"
-          sm="6"
-          cols="12"
-          class="kb-search-content"
-        >
+        <v-col v-for="item in filteredKB" :key="item.character" md="4" sm="6" cols="12" class="kb-search-content">
           <v-card
             color="text-center cursor-pointer"
             @click.native="$router.push({ name: 'page-knowledge-base-category', params: { category: item.category } })"
           >
             <div class="kb-character-wrapper">
-              <v-img
-                contain
-                :max-width="item.characterSize"
-                class="mx-auto"
-                :src="item.character"
-              ></v-img>
+              <v-img contain :max-width="item.characterSize" class="mx-auto" :src="item.character"></v-img>
             </div>
 
             <!-- title -->
@@ -67,14 +45,8 @@
         </v-col>
 
         <!-- no result found -->
-        <v-col
-          v-show="!filteredKB.length"
-          cols="12"
-          class="text-center"
-        >
-          <h4 class="mt-4">
-            Search result not found!!
-          </h4>
+        <v-col v-show="!filteredKB.length" cols="12" class="text-center">
+          <h4 class="mt-4">Search result not found!!</h4>
         </v-col>
       </v-row>
     </div>

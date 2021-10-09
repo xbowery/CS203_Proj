@@ -1,12 +1,6 @@
 <template>
   <v-card>
-    <v-data-table
-      :headers="headers"
-      :items="usreList"
-      item-key="full_name"
-      class="table-rounded"
-      hide-default-footer
-    >
+    <v-data-table :headers="headers" :items="usreList" item-key="full_name" class="table-rounded" hide-default-footer>
       <!-- name -->
       <template #[`item.full_name`]="{ item }">
         <div class="d-flex flex-column">

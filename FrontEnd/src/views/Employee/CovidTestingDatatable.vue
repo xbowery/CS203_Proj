@@ -1,8 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>
-        Covid Testing History
-    </v-card-title>
+    <v-card-title> Covid Testing History </v-card-title>
 
     <v-divider class="mt-1"></v-divider>
 
@@ -15,7 +13,7 @@
         hide-details
         dense
         class="user-search me-3 mb-4"
-        label = "Search"
+        label="Search"
       >
       </v-text-field>
 
@@ -43,7 +41,7 @@
     <v-data-table
       :headers="headers"
       :items="usreList"
-      :search = "search"
+      :search="search"
       item-key="date"
       class="table-rounded"
       hide-default-footer
@@ -62,7 +60,6 @@ export default {
     AddTest,
   },
   setup() {
-
     return {
       dialog: false,
       search: '',

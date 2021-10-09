@@ -1,37 +1,37 @@
 <template>
   <v-row>
-        <v-col cols="10" sm="4">
-          <statistics-card-vertical
-            :change="totalProfit.change"
-            :color="totalProfit.color"
-            :icon="totalProfit.icon"
-            :statistics="totalProfit.statistics"
-            :stat-title="totalProfit.statTitle"
-            :subtitle="totalProfit.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
-    
-        <v-col cols="12" sm="4">
-          <statistics-card-vertical
-            :change="newProject.change"
-            :color="newProject.color"
-            :icon="newProject.icon"
-            :statistics="newProject.statistics"
-            :stat-title="newProject.statTitle"
-            :subtitle="newProject.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
+    <v-col cols="10" sm="4">
+      <statistics-card-vertical
+        :change="totalProfit.change"
+        :color="totalProfit.color"
+        :icon="totalProfit.icon"
+        :statistics="totalProfit.statistics"
+        :stat-title="totalProfit.statTitle"
+        :subtitle="totalProfit.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
 
-        <v-col cols="12" sm="4">
-          <statistics-card-vertical
-            :change="salesQueries.change"
-            :color="salesQueries.color"
-            :icon="salesQueries.icon"
-            :statistics="salesQueries.statistics"
-            :stat-title="salesQueries.statTitle"
-            :subtitle="salesQueries.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
+    <v-col cols="12" sm="4">
+      <statistics-card-vertical
+        :change="newProject.change"
+        :color="newProject.color"
+        :icon="newProject.icon"
+        :statistics="newProject.statistics"
+        :stat-title="newProject.statTitle"
+        :subtitle="newProject.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
+
+    <v-col cols="12" sm="4">
+      <statistics-card-vertical
+        :change="salesQueries.change"
+        :color="salesQueries.color"
+        :icon="salesQueries.icon"
+        :statistics="salesQueries.statistics"
+        :stat-title="salesQueries.statTitle"
+        :subtitle="salesQueries.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
 
     <v-col cols="12">
       <employee-datatable></employee-datatable>

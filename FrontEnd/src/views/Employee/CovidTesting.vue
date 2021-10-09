@@ -1,48 +1,48 @@
 <template>
   <v-row>
-        <v-col cols="10" sm="3">
-          <statistics-card-vertical
-            :change="latestTestDate.change"
-            :color="latestTestDate.color"
-            :icon="latestTestDate.icon"
-            :statistics="latestTestDate.statistics"
-            :stat-title="latestTestDate.statTitle"
-            :subtitle="latestTestDate.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
-    
-        <v-col cols="10" sm="3">
-          <statistics-card-vertical
-            :change="latestResult.change"
-            :color="latestResult.color"
-            :icon="latestResult.icon"
-            :statistics="latestResult.statistics"
-            :stat-title="latestResult.statTitle"
-            :subtitle="latestResult.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
+    <v-col cols="10" sm="3">
+      <statistics-card-vertical
+        :change="latestTestDate.change"
+        :color="latestTestDate.color"
+        :icon="latestTestDate.icon"
+        :statistics="latestTestDate.statistics"
+        :stat-title="latestTestDate.statTitle"
+        :subtitle="latestTestDate.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
 
-        <v-col cols="10" sm="3">
-          <statistics-card-vertical
-            :change="frequencyOfTest.change"
-            :color="frequencyOfTest.color"
-            :icon="frequencyOfTest.icon"
-            :statistics="frequencyOfTest.statistics"
-            :stat-title="frequencyOfTest.statTitle"
-            :subtitle="frequencyOfTest.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
+    <v-col cols="10" sm="3">
+      <statistics-card-vertical
+        :change="latestResult.change"
+        :color="latestResult.color"
+        :icon="latestResult.icon"
+        :statistics="latestResult.statistics"
+        :stat-title="latestResult.statTitle"
+        :subtitle="latestResult.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
 
-        <v-col cols="10" sm="3">
-          <statistics-card-vertical
-            :change="daysToNextTest.change"
-            :color="daysToNextTest.color"
-            :icon="daysToNextTest.icon"
-            :statistics="daysToNextTest.statistics"
-            :stat-title="daysToNextTest.statTitle"
-            :subtitle="daysToNextTest.subtitle"
-          ></statistics-card-vertical>
-        </v-col>
+    <v-col cols="10" sm="3">
+      <statistics-card-vertical
+        :change="frequencyOfTest.change"
+        :color="frequencyOfTest.color"
+        :icon="frequencyOfTest.icon"
+        :statistics="frequencyOfTest.statistics"
+        :stat-title="frequencyOfTest.statTitle"
+        :subtitle="frequencyOfTest.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
+
+    <v-col cols="10" sm="3">
+      <statistics-card-vertical
+        :change="daysToNextTest.change"
+        :color="daysToNextTest.color"
+        :icon="daysToNextTest.icon"
+        :statistics="daysToNextTest.statistics"
+        :stat-title="daysToNextTest.statTitle"
+        :subtitle="daysToNextTest.subtitle"
+      ></statistics-card-vertical>
+    </v-col>
 
     <v-col cols="12">
       <covid-testing-datatable></covid-testing-datatable>

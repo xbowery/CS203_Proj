@@ -74,7 +74,7 @@ export default {
         show: false,
       },
       xaxis: {
-        categories: ['0900', '1000', '1100', '1200', '1300', '1400', '1500','1600'],
+        categories: ['0900', '1000', '1100', '1200', '1300', '1400', '1500', '1600'],
         axisBorder: {
           show: false,
         },
@@ -110,7 +110,7 @@ export default {
 
     const chartData = [
       {
-        data: [10, 10, 10, 25, 30, 0, 0, 0,0],
+        data: [10, 10, 10, 25, 30, 0, 0, 0, 0],
       },
     ]
 
