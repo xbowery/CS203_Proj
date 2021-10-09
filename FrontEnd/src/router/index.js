@@ -82,6 +82,11 @@ const routes = [
     name: 'CovidTesting',
     component: () => import('@/views/Employee/CovidTesting.vue'),
   },
+  {
+    path: '/News',
+    name: 'News',
+    component: () => import('@/views/news/News.vue'),
+  },
 ]
 
 const router = new VueRouter({

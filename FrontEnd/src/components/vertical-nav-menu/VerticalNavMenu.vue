@@ -33,6 +33,7 @@
       <nav-menu-link title="Dashboard" :to="{ name: 'Dashboard' }" :icon="icons.mdiDomain"></nav-menu-link>
       <nav-menu-link title="Employees List" :to="{ name: 'Employees' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
       <nav-menu-link title="Covid Testing" :to="{ name: 'CovidTesting' }" :icon="icons.mdiHospitalBoxOutline"></nav-menu-link>
+      <nav-menu-link title="News" :to="{ name: 'News' }" :icon="icons.mdiDomain"></nav-menu-link>
       <nav-menu-link title="Settings" :to="{ name: 'settings' }" :icon="icons.mdiAccountCog"></nav-menu-link>
     </v-list>
   </v-navigation-drawer>
