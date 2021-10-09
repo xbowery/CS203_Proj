@@ -9,6 +9,8 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
+    User getUserByVerificationToken(String verificationToken);
+
     User addUser(User user, Boolean isAdmin);
 
     User updateUserByUsername(String username, User user);

@@ -9,10 +9,7 @@ import java.util.Date;
 
 import com.app.APICode.measure.hawker.MeasureHawker;
 import com.app.APICode.measure.hawker.MeasureHawkerRepository;
-import com.app.APICode.measure.others.MeasureOthers;
-import com.app.APICode.measure.others.MeasureOthersRepository;
-import com.app.APICode.measure.restaurant.MeasureRestaurant;
-import com.app.APICode.measure.restaurant.MeasureRestaurantRepository;
+
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;

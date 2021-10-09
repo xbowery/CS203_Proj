@@ -1,7 +1,9 @@
 package com.app.APICode.user;
 
 import com.app.APICode.emailer.EmailerService;
-import com.app.APICode.utility.*;
+import com.app.APICode.utility.RandomPassword;
+import com.app.APICode.verificationtoken.VerificationToken;
+import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import java.io.IOException;
 import java.util.*;
@@ -17,6 +19,8 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository users;
 
+    private VerificationTokenRepository vTokens;
+
     EmailerService emailerService;
 
     RandomPassword randomPasswordGenerator;
@@ -24,9 +28,10 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder encoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository users, EmailerService emailerService, RandomPassword randomPasswordGenerator,
+    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
             BCryptPasswordEncoder encoder) {
         this.users = users;
+        this.vTokens = vTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
@@ -45,6 +50,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         return users.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public User getUserByVerificationToken(String verificationToken) {
+        final VerificationToken token = vTokens.findByToken(verificationToken).orElse(null);
+        if (token != null) {
+            return token.getUser();
+        }
+        return null;
     }
 
     @Override
@@ -74,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public User updateUserByUsername(String username, User newUserInfo) {
         return users.findByUsername(username).map(user -> {
             // Check if email exists to prevent a unique index violation
-            if (getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username)) {
+            if (!getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username)) {
                 return null;
             }
 
@@ -119,6 +133,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String username) {
+        User user = users.findByUsername(username).orElse(null);
+
+        final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
+
+        if (verificationToken != null) {
+            vTokens.delete(verificationToken);
+        }
+
         users.deleteByUsername(username);
     }
 

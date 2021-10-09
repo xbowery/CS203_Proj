@@ -96,7 +96,7 @@ public class UserController {
         refreshToken.refreshJwtToken(req, res);
     }
 
-    @PostMapping("/ForgotPassword")
+    @PostMapping("/forgotPassword")
     public void resetPassword(HttpServletRequest req, @ModelAttribute(name = "user") User userInput) {
         User user = userService.getUserByEmail(userInput.getEmail());
         if (user == null) {
