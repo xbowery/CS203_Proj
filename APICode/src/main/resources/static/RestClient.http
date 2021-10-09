@@ -1,0 +1,87 @@
+GET http://localhost:8080/api/v1/users
+Authorization: Basic admin:goodpassword
+
+###
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+Authorization: Basic user2:testing12345
+
+{
+    "email": "test4@test.com",
+    "firstName": "Test",
+    "lastName": null,
+    "username": "test4",
+    "password": "password123",
+    "isVaccinated": true,
+    "authorities": "ROLE_USER"
+}
+
+###
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+Authorization: Basic user1:testing123
+
+{
+    "email": "test5@test.com",
+    "firstName": "Test5",
+    "lastName": "LOL",
+    "username": "test5",
+    "password": "password12345",
+    "isVaccinated": true,
+    "authorities": "ROLE_USER"
+}
+
+
+###
+PUT http://localhost:8080/api/v1/users/test4@test.com
+Content-Type: application/json
+Authorization: Basic user2:testing12345
+
+{
+    "email": "test5@test.com",
+    "firstName": "Test5",
+    "lastName": "LOL",
+    "username": "test5",
+    "password": "password12345",
+    "isVaccinated": true,
+    "authorities": "ROLE_USER"
+}
+
+###
+DELETE http://localhost:8080/api/v1/users/test5@test.com
+Authorization: Basic user2:testing12345
+
+###
+GET http://localhost:8080/api/v1/restaurants
+
+###
+GET http://localhost:8080/api/v1/restaurants/Astons/Cathay
+
+###
+POST http://localhost:8080/api/v1/restaurants
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "name": "Collin's",
+    "location": "Funan",
+    "cuisine": "Western",
+    "description": "Western Food",
+    "maxCapacity": 50
+}
+
+###
+PUT http://localhost:8080/api/v1/restaurants/Astons/Cathay
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "name": "Popeye",
+    "location": "Plaza Sing",
+    "cuisine": "Western",
+    "description": "Western Food",
+    "maxCapacity": 75
+}
+
+###
+DELETE http://localhost:8080/api/v1/restaurants/Popeye/Plaza%20Sing
