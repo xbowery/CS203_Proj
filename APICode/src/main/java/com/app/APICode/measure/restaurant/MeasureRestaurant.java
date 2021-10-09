@@ -5,8 +5,6 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -14,8 +12,7 @@ public class MeasureRestaurant {
     private @Id @GeneratedValue Long id;
 
     @NotNull (message = "Created date should not be null")
-    private @Temporal(TemporalType.TIMESTAMP)
-    Date creationDateTime;
+    private Date creationDateTime;
 
     @NotNull(message = "Max capacity should not be null")
     private int maxPerTable;
