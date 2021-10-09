@@ -7,8 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 
-import com.app.APICode.measure.hawker.MeasureHawker;
-import com.app.APICode.measure.hawker.MeasureHawkerRepository;
+import com.app.APICode.measure.*;
 
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
@@ -34,19 +33,10 @@ public class G2T4Application {
 		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 		testRestaurant.setCurrentCapacity(0);
 		testRestaurant.setCrowdLevel();
-
-		MeasureHawkerRepository measureHawkers = ctx.getBean(MeasureHawkerRepository.class);
-		MeasureHawker testHawkerMeasure = new MeasureHawker(new Date(), 2, true);
-		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawkerMeasure).getCreationDateTime());
 	
-		// MeasureOthersRepository measureOthers = ctx.getBean(MeasureOthersRepository.class);
-		// MeasureOthers testOthersMeasure = new MeasureOthers(new Date(), "book store", 50, true, true, "2 per table");
-		// System.out.println("[Add others measure]:" + measureOthers.save(testOthersMeasure).getCreationDateTime());
-
-		// MeasureRestaurantRepository measureRestaurants = ctx.getBean(MeasureRestaurantRepository.class);
-		// MeasureRestaurant testRestaurantMeasure = new MeasureRestaurant(new Date(), 2, true, true);
-		// System.out.println("[Add restaurant measure]:" + measureRestaurants.save(testRestaurantMeasure).getCreationDateTime());
-
+		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
+		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
+		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
 	}
 
 }

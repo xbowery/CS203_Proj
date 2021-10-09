@@ -86,7 +86,8 @@ Authorization: Basic admin:goodpassword
 ###
 DELETE http://localhost:8080/api/v1/restaurants/Popeye/Plaza%20Sing
 
-GET http://localhost:8080/api/v1/measureHawkers
+###
+GET http://localhost:8080/api/v1/measures
 
 
 
