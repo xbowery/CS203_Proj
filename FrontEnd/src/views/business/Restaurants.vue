@@ -19,7 +19,7 @@
             flat
             solo-inverted
             hide-details
-            prepend-inner-icon="mdi-magnify"
+            :prepend-inner-icon="icons.mdiMagnify"
             label="Search"
           ></v-text-field>
           <template v-if="$vuetify.breakpoint.mdAndUp">
@@ -30,16 +30,16 @@
               solo-inverted
               hide-details
               :items="keys"
-              prepend-inner-icon="mdi-magnify"
+              :prepend-inner-icon="icons.mdiMagnify"
               label="Sort by"
             ></v-select>
             <v-spacer></v-spacer>
             <v-btn-toggle v-model="sortDesc" mandatory>
               <v-btn large depressed color="blue" :value="false">
-                <v-icon>mdi-arrow-up</v-icon>
+                <v-icon>{{ icons.mdiArrowUp }}</v-icon>
               </v-btn>
               <v-btn large depressed color="blue" :value="true">
-                <v-icon>mdi-arrow-down</v-icon>
+                <v-icon>{{ icons.mdiArrowDown }}</v-icon>
               </v-btn>
             </v-btn-toggle>
           </template>
@@ -81,7 +81,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn dark text color="primary" class="ml-2" v-bind="attrs" v-on="on">
                 {{ itemsPerPage }}
-                <v-icon>mdi-chevron-down</v-icon>
+                <v-icon>{{ icons.mdiChevronDown }}</v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -99,10 +99,10 @@
 
           <span class="mr-4 grey--text"> Page {{ page }} of {{ numberOfPages }} </span>
           <v-btn fab dark color="blue darken-3" class="mr-1" @click="formerPage">
-            <v-icon>mdi-chevron-left</v-icon>
+            <v-icon>{{ icons.mdiChevronLeft }}</v-icon>
           </v-btn>
           <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
-            <v-icon>mdi-chevron-right</v-icon>
+            <v-icon>{{ icons.mdiChevronRight }}</v-icon>
           </v-btn>
         </v-row>
       </template>
@@ -112,7 +112,14 @@
 
 <script>
 import UserService from '@/services/user.service'
+import { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown } from '@mdi/js'
+
 export default {
+  setup() {
+    return {
+      icons: { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown },
+    }
+  },
   data() {
     return {
       itemsPerPageArray: [4, 8, 12],
