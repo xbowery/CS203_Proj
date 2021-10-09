@@ -22,6 +22,22 @@ const routes = [
     },
   },
   {
+    path: '/ForgotPassword',
+    name: 'ForgotPassword',
+    component: () => import('@/views/user-management/ForgotPassword.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
+    path: '/ResetPassword',
+    name: 'ResetPassword',
+    component: () => import('@/views/user-management/ResetPassword.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/register',
     name: 'register',
     component: () => import('@/views/user-management/Register.vue'),
@@ -52,9 +68,19 @@ const routes = [
     component: () => import('@/views/user-management/user-settings/AccountSettings.vue'),
   },
   {
-    path: '/bDashboard',
-    name: 'bDashboard',
-    component: () => import('@/views/business/BDashboard.vue'),
+    path: '/Dashboard',
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/Dashboard.vue'),
+  },
+  {
+    path: '/Employees',
+    name: 'Employees',
+    component: () => import('@/views/business/EmployeeUsers.vue'),
+  },
+  {
+    path: '/CovidTesting',
+    name: 'CovidTesting',
+    component: () => import('@/views/Employee/CovidTesting.vue'),
   },
 ]
 
