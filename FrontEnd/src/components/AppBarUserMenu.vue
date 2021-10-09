@@ -13,11 +13,11 @@
       </v-tooltip>
     </div>
     <div v-else>
-      <v-btn icon small class="ms-3">
+      <!-- <v-btn icon small class="ms-3">
         <v-icon>
           {{ icons.mdiBellOutline }}
         </v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-menu offset-y left nudge-bottom="14" min-width="230" content-class="user-profile-menu-content">
         <template v-slot:activator="{ on, attrs }">
           <v-badge bottom color="success" overlap offset-x="12" offset-y="12" class="ms-4" dot>

@@ -20,6 +20,8 @@
 
           <!-- Right Content -->
           <theme-switcher></theme-switcher>
+
+          <app-bar-notification></app-bar-notification>
           <app-bar-user-menu></app-bar-user-menu>
         </div>
       </div>
@@ -57,13 +59,16 @@ import { ref } from '@vue/composition-api'
 import { mdiMagnify, mdiLogin } from '@mdi/js'
 import VerticalNavMenu from '@/components/vertical-nav-menu/VerticalNavMenu.vue'
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue'
+import AppBarNotification from '@/components/AppBarNotification.vue'
 import AppBarUserMenu from '@/components/AppBarUserMenu.vue'
+
 
 export default {
   components: {
     VerticalNavMenu,
     ThemeSwitcher,
     AppBarUserMenu,
+    AppBarNotification,
   },
   setup() {
     const isDrawerOpen = ref(null)
