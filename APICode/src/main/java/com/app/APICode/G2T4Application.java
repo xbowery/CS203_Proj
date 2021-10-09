@@ -9,6 +9,10 @@ import java.util.Date;
 
 import com.app.APICode.measure.hawker.MeasureHawker;
 import com.app.APICode.measure.hawker.MeasureHawkerRepository;
+import com.app.APICode.measure.others.MeasureOthers;
+import com.app.APICode.measure.others.MeasureOthersRepository;
+import com.app.APICode.measure.restaurant.MeasureRestaurant;
+import com.app.APICode.measure.restaurant.MeasureRestaurantRepository;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -35,9 +39,17 @@ public class G2T4Application {
 		testRestaurant.setCrowdLevel();
 
 		MeasureHawkerRepository measureHawkers = ctx.getBean(MeasureHawkerRepository.class);
-		MeasureHawker testHawker = new MeasureHawker(new Date(), 2, false);
-		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawker).getCreationDateTime());
+		MeasureHawker testHawkerMeasure = new MeasureHawker(new Date(), 2, true);
+		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawkerMeasure).getCreationDateTime());
 	
+		// MeasureOthersRepository measureOthers = ctx.getBean(MeasureOthersRepository.class);
+		// MeasureOthers testOthersMeasure = new MeasureOthers(new Date(), "book store", 50, true, true, "2 per table");
+		// System.out.println("[Add others measure]:" + measureOthers.save(testOthersMeasure).getCreationDateTime());
+
+		// MeasureRestaurantRepository measureRestaurants = ctx.getBean(MeasureRestaurantRepository.class);
+		// MeasureRestaurant testRestaurantMeasure = new MeasureRestaurant(new Date(), 2, true, true);
+		// System.out.println("[Add restaurant measure]:" + measureRestaurants.save(testRestaurantMeasure).getCreationDateTime());
+
 	}
 
 }
