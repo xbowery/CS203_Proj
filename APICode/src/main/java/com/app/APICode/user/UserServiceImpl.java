@@ -4,6 +4,8 @@ import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
+import com.app.APICode.passwordresettoken.PasswordResetToken;
+import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 
 import java.io.IOException;
 import java.util.*;
@@ -21,17 +23,24 @@ public class UserServiceImpl implements UserService {
 
     private VerificationTokenRepository vTokens;
 
+    private PasswordResetTokenRepository pTokens;
+
     EmailerService emailerService;
 
     RandomPassword randomPasswordGenerator;
 
     BCryptPasswordEncoder encoder;
 
+    public static final String TOKEN_INVALID = "invalidToken";
+    public static final String TOKEN_EXPIRED = "expired";
+    public static final String TOKEN_VALID = "valid";
+
     @Autowired
-    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
+    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens, PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
             BCryptPasswordEncoder encoder) {
         this.users = users;
         this.vTokens = vTokens;
+        this.pTokens = pTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
@@ -62,6 +71,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public VerificationToken getVerificationToken(final String VerificationToken) {
+        return vTokens.findByToken(VerificationToken).orElse(null);
+    }
+
+    @Override
+    public void createVerificationTokenForUser(final User user, final String token) {
+        final VerificationToken myToken = new VerificationToken(token, user);
+        vTokens.save(myToken);
+    }
+
+    @Override
+    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
+        VerificationToken vToken = vTokens.findByToken(existingVerificationToken).orElse(null);
+        vToken.updateToken(UUID.randomUUID().toString());
+        vToken = vTokens.save(vToken);
+        return vToken;
+    }
+
+    @Override
+    public String validateVerificationToken(String token) {
+        final VerificationToken vToken = vTokens.findByToken(token).orElse(null);
+        if (vToken == null) {
+            return TOKEN_INVALID;
+        }
+
+        final User user = vToken.getUser();
+        final Calendar cal = Calendar.getInstance();
+        if ((vToken.getExpiryDate()
+            .getTime() - cal.getTime()
+            .getTime()) <= 0) {
+            vTokens.delete(vToken);
+            return TOKEN_EXPIRED;
+        }
+        user.setEnabled(true);
+        users.save(user);
+        return TOKEN_VALID;
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(final User user, final String token) {
+        final PasswordResetToken myToken = new PasswordResetToken(token, user);
+        pTokens.save(myToken);
+    }
+
+    @Override
+    public PasswordResetToken getPasswordResetToken(final String token) {
+        return pTokens.findByToken(token);
+    }
+
+    @Override
+    public User getUserByPasswordResetToken(final String token) {
+        return pTokens.findByToken(token).getUser();
+    }
+    
+    
+
+    @Override
     public User addUser(User user, Boolean isAdmin) {
         List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)
                 .orElseGet(Collections::emptyList);
@@ -78,6 +144,22 @@ public class UserServiceImpl implements UserService {
         }
 
         if (sameUsernames.size() == 0) {
+            String token = UUID.randomUUID().toString();
+            VerificationToken vToken = new VerificationToken(token, user);
+            vTokens.save(vToken);
+
+            Map<String, Object> dataModel = emailerService.getDataModel();
+            dataModel.put("isRegisterSuccess", true);
+            dataModel.put("token", vToken);
+
+            try {
+                emailerService.sendMessage(user.getEmail(), dataModel);
+            } catch (MessagingException e) {
+                System.out.println("Error occurred while trying to send an email to: " + user.getEmail());
+            } catch (IOException e) {
+                System.out.println("Error occurred while trying to send an email to: " + user.getEmail());
+            }
+
             return users.save(user);
         } else {
             throw new UserOrEmailExistsException("This username is already used. Please choose another username");

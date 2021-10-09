@@ -52,11 +52,12 @@ public class User implements UserDetails {
     @NotNull(message = "Authorities must not be null")
     private String authorities = UserRole.USER.role;
 
+    private boolean isEnabled = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employee employee;
 
-    public User() {
-    }
+    public User() {}
 
     public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
             String authorities) {
@@ -96,7 +97,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
+    }
+
+    public void setEnabled(final boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     public Long getId() {
