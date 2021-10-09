@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         if (sameUsernames.size() == 0) {
             return users.save(user);
         } else {
-            throw new UserOrEmailExistsException("This username is already in used. Please choose another username");
+            throw new UserOrEmailExistsException("This username is already used. Please choose another username");
         }
     }
 
@@ -88,7 +88,9 @@ public class UserServiceImpl implements UserService {
     public User updateUserByUsername(String username, User newUserInfo) {
         return users.findByUsername(username).map(user -> {
             // Check if email exists to prevent a unique index violation
-            if (!getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username)) {
+            if (getUserByEmail(newUserInfo.getEmail()) == null) {
+                
+            } else if (!(getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username))) {
                 return null;
             }
 
@@ -96,7 +98,7 @@ public class UserServiceImpl implements UserService {
             user.setFirstName(newUserInfo.getFirstName());
             user.setLastName(newUserInfo.getLastName());
             user.setPassword(encoder.encode(newUserInfo.getPassword()));
-            user.setUsername(newUserInfo.getUsername());
+            // user.setUsername(newUserInfo.getUsername());
             user.setIsVaccinated(newUserInfo.getIsVaccinated());
             return users.save(user);
         }).orElse(null);
