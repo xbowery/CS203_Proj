@@ -1,11 +1,11 @@
 <template>
   <v-card>
     <v-card-title>
-        Search &amp; Filter
+        Employees 
       </v-card-title>
       <v-row class="px-2 ma-0">
         <!-- role filter -->
-        <v-col
+        <!-- <v-col
           cols="12"
           sm="4"
         >
@@ -20,7 +20,7 @@
             dense
             hide-details
           ></v-select>
-        </v-col>
+        </v-col> -->
 
         <!-- plan filter -->
         <!-- <v-col
@@ -41,7 +41,7 @@
         </v-col> -->
 
         <!-- status filter -->
-        <v-col
+        <!-- <v-col
           cols="12"
           sm="4"
         >
@@ -56,7 +56,7 @@
             clearable
             hide-details
           ></v-select>
-        </v-col>
+        </v-col> -->
       </v-row>
 
       <v-divider class="mt-4"></v-divider>
