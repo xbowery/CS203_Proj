@@ -145,12 +145,10 @@ public class UserServiceImpl implements UserService {
 
         if (sameUsernames.size() == 0) {
             String token = UUID.randomUUID().toString();
-            VerificationToken vToken = new VerificationToken(token, user);
-            vTokens.save(vToken);
-
+            
             Map<String, Object> dataModel = emailerService.getDataModel();
-            dataModel.put("isRegisterSuccess", true);
-            dataModel.put("token", vToken);
+            dataModel.put("isRegisterConfirmation", true);
+            dataModel.put("token", token);
 
             try {
                 emailerService.sendMessage(user.getEmail(), dataModel);
@@ -160,7 +158,11 @@ public class UserServiceImpl implements UserService {
                 System.out.println("Error occurred while trying to send an email to: " + user.getEmail());
             }
 
-            return users.save(user);
+            User savedUser = users.save(user);
+            VerificationToken vToken = new VerificationToken(token, user);
+            vTokens.save(vToken);
+
+            return savedUser;
         } else {
             throw new UserOrEmailExistsException("This username is already used. Please choose another username");
         }

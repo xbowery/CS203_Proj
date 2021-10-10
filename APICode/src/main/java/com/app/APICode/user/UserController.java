@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.app.APICode.security.jwt.JWTRefreshToken;
+import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -28,11 +29,13 @@ public class UserController {
     private UserService userService;
     private BCryptPasswordEncoder encoder;
     private JWTRefreshToken refreshToken;
+    private VerificationTokenRepository vTokens;
 
-    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken) {
+    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken, VerificationTokenRepository vTokens) {
         this.userService = userService;
         this.encoder = encoder;
         this.refreshToken = refreshToken;
+        this.vTokens = vTokens;
     }
 
     @GetMapping("/users")

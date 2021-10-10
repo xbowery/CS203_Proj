@@ -1,6 +1,6 @@
 <!-- Function 1: After successful registration -->
 <!-- span id tags: function1-user, function1-pw -->
-<div th:if="${isRegisterSuccess}">
+<div th:if="${isRegisterConfirmation}">
     <table style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%" cellpadding="0" cellspacing="0">
       <tr style="vertical-align: top"><td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
         <div style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #13181b;">
@@ -41,7 +41,7 @@
                     <p style="padding-top: 26px;padding-bottom: 26px; middle;line-height: 140%; font-size: 14px; text-align: center;margin: 0;">
                       <span style="vertical-align: middle;font-family: helvetica, sans-serif; font-size: 18px; line-height: 25.2px; color: #1f1f1f;">
                       <span style="line-height: 25.2px; font-size: 16.5px;">
-                      <strong>Link: <span th:text="${token}" id="function1-user"></span><br>
+                      <strong>Token: <span th:text="${token}" id="function1-user"></span><br>
                       </span>
                       </span>
                     </p>
