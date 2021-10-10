@@ -30,7 +30,7 @@
         <v-col v-for="item in filteredKB" :key="item.character" md="4" sm="6" cols="12" class="kb-search-content">
           <v-card
             color="text-center cursor-pointer"
-            @click.native="$router.push({ name: 'page-knowledge-base-category', params: { category: item.category } })"
+            @click.native="$router.push('/CovidNews')"
           >
             <div class="kb-character-wrapper">
               <v-img contain :max-width="item.characterSize" class="mx-auto" :src="item.character"></v-img>
@@ -83,27 +83,27 @@ export default {
         title: 'Covid-related news 📱',
         desc: 'Every hero and coward, every creator and destroyer of civilization.',
       },
-      {
-        character: require('@/assets/images/3d-characters/pose-f-39.png'),
-        category: 'email-marketing',
-        characterSize: '172',
-        title: 'Email Marketing ✉️',
-        desc: 'There is perhaps no better demonstration of the folly of human conceits.',
-      },
-      {
-        character: require('@/assets/images/3d-characters/pose-m-14.png'),
-        category: 'personalization',
-        characterSize: '163',
-        title: 'Personalization 🤩',
-        desc: 'It has been said that astronomy is a humbling and character experience.',
-      },
-      {
-        character: require('@/assets/images/3d-characters/pose-m-5.png'),
-        category: 'demand-generation',
-        characterSize: '156',
-        title: 'Demand Generation 🤟🏻',
-        desc: 'Competent means we will never take anything for granted.',
-      },
+      // {
+      //   character: require('@/assets/images/3d-characters/pose-f-39.png'),
+      //   category: 'email-marketing',
+      //   characterSize: '172',
+      //   title: 'Email Marketing ✉️',
+      //   desc: 'There is perhaps no better demonstration of the folly of human conceits.',
+      // },
+      // {
+      //   character: require('@/assets/images/3d-characters/pose-m-14.png'),
+      //   category: 'personalization',
+      //   characterSize: '163',
+      //   title: 'Personalization 🤩',
+      //   desc: 'It has been said that astronomy is a humbling and character experience.',
+      // },
+      // {
+      //   character: require('@/assets/images/3d-characters/pose-m-5.png'),
+      //   category: 'demand-generation',
+      //   characterSize: '156',
+      //   title: 'Demand Generation 🤟🏻',
+      //   desc: 'Competent means we will never take anything for granted.',
+      // },
     ]
 
     const filteredKB = computed(() => {
