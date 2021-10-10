@@ -55,28 +55,27 @@
             hide-details
           ></v-select>
         </v-col> -->
-      </v-row>
+    </v-row>
 
-      <v-divider class="mt-4"></v-divider>
+    <v-divider class="mt-4"></v-divider>
 
-      <!-- actions -->
-      <v-card-text class="d-flex align-center flex-wrap pb-0">
-        <!-- search -->
-        <v-text-field
-          v-model="search"
-          placeholder="Search"
-          outlined
-          hide-details
-          dense
-          class="user-search me-3 mb-4"
-          label = "Search"
-        >
-        </v-text-field>
+    <!-- actions -->
+    <v-card-text class="d-flex align-center flex-wrap pb-0">
+      <!-- search -->
+      <v-text-field
+        v-model="search"
+        placeholder="Search"
+        outlined
+        hide-details
+        dense
+        class="user-search me-3 mb-4"
+        label="Search"
+      >
+      </v-text-field>
 
-        <v-spacer></v-spacer>
-        
+      <v-spacer></v-spacer>
 
-        <!-- <div class="d-flex align-center flex-wrap">
+      <!-- <div class="d-flex align-center flex-wrap">
           <v-dialog
           v-model="dialog"
           width="500"
@@ -139,7 +138,7 @@
             <span>Export</span>
           </v-btn>
         </div> -->
-      </v-card-text>
+    </v-card-text>
 
     <v-data-table
       :headers="headers"

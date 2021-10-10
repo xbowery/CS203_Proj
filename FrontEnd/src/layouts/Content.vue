@@ -62,7 +62,6 @@ import ThemeSwitcher from '@/components/ThemeSwitcher.vue'
 import AppBarNotification from '@/components/AppBarNotification.vue'
 import AppBarUserMenu from '@/components/AppBarUserMenu.vue'
 
-
 export default {
   components: {
     VerticalNavMenu,

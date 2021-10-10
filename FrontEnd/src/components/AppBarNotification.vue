@@ -7,59 +7,37 @@
     content-class="list-style notification-menu-content"
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-icon
-        v-bind="attrs"
-        v-on="on"
-      >
+      <v-icon v-bind="attrs" v-on="on">
         {{ icons.mdiBellOutline }}
       </v-icon>
     </template>
     <v-card class="app-bar-notification-content-container">
-      <perfect-scrollbar
-        class="ps-user-notifications"
-        :options="perfectScrollbarOptions"
-      >
+      <perfect-scrollbar class="ps-user-notifications" :options="perfectScrollbarOptions">
         <v-list class="py-0">
           <!-- Header -->
-          <v-list-item
-            class="d-flex"
-            link
-          >
+          <v-list-item class="d-flex" link>
             <div class="d-flex align-center justify-space-between flex-grow-1">
               <span class="font-weight-semibold">Notifications</span>
-              <v-chip
-                class="v-chip-light-bg primary--text font-weight-semibold"
-                small
-              >
-                8 New
-              </v-chip>
+              <v-chip class="v-chip-light-bg primary--text font-weight-semibold" small> 8 New </v-chip>
             </div>
           </v-list-item>
           <v-divider></v-divider>
 
           <!-- Notifications -->
           <template v-for="(notification, index) in notifications">
-            <v-list-item
-              :key="notification.title"
-              link
-            >
+            <v-list-item :key="notification.title" link>
               <!-- Avatar -->
               <v-list-item-avatar
-                :class="[{'v-avatar-light-bg primary--text justify-center': notification.user && !notification.user.avatar}]"
+                :class="[
+                  { 'v-avatar-light-bg primary--text justify-center': notification.user && !notification.user.avatar },
+                ]"
                 size="38"
               >
-                <v-img
-                  v-if="notification.user && notification.user.avatar"
-                  :src="notification.user.avatar"
-                ></v-img>
-                <span
-                  v-else-if="notification.user && !notification.user.avatar"
-                  class="text-lg"
-                >{{ getInitialName(notification.user.name) }}</span>
-                <v-img
-                  v-else
-                  :src="notification.service.icon"
-                ></v-img>
+                <v-img v-if="notification.user && notification.user.avatar" :src="notification.user.avatar"></v-img>
+                <span v-else-if="notification.user && !notification.user.avatar" class="text-lg">{{
+                  getInitialName(notification.user.name)
+                }}</span>
+                <v-img v-else :src="notification.service.icon"></v-img>
               </v-list-item-avatar>
 
               <!-- Content -->
@@ -79,16 +57,8 @@
             </v-list-item>
             <v-divider :key="index"></v-divider>
           </template>
-          <v-list-item
-            key="read-all-btn"
-            class="read-all-btn-list-item"
-          >
-            <v-btn
-              block
-              color="primary"
-            >
-              Read All Notifications
-            </v-btn>
+          <v-list-item key="read-all-btn" class="read-all-btn-list-item">
+            <v-btn block color="primary"> Read All Notifications </v-btn>
           </v-list-item>
         </v-list>
       </perfect-scrollbar>

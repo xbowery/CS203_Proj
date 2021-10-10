@@ -28,10 +28,7 @@
     <div id="knowledge-base-content">
       <v-row class="kb-search-content-info match-height">
         <v-col v-for="item in filteredKB" :key="item.character" md="4" sm="6" cols="12" class="kb-search-content">
-          <v-card
-            color="text-center cursor-pointer"
-            @click.native="$router.push('/CovidNews')"
-          >
+          <v-card color="text-center cursor-pointer" @click.native="$router.push('/CovidNews')">
             <div class="kb-character-wrapper">
               <v-img contain :max-width="item.characterSize" class="mx-auto" :src="item.character"></v-img>
             </div>
