@@ -3,10 +3,10 @@ package com.app.APICode.exception;
 import java.util.Date;
 
 public class ApiError {
-    final private int status;
-    final private String message;
-    final private String error;
     final private Date timestamp;
+    final private int status;
+    final private String error;
+    final private String message;
     final private String path;
 
     public ApiError(final int status, final String error, final String message, final String path) {

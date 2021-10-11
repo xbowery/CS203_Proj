@@ -7,10 +7,12 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,10 +73,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             res.setContentType(APPLICATION_JSON_VALUE);
             res.setStatus(UNAUTHORIZED.value());
 
-            Map<String, Object> error = new HashMap<>();
-            error.put("error_message", "Invalid or missing token");
+            Map<String, Object> error = new LinkedHashMap<>();
+            error.put("timestamp", ZonedDateTime.now(ZoneOffset.UTC).toString());
             error.put("status", HttpStatus.UNAUTHORIZED.value());
             error.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            error.put("message", "Invalid or missing token");
+            error.put("path", req.getRequestURI());
 
             new ObjectMapper().writeValue(res.getOutputStream(), error);
         }
