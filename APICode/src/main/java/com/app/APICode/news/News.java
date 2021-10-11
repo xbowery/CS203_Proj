@@ -53,4 +53,5 @@ public class News {
     public void setArticleDate(Date articleDate) {
         this.articleDate = articleDate;
     }
+
 }
