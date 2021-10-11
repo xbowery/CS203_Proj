@@ -20,6 +20,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    //returns the latest news by article date
+    public News getLatestNews() {
+        return newsRepo.findTopByOrderByArticleDateDesc();
+    }
+
+    @Override
     public News addNews(News news) {
         List<News> sameNews = newsRepo.findById(news.getId()).map(Collections::singletonList)
                 .orElseGet(Collections::emptyList);

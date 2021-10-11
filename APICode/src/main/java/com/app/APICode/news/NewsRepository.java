@@ -10,4 +10,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     Optional<News> findById(Long id);
 
     void deleteById(Long id);
+
+    News findTopByOrderByArticleDateDesc();
 }

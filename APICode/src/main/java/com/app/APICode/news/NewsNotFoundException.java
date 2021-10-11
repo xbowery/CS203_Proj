@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NewsNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    private NewsNotFoundException(Long id) {
+    public NewsNotFoundException(Long id) {
         super("Could not find news with the id: " + id);
     }
 }
