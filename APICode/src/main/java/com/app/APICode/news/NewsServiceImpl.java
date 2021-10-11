@@ -14,7 +14,28 @@ public class NewsServiceImpl implements NewsService {
         this.newsRepository = newsRepository;
     }
 
+    @Override
+    public void addNews(News news) {
+        newsRepository.save(news);
+    }
+
+    @Override
     public List<News> getNews() {
+        return newsRepository.findAll();
+    }
+
+    @Override
+    public List<News> getNews(int limit) {
+        return newsRepository.findAll();
+    }
+
+    @Override
+    public List<News> getNewsByCategory(String category) {
+        return newsRepository.findAll();
+    }
+
+    @Override
+    public List<News> getNewsByCategory(String category, int limit) {
         return newsRepository.findAll();
     }
 }
