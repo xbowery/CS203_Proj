@@ -57,9 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/register").permitAll().antMatchers("/h2-console/**").permitAll()
 
-                .anyRequest().authenticated().and()
-
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
+                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
                 .addFilterBefore(new JWTAuthorizationFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

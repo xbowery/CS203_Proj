@@ -3,7 +3,10 @@ package com.app.APICode.security.jwt;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -15,6 +18,7 @@ import com.app.APICode.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,8 +84,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.setContentType(APPLICATION_JSON_VALUE);
 
-        Map<String, String> error = new HashMap<>();
-        error.put("error_message", "Incorrect username or password");
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("timestamp", ZonedDateTime.now(ZoneOffset.UTC).toString());
+        error.put("status", HttpStatus.UNAUTHORIZED.value());
+        error.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        error.put("message", "Incorrect username or password");
+        error.put("path", req.getRequestURI());
 
         new ObjectMapper().writeValue(res.getOutputStream(), error);
     }
