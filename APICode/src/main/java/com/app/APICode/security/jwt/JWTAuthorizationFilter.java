@@ -23,6 +23,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -70,8 +71,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             res.setContentType(APPLICATION_JSON_VALUE);
             res.setStatus(UNAUTHORIZED.value());
 
-            Map<String, String> error = new HashMap<>();
+            Map<String, Object> error = new HashMap<>();
             error.put("error_message", "Invalid or missing token");
+            error.put("status", HttpStatus.UNAUTHORIZED.value());
+            error.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
 
             new ObjectMapper().writeValue(res.getOutputStream(), error);
         }

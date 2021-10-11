@@ -15,6 +15,7 @@ import com.app.APICode.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,8 +81,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.setContentType(APPLICATION_JSON_VALUE);
 
-        Map<String, String> error = new HashMap<>();
-        error.put("error_message", "Incorrect username or password");
+        Map<String, Object> error = new HashMap<>();
+        error.put("message", "Incorrect username or password");
+        error.put("status", HttpStatus.UNAUTHORIZED.value());
+        error.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
 
         new ObjectMapper().writeValue(res.getOutputStream(), error);
     }

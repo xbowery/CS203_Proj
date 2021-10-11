@@ -12,7 +12,6 @@ import com.app.APICode.user.UserOrEmailExistsException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -79,13 +78,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         String message = ex.getMessage();
 
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), message);
-        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
-    }
-
-    @ExceptionHandler({ AccessDeniedException.class })
-    public ResponseEntity<Object> handleForbidden(Exception ex, WebRequest request) {
-        String message = "Access Denied.";
         ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), message);
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
