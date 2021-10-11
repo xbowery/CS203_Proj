@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Date;
 
 import com.app.APICode.measure.*;
-
+import com.app.APICode.news.*;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -39,6 +39,10 @@ public class G2T4Application {
 		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
 		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
 		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
+
+		NewsRepository news = ctx.getBean(NewsRepository.class);
+		News testNews = new News("CNA", "Unvaccinated children aged 12 and below allowed to enter Singapore under vaccinated travel lanes: CAAS", new Date());
+		System.out.println("[Add News]:" + news.save(testNews).getTitle());
 	}
 
 }

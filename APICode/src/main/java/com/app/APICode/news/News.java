@@ -22,6 +22,12 @@ public class News {
     @NotNull(message = "Article Date cannot be null")
     private Date articleDate;
 
+    public News(String source, String title,Date articleDate) {
+        this.source = source;
+        this.title = title;
+        this.articleDate = articleDate;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -53,5 +59,6 @@ public class News {
     public void setArticleDate(Date articleDate) {
         this.articleDate = articleDate;
     }
+
 
 }
