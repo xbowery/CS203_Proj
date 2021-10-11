@@ -19,18 +19,24 @@
 
         <!-- login form -->
         <v-card-text>
-          <v-form>
-            <v-text-field
-              v-model="email"
-              outlined
-              label="Email"
-              placeholder="john@example.com"
-              hide-details
-              class="mb-4"
-            ></v-text-field>
-
-            <v-btn block color="primary"> Send reset link </v-btn>
-          </v-form>
+          <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
+            <validation-observer v-slot="{ invalid }">
+              <v-form @submit.prevent="handleRegister">
+                <validation-provider name="Email" rules="required|email" v-slot="{ errors }">
+                  <v-text-field
+                    v-model="user.email"
+                    outlined
+                    label="Email"
+                    placeholder="john@example.com"
+                    hide-details
+                    class="mb-4"
+                    :error-messages="errors[0]"
+                  ></v-text-field>
+                </validation-provider>
+              
+                <v-btn block color="primary" type="submit" :disabled="invalid"> Send reset link </v-btn>
+              </v-form>
+            </validation-observer>
         </v-card-text>
 
         <v-card-actions class="d-flex justify-center align-center">
@@ -62,16 +68,46 @@
 <script>
 import { mdiChevronLeft } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import themeConfig from '/themeConfig'
+import User from '@/model/user'
 
 export default {
+  components: { ValidationProvider, ValidationObserver },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn
+    },
+  },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push('/')
+    }
+  },
+  methods: {
+    handleRegister() {
+      // this.message = ''
+      this.submitted = true
+
+      this.$store.dispatch('auth/forgotPassword', this.user).then(
+        data => {
+          this.message = data.message
+          this.successful = true
+        },
+        error => {
+          this.message = (error.response && error.response.data && error.response.data.message) || error.toString()
+          this.successful = false
+        },
+      )
+    },
+  },
   setup() {
     const isPasswordVisible = ref(false)
-    const email = ref('')
+    const user = new User('')
 
     return {
       isPasswordVisible,
-      email,
+      user,
 
       // themeConfig
       appName: themeConfig.app.name,

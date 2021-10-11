@@ -53,6 +53,30 @@
                 ></v-text-field>
               </validation-provider>
 
+              <validation-provider name="First Name" rules="required" v-slot="{ errors }">
+                <v-text-field
+                  v-model="user.firstName"
+                  outlined
+                  label="First Name"
+                  placeholder="John"
+                  hide-details="auto"
+                  class="mb-3"
+                  :error-messages="errors[0]"
+                ></v-text-field>
+              </validation-provider>
+
+              <validation-provider name="Last Name" rules="required" v-slot="{ errors }">
+                <v-text-field
+                  v-model="user.lastName"
+                  outlined
+                  label="Last Name"
+                  placeholder="Doe"
+                  hide-details="auto"
+                  class="mb-3"
+                  :error-messages="errors[0]"
+                ></v-text-field>
+              </validation-provider>
+
               <validation-observer>
                 <!-- Commented out strong password validation for dev purposes -->
                 <!-- <validation-provider name="Password" rules="required|password" v-slot="{ errors }"> -->
@@ -153,7 +177,7 @@ export default {
   },
   setup() {
     const isPasswordVisible = ref(false)
-    const user = new User('', '', '')
+    const user = new User('', '', '', '', '')
     const successful = false
     const submitted = false
     const cfmPassword = ref('')
