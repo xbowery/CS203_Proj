@@ -23,6 +23,11 @@ public class MeasureController {
         return measureService.listMeasures();
     }
 
+    @GetMapping("/measures/latest")
+    public Measure getLatestMeasure(){
+        return measureService.getLatestMeasure();
+    }
+
     @GetMapping("/measures/{creationDateTime}")
     public Measure getMeasure(@PathVariable Date creationDateTime) {
         Measure measure = measureService.getMeasure(creationDateTime);
