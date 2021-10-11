@@ -57,11 +57,11 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employee employee;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
             String authorities) {
-        System.out.println("cde");
         this.email = email;
         this.username = username;
         this.firstName = firstName;

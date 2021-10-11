@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
-import java.util.Optional;
 
 import com.app.APICode.measure.*;
 
@@ -22,8 +21,9 @@ public class G2T4Application {
 
 		UserRepository users = ctx.getBean(UserRepository.class);
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-		
-		User user = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN");
+
+		User user = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
+				"ROLE_ADMIN");
 		user.setEnabled(true);
 		System.out.println("[Add user]: " + users.save(user).getUsername());
 		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
@@ -36,7 +36,6 @@ public class G2T4Application {
 		testRestaurant.setCrowdLevel();
 		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 
-	
 		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
 		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
 		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
