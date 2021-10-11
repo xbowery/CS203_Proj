@@ -1,41 +1,48 @@
 package com.app.APICode.news;
 
+import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NewsServiceImpl implements NewsService {
-    private NewsRepository newsRepository;
+    private NewsRepository newsRepo;
 
-    @Autowired
-    public NewsServiceImpl(NewsRepository newsRepository) {
-        this.newsRepository = newsRepository;
+    @Override
+    public List<News> listNews() {
+        return newsRepo.findAll();
     }
 
     @Override
-    public void addNews(News news) {
-        newsRepository.save(news);
+    public News getNews(Long id) {
+        return newsRepo.findById(id).orElse(null);
     }
 
     @Override
-    public List<News> getNews() {
-        return newsRepository.findAll();
+    public News addNews(News news) {
+        List<News> sameNews = newsRepo.findById(news.getId()).map(Collections::singletonList)
+                .orElseGet(Collections::emptyList);
+
+        if (sameNews.size() == 0) {
+            return newsRepo.save(news);
+        } else {
+            return null;
+        }
+
     }
 
-    @Override
-    public List<News> getNews(int limit) {
-        return newsRepository.findAll();
+    public News updateNews(Long id, News newNews) {
+        return newsRepo.findById(id).map(news -> {
+            news.setArticleDate(newNews.getArticleDate());
+            news.setId(newNews.getId());
+            news.setSource(newNews.getSource());
+            news.setTitle(newNews.getTitle());
+            return newsRepo.save(news);
+        }).orElse(null);
     }
 
-    @Override
-    public List<News> getNewsByCategory(String category) {
-        return newsRepository.findAll();
-    }
-
-    @Override
-    public List<News> getNewsByCategory(String category, int limit) {
-        return newsRepository.findAll();
+    public void deleteNews(Long id) {
+        newsRepo.deleteById(id);
     }
 }

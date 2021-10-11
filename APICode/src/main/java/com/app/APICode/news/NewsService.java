@@ -3,13 +3,13 @@ package com.app.APICode.news;
 import java.util.List;
 
 public interface NewsService {
-    public void addNews(News news);
+    public List<News> listNews();
 
-    public List<News> getNews();
+    News getNews(Long id);
 
-    public List<News> getNews(int limit);
+    News addNews(News news);
 
-    public List<News> getNewsByCategory(String category);
+    News updateNews(Long id, News news);
 
-    public List<News> getNewsByCategory(String category, int limit);
+    void deleteNews(Long id);
 }
