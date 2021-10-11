@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MeasureRepository extends JpaRepository<Measure, Long>{
-        // define a derived query to find MeasureHawker by created datetime
+        // define a derived query to find Measure by created datetime
         Optional<Measure> findByCreationDateTime(Date creationDateTime);
+        //returns number of deleted measures
         Long deleteByCreationDateTime (Date creationDateTime);
 }
