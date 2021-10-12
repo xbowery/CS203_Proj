@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class News {
-    public News() {}
 
     private @Id @GeneratedValue Long id;
 
@@ -21,6 +20,21 @@ public class News {
 
     @NotNull(message = "Article Date cannot be null")
     private Date articleDate;
+
+    @NotNull(message = "URI should not be null")
+    private String URI;
+
+    @NotNull()
+
+    public News() {
+    }
+
+    public News(String source, String title, Date articleDate, String URI) {
+        this.source = source;
+        this.title = title;
+        this.articleDate = articleDate;
+        this.URI = URI;
+    }
 
     public Long getId() {
         return id;

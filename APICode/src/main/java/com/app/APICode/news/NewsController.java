@@ -17,4 +17,9 @@ public class NewsController {
     public List<News> retrieveAllNews() {
         return newsService.listNews();
     }
+
+    @GetMapping("/fetchNews")
+    public void pullRemoteNews() {
+        newsService.fetchNews();
+    }
 }

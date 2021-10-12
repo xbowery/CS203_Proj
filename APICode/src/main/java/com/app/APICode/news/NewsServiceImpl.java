@@ -1,13 +1,30 @@
 package com.app.APICode.news;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NewsServiceImpl implements NewsService {
     private NewsRepository newsRepo;
+
+    @Value("${newsapi.uri}")
+    private String newsUri;
+
+    @Value("${newsapi.apikey}")
+    private String ApiKey;
+
+    @Autowired
+    public NewsServiceImpl(NewsRepository newsRepo) {
+        this.newsRepo = newsRepo;
+    }
 
     @Override
     public List<News> listNews() {
@@ -44,5 +61,16 @@ public class NewsServiceImpl implements NewsService {
 
     public void deleteNews(Long id) {
         newsRepo.deleteById(id);
+    }
+
+    public void fetchNews() {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            URI uri = new URI(newsUri + ApiKey);
+            ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+            System.out.println(result.getBody());
+        } catch (URISyntaxException e) {
+            System.out.println("URI Invalid");
+        }
     }
 }
