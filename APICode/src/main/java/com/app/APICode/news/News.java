@@ -21,19 +21,10 @@ public class News {
     @NotNull(message = "Article Date cannot be null")
     private Date articleDate;
 
-    @NotNull(message = "URI should not be null")
-    private String URI;
-
-    @NotNull()
-
-    public News() {
-    }
-
-    public News(String source, String title, Date articleDate, String URI) {
+    public News(String source, String title, Date articleDate) {
         this.source = source;
         this.title = title;
         this.articleDate = articleDate;
-        this.URI = URI;
     }
 
     public Long getId() {

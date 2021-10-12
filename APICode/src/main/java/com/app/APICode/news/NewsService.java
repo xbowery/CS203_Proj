@@ -7,6 +7,8 @@ public interface NewsService {
 
     News getNews(Long id);
 
+    News getLatestNews();
+
     News addNews(News news);
 
     News updateNews(Long id, News news);
