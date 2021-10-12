@@ -61,12 +61,10 @@ public class NewsController {
     }
 
     /**
-     * If there is no measure with the given creationDateTime, throw
-     * MeasureHawkerNotFoundException
-     * 
-     * @param creationDateTime
-     * @param newMeasureInfo
-     * @return the updated measure
+     * If there is no news with the given id, throw NewsNotFoundException
+     * @param id
+     * @param newsNewsInfo
+     * @return the updated news
      */
     @PutMapping("/news/{id}")
     public News updateNews(@PathVariable Long id, @Valid @RequestBody News newNewsInfo) {
