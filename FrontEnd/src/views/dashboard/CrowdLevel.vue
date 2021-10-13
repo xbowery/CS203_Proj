@@ -47,13 +47,11 @@ export default {
       if (this.current + count >= 0 && this.current + count <= this.maxCapacity) {
         this.current += count
       }
-      if(this.current >= this.maxCapacity*0.4 && this.current < this.maxCapacity*0.7){
+      if (this.current >= this.maxCapacity * 0.4 && this.current < this.maxCapacity * 0.7) {
         this.crowdLvl = 'medium'
-      } 
-      else if(this.current >= this.maxCapacity*0.7){
+      } else if (this.current >= this.maxCapacity * 0.7) {
         this.crowdLvl = 'high'
-      }
-      else if(this.current < this.maxCapacity*0.4){
+      } else if (this.current < this.maxCapacity * 0.4) {
         this.crowdLvl = 'low'
       }
     },

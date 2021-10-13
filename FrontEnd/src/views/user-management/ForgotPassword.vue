@@ -19,7 +19,7 @@
 
         <!-- login form -->
         <v-card-text>
-          <v-form>
+          <v-form @submit.prevent="handleForget">
             <v-text-field
               v-model="email"
               outlined
@@ -29,7 +29,7 @@
               class="mb-4"
             ></v-text-field>
 
-            <v-btn block color="primary"> Send reset link </v-btn>
+            <v-btn block color="primary" type="submit"> Send reset link </v-btn>
           </v-form>
         </v-card-text>
 
@@ -81,6 +81,22 @@ export default {
         mdiChevronLeft,
       },
     }
+  },
+  methods: {
+    async handleForget() {
+      this.loading = true
+      if (this.email) {
+        try {
+          await this.$store.dispatch('auth/forgetPassword', this.email)
+          console.log('success')
+          // this.$router.push('/')
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+        } finally {
+          this.loading = false
+        }
+      }
+    },
   },
 }
 </script>

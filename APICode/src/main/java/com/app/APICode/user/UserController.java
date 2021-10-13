@@ -2,6 +2,7 @@ package com.app.APICode.user;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -100,12 +101,18 @@ public class UserController {
     }
 
     @PostMapping("/forgotPassword")
-    public void resetPassword(HttpServletRequest req, @ModelAttribute(name = "user") User userInput) {
-        User user = userService.getUserByEmail(userInput.getEmail());
-        if (user == null) {
-            throw new UserNotFoundException(userInput.getEmail());
+    public void resetPassword(@RequestBody Map<String, String> payload) {
+        String email = "";
+        try {
+            email = payload.get("email");
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid request");
         }
-        userService.createTempPassword(userInput.getEmail());
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException(email);
+        }
+        userService.createTempPassword(email);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

@@ -48,6 +48,20 @@ class AuthService {
       },
     )
   }
+
+  forgetPassword(email) {
+    return api.post(
+      '/forgotPassword',
+      {
+        email,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
 }
 
 export default new AuthService()
