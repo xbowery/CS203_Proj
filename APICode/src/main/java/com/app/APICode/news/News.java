@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class News {
+    public News() {}
 
     private @Id @GeneratedValue Long id;
 

@@ -89,6 +89,73 @@ DELETE http://localhost:8080/api/v1/restaurants/Popeye/Plaza%20Sing
 ###
 GET http://localhost:8080/api/v1/measures
 
+###
+POST http://localhost:8080/api/v1/measures
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
 
+{
+    "creationDateTime": "2021-11-10T19:20:00.164+00:00",
+    "businessType": "Shopping mall",
+    "maxCapacity": 1000,
+    "vaccinationStatus": true,
+    "maskStatus": true,
+    "details": "Unvaccinated children younger than 12 can enter with their parents"
+}
 
+### need to fix links with creationDateTime
+PUT http://localhost:8080/api/v1/measures/2021-11-10T19:20:00.164+00:00
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "creationDateTime": "2021-11-10T19:20:00.164+00:00",
+    "businessType": "Shopping mall",
+    "maxCapacity": 500,
+    "vaccinationStatus": true,
+    "maskStatus": true,
+    "details": null
+}
+
+###
+DELETE http://localhost:8080/api/v1/measures/2021-11-10T19:20:00.164+00:00
+
+###
+GET http://localhost:8080/api/v1/news
+
+###
+GET http://localhost:8080/api/v1/news/6
+
+###
+GET http://localhost:8080/api/v1/news/latest
+
+###
+GET http://localhost:8080/api/v1/fetchNews
+
+###
+POST http://localhost:8080/api/v1/news
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "id": "1",
+    "source": "The Straits Times",
+    "title": "Stricter rules for those unvaccinated against Covid-19 take effect in S'pore",
+    "articleDate": "2021-10-13T10:01:02.119+00:00"
+}
+
+### id of news article has to be the same even with an update
+PUT http://localhost:8080/api/v1/news/7
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "id": "7",
+    "source": "The Straits Times",
+    "title": "11 seniors die of Covid-19, bringing death toll to 183 in S'pore; 2,976 new cases",
+    "articleDate": "2021-10-13T09:01:02.119+00:00"
+}
+
+###
+DELETE http://localhost:8080/api/v1/news/8
 
