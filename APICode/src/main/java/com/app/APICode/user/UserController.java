@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.app.APICode.security.jwt.JWTRefreshToken;
-import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,21 +29,36 @@ public class UserController {
     private UserService userService;
     private BCryptPasswordEncoder encoder;
     private JWTRefreshToken refreshToken;
-    private VerificationTokenRepository vTokens;
 
-    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken, VerificationTokenRepository vTokens) {
+    /**
+     * Constructor method for UserController
+     * 
+     * @param userService UserService class
+     * @param encoder BCryptPasswordEncoder class
+     * @param refreshToken JWTRefreshToken class
+     */
+    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken) {
         this.userService = userService;
         this.encoder = encoder;
         this.refreshToken = refreshToken;
-        this.vTokens = vTokens;
     }
 
+    /**
+     * Gets all the users stored in the database
+     * 
+     * @return list of all users
+     */
     @GetMapping("/users")
     public List<User> getUsers() {
         return userService.listUsers();
     }
 
-    // need to do the mapping properly
+    /**
+     * Finds the username of the User and returns the User page
+     * 
+     * @param username Username of the user
+     * @return the user
+     */
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
@@ -54,10 +69,11 @@ public class UserController {
     }
 
     /**
-     * Using BCrypt encoder to encrypt the password for storage
+     * Using BCrypt encoder to encrypt the password before sending the User back into the
+     * database to persist the user
      * 
-     * @param user
-     * @return
+     * @param user User entity 
+     * @return saved user is successful; null if unsuccessful
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
@@ -84,6 +100,13 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Deletes the user if there exists a user
+     * else catch the exception and throw a UserNotFoundException 
+     * to inform that the user does not exist
+     * 
+     * @param username Username of the user
+     */
     @Transactional
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
@@ -94,11 +117,24 @@ public class UserController {
         }
     }
 
+    /**
+     * Refreshes the JWT token
+     * 
+     * @param req HttpServletRequest
+     * @param res HttpServletResponse
+     * @throws IOException
+     */
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
         refreshToken.refreshJwtToken(req, res);
     }
 
+    /**
+     * Function to call for forgot password
+     * 
+     * @param req
+     * @param userInput
+     */
     @PostMapping("/forgotPassword")
     public void resetPassword(HttpServletRequest req, @ModelAttribute(name = "user") User userInput) {
         User user = userService.getUserByEmail(userInput.getEmail());
@@ -108,6 +144,12 @@ public class UserController {
         userService.createTempPassword(userInput.getEmail());
     }
 
+    /**
+     * Function to call for registering a new user
+     * 
+     * @param newUser
+     * @return
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public User register(@Valid @RequestBody User newUser) {
@@ -119,4 +161,14 @@ public class UserController {
         return savedUser;
     }
 
+    /**
+     * Function to call to confirm a user's registration
+     * 
+     * @param token
+     * @return
+     */
+    @GetMapping("/registrationConfirm")
+    public String confirmRegistration(@RequestParam("token") final String token) {
+        return userService.validateVerificationToken(token);
+    }
 }
