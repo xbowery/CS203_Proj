@@ -21,6 +21,9 @@ public class NewsServiceImpl implements NewsService {
     @Value("${newsapi.apikey}")
     private String ApiKey;
 
+    @Value("${newsapi.options}")
+    private String apiOptions;
+
     @Autowired
     public NewsServiceImpl(NewsRepository newsRepo) {
         this.newsRepo = newsRepo;
@@ -37,7 +40,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    //returns the latest news by article date
+    // returns the latest news by article date
     public News getLatestNews() {
         return newsRepo.findTopByOrderByArticleDateDesc();
     }
@@ -72,9 +75,11 @@ public class NewsServiceImpl implements NewsService {
     public void fetchNews() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            URI uri = new URI(newsUri + ApiKey);
-            ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
-            System.out.println(result.getBody());
+            String generalQuery = "q=Singapore+AND+covid";
+            URI uri = new URI(newsUri + generalQuery + apiOptions + ApiKey);
+            // ResponseEntity<News[]> result = restTemplate.getForEntity(uri, News[].class);
+            // News[] newsArray = result.getBody();
+            // System.out.println(newsArray[0].getTitle());
         } catch (URISyntaxException e) {
             System.out.println("URI Invalid");
         }
