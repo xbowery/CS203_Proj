@@ -8,7 +8,7 @@ class AuthService {
       const response = await api.post(
         '/login',
         {
-          username: user.email,
+          username: user.username,
           password: user.password,
         },
         {
