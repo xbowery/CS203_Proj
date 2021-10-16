@@ -120,5 +120,56 @@ Authorization: Basic admin:goodpassword
     "details": null
 }
 
+
 ###
 DELETE http://localhost:8080/api/v1/measures/2021-11-10T19:20:00.164+00:00
+###
+
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "goodpassword"
+}
+### Start from here for testing employee and ctest
+### for testign with new JWT just replace all the bearer with the JWT token after the initial Post Login method bellow
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+    "username": "employee1",
+    "password": "testing12345"
+}
+###
+
+POST http://localhost:8080/api/v1/users/employee1/employee
+Content-Type: application/json
+Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJyb2xlcyI6WyJST0xFX0VNUExPWUVFIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDM5ODgzNCwidHlwZSI6ImFjY2VzcyJ9.6Odh9Ls71jsYQQ-hb69wIgK6cEE33OFsg5eCM4HjubbGbWBH38gOqnU8ZoqmaVQr-wsLyfm-tzxjM7qMsLXxUA
+
+{
+
+}
+###
+
+GET http://localhost:8080/api/v1/users/employee1/employee
+Content-Type: application/json
+
+{
+
+}
+
+###
+POST http://localhost:8080/api/v1/employee/employee1/ctests
+Content-Type: application/json
+Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJyb2xlcyI6WyJST0xFX0VNUExPWUVFIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDM5ODgzNCwidHlwZSI6ImFjY2VzcyJ9.6Odh9Ls71jsYQQ-hb69wIgK6cEE33OFsg5eCM4HjubbGbWBH38gOqnU8ZoqmaVQr-wsLyfm-tzxjM7qMsLXxUA
+
+{
+    "type": "ART",
+    "date": "Sat, 16 Oct 2021 14:34:30 GMT",
+    "result": "Negative"
+}
+
+###
+GET http://localhost:8080/api/v1/employee/employee1/ctests
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJyb2xlcyI6WyJST0xFX0VNUExPWUVFIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDM5ODgzNCwidHlwZSI6ImFjY2VzcyJ9.6Odh9Ls71jsYQQ-hb69wIgK6cEE33OFsg5eCM4HjubbGbWBH38gOqnU8ZoqmaVQr-wsLyfm-tzxjM7qMsLXxUA

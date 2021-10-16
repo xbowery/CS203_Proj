@@ -55,6 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/restaurants", "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
 
+                .antMatchers(HttpMethod.GET, "/employee").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.POST, "/employee").hasAnyRole("ADMIN", "BUSINESS")
+
                 .antMatchers(HttpMethod.POST, "/register").permitAll().antMatchers("/h2-console/**").permitAll()
 
                 .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))

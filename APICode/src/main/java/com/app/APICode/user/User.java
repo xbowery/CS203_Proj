@@ -15,11 +15,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.app.APICode.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="@Id")
 @Entity
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
