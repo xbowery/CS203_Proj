@@ -6,10 +6,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 import com.app.APICode.measure.*;
-
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;

@@ -106,7 +106,7 @@ Authorization: Basic admin:goodpassword
     "details": "Unvaccinated children younger than 12 can enter with their parents"
 }
 
-### need to fix links with creationDateTime
+###
 PUT http://localhost:8080/api/v1/measures/2021-11-10T19:20:00.164+00:00
 Content-Type: application/json
 Authorization: Basic admin:goodpassword
