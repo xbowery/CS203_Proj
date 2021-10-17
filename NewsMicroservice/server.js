@@ -1,9 +1,6 @@
 const express = require("express");
 const app = express();
 
-require("dotenv").config();
-app.use(express.json());
-
 const mongoose = require("mongoose");
 mongoose.set("debug", true);
 
@@ -17,6 +14,14 @@ mongoose.connect(process.env.MONGO_URI).then(
     console.error("Something went wrong. Please try again.");
   }
 );
+
+require("dotenv").config();
+
+const News = require("./newsSchema");
+app.use(cors());
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 mongoose.connection.on("error", (err) => {
   console.log(err);
