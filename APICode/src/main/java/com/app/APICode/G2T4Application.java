@@ -7,12 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 
-import com.app.APICode.measure.hawker.MeasureHawker;
-import com.app.APICode.measure.hawker.MeasureHawkerRepository;
-import com.app.APICode.measure.others.MeasureOthers;
-import com.app.APICode.measure.others.MeasureOthersRepository;
-import com.app.APICode.measure.restaurant.MeasureRestaurant;
-import com.app.APICode.measure.restaurant.MeasureRestaurantRepository;
+import com.app.APICode.employee.Employee;
+import com.app.APICode.measure.*;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -25,31 +21,27 @@ public class G2T4Application {
 
 		UserRepository users = ctx.getBean(UserRepository.class);
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-		System.out.println("[Add user]: " + users.save(
-				new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN"))
-				.getUsername());
+
+		User user = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
+				"ROLE_ADMIN");
+		user.setEnabled(true);
+		System.out.println("[Add user]: " + users.save(user).getUsername());
 		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
-		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,
-				"ROLE_BUSINESS"));
+		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,"ROLE_BUSINESS"));
+
+		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
+		employee1.setEnabled(true);
+		users.save(employee1);
 
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
-		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 		testRestaurant.setCurrentCapacity(0);
 		testRestaurant.setCrowdLevel();
+		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 
-		MeasureHawkerRepository measureHawkers = ctx.getBean(MeasureHawkerRepository.class);
-		MeasureHawker testHawkerMeasure = new MeasureHawker(new Date(), 2, true);
-		System.out.println("[Add hawker measure]:" + measureHawkers.save(testHawkerMeasure).getCreationDateTime());
-	
-		// MeasureOthersRepository measureOthers = ctx.getBean(MeasureOthersRepository.class);
-		// MeasureOthers testOthersMeasure = new MeasureOthers(new Date(), "book store", 50, true, true, "2 per table");
-		// System.out.println("[Add others measure]:" + measureOthers.save(testOthersMeasure).getCreationDateTime());
-
-		// MeasureRestaurantRepository measureRestaurants = ctx.getBean(MeasureRestaurantRepository.class);
-		// MeasureRestaurant testRestaurantMeasure = new MeasureRestaurant(new Date(), 2, true, true);
-		// System.out.println("[Add restaurant measure]:" + measureRestaurants.save(testRestaurantMeasure).getCreationDateTime());
-
+		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
+		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
+		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
 	}
 
 }

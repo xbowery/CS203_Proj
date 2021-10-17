@@ -16,11 +16,22 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
+    /**
+     * List all restaurants in the system
+     * @return list of all restaurants
+     */
     @GetMapping("/restaurants")
     public List<Restaurant> getRestaurants() {
         return restaurantService.listRestaurants();
     }
 
+    /**
+     * Search for a restaurant with the given name and location (identifier defined for a restaurant)
+     * If there is no restaurant with the given "name" and "location", throw a RestaurantNotFoundException
+     * @param name name of restaurant
+     * @param location location of restaurant
+     * @return restaurant with the given name and location
+     */
     @GetMapping("/restaurants/{name}/{location}")
     public Restaurant getRestaurant(@PathVariable String name, @PathVariable String location) {
         Restaurant restaurant = restaurantService.getRestaurant(name,location);
@@ -30,8 +41,9 @@ public class RestaurantController {
     }
 
     /**
-    * @param restaurant
-    * @return
+     * Add new restaurant with POST request to "/restaurants"
+     * @param restaurant a Restaurant object containing the info to be added
+     * @return the newly added restaurant
     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/restaurants")
@@ -42,10 +54,11 @@ public class RestaurantController {
     }
 
     /**
+     * Search for user given the name and location and updates the relevant restaurant details
      * If there is no restaurant with the given name and location, throw a RestaurantNotFoundException
-     * @param name
-     * @param location
-     * @param newRestaurantInfo
+     * @param name name of restaurant
+     * @param location location of restaurant
+     * @param newRestaurantInfo a Restaurant object containing the new restaurant info to be updated
      * @return the updated restaurant
      */
     @PutMapping("/restaurants/{name}/{location}")
@@ -55,7 +68,12 @@ public class RestaurantController {
 
         return restaurant;
     }
-
+    /**
+     * Remove a restaurant with the DELETE request to "/restaurants/{name}/{location}"
+     * If there is no restaurant with the given "name" and "location", throw a RestaurantNotFoundException
+     * @param name name of restaurant
+     * @param location location of restaurant
+     */
     @Transactional
     @DeleteMapping("/restaurants/{name}/{location}")
     public void deleteRestaurant(@PathVariable String name, @PathVariable String location) {

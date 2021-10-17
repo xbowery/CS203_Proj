@@ -10,9 +10,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.user.User;
+import com.app.APICode.user.UserOrEmailExistsException;
 import com.app.APICode.user.UserRepository;
 import com.app.APICode.user.UserServiceImpl;
+import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +32,12 @@ public class UserServiceTest {
 
     @Mock
     private BCryptPasswordEncoder encoder;
+
+    @Mock
+    private EmailerService emailerService;
+
+    @Mock
+    private VerificationTokenRepository vTokens;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -58,7 +67,12 @@ public class UserServiceTest {
         when(users.findByUsername(any(String.class))).thenReturn(Optional.of(user));
 
         // Act
-        User savedUser = userService.addUser(user, true);
+        User savedUser = null;
+        try {
+            savedUser = userService.addUser(user, true);
+        } catch (UserOrEmailExistsException e) {
+
+        }
 
         // Assert
         assertNull(savedUser);

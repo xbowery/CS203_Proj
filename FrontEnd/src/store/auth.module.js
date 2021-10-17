@@ -35,6 +35,18 @@ export const auth = {
         },
       )
     },
+    forgetPassword({ commit }, email) {
+      return AuthService.forgetPassword(email).then(
+        response => {
+          commit('forgetPasswordSuccess')
+          return Promise.resolve(response.data)
+        },
+        error => {
+          commit('forgetPasswordFailure')
+          return Promise.reject(error)
+        },
+      )
+    },
     refreshToken({ commit }, accessToken) {
       commit('refreshToken', accessToken)
     },
@@ -56,6 +68,12 @@ export const auth = {
       state.status.loggedIn = false
     },
     registerFailure(state) {
+      state.status.loggedIn = false
+    },
+    forgetPasswordSuccess(state) {
+      state.status.loggedIn = false
+    },
+    forgetPasswordFailure(state) {
       state.status.loggedIn = false
     },
     refreshToken(state, accessToken) {

@@ -3,18 +3,8 @@
     <div class="auth-inner">
       <v-card class="auth-card">
         <v-card-title class="d-flex align-center justify-center py-7">
-          <router-link
-            to="/"
-            class="d-flex align-center"
-          >
-            <v-img
-              :src="appLogo"
-              max-height="30px"
-              max-width="30px"
-              alt="logo"
-              contain
-              class="me-3 "
-            ></v-img>
+          <router-link to="/" class="d-flex align-center">
+            <v-img :src="appLogo" max-height="30px" max-width="30px" alt="logo" contain class="me-3"></v-img>
 
             <h2 class="text-2xl font-weight-semibold">
               {{ appName }}
@@ -23,17 +13,13 @@
         </v-card-title>
 
         <v-card-text>
-          <p class="text-2xl font-weight-semibold text--primary mb-2">
-            Forgot Password? 🔒
-          </p>
-          <p class="mb-2">
-            Enter your email and we'll send you instructions to reset your password
-          </p>
+          <p class="text-2xl font-weight-semibold text--primary mb-2">Forgot Password? 🔒</p>
+          <p class="mb-2">Enter your email and we'll send you instructions to reset your password</p>
         </v-card-text>
 
         <!-- login form -->
         <v-card-text>
-          <v-form>
+          <v-form @submit.prevent="handleForget">
             <v-text-field
               v-model="email"
               outlined
@@ -43,24 +29,13 @@
               class="mb-4"
             ></v-text-field>
 
-            <v-btn
-              block
-              color="primary"
-            >
-              Send reset link
-            </v-btn>
+            <v-btn block color="primary" type="submit"> Send reset link </v-btn>
           </v-form>
         </v-card-text>
 
         <v-card-actions class="d-flex justify-center align-center">
-          <router-link
-            :to="{path:'/Login'}"
-            class="d-flex align-center text-sm"
-          >
-            <v-icon
-              size="24"
-              color="primary"
-            >
+          <router-link :to="{ path: '/Login' }" class="d-flex align-center text-sm">
+            <v-icon size="24" color="primary">
               {{ icons.mdiChevronLeft }}
             </v-icon>
             <span>Back to login</span>
@@ -73,24 +48,14 @@
     <img
       class="auth-mask-bg"
       height="190"
-      :src="require(`@/assets/images/misc/mask-${$vuetify.theme.dark ? 'dark':'light'}.png`)"
+      :src="require(`@/assets/images/misc/mask-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
     />
 
     <!-- tree -->
-    <v-img
-      class="auth-tree"
-      width="247"
-      height="185"
-      src="@/assets/images/misc/tree.png"
-    ></v-img>
+    <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img>
 
     <!-- tree  -->
-    <v-img
-      class="auth-tree-3"
-      width="377"
-      height="289"
-      src="@/assets/images/misc/tree-3.png"
-    ></v-img>
+    <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img>
   </div>
 </template>
 
@@ -116,6 +81,22 @@ export default {
         mdiChevronLeft,
       },
     }
+  },
+  methods: {
+    async handleForget() {
+      this.loading = true
+      if (this.email) {
+        try {
+          await this.$store.dispatch('auth/forgetPassword', this.email)
+          console.log('success')
+          // this.$router.push('/')
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+        } finally {
+          this.loading = false
+        }
+      }
+    },
   },
 }
 </script>

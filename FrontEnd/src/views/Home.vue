@@ -3,57 +3,33 @@
     <!-- <h1>Home</h1> -->
     <v-row></v-row>
     <v-row>
-    <!-- congratulations flora -->
-    <v-col
-      cols="10"
-      md="12"
-      order="1"
-      order-md="2"
-      class="align-self-end mb-10 mt-sm-10 mt-md-0"
-      
-    >
-      <v-card class="align-center" >
-        <v-row>
-          <v-col
-            cols="8"
-            sm="6"
-          >
-            <v-card-title class="page-title flex-nowrap text-2xl">
-              <span class="text-no-wrap">Good Morning</span>
-              <span class="text-no-wrap font-weight-bold mx-1">John!</span>
-              <span>🎉</span>
-            </v-card-title>
-            <v-card-text>
-              What would you like to know more about today?
-            </v-card-text>
-          </v-col>
-          <v-col
-            cols="4"
-            sm="6"
-          >
-            <div>
-              <v-img
-                width="120"
-                src="@/assets/images/misc/tree-4.png"
-                class="gamification-tree-4"
-              ></v-img>
-              <v-img
-                width="128"
-                src="@/assets/images/3d-characters/pose-2.png"
-                class="gamification-john-pose-2"
-              ></v-img>
-              <v-img
-                width="100"
-                src="@/assets/images/misc/tree.png"
-                class="gamification-tree"
-              ></v-img>
-            </div>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-
-  </v-row>
+      <!-- congratulations flora -->
+      <v-col cols="10" md="12" order="1" order-md="2" class="align-self-end mb-10 mt-sm-10 mt-md-0">
+        <v-card class="align-center">
+          <v-row>
+            <v-col cols="8" sm="6">
+              <v-card-title class="page-title flex-nowrap text-2xl">
+                <span class="text-no-wrap">Good Morning</span>
+                <span class="text-no-wrap font-weight-bold mx-1">John!</span>
+                <span>🎉</span>
+              </v-card-title>
+              <v-card-text> What would you like to know more about today? </v-card-text>
+            </v-col>
+            <v-col cols="4" sm="6">
+              <div>
+                <v-img width="120" src="@/assets/images/misc/tree-4.png" class="gamification-tree-4"></v-img>
+                <v-img
+                  width="128"
+                  src="@/assets/images/3d-characters/pose-2.png"
+                  class="gamification-john-pose-2"
+                ></v-img>
+                <v-img width="100" src="@/assets/images/misc/tree.png" class="gamification-tree"></v-img>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <v-item-group>
       <v-container>
@@ -143,7 +119,6 @@ export default {
   },
 }
 </script>
-
 
 <style lang="scss" scoped>
 @import '~vuetify/src/styles/styles.sass';

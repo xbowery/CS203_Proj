@@ -10,11 +10,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.app.APICode.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 public class User implements UserDetails {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +55,11 @@ public class User implements UserDetails {
     @NotNull(message = "Authorities must not be null")
     private String authorities = UserRole.USER.role;
 
+    private boolean isEnabled = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    @JsonManagedReference
     private Employee employee;
 
     public User() {
@@ -60,7 +67,6 @@ public class User implements UserDetails {
 
     public User(String email, String username, String firstName, String lastName, String password, boolean isVaccinated,
             String authorities) {
-        System.out.println("cde");
         this.email = email;
         this.username = username;
         this.firstName = firstName;
@@ -96,7 +102,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
+    }
+
+    public void setEnabled(final boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     public Long getId() {

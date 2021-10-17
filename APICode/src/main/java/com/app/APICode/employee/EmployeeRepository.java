@@ -15,5 +15,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<List<Employee>> findByRestaurant(Long restaurant_id);
 
-    Optional<Employee> findByEmployeeId(Long id);
+    Optional<Employee> findById(Long id);
 }

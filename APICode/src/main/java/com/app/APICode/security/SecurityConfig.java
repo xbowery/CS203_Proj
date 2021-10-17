@@ -55,11 +55,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/restaurants", "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
 
+                .antMatchers(HttpMethod.GET, "/employee").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.POST, "/employee").hasAnyRole("ADMIN", "BUSINESS")
+
                 .antMatchers(HttpMethod.POST, "/register").permitAll().antMatchers("/h2-console/**").permitAll()
 
-                .anyRequest().authenticated().and()
-
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
+                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
                 .addFilterBefore(new JWTAuthorizationFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
