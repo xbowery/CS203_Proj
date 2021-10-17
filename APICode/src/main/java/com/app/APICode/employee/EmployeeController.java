@@ -25,6 +25,12 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    /**
+     * List all employees of a particular business in the database
+     * 
+     * @param principal name of the user logged in currently
+     * @return list of employees in a particular business
+     */
     @GetMapping("/employees") 
     public List<User> getEmployees(Principal principal) {
         Long principal_id = userService.getUserIdByUsername(principal.getName());
@@ -39,6 +45,14 @@ public class EmployeeController {
         return userList;
     }
 
+    /**
+     * Search for employee with the given username
+     * If there is no user with the given username, throw a UserNotFoundException
+     * If there is no employee with the given username, throw a EmployeeNotFoundException
+     * 
+     * @param username username of employee
+     * @return employee with the given username
+     */
     @GetMapping("/users/{username}/employee")
     public Employee getEmployee(@PathVariable String username){
         User user = userService.getUserByUsername(username);
@@ -53,6 +67,13 @@ public class EmployeeController {
         return user.getEmployee();
     }
 
+    /**
+     * Add new employee with POST request to "/users/{username}/employee"
+     * If there is no user with the given username, throw a UserNotFoundException
+     * 
+     * @param username username of employee
+     * @return the newly added employee
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{username}/employee")
     public Employee addEmployee(@PathVariable (value = "username") String username){

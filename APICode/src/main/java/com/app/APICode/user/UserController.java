@@ -39,12 +39,21 @@ public class UserController {
         this.vTokens = vTokens;
     }
 
+    /**
+     * List all users in the database
+     * @return list of all users
+     */
     @GetMapping("/users")
     public List<User> getUsers() {
         return userService.listUsers();
     }
 
-    // need to do the mapping properly
+    /**
+     * Search for user with the given username
+     * If there is no user with the given username, throw a UserNotFoundException
+     * @param username
+     * @return user with the given username
+     */
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
@@ -55,10 +64,11 @@ public class UserController {
     }
 
     /**
+     * Add a new user with POST request to "/users"
      * Using BCrypt encoder to encrypt the password for storage
      * 
-     * @param user
-     * @return
+     * @param user a User object containing the user information to be added
+     * @return user with the admin role
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
@@ -70,11 +80,12 @@ public class UserController {
     }
 
     /**
+     * Search for user given the username and updates the relevant user details
      * If there is no user with the given username, throw a UserNotFoundException
      * 
-     * @param email
-     * @param newUserInfo
-     * @return the updated user
+     * @param username username of user
+     * @param newUserInfo a User object containing the new user info to be updated
+     * @return the updated User object
      */
     @PutMapping("/users/{username}")
     public User updateUser(@PathVariable String username, @Valid @RequestBody User newUserInfo) {
@@ -85,6 +96,12 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Remove a user with the DELETE request to "/users/{username}"
+     * If there is no user with the given username, throw a UserNotFoundException
+     * 
+     * @param username username of user
+     */
     @Transactional
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
@@ -95,11 +112,25 @@ public class UserController {
         }
     }
 
+    /**
+     * Refreshes the JWT token
+     * 
+     * @param req a HttpServletRequest object
+     * @param res a HttpServletResponse cookie
+     * @throws IOException
+     */
     @PostMapping("/refreshToken")
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
         refreshToken.refreshJwtToken(req, res);
     }
 
+    /**
+     * Retrieves the email from the request parameter and finds the user 
+     * Resets the password for the user
+     * If there is no user with the given email, throw a UserNotFoundException
+     * 
+     * @param payload the request parameter
+     */
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
         String email = "";
@@ -115,6 +146,13 @@ public class UserController {
         userService.createTempPassword(email);
     }
 
+    /**
+     * Retrieves the new user information and proceed to save the user into the database
+     * If there is already an existing user with the given email or username, throw a UserOrEmailExistsException
+     * 
+     * @param newUser a User object containing the new user info to be saved
+     * @return the newly created user
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public User register(@Valid @RequestBody User newUser) {
