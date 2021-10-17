@@ -41,4 +41,6 @@ public interface UserService {
     Long getUserIdByUsername(String username);
 
     User getUserById(Long id);
+
+    void save(User user);
 }
