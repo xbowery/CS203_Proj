@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.app.APICode.security.jwt.JWTRefreshToken;
-import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,13 +30,18 @@ public class UserController {
     private UserService userService;
     private BCryptPasswordEncoder encoder;
     private JWTRefreshToken refreshToken;
-    private VerificationTokenRepository vTokens;
 
-    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken, VerificationTokenRepository vTokens) {
+    /**
+     * Constructor method for UserController
+     * 
+     * @param userService UserService class
+     * @param encoder BCryptPasswordEncoder class
+     * @param refreshToken JWTRefreshToken class
+     */
+    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken) {
         this.userService = userService;
         this.encoder = encoder;
         this.refreshToken = refreshToken;
-        this.vTokens = vTokens;
     }
 
     /**
@@ -164,4 +169,14 @@ public class UserController {
         return savedUser;
     }
 
+    /**
+     * Function to call to confirm a user's registration
+     * 
+     * @param token
+     * @return
+     */
+    @GetMapping("/registrationConfirm")
+    public String confirmRegistration(@RequestParam("token") final String token) {
+        return userService.validateVerificationToken(token);
+    }
 }
