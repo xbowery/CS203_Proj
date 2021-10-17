@@ -6,4 +6,8 @@ public class EmployeeNotFoundException extends RuntimeException {
     public EmployeeNotFoundException(Long id) {
         super("Could not find Employee with id: " + id);
     }
+
+    public EmployeeNotFoundException(String username) {
+        super("Could not find Employee with user Username: " + username);
+    }
 }

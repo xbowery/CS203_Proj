@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +56,7 @@ public class MeasureController {
      * @return the updated measure
      */
     @PutMapping("/measures/{creationDateTime}")
-    public Measure updateMeasure(@PathVariable Date creationDateTime, @Valid @RequestBody Measure newMeasureInfo) {
+    public Measure updateMeasure(@PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date creationDateTime, @Valid @RequestBody Measure newMeasureInfo) {
         Measure measure = measureService.updateMeasure(creationDateTime, newMeasureInfo);
         if (measure == null) throw new MeasureNotFoundException(creationDateTime);
 
@@ -63,7 +65,7 @@ public class MeasureController {
 
     @Transactional
     @DeleteMapping("/measures/{creationDateTime}")
-    public void deleteMeasure(@PathVariable Date creationDateTime) {
+    public void deleteMeasure(@PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date creationDateTime) {
         try {
             measureService.deleteMeasure(creationDateTime);
         } catch (EmptyResultDataAccessException e) {

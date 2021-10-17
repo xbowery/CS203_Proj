@@ -39,6 +39,8 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
     private List<Employee> employees;
 
+    public Restaurant() {}
+
     public Restaurant(String name, String location, String cuisine, String description, int maxCapacity) {
         this.name = name;
         this.location = location;
@@ -102,13 +104,11 @@ public class Restaurant {
         double utilization = (double)this.currentCapacity/this.maxCapacity;
         if (utilization <= 0.4) {
             this.crowdLevel = "Low";
-        } else if (utilization >= 0.4 && utilization <= 0.6)  {
+        } else if (utilization <= 0.7)  {
             this.crowdLevel = "Medium";
         } else {
             this.crowdLevel = "High";
         }
     }
-
-    public Restaurant() {}
 }
 

@@ -6,14 +6,14 @@
           <v-col v-for="n in 1" :key="n" cols="8" md="4">
             <h2>Capacity: {{ current }}/{{ maxCapacity }}</h2>
           </v-col>
-          <v-col v-for="n in 1" :key="n" cols="8" md="4">
+          <v-col v-for="n in 1" :key="n" cols="9" md="5">
             <h2>Crowd level: {{ crowdLvl }}</h2>
           </v-col>
         </v-row>
 
         <v-row justify="center" align="center">
           <v-col v-for="n in 1" :key="n" cols="6" md="4" justify="center" align="center">
-            <v-btn depressed color="primary" large @click="increment(10)">+1</v-btn>
+            <v-btn depressed color="primary" large @click="increment(1)">+1</v-btn>
           </v-col>
           <v-col v-for="n in 1" :key="n" cols="6" md="4" justify="center" align="center">
             <v-btn small color="error" large @click="increment(-1)">-1</v-btn>
@@ -46,6 +46,13 @@ export default {
     increment(count) {
       if (this.current + count >= 0 && this.current + count <= this.maxCapacity) {
         this.current += count
+      }
+      if (this.current >= this.maxCapacity * 0.4 && this.current < this.maxCapacity * 0.7) {
+        this.crowdLvl = 'medium'
+      } else if (this.current >= this.maxCapacity * 0.7) {
+        this.crowdLvl = 'high'
+      } else if (this.current < this.maxCapacity * 0.4) {
+        this.crowdLvl = 'low'
       }
     },
   },

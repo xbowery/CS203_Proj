@@ -16,11 +16,22 @@ public class RestaurantController {
         this.restaurantService = restaurantService;
     }
 
+    /**
+     * List all restaurants in the system
+     * @return list of all restaurants
+     */
     @GetMapping("/restaurants")
     public List<Restaurant> getRestaurants() {
         return restaurantService.listRestaurants();
     }
 
+    /**
+     * Search for a restaurant with the given name and location (identifier defined for a restaurant)
+     * If there is no restaurant with the given "name" and "location", throw a RestaurantNotFoundException
+     * @param name
+     * @param location
+     * @return book with the given id
+     */
     @GetMapping("/restaurants/{name}/{location}")
     public Restaurant getRestaurant(@PathVariable String name, @PathVariable String location) {
         Restaurant restaurant = restaurantService.getRestaurant(name,location);
@@ -30,8 +41,9 @@ public class RestaurantController {
     }
 
     /**
-    * @param restaurant
-    * @return
+     * Add new restaurant with POST request to "/restaurants"
+     * @param restaurant
+     * @return restaurant created
     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/restaurants")
@@ -55,7 +67,12 @@ public class RestaurantController {
 
         return restaurant;
     }
-
+    /**
+     * Remove a restaurant with the DELETE request to "/restaurants/{name}/{location}"
+     * If there is no restaurant with the given "name" and "location", throw a RestaurantNotFoundException
+     * @param name
+     * @param location
+     */
     @Transactional
     @DeleteMapping("/restaurants/{name}/{location}")
     public void deleteRestaurant(@PathVariable String name, @PathVariable String location) {

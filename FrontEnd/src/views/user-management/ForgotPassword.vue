@@ -118,6 +118,22 @@ export default {
       },
     }
   },
+  methods: {
+    async handleForget() {
+      this.loading = true
+      if (this.email) {
+        try {
+          await this.$store.dispatch('auth/forgetPassword', this.email)
+          console.log('success')
+          // this.$router.push('/')
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+        } finally {
+          this.loading = false
+        }
+      }
+    },
+  },
 }
 </script>
 

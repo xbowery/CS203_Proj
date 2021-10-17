@@ -14,7 +14,7 @@
             Singapore will change testing and quarantine requirements for COVID-19 as Prime Minister Lee Hsien Loong
             said on Saturday (Oct 9) that people should update their mindsets and not be paralysed by fear of the virus.
           </v-card-text>
-          <v-card-actions class="dense">
+          <!-- <v-card-actions class="dense">
             <v-btn color="primary" text> Details </v-btn>
             <v-spacer></v-spacer>
             <v-btn icon @click="isCardDetailsVisible = !isCardDetailsVisible">
@@ -29,7 +29,7 @@
                 include people as it moves towards the new normal of living with COVID-19.
               </v-card-text>
             </div>
-          </v-expand-transition>
+          </v-expand-transition> -->
         </v-card>
       </v-col>
       <!-- send request card -->
@@ -48,7 +48,7 @@
             Singapore reported more than 3,000 new COVID-19 cases for a fifth straight day on Saturday (Oct 9) as 11
             more people died from complications due to the virus.
           </v-card-text>
-          <v-card-actions class="dense">
+          <!-- <v-card-actions class="dense">
             <v-btn color="primary" text> Details </v-btn>
             <v-spacer></v-spacer>
             <v-btn icon @click="isCardDetailsVisible = !isCardDetailsVisible">
@@ -63,7 +63,7 @@
                 COVID-19, three were partially vaccinated and four were fully vaccinated.
               </v-card-text>
             </div>
-          </v-expand-transition>
+          </v-expand-transition> -->
         </v-card>
       </v-col>
       <!-- card explore -->
@@ -80,7 +80,7 @@
             Singapore is extending its vaccinated travel lane scheme to eight more countries, allowing those who are
             fully vaccinated against COVID-19 to enter Singapore without having to serve quarantine.
           </v-card-text>
-          <v-card-actions class="dense">
+          <!-- <v-card-actions class="dense">
             <v-btn color="primary" text> Details </v-btn>
             <v-spacer></v-spacer>
             <v-btn icon @click="isCardDetailsVisible = !isCardDetailsVisible">
@@ -96,7 +96,7 @@
                 Civil Aviation Authority of Singapore (CAAS) announced on Saturday (Oct 9).
               </v-card-text>
             </div>
-          </v-expand-transition>
+          </v-expand-transition> -->
         </v-card>
       </v-col>
     </v-row>
