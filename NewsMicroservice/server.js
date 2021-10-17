@@ -1,5 +1,10 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+const morgan = require("morgan");
+const News = require("./newsSchema");
+const router = require("./routes");
+require("dotenv").config();
 
 const mongoose = require("mongoose");
 mongoose.set("debug", true);
@@ -15,13 +20,14 @@ mongoose.connect(process.env.MONGO_URI).then(
   }
 );
 
-require("dotenv").config();
-
-const News = require("./newsSchema");
 app.use(cors());
+app.use(morgan("tiny"));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+//Routes with the default path added
+app.use("/api/v1", router);
 
 mongoose.connection.on("error", (err) => {
   console.log(err);
