@@ -20,16 +20,30 @@ public class MeasureController {
         this.measureService = measureService;
     }
 
+    /**
+     * List all measures in the system
+     * @return list of all measures
+     */
     @GetMapping("/measures")
     public List<Measure> getMeasures(){
         return measureService.listMeasures();
     }
 
+    /**
+     * List the latest measures (by DateTime) in the system
+     * @return list of latest measures
+     */
     @GetMapping("/measures/latest")
     public Measure getLatestMeasure(){
         return measureService.getLatestMeasure();
     }
 
+    /**
+     * Search for the measure given the creationDateTime
+     * If there is no measure with the given creationDateTime, throw a MeasureNotFoundException
+     * @param creationDateTime Date object containing the date to be searched
+     * @return measure with the given creationDateTime
+     */
     @GetMapping("/measures/{creationDateTime}")
     public Measure getMeasure(@PathVariable Date creationDateTime) {
         Measure measure = measureService.getMeasure(creationDateTime);
@@ -39,8 +53,9 @@ public class MeasureController {
     }
 
     /**
+    * Add a new measure with POST request to "/measures"
     * @param measure
-    * @return
+    * @return the newly added measure
     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/measures")
@@ -50,10 +65,11 @@ public class MeasureController {
     }
 
     /**
+     * Update the info of a measure
      * If there is no measure with the given creationDateTime, throw MeasureHawkerNotFoundException
-     * @param creationDateTime
-     * @param newMeasureInfo
-     * @return the updated measure
+     * @param creationDateTime the creationDateTime of the measure
+     * @param newMeasureInfo a Measure object containing the new measure info to be updated
+     * @return the updated Measure object
      */
     @PutMapping("/measures/{creationDateTime}")
     public Measure updateMeasure(@PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date creationDateTime, @Valid @RequestBody Measure newMeasureInfo) {
@@ -63,6 +79,11 @@ public class MeasureController {
         return measure;
     }
 
+    /**
+     * Remove a measure with the DELETE request to "/measures/{creationDateTime}"
+     * If there is no measure with the given creationDateTime, throw a MeasureNotFoundException
+     * @param creationDateTime the creationDateTime of the measure
+     */
     @Transactional
     @DeleteMapping("/measures/{creationDateTime}")
     public void deleteMeasure(@PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date creationDateTime) {
