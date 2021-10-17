@@ -83,6 +83,9 @@ export default {
     DashboardDatatable,
   },
   setup() {
+    /*providing statistics on status of employees */
+
+    //total number of employees
     const totalNumEmployees = {
       statTitle: 'Num of Employees',
       icon: mdiAccountGroup,
@@ -92,6 +95,7 @@ export default {
       change: '+5%',
     }
 
+    //number of employees on quarantine
     const employeesQuarantine = {
       statTitle: 'Num of employees',
       icon: mdiHospitalBoxOutline,
@@ -101,7 +105,7 @@ export default {
       change: '+0.02%',
     }
 
-    // vertical card options
+    //number of employees infected with COVID-19
     const employeesInfected = {
       statTitle: 'Num of employees',
       icon: mdiNeedle,
@@ -111,6 +115,7 @@ export default {
       change: '',
     }
 
+    //number of employees recovered from COVID-19
     const employeesRecovered = {
       statTitle: 'Num of employees',
       icon: mdiThumbUp,
