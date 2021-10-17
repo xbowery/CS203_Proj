@@ -7,10 +7,16 @@ const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
 
 module.exports.getNews = async (req, res, next) => {
   try {
-    const news = await fetchLatestNewsFromExternal("Singapore AND Covid");
+    const newsRaw = await fetchLatestNewsFromExternal("Singapore AND Covid");
+    const newsArr = json.parse(newsRaw);
+
+    for (const news of newsArr) {
+      // do nothing as of now
+    }
     res.status(200).json(news);
   } catch (err) {
     console.error(err);
+    next(err);
   }
 };
 
@@ -37,4 +43,5 @@ const fetchLatestNewsFromExternal = async (title) => {
   }
 };
 
+// Run it once upon init to populate database
 // fetchLatestNewsFromExternal("Covid AND Singapore");
