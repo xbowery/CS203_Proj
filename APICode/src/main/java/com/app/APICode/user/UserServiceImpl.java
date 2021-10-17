@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void save(User user) {
+        users.save(user);
+    }
+
+    @Override
     public List<User> listUsers() {
         return users.findAll();
     }
@@ -89,6 +94,9 @@ public class UserServiceImpl implements UserService {
         return vToken;
     }
 
+    /**
+     * Add logic to validate verification token by calculating the expiry date of token
+     */
     @Override
     public String validateVerificationToken(String token) {
         final VerificationToken vToken = vTokens.findByToken(token).orElse(null);
@@ -125,8 +133,14 @@ public class UserServiceImpl implements UserService {
         return pTokens.findByToken(token).getUser();
     }
     
-    
-
+    /**
+     * Add logic to avoid adding users with the same email or username
+     * Return null if there exists a user with the same email or username
+     * 
+     * @param user a User object
+     * @param isAdmin boolean value to determine if user is admin or not
+     * @return the newly added user object
+     */
     @Override
     public User addUser(User user, Boolean isAdmin) {
         List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)

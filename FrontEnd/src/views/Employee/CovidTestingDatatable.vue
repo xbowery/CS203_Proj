@@ -113,9 +113,6 @@
         </v-dialog>
       </div>
     </v-card-text>
-<p>{{type}}</p>
-<p>{{result}}</p>
-<p>{{date}}</p>
 
 
     <v-data-table
