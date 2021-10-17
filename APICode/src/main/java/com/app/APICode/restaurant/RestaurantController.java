@@ -30,7 +30,7 @@ public class RestaurantController {
      * If there is no restaurant with the given "name" and "location", throw a RestaurantNotFoundException
      * @param name
      * @param location
-     * @return book with the given id
+     * @return restaurant with the given name and location
      */
     @GetMapping("/restaurants/{name}/{location}")
     public Restaurant getRestaurant(@PathVariable String name, @PathVariable String location) {
