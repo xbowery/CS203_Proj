@@ -19,11 +19,13 @@ module.exports.getNews = async (req, res, next) => {
     const latestGeneralNews = await News.find({ type: "Regular" })
       .lean()
       .sort("createdAt")
+      .select("-_id -createdAt")
       .limit(8)
       .exec();
     const latestRestaurantNews = await News.find({ type: "Restaurant" })
       .lean()
       .sort("createdAt")
+      .select("-_id -createdAt")
       .limit(8)
       .exec();
 
@@ -74,6 +76,7 @@ module.exports.searchNews = async (req, res, next) => {
     const news = await News.find(queryObj)
       .lean()
       .sort("createdAt")
+      .select("-_id -createdAt")
       .limit(5)
       .exec();
 
