@@ -7,17 +7,14 @@ const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
 
 module.exports.getNews = async (req, res, next) => {
   try {
-    const restaurantTerms = ["Restaurant", "Food", "Dining"].join(" OR ");
-    const newsArr = await fetchLatestNewsFromExternal(
-      `Singapore AND Covid NOT (${restaurantTerms})`
-    );
+    const { general, restaurant } = await fetchLatestNewsFromExternal();
 
     /**
      * Generate a map of updates that will be passed to MongoDB at once using
      * the bulkWrite function. It will create a new entry if an article is not found.
      * In this case, the criteria to check (filter) is the url itself
      */
-    const craftedBulkWriteObject = newsArr.map((news) => {
+    const craftedBulkWriteObjectA = general.map((news) => {
       news.source = news.source.name;
       return {
         updateOne: {
@@ -33,7 +30,29 @@ module.exports.getNews = async (req, res, next) => {
       };
     });
 
-    const dbResp = await News.bulkWrite(craftedBulkWriteObject);
+    const craftedBulkWriteObjectB = restaurant.map((news) => {
+      news.source = news.source.name;
+      news.type = "Restaurant";
+      return {
+        updateOne: {
+          filter: {
+            url: news.url,
+          },
+          update: {
+            $set: news,
+          },
+          upsert: true,
+          timestamps: true,
+        },
+      };
+    });
+
+    const mergedBulkWriteArr = [
+      ...craftedBulkWriteObjectA,
+      ...craftedBulkWriteObjectB,
+    ];
+
+    const dbResp = await News.bulkWrite(mergedBulkWriteArr);
     const { nUpserted, nModified } = dbResp;
 
     console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
@@ -49,22 +68,39 @@ module.exports.getNews = async (req, res, next) => {
  * It will update the database which automatically checks if the entry exists
  * If the entry exists, it will update the entry. Else, it will add a new entry.
  */
-cron.schedule("* */1 * * *", () => {
-  fetchLatestNewsFromExternal("Covid AND Singapore");
+cron.schedule("0 * * * *", () => {
+  fetchLatestNewsFromExternal();
 });
 
-const fetchLatestNewsFromExternal = async (title) => {
+const fetchLatestNewsFromExternal = async () => {
+  const restaurantTerms = ["Restaurant", "Food", "Dining"].join(" OR ");
+  const generalQuery = `Singapore AND Covid NOT (${restaurantTerms})`;
+  const restaurantQuery = `Singapore AND Covid AND (${restaurantTerms})`;
+
   try {
-    const response = await newsapi.v2.everything({
-      q: title,
+    const generalNews = await apiQuery(generalQuery);
+    const restaurantNews = await apiQuery(restaurantQuery);
+
+    return {
+      general: generalNews.articles,
+      restaurant: restaurantNews.articles,
+    };
+  } catch (err) {
+    console.error("News API fetch error");
+  }
+};
+
+const apiQuery = async (query) => {
+  try {
+    return await newsapi.v2.everything({
+      q: query,
       domains: "straitstimes.com,channelnewsasia.com,nytimes.com,bbc.co.uk",
       language: "en",
       sortBy: "publishedAt",
       pageSize: 20,
     });
-    return response.articles;
   } catch (err) {
-    console.error("News API fetch error");
+    console.error(err);
   }
 };
 
