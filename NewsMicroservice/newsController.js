@@ -99,7 +99,7 @@ module.exports.searchNews = async (req, res, next) => {
  * @param {*} res
  * @param {*} next
  */
-module.exports.fetchNews = async (req, res, next) => {
+const fetchNews = async () => {
   try {
     const { general, restaurant } = await fetchLatestNewsFromExternal();
 
@@ -150,11 +150,14 @@ module.exports.fetchNews = async (req, res, next) => {
     const { nUpserted, nModified } = dbResp;
 
     console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
-    res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
-    next(err);
   }
+};
+
+module.exports.devFetch = async (req, res, next) => {
+  await fetchNews();
+  return res.status(200).json();
 };
 
 /**
@@ -163,7 +166,7 @@ module.exports.fetchNews = async (req, res, next) => {
  * If the entry exists, it will update the entry. Else, it will add a new entry.
  */
 cron.schedule("0 * * * *", () => {
-  fetchLatestNewsFromExternal();
+  fetchNews();
 });
 
 const fetchLatestNewsFromExternal = async () => {
