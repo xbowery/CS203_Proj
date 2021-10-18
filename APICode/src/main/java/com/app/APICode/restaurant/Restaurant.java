@@ -101,13 +101,13 @@ public class Restaurant {
         this.maxCapacity = maxCapacity;
     }
 
-    public CrowdLevel getCrowdLevel() {
-        return this.getCrowdLevel();
-    }
+    // public CrowdLevel getCrowdLevel() {
+    //     return crowdLevel.getCrowdLevel();
+    // }
 
-    public void setCrowdLevel(CrowdLevel crowdLevel) {
-        this.crowdLevel = crowdLevel;
-    }
+    // public void setCrowdLevel(CrowdLevel crowdLevel) {
+    //     this.crowdLevel = crowdLevel;
+    // }
 
     // public void setCrowdLevel() {
     //     double utilization = (double)this.currentCapacity/this.maxCapacity;

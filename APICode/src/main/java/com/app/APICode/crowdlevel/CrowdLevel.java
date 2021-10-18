@@ -25,12 +25,7 @@ public class CrowdLevel {
     @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 
-    public CrowdLevel(Long id, Date datetime, String crowdLevel, Restaurant restaurant) {
-        this.id = id;
-        this.datetime = datetime;
-        this.crowdLevel = crowdLevel;
-        this.restaurant = restaurant;
-    }
+    public CrowdLevel() {}
 
     public Date getDatetime() {
         return datetime;
@@ -44,7 +39,7 @@ public class CrowdLevel {
         return crowdLevel;
     }
 
-    public void setCrowdLevel(String crowdLevel) {
+    public void setCrowdLevel(Restaurant restaurant) {
         double utilization = (double)restaurant.getCurrentCapacity()/restaurant.getMaxCapacity();
         if (utilization <= 0.4) {
             this.crowdLevel = "Low";

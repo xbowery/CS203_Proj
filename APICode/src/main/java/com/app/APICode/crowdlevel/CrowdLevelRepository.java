@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CrowdLevelRepository extends JpaRepository<CrowdLevel, Long> {
-    Optional<CrowdLevel> findByRestaurant(Long restaurant_id);
-    
+    Optional<CrowdLevel> findByRestaurantNameAndRestaurantLocation(String name, String location);
     Optional<CrowdLevel> findByDatetime(Date datetime);
 }
