@@ -36,7 +36,7 @@ public class G2T4Application {
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		testRestaurant.setCurrentCapacity(0);
-		testRestaurant.setCrowdLevel();
+		// testRestaurant.setCrowdLevel();
 		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
 
 		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
