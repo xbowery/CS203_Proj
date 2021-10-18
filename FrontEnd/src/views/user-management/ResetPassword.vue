@@ -50,7 +50,7 @@
 
         <!-- back to login -->
         <v-card-actions class="d-flex justify-center align-center">
-          <router-link :to="{ path: '/Login' }" class="d-flex align-center text-sm">
+          <router-link :to="{ name: 'login' }" class="d-flex align-center text-sm">
             <v-icon size="24" color="primary">
               {{ icons.mdiChevronLeft }}
             </v-icon>
