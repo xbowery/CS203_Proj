@@ -21,7 +21,7 @@
         <v-card-text>
           <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
           <validation-observer v-slot="{ invalid }">
-            <v-form @submit.prevent="handleRegister">
+            <v-form @submit.prevent="handleForget">
               <validation-provider name="Email" rules="required|email" v-slot="{ errors }">
                 <v-text-field
                   v-model="user.email"
