@@ -41,6 +41,55 @@ module.exports.getNews = async (req, res, next) => {
 };
 
 /**
+ * This function allows user to search for news based on a single search string to return all related news
+ * For instances where no query is sent or the query is simply and empty string, it will default to
+ * return latest 5 news.
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @return JSON object of the top 8 news of each category
+ */
+module.exports.searchNews = async (req, res, next) => {
+  const searchStr = req.query.q;
+
+  // Crafts an object that searches for that string in either the title or the content or both (case insensitive)
+  let queryObj = {};
+  if (searchStr !== "") {
+    const regex = new RegExp(searchStr, "i");
+    queryObj = {
+      $or: [
+        {
+          title: regex,
+        },
+        {
+          content: regex,
+        },
+      ],
+    };
+  }
+
+  // queryObj will be empty if user does not specify any query parameters
+  try {
+    const news = await News.find(queryObj)
+      .lean()
+      .sort("createdAt")
+      .limit(5)
+      .exec();
+
+    const returnObj = {
+      success: true,
+      news,
+    };
+
+    return res.status(200).json(returnObj);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+/**
  * Internal function to retrieve the news and save to the DB
  *
  * @param {*} req
