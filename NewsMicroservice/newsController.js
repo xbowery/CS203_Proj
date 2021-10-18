@@ -5,7 +5,49 @@ require("dotenv").config();
 const NewsAPI = require("newsapi");
 const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
 
+/**
+ * This function is the main functionality of this microservice - to return the top 8 news of each category
+ * These articles are sorted by the date of creation (descending time of insertion)
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @return JSON object of the top 8 news of each category
+ */
 module.exports.getNews = async (req, res, next) => {
+  try {
+    const latestGeneralNews = await News.find({ type: "Regular" })
+      .lean()
+      .sort("createdAt")
+      .limit(8)
+      .exec();
+    const latestRestaurantNews = await News.find({ type: "Restaurant" })
+      .lean()
+      .sort("createdAt")
+      .limit(8)
+      .exec();
+
+    const returnObj = {
+      success: true,
+      generalNews: latestGeneralNews,
+      restaurantNews: latestRestaurantNews,
+    };
+
+    return res.status(200).json(returnObj);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+/**
+ * Internal function to retrieve the news and save to the DB
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+module.exports.fetchNews = async (req, res, next) => {
   try {
     const { general, restaurant } = await fetchLatestNewsFromExternal();
 
