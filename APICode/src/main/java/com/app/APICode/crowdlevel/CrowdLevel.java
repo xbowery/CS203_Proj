@@ -5,8 +5,9 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.validation.constraints.NotNull;
 
 import com.app.APICode.restaurant.Restaurant;
@@ -18,14 +19,23 @@ public class CrowdLevel {
     @NotNull(message = "Datetime cannot be null")
     private Date datetime;
 
-    @NotNull(message = "Crowd level cannot be null")
     private String crowdLevel;
 
     @OneToOne
-    @JoinColumn(name = "restaurantId")
+    @PrimaryKeyJoinColumns({
+        @PrimaryKeyJoinColumn(name = "restaurant_name", referencedColumnName = "name"),
+        @PrimaryKeyJoinColumn(name = "restaurant_location", referencedColumnName = "location")    
+    })
     private Restaurant restaurant;
 
     public CrowdLevel() {}
+
+    
+    public CrowdLevel(Date datetime, String crowdLevel) {
+        this.datetime = datetime;
+        this.crowdLevel = crowdLevel;
+    }
+
 
     public Date getDatetime() {
         return datetime;
@@ -39,7 +49,7 @@ public class CrowdLevel {
         return crowdLevel;
     }
 
-    public void setCrowdLevel(Restaurant restaurant) {
+    public void setCrowdLevel() {
         double utilization = (double)restaurant.getCurrentCapacity()/restaurant.getMaxCapacity();
         if (utilization <= 0.4) {
             this.crowdLevel = "Low";

@@ -45,7 +45,7 @@ public class MeasureController {
      * @return measure with the given creationDateTime
      */
     @GetMapping("/measures/{creationDateTime}")
-    public Measure getMeasure(@PathVariable Date creationDateTime) {
+    public Measure getMeasure(@PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date creationDateTime) {
         Measure measure = measureService.getMeasure(creationDateTime);
 
         if (measure== null) throw new MeasureNotFoundException(creationDateTime);

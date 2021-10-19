@@ -93,6 +93,9 @@ GET http://localhost:8080/api/v1/measures
 GET http://localhost:8080/api/v1/measures/latest
 
 ###
+GET http://localhost:8080/api/v1/measures/2021-11-10T19:20:00.164+00:00
+
+###
 POST http://localhost:8080/api/v1/measures
 Content-Type: application/json
 Authorization: Basic admin:goodpassword
@@ -173,3 +176,22 @@ Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3ll
 ###
 GET http://localhost:8080/api/v1/employee/employee1/ctests
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJyb2xlcyI6WyJST0xFX0VNUExPWUVFIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDM5ODgzNCwidHlwZSI6ImFjY2VzcyJ9.6Odh9Ls71jsYQQ-hb69wIgK6cEE33OFsg5eCM4HjubbGbWBH38gOqnU8ZoqmaVQr-wsLyfm-tzxjM7qMsLXxUA
+
+###Crowd level testing
+GET http://localhost:8080/api/v1/restaurant/crowdLevels
+
+###
+GET http://localhost:8080/api/v1/restaurant/Astons/Cathay/crowdLevel
+
+###
+# GET http://localhost:8000/api/v1/crowdLevel/2021-10-19T12:20:00.164+00:00
+
+###
+POST  http://localhost:8080/api/v1/restaurant/Astons/Cathay/crowdLevel
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "datetime": "Tue, 19 Oct 2021 12:05:30 GMT"
+}
+
