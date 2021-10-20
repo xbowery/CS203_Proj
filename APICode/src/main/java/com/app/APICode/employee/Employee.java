@@ -59,4 +59,8 @@ public class Employee {
     public Restaurant getRestaurant() {
         return restaurant;
     }
+
+    public Long getId(){
+        return id;
+    }
 }

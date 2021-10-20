@@ -85,17 +85,22 @@ public class CtestController {
      * @param newCtest a Ctest object containing the new Ctest info to be updated
      * @return the updated Ctest object
      */
-    @PutMapping("/employee/{employee_id}/ctests/{ctestId}")
-    public Ctest updateCtest(@PathVariable (value = "employee_id") Long id, @PathVariable(value = "ctestId") Long ctestId, @RequestBody Ctest newCtest){
-        if(!employees.findById(id).isPresent()) {
-            throw new EmployeeNotFoundException(id);
+    @PutMapping("/employee/{username}/ctests/{ctestId}")
+    public Ctest updateCtest(@PathVariable (value = "username") String username, @PathVariable(value = "ctestId") Long ctestId, @RequestBody Ctest newCtest){
+        Optional<User> user = users.findByUsername(username);
+        if(!user.isPresent()){
+            throw new UserNotFoundException(username);
         }
-        return ctests.findByIdAndEmployeeId(id, ctestId).map(ctest -> {
+        Employee employee = user.get().getEmployee();
+        if(employee == null){
+            throw new EmployeeNotFoundException(username);
+        }
+        return ctests.findByIdAndEmployeeId(employee.getId(), ctestId).map(ctest -> {
             ctest.setType(newCtest.getType());
             ctest.setDate(newCtest.getDate());
             ctest.setResult(newCtest.getResult());
             return ctests.save(ctest);
-        }).orElseThrow(() -> new CtestNotFoundException(id));
+        }).orElseThrow(() -> new CtestNotFoundException(ctestId));
     }
 
     /**
@@ -105,17 +110,16 @@ public class CtestController {
      * 
      * @param employeeId a long value (Employee)
      * @param ctestId a long value (Ctest)
-     * @return ResponseEntity object
      */
     @DeleteMapping("/employee/{employee_id}/ctests/{ctestId}")
-    public ResponseEntity<?> deleteCtest(@PathVariable (value = "employee_id") Long employeeId, @PathVariable (value = "ctestId") Long ctestId){
+    public Ctest deleteCtest(@PathVariable (value = "employee_id") Long employeeId, @PathVariable (value = "ctestId") Long ctestId){
         if(!employees.findById(employeeId).isPresent()) {
             throw new EmployeeNotFoundException(employeeId);
         }
 
         return ctests.findByIdAndEmployeeId(ctestId, employeeId).map(ctest -> {
             ctests.delete(ctest);
-            return ResponseEntity.ok().build();
+            return ctest;
         }).orElseThrow(() -> new CtestNotFoundException(ctestId));
     }
 }

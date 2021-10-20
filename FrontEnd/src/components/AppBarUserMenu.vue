@@ -152,7 +152,6 @@ import {
   mdiBellOutline,
 } from '@mdi/js'
 import EventBus from '@/common/EventBus'
-import UserService from '@/services/user.service'
 
 export default {
   computed: {
@@ -164,19 +163,6 @@ export default {
     handleLogout() {
       EventBus.dispatch('logout')
     },
-  },
-  async mounted() {
-    try {
-      const res = await UserService.getUsers()
-      console.log(res.data)
-    } catch (error) {
-      console.error(
-        (error.response && error.response.data && error.response.data.message) || error.message || error.toString(),
-      )
-      if (error.response && error.response.status === 403) {
-        EventBus.dispatch('logout')
-      }
-    }
   },
   setup() {
     return {
