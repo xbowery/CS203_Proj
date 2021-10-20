@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import com.app.APICode.crowdlevel.CrowdLevel;
@@ -41,8 +40,8 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
     private List<Employee> employees;
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private CrowdLevel crowdLevel;
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<CrowdLevel> crowdLevel;
 
     public Restaurant() {}
 
@@ -101,6 +100,15 @@ public class Restaurant {
         this.maxCapacity = maxCapacity;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
     // public CrowdLevel getCrowdLevel() {
     //     return crowdLevel.getCrowdLevel();
     // }
@@ -119,5 +127,6 @@ public class Restaurant {
     //         this.crowdLevel = "High";
     //     }
     // }
+
 }
 

@@ -1,6 +1,7 @@
 package com.app.APICode.crowdlevel;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -34,9 +35,9 @@ public class CrowdLevelController {
     //  * @return crowd level of the restaurant
      */
     @GetMapping("/restaurant/{id}/crowdLevel")
-    public CrowdLevel getCrowdLevelByRestaurant(@PathVariable Long id) {
+    public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable Long id) {
         Restaurant restaurant = restaurants.findById(id).orElse(null);
-        return crowdlevels.findByRestaurant(restaurant).orElse(null);
+        return crowdlevels.findByRestaurant(restaurant);
     }
 
     /**
