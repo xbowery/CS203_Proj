@@ -5,10 +5,8 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.PrimaryKeyJoinColumns;
-import javax.validation.constraints.NotNull;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.app.APICode.restaurant.Restaurant;
 
@@ -16,26 +14,45 @@ import com.app.APICode.restaurant.Restaurant;
 public class CrowdLevel {
     private @Id @GeneratedValue Long id;
 
-    @NotNull(message = "Datetime cannot be null")
+    // private Crowd latestCrowd;
+
+    // @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
+    // private List<Crowd> historialCrowdLevel;
+
     private Date datetime;
 
-    private String crowdLevel;
+    private String latestCrowd;
 
-    @OneToOne
-    @PrimaryKeyJoinColumns({
-        @PrimaryKeyJoinColumn(name = "restaurant_name", referencedColumnName = "name"),
-        @PrimaryKeyJoinColumn(name = "restaurant_location", referencedColumnName = "location")    
-    })
+    private int noOfCustomers;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 
-    public CrowdLevel() {}
-
-    
-    public CrowdLevel(Date datetime, String crowdLevel) {
-        this.datetime = datetime;
-        this.crowdLevel = crowdLevel;
+    public CrowdLevel() {
     }
 
+    // public CrowdLevel(Crowd latestCrowd, List<Crowd> historialCrowdLevel, Restaurant restaurant) {
+    //     this.latestCrowd = latestCrowd;
+    //     historialCrowdLevel = new ArrayList<>();
+    //     this.restaurant = restaurant;
+    // }
+
+    // public Crowd getLatestCrowd() {
+    //     return latestCrowd;
+    // }
+
+    // public void setLatestCrowd() {
+    //     latestCrowd.setCrowdLevel(restaurant.getMaxCapacity());
+    // }
+
+    // public List<Crowd> getHistorialCrowdLevel() {
+    //     return historialCrowdLevel;
+    // }
+
+    // public void setHistorialCrowdLevel(List<Crowd> historialCrowdLevel) {
+    //     this.historialCrowdLevel = historialCrowdLevel;
+    // }
 
     public Date getDatetime() {
         return datetime;
@@ -45,18 +62,26 @@ public class CrowdLevel {
         this.datetime = datetime;
     }
 
-    public String getCrowdLevel() {
-        return crowdLevel;
+        public int getNoOfCustomers() {
+            return noOfCustomers;
+        }
+
+        public void setNoOfCustomers(int noOfCustomers) {
+            this.noOfCustomers = noOfCustomers;
+        }
+
+        public String getLatestCrowd() {
+            return latestCrowd;
     }
 
-    public void setCrowdLevel() {
-        double utilization = (double)restaurant.getCurrentCapacity()/restaurant.getMaxCapacity();
+    public void setLatestCrowd() {
+        double utilization = (double) getNoOfCustomers()/ restaurant.getMaxCapacity();
         if (utilization <= 0.4) {
-            this.crowdLevel = "Low";
+            this.latestCrowd = "Low";
         } else if (utilization <= 0.7)  {
-            this.crowdLevel = "Medium";
+            this.latestCrowd = "Medium";
         } else {
-            this.crowdLevel = "High";
+            this.latestCrowd = "High";
         }
     }
 

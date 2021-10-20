@@ -10,6 +10,6 @@ public class CrowdLevelNotFoundException extends RuntimeException{
     private static final long serialVersionUID = 1L;
 
     public CrowdLevelNotFoundException(Date datetime){
-        super("Could not find crowd level on" + datetime);
+        super("Could not find crowd level on " + datetime);
     }
 }

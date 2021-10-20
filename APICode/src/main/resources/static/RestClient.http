@@ -181,17 +181,25 @@ Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJy
 GET http://localhost:8080/api/v1/restaurant/crowdLevels
 
 ###
-GET http://localhost:8080/api/v1/restaurant/Astons/Cathay/crowdLevel
+GET http://localhost:8080/api/v1/restaurant/3/crowdLevel
 
 ###
-# GET http://localhost:8000/api/v1/crowdLevel/2021-10-19T12:20:00.164+00:00
-
-###
-POST  http://localhost:8080/api/v1/restaurant/Astons/Cathay/crowdLevel
+POST  http://localhost:8080/api/v1/restaurant/3/crowdLevel
 Content-Type: application/json
 Authorization: Basic admin:goodpassword
 
 {
-    "datetime": "Tue, 19 Oct 2021 12:05:30 GMT"
+    "datetime": "Wed, 20 Oct 2021 21:50:30 GMT",
+    "noOfCustomers": 45
+}
+
+###
+POST  http://localhost:8080/api/v1/restaurant/4/crowdLevel
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "datetime": "2021-10-19T12:05:30.000+00:00",
+    "noOfCustomers": 25
 }
 
