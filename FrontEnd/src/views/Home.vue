@@ -10,7 +10,7 @@
             <v-col cols="8" sm="6">
               <v-card-title class="page-title flex-nowrap text-2xl">
                 <span class="text-no-wrap">Good Morning</span>
-                <span class="text-no-wrap font-weight-bold mx-1">John!</span>
+                <span class="text-no-wrap font-weight-bold mx-1"> {{ user.username }} </span>
                 <span>🎉</span>
               </v-card-title>
               <v-card-text> What would you like to know more about today? </v-card-text>
@@ -103,8 +103,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Home',
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
+  },
   data() {
     return {
       headingGathering: 'Gatherings',
