@@ -35,8 +35,8 @@
           </template>
 
           <validation-observer ref="obs">
-            <v-card slot-scope="{ invalid, handleSubmit }">
-              <v-form @submit.prevent="handleSubmit(handleLogin)">
+            <v-card slot-scope="{ invalid }">
+              <v-form @submit.prevent="handleSubmit">
                 <v-card-title class="text-h5 grey lighten-2"> New Test </v-card-title>
 
                 <v-container>
@@ -45,9 +45,8 @@
                       <validation-provider name="type" rules="required" v-slot="{ errors }">
                         <v-select
                           :items="dropdown_type"
-                          v-model="type"
+                          v-model="ctest.type"
                           :error-messages="errors[0]"
-                          :success="valid"
                           label="Select Type of Test"
                           required
                         ></v-select>
@@ -57,9 +56,8 @@
                       <validation-provider name="result" rules="required" v-slot="{ errors }">
                         <v-select
                           :items="dropdown_result"
-                          v-model="result"
+                          v-model="ctest.result"
                           :error-messages="errors[0]"
-                          :success="valid"
                           label="Select result of test"
                           required
                         ></v-select>
@@ -72,16 +70,15 @@
                         ref="menu"
                         v-model="menu"
                         :close-on-content-click="false"
-                        :return-value.sync="date"
+                        :return-value.sync="ctest.date"
                         transition="scale-transition"
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <validation-provider name="Date" rules="required">
                             <v-text-field
-                              v-model="date"
+                              v-model="ctest.date"
                               label="Day of Test"
                               :error-messages="errors"
-                              :success="valid"
                               prepend-icon="mdi-calendar"
                               readonly
                               v-bind="attrs"
@@ -90,10 +87,10 @@
                             ></v-text-field>
                           </validation-provider>
                         </template>
-                        <v-date-picker v-model="date" no-title scrollable :allowed-dates="disableFutureDates">
+                        <v-date-picker v-model="ctest.date" no-title scrollable :allowed-dates="disableFutureDates">
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="menu = false" v-bind="attrs" v-on="on"> Cancel </v-btn>
-                          <v-btn text color="primary" @click="$refs.menu.save(date)"> OK </v-btn>
+                          <v-btn text color="primary" @click="$refs.menu.save(ctest.date)"> OK </v-btn>
                         </v-date-picker>
                       </v-menu>
                     </v-col>
@@ -104,8 +101,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary" text @click="dialog = false"> Cancel </v-btn>
-                  <v-btn color="primary" type="submit" :disabled="invalid"> Save </v-btn>
+                  <v-btn color="primary" text @click="dialog = false" type="button"> Cancel </v-btn>
+                  <v-btn color="primary" type="submit" :disabled="invalid" @click="handleSubmit"> Save </v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
@@ -116,7 +113,7 @@
 
     <v-data-table
       :headers="headers"
-      :items="usreList"
+      :items="items"
       :search="search"
       item-key="date"
       class="table-rounded"
@@ -128,29 +125,73 @@
 
 <script>
 import { mdiSquareEditOutline, mdiDotsVertical } from '@mdi/js'
-import data from './covidtestingdatatable-data.js'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import '@/validators'
+import UserService from '@/services/user.service'
 
 export default {
   components: { ValidationProvider, ValidationObserver },
+  props:{
+    username: String,
+  },
   data: () => ({
     dropdown_type: [{ text: 'ART' }, { text: 'PCR' }],
     dropdown_result: [{ text: 'Pending' }, { text: 'Negative' }, { text: 'Positive' }],
     menu: false,
+    items: [],
+    errors:'',
+    on:'',
+    attrs:'',
+    isAddNewUserSidebarActive:'',
 
-    type: '',
-    result: '',
-    date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
+
+
+    ctest:{
+      type: '',
+      result: '',
+      date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
+    }
+
   }),
+
+  async mounted() {
+    console.log(this.username)
+    try {
+      const res = await UserService.getCtests(this.username)
+      this.items = res.data
+      console.log(this.items)
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
   methods: {
     disableFutureDates(val) {
       return val <= new Date().toISOString().substr(0, 10)
     },
-    async submit() {
-      // const result = await this.$refs.obs.validate();
-      await this.$refs.obs.validate()
+    async handleSubmit() {
+      console.log("SUBMITTED")
+      try {
+          const res = await UserService.postCtest(this.username, this.ctest)
+          console.log(res)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.ctest.type = ''
+          this.ctest.result = ''
+          this.ctest.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
+          this.dialog = false
+        }
     },
+    async reloadTable(){
+      try {
+        const res = await UserService.getCtests(this.username)
+        this.items = res.data
+        console.log(this.items)
+      } catch (error) {
+        console.error(error)
+      }
+    }
   },
 
   setup() {
@@ -162,7 +203,6 @@ export default {
         { text: 'Type of test (PCR/ART)', value: 'type' },
         { text: 'Result', value: 'result' },
       ],
-      usreList: data,
       // icons
       icons: {
         mdiSquareEditOutline,

@@ -11,6 +11,10 @@ class UserService {
     var request =  'employee/' + username + '/ctests'
     return api.get(request)
   }
+  async postCtest(username, ctest) {
+    var request =  'employee/' + username + '/ctests'
+    return api.post(request, ctest)
+  }
 }
 
 export default new UserService()

@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
 import com.app.APICode.restaurant.Restaurant;
@@ -32,6 +33,13 @@ public class G2T4Application {
 		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
 		employee1.setEnabled(true);
 		users.save(employee1);
+		Employee employee11 = new Employee(employee1);
+		employee1.setEmployee(employee11);
+		users.save(employee1);
+		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+		Ctest ctest1 = new Ctest("ART", date, "Positive");
+		ctest1.setEmployee(employee1.getEmployee());
+
 
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);

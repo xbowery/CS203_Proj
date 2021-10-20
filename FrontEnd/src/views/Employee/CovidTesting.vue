@@ -43,9 +43,8 @@
         :subtitle="daysToNextTest.subtitle"
       ></statistics-card-vertical>
     </v-col>
-
     <v-col cols="12">
-      <covid-testing-datatable></covid-testing-datatable>
+      <covid-testing-datatable :username="user.username"></covid-testing-datatable>
     </v-col>
   </v-row>
 </template>
@@ -53,7 +52,7 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiCalendarMonth, mdiClockOutline, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
-
+import { mapGetters } from 'vuex'
 // demos
 import CovidTestingDatatable from './CovidTestingDatatable.vue'
 
@@ -64,6 +63,13 @@ export default {
     // DashboardWeeklyOverview,
     CovidTestingDatatable,
   },
+
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
+  },
+
   setup() {
     const latestTestDate = {
       statTitle: 'Latest Test Date',
