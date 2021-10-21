@@ -45,9 +45,10 @@
               v-bind="attrs"
               v-on="on"
             >
-              New User
+              Add New User
             </v-btn>
           </template>
+          <validation-observer ref="obs">
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
@@ -61,50 +62,72 @@
                     sm="6"
                     md="4"
                   >
+                  <validation-provider name="type" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.Fullname"
+                      :error-messages="errors[0]"
                       label="Full name"
                     ></v-text-field>
+                  </validation-provider>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                     md="4"
                   >
+                  <validation-provider name="type" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.username"
+                      :error-messages="errors[0]"
                       label="Username"
                     ></v-text-field>
+                  </validation-provider>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                     md="4"
                   >
+                  <validation-provider name="type" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.email"
+                      :error-messages="errors[0]"
                       label="Email"
                     ></v-text-field>
+                  </validation-provider>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                     md="4"
                   >
+                  <validation-provider name="type" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.company"
+                      :error-messages="errors[0]"
                       label="Company"
                     ></v-text-field>
+                  </validation-provider>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                     md="4"
                   >
-                    <v-text-field
+                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                    <v-select
                       v-model="editedItem.role"
+                      :error-messages="errors[0]"
                       label="Role"
-                    ></v-text-field>
+                      :items="roleOptions"
+                      item-text="title"
+                        item-value="value"
+                        outlined
+                        dense
+                        hide-details="auto"
+                        class="mb-6"
+                    ></v-select>
+                  </validation-provider>
                   </v-col>
                 </v-row>
               </v-container>
@@ -128,6 +151,7 @@
               </v-btn>
             </v-card-actions>
           </v-card>
+          </validation-observer>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">  
           <v-card>
@@ -191,45 +215,54 @@
 </template>
 
 <script>
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
   export default {
+    components: { ValidationProvider, ValidationObserver },
     data: () => ({
       dialog: false,
       dialogDelete: false,
       search:'',
+      errors:'',
+      roleOptions: [
+      { title: 'Admin', value: 'admin' },
+      { title: 'User', value: 'user' },
+      { title: 'Employee', value: 'employee' },
+      { title: 'Business Owner', value: 'business owner' },
+    ],
       headers: [
         {
-          text: 'Full Name',
+          text: 'FULL NAME',
           align: 'start',
           sortable: false,
           value: 'Fullname',
         },
-        { text: 'Username', value: 'username' },
-        { text: 'Email', value: 'email' },
-        { text: 'Company', value: 'company' },
-        { text: 'Role', value: 'role' },
-        { text: 'Actions', value: 'actions', sortable: true },
+        { text: 'USERNAME', value: 'username' },
+        { text: 'EMAIL', value: 'email' },
+        { text: 'COMPANY', value: 'company' },
+        { text: 'ROLE', value: 'role' },
+        { text: 'ACTIONS', value: 'actions', sortable: true },
       ],
       desserts: [],
       editedIndex: -1,
       editedItem: {
         Fullname: '',
-        username: 0,
-        email: 0,
-        company: 0,
-        role: 0,
+        username: '',
+        email: '',
+        company: '',
+        role: '',
       },
       defaultItem: {
         Fullname: '',
-        username: 0,
-        email: 0,
-        company: 0,
-        role: 0,
+        username: '',
+        email: '',
+        company: '',
+        role: '',
       },
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'New User' : 'Edit User'
       },
     },
 
@@ -365,4 +398,5 @@
       },
     },
   }
+
 </script>
