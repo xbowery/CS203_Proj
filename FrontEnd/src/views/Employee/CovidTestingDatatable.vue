@@ -102,7 +102,7 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="primary" text @click="dialog = false" type="button"> Cancel </v-btn>
-                  <v-btn color="primary" type="submit" :disabled="invalid" @click="handleSubmit"> Save </v-btn>
+                  <v-btn color="primary" type="submit" :disabled="invalid" > Save </v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
@@ -169,6 +169,7 @@ export default {
     disableFutureDates(val) {
       return val <= new Date().toISOString().substr(0, 10)
     },
+
     async handleSubmit() {
       console.log("SUBMITTED")
       try {
@@ -181,8 +182,10 @@ export default {
           this.ctest.result = ''
           this.ctest.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
           this.dialog = false
+          this.reloadTable()
         }
     },
+
     async reloadTable(){
       try {
         const res = await UserService.getCtests(this.username)

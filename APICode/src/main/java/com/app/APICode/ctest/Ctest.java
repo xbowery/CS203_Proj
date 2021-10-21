@@ -43,6 +43,10 @@ public class Ctest {
         
     }
 
+    public Long getId(){
+        return id;
+    }
+
     public void setEmployee(Employee employee){
         this.employee = employee;
     }
