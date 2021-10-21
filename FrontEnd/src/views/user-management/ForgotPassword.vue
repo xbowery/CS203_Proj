@@ -104,9 +104,9 @@ export default {
   methods: {
     async handleForget() {
       this.loading = true
-      if (this.email) {
+      if (this.user.email) {
         try {
-          await this.$store.dispatch('auth/forgetPassword', this.email)
+          await this.$store.dispatch('auth/forgetPassword', this.user.email)
           console.log('success')
           // this.$router.push('/')
         } catch (error) {
