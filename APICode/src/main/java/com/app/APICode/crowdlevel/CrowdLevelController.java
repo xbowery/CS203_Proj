@@ -1,16 +1,21 @@
 package com.app.APICode.crowdlevel;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import com.app.APICode.restaurant.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,16 +28,21 @@ public class CrowdLevelController {
         this.restaurants = restaurants;
     }
 
+        /**
+     * List the latest crowd levels by datetime and restaurant in the system
+     * @return list of latest crowd levels
+     */
     @GetMapping("restaurant/crowdLevels")
     public List<CrowdLevel> getCrowdLevels(){
         return crowdlevels.findAll();
     }
+
     /**
-    //  * Search for the crowd level of a restaurant with the given name and location 
-    //  * 
-    //  * @param name name of restaurant
-    //  * @param location location of restaurant
-    //  * @return crowd level of the restaurant
+     * Search for the crowd level of a restaurant with the given name and location 
+     * 
+     * @param name name of restaurant
+     * @param location location of restaurant
+     * @return crowd level of the restaurant
      */
     @GetMapping("/restaurant/{id}/crowdLevel")
     public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable Long id) {
@@ -46,6 +56,7 @@ public class CrowdLevelController {
      * @param id id of restaurant
      * @return the newly added CrowdLevel object
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/restaurant/{id}//crowdLevel")
     public CrowdLevel addCrowdLevel(@PathVariable Long id, @Valid @RequestBody CrowdLevel crowdLevel) {
         return restaurants.findById(id).map(restaurant -> {
@@ -55,13 +66,23 @@ public class CrowdLevelController {
         }).orElse(null);
     }
 
-    // @PutMapping("/restaurant/{id}/crowdLevel/{crowdLevelDateTime}")
-    // public CrowdLevel updateCrowdLevel(@PathVariable Long id,
-    // @PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date crowdLevelDateTime, @RequestBody CrowdLevel newCrowdLevel){
-    //     return crowdlevels.findByDatetime(crowdLevelDateTime).map(crowdLevel -> {
-    //         crowdLevel.setLatestCrowd(newCrowdLevel.getLatestCrowd());
-    //         return crowdlevels.save(crowdLevel);
-    //     }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelDateTime));
-    // }
+    /**
+     * Update crowd level
+     * If there is no crowd level with the given datetime, throw CrowdLevelNotFoundException
+     * @param crowdLevelDateTime the datetime of the measure
+     * @param newCrowdLevel a CrowdLevel object containing the new crowd level to be updated
+     * @return the updated CrowdLevel object
+     */
+    @PutMapping("/restaurant/{id}/crowdLevel/{crowdLevelDateTime}")
+    public CrowdLevel updateCrowdLevel(@PathVariable Long id,
+    @PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date crowdLevelDateTime, @RequestBody CrowdLevel newCrowdLevel){
+        return crowdlevels.findByDatetime(crowdLevelDateTime).map(crowdLevel -> {
+            crowdLevel.setNoOfCustomers(newCrowdLevel.getNoOfCustomers());
+            crowdLevel.setLatestCrowd();
+            return crowdlevels.save(crowdLevel);
+        }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelDateTime));
+    }
 
 }
+
+
