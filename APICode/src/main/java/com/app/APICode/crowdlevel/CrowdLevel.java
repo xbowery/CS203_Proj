@@ -14,11 +14,6 @@ import com.app.APICode.restaurant.Restaurant;
 public class CrowdLevel {
     private @Id @GeneratedValue Long id;
 
-    // private Crowd latestCrowd;
-
-    // @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
-    // private List<Crowd> historialCrowdLevel;
-
     private Date datetime;
 
     private String latestCrowd;
@@ -31,28 +26,6 @@ public class CrowdLevel {
 
     public CrowdLevel() {
     }
-
-    // public CrowdLevel(Crowd latestCrowd, List<Crowd> historialCrowdLevel, Restaurant restaurant) {
-    //     this.latestCrowd = latestCrowd;
-    //     historialCrowdLevel = new ArrayList<>();
-    //     this.restaurant = restaurant;
-    // }
-
-    // public Crowd getLatestCrowd() {
-    //     return latestCrowd;
-    // }
-
-    // public void setLatestCrowd() {
-    //     latestCrowd.setCrowdLevel(restaurant.getMaxCapacity());
-    // }
-
-    // public List<Crowd> getHistorialCrowdLevel() {
-    //     return historialCrowdLevel;
-    // }
-
-    // public void setHistorialCrowdLevel(List<Crowd> historialCrowdLevel) {
-    //     this.historialCrowdLevel = historialCrowdLevel;
-    // }
 
     public Date getDatetime() {
         return datetime;
@@ -93,4 +66,30 @@ public class CrowdLevel {
         this.restaurant = restaurant;
     }
 
+    // private Crowd latestCrowd;
+
+    // @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
+    // private List<Crowd> historialCrowdLevel;
+
+    // public CrowdLevel(Crowd latestCrowd, List<Crowd> historialCrowdLevel, Restaurant restaurant) {
+    //     this.latestCrowd = latestCrowd;
+    //     historialCrowdLevel = new ArrayList<>();
+    //     this.restaurant = restaurant;
+    // }
+
+    // public Crowd getLatestCrowd() {
+    //     return latestCrowd;
+    // }
+
+    // public void setLatestCrowd() {
+    //     latestCrowd.setCrowdLevel(restaurant.getMaxCapacity());
+    // }
+
+    // public List<Crowd> getHistorialCrowdLevel() {
+    //     return historialCrowdLevel;
+    // }
+
+    // public void setHistorialCrowdLevel(List<Crowd> historialCrowdLevel) {
+    //     this.historialCrowdLevel = historialCrowdLevel;
+    // }
 }

@@ -203,3 +203,12 @@ Authorization: Basic admin:goodpassword
     "noOfCustomers": 25
 }
 
+###
+PUT   http://localhost:8080/api/v1/restaurant/4/crowdLevel/2021-10-19T12:05:30.000+00:00
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "datetime": "2021-10-19T12:05:30.000+00:00",
+    "noOfCustomers": 1
+} 
