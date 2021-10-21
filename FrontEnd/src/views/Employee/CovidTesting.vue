@@ -5,7 +5,7 @@
         :change="latestTestDate.change"
         :color="latestTestDate.color"
         :icon="latestTestDate.icon"
-        :statistics="latestTestDate.statistics"
+        :statistics="latest_date"
         :stat-title="latestTestDate.statTitle"
         :subtitle="latestTestDate.subtitle"
       ></statistics-card-vertical>
@@ -16,7 +16,7 @@
         :change="latestResult.change"
         :color="latestResult.color"
         :icon="latestResult.icon"
-        :statistics="latestResult.statistics"
+        :statistics="latest_result"
         :stat-title="latestResult.statTitle"
         :subtitle="latestResult.subtitle"
       ></statistics-card-vertical>
@@ -44,7 +44,7 @@
       ></statistics-card-vertical>
     </v-col>
     <v-col cols="12">
-      <covid-testing-datatable :username="user.username"></covid-testing-datatable>
+      <covid-testing-datatable :username="user.username" @set_latest="set_latest"></covid-testing-datatable>
     </v-col>
   </v-row>
 </template>
@@ -57,6 +57,11 @@ import { mapGetters } from 'vuex'
 import CovidTestingDatatable from './CovidTestingDatatable.vue'
 
 export default {
+  data: () => ({
+    latest_date: '',
+    latest_result: '',
+  }),
+
   components: {
     StatisticsCardVertical,
     // DashboardCongratulationJohn,
@@ -70,12 +75,21 @@ export default {
     }),
   },
 
+  methods: {
+    set_latest(e) {
+      if (e != null) {
+        this.latest_date = e.date
+        this.latest_result = e.result
+        console.log('new latest')
+      }
+    },
+  },
+
   setup() {
     const latestTestDate = {
       statTitle: 'Latest Test Date',
       icon: mdiCalendarMonth,
       color: 'success',
-      statistics: '05/10/2021',
     }
 
     // vertical card options
@@ -83,7 +97,6 @@ export default {
       statTitle: 'Latest Result',
       icon: mdiHelpCircleOutline,
       color: 'primary',
-      statistics: 'Negative',
     }
 
     const frequencyOfTest = {
