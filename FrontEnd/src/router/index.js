@@ -92,6 +92,11 @@ const routes = [
     name: 'CovidNews',
     component: () => import('@/views/news/CovidNews.vue'),
   },
+  {
+    path: '/UserList',
+    name: 'UserList',
+    component: () => import('@/views/user-management/admin/UserList.vue'),
+  },
 ]
 
 const router = new VueRouter({
