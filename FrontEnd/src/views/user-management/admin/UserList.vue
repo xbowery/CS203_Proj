@@ -17,7 +17,7 @@
     </v-card-text>
   <v-data-table
     :headers="headers"
-    :items="desserts"
+    :items="items"
     :search = "search"
     sort-by="username"
     class="elevation-1"
@@ -215,7 +215,9 @@
 </template>
 
 <script>
+import UserService from '@/services/user.service'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+
   export default {
     components: { ValidationProvider, ValidationObserver },
     data: () => ({
@@ -242,7 +244,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         { text: 'ROLE', value: 'role' },
         { text: 'ACTIONS', value: 'actions', sortable: true },
       ],
-      desserts: [],
+      items: [],
       editedIndex: -1,
       editedItem: {
         Fullname: '',
@@ -259,6 +261,15 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         role: '',
       },
     }),
+
+    async mounted() {
+      try {
+        const res = await UserService.getUsers()
+        this.items = res.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
 
     computed: {
       formTitle () {
