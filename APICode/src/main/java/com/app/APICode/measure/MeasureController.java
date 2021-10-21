@@ -66,7 +66,7 @@ public class MeasureController {
 
     /**
      * Update the info of a measure
-     * If there is no measure with the given creationDateTime, throw MeasureHawkerNotFoundException
+     * If there is no measure with the given creationDateTime, throw MeasureNotFoundException
      * @param creationDateTime the creationDateTime of the measure
      * @param newMeasureInfo a Measure object containing the new measure info to be updated
      * @return the updated Measure object

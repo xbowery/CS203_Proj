@@ -24,6 +24,11 @@
           <p class="mb-2">Make your "Normal" easy and fun!</p>
         </v-card-text>
 
+        <div class = "success" v-if="successful">
+          <p>Success! Please check your email to activate your account!</p>
+        </div>
+
+
         <!-- login form -->
         <v-card-text>
           <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
