@@ -73,13 +73,6 @@ export default {
       { title: 'Subscriber', value: 'subscriber' },
     ]
 
-    // const planOptions = [
-    //   { title: 'Basic', value: 'basic' },
-    //   { title: 'Company', value: 'company' },
-    //   { title: 'Enterprise', value: 'enterprise' },
-    //   { title: 'Standard', value: 'standard' },
-    // ]
-
     const statusOptions = [
       { title: 'Pending', value: 'pending' },
       { title: 'Active', value: 'active' },

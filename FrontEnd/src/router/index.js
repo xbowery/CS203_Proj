@@ -58,6 +58,14 @@ const routes = [
     redirect: 'error-404',
   },
   {
+    path: '/error-403',
+    name: 'error-403',
+    component: () => import('@/views/NotAuthorized.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/restaurants',
     name: 'restaurants',
     component: () => import('@/views/business/Restaurants.vue'),
