@@ -30,22 +30,24 @@ public class G2T4Application {
 		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
 		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,"ROLE_BUSINESS"));
 
-		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
-		employee1.setEnabled(true);
-		users.save(employee1);
-		Employee employee11 = new Employee(employee1);
-		employee1.setEmployee(employee11);
-		users.save(employee1);
-		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-		Ctest ctest1 = new Ctest("ART", date, "Positive");
-		ctest1.setEmployee(employee1.getEmployee());
-
-
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		testRestaurant.setCurrentCapacity(0);
 		// testRestaurant.setCrowdLevel();
-		System.out.println("[Add restaurant]:" + restaurants.save(testRestaurant).getName());
+		testRestaurant = restaurants.save(testRestaurant);
+		System.out.println("[Add restaurant]:" + testRestaurant.getName());
+
+		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
+		employee1.setEnabled(true);
+		users.save(employee1);
+		Employee employee11 = new Employee(employee1);
+		employee11.setRestaurant(testRestaurant);
+		employee1.setEmployee(employee11);
+		users.save(employee1);
+
+		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+		Ctest ctest1 = new Ctest("ART", date, "Positive");
+		ctest1.setEmployee(employee1.getEmployee());
 
 		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
 		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);

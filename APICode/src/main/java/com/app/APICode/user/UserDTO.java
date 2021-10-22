@@ -11,6 +11,7 @@ public class UserDTO {
     private String lastName;
     private String role;
     private boolean isEnabled;
+    private String company;
 
     /**
      * Reduce information contained in the User class for transmission
@@ -26,7 +27,11 @@ public class UserDTO {
         userDTO.firstName = user.getFirstName();
         userDTO.lastName = user.getLastName();
         userDTO.isEnabled = user.isEnabled();
-        userDTO.role = StringUtils.collectionToCommaDelimitedString(user.getAuthorities());
+        if(user.getEmployee() != null){
+            userDTO.company = user.getEmployee().getRestaurant().getName();
+            System.out.println(user.getEmployee().getRestaurant().getName());
+        }
+        userDTO.role = StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1];
         return userDTO;
     }
 
@@ -84,5 +89,13 @@ public class UserDTO {
 
     public void setEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 }
