@@ -3,10 +3,14 @@ const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 const router = require("./routes");
-require("dotenv").config();
 
 const mongoose = require("mongoose");
-mongoose.set("debug", true);
+
+// Set DEV tools
+if (process.env.NODE_ENV !== "test") {
+  mongoose.set("debug", true);
+  app.use(morgan("tiny"));
+}
 
 // Connect to the MongoDB interface and logs for current and future errors
 mongoose.connect(process.env.MONGO_URI).then(
@@ -20,7 +24,6 @@ mongoose.connect(process.env.MONGO_URI).then(
 );
 
 app.use(cors());
-app.use(morgan("tiny"));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

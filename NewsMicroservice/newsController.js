@@ -1,6 +1,5 @@
 const News = require("./newsSchema");
 const cron = require("node-cron");
-require("dotenv").config();
 
 const NewsAPI = require("newsapi");
 const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);

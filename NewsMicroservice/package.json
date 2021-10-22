@@ -4,8 +4,8 @@
   "description": "A backend news API microservice to show COVID-19 related news",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=dev nodemon -r dotenv/config server.js",
+    "test": "mocha"
   },
   "keywords": [],
   "author": "G2T4",
