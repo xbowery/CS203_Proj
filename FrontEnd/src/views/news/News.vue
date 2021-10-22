@@ -27,8 +27,8 @@
     <!-- kb search content -->
     <div id="knowledge-base-content">
       <v-row class="kb-search-content-info match-height">
-        <v-col v-for="item in filteredKB" :key="item.character" md="4" sm="6" cols="12" class="kb-search-content">
-          <v-card color="text-center cursor-pointer" @click.native="$router.push('/CovidNews')">
+        <v-col v-for="(item, index) in filteredKB" :key="index" md="4" sm="6" cols="12" class="kb-search-content">
+          <v-card color="text-center cursor-pointer" @click.native="$router.push(item.path)">
             <div class="kb-character-wrapper">
               <v-img contain :max-width="item.characterSize" class="mx-auto" :src="item.character"></v-img>
             </div>
@@ -65,6 +65,7 @@ export default {
         characterSize: '139',
         title: 'F&B Guidelines',
         desc: 'Be informed of the latest news on F&B business guidelines and safety measures',
+        path: {name: 'CovidNews'}
       },
       {
         character: require('@/assets/images/3d-characters/pose-f-28.png'),
@@ -72,6 +73,7 @@ export default {
         characterSize: '188',
         title: 'F&B-related news',
         desc: 'Be informed of latest news in the F&B industry',
+        path: {name: 'CovidTesting'}
       },
       {
         character: require('@/assets/images/3d-characters/pose-m-34.png'),
@@ -79,6 +81,7 @@ export default {
         characterSize: '126',
         title: 'Covid-related news',
         desc: 'Be informed of the latest news on the pandemic and safety management measures',
+        path: {name: 'CovidNews'}
       },
       // {
       //   character: require('@/assets/images/3d-characters/pose-f-39.png'),
