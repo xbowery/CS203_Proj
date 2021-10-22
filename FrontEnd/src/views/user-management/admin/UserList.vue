@@ -64,9 +64,22 @@
                   >
                   <validation-provider name="type" rules="required" v-slot="{ errors }">
                     <v-text-field
-                      v-model="editedItem.Fullname"
+                      v-model="editedItem.firstName"
                       :error-messages="errors[0]"
-                      label="Full name"
+                      label="First name"
+                    ></v-text-field>
+                  </validation-provider>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                    <v-text-field
+                      v-model="editedItem.lastName"
+                      :error-messages="errors[0]"
+                      label="Last name"
                     ></v-text-field>
                   </validation-provider>
                   </v-col>
@@ -116,7 +129,7 @@
                   >
                   <validation-provider name="type" rules="required" v-slot="{ errors }">
                     <v-select
-                      v-model="editedItem.role"
+                      v-model="editedItem.authorities"
                       :error-messages="errors[0]"
                       label="Role"
                       :items="roleOptions"
@@ -253,7 +266,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         username: '',
         email: '',
         company: '',
-        role: '',
+        authorities: '',
       },
       defaultItem: {
         firstName: '',
@@ -261,7 +274,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         username: '',
         email: '',
         company: '',
-        role: '',
+        authorities: '',
       },
     }),
 
@@ -302,7 +315,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 159,
             email: 6.0,
             company: 24,
-            role: 4.0,
+            authorities: 4.0,
           },
           {
             firstName: 'Ice cream',
@@ -310,7 +323,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 237,
             email: 9.0,
             company: 37,
-            role: 4.3,
+            authorities: 4.3,
           },
           {
             firstName: 'Eclair',
@@ -318,7 +331,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 262,
             email: 16.0,
             company: 23,
-            role: 6.0,
+            authorities: 6.0,
           },
           {
             firstName: 'Cupcake',
@@ -326,7 +339,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 305,
             email: 3.7,
             company: 67,
-            role: 4.3,
+            authorities: 4.3,
           },
           {
             firstName: 'Gingerbread',
@@ -334,7 +347,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 356,
             email: 16.0,
             company: 49,
-            role: 3.9,
+            authorities: 3.9,
           },
           {
             firstName: 'Jelly',
@@ -342,7 +355,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 375,
             email: 0.0,
             company: 94,
-            role: 0.0,
+            authorities: 0.0,
           },
           {
             firstName: 'Lollipop',
@@ -350,7 +363,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 392,
             email: 0.2,
             company: 98,
-            role: 0,
+            authorities: 0,
           },
           {
             firstName: 'Honeycomb',
@@ -358,7 +371,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 408,
             email: 3.2,
             company: 87,
-            role: 6.5,
+            authorities: 6.5,
           },
           {
             firstName: 'Donut',
@@ -366,7 +379,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 452,
             email: 25.0,
             company: 51,
-            role: 4.9,
+            authorities: 4.9,
           },
           {
             firstName: 'Kit',
@@ -374,25 +387,25 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
             username: 518,
             email: 26.0,
             company: 65,
-            role: 7,
+            authorities: 7,
           },
         ]
       },
 
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.items.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.items.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
 
       deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+        this.items.splice(this.editedIndex, 1)
         this.closeDelete()
       },
 
@@ -416,7 +429,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          this.items.push(this.editedItem)
         }
         this.close()
       },
