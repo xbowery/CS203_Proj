@@ -106,16 +106,6 @@ import '@/validators'
 
 export default {
   components: { ValidationProvider, ValidationObserver },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn
-    },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push('/')
-    }
-  },
   methods: {
     async handleLogin() {
       this.loading = true

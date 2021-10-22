@@ -153,16 +153,6 @@ import User from '@/model/user'
 
 export default {
   components: { ValidationProvider, ValidationObserver },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn
-    },
-  },
-  mounted() {
-    if (this.loggedIn) {
-      this.$router.push('/')
-    }
-  },
   methods: {
     handleRegister() {
       // this.message = ''
