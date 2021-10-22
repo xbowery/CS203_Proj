@@ -42,6 +42,7 @@
               color="primary"
               dark
               class="mb-2"
+              @click.stop="isAddNewUserSidebarActive = !isAddNewUserSidebarActive"
               v-bind="attrs"
               v-on="on"
             >
@@ -49,7 +50,8 @@
             </v-btn>
           </template>
           <validation-observer ref="obs">
-          <v-card>
+          <v-card slot-scope="{ invalid }">
+            <v-form @submit.prevent="handleSubmit">
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
@@ -62,7 +64,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="name" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.name"
                       :error-messages="errors[0]"
@@ -75,7 +77,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="location" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.location"
                       :error-messages="errors[0]"
@@ -88,7 +90,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="cuisine" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.cuisine"
                       :error-messages="errors[0]"
@@ -101,7 +103,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="description" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.description"
                       :error-messages="errors[0]"
@@ -114,7 +116,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="max capacity" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.maxCapacity"
                       :error-messages="errors[0]"
@@ -131,7 +133,8 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click="close"
+                @click="dialog = false" 
+                type="button"
               >
                 Cancel
               </v-btn>
@@ -139,10 +142,12 @@
                 color="blue darken-1"
                 text
                 @click="save"
+                type="submit" :disabled="invalid"
               >
                 Save
               </v-btn>
             </v-card-actions>
+            </v-form>
           </v-card>
           </validation-observer>
         </v-dialog>
@@ -160,13 +165,6 @@
       </v-toolbar>
     </template>
     <template  #[`item.actions`]="{ item }">
-      <!-- <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon> -->
         <v-icon
               small
               color="secondary"
@@ -188,20 +186,9 @@
             >
               Delete
         </v-icon>
-      <!-- <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon> -->
     </template>
     <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
+        <v-text>No data available.</v-text>
     </template>
   </v-data-table>
     </v-card>
@@ -218,12 +205,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       dialogDelete: false,
       search:'',
       errors:'',
-      roleOptions: [
-      { title: 'Admin', value: 'admin' },
-      { title: 'User', value: 'user' },
-      { title: 'Employee', value: 'employee' },
-      { title: 'Business Owner', value: 'business owner' },
-    ],
+      isAddNewUserSidebarActive: '',
       headers: [
         {
           text: 'NAME',
@@ -280,96 +262,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       },
     },
 
-    created () {
-      this.initialize()
-    },
-
     methods: {
-      initialize () {
-        this.desserts = [
-          {
-            Name: 'Frozen',
-            lastName: 'Yogurt',
-            location: 159,
-            cuisine: 6.0,
-            description: 24,
-            maxCapacity: 4.0,
-          },
-          {
-            Name: 'Ice cream',
-            lastName: 'sandwich',
-            location: 237,
-            cuisine: 9.0,
-            description: 37,
-            maxCapacity: 4.3,
-          },
-          {
-            Name: 'Eclair',
-            lastName: null,
-            location: 262,
-            cuisine: 16.0,
-            description: 23,
-            maxCapacity: 6.0,
-          },
-          {
-            Name: 'Cupcake',
-            lastName: null,
-            location: 305,
-            cuisine: 3.7,
-            description: 67,
-            maxCapacity: 4.3,
-          },
-          {
-            Name: 'Gingerbread',
-            lastName: '',
-            location: 356,
-            cuisine: 16.0,
-            description: 49,
-            maxCapacity: 3.9,
-          },
-          {
-            Name: 'Jelly',
-            lastName: 'Bean',
-            location: 375,
-            cuisine: 0.0,
-            description: 94,
-            maxCapacity: 0.0,
-          },
-          {
-            Name: 'Lollipop',
-            lastName: null,
-            location: 392,
-            cuisine: 0.2,
-            description: 98,
-            maxCapacity: 0,
-          },
-          {
-            Name: 'Honeycomb',
-            lastName: '',
-            location: 408,
-            cuisine: 3.2,
-            description: 87,
-            maxCapacity: 6.5,
-          },
-          {
-            Name: 'Donut',
-            lastName: null,
-            location: 452,
-            cuisine: 25.0,
-            description: 51,
-            maxCapacity: 4.9,
-          },
-          {
-            Name: 'Kit',
-            lastName: 'Kat',
-            location: 518,
-            cuisine: 26.0,
-            description: 65,
-            maxCapacity: 7,
-          },
-        ]
-      },
-
       editItem (item) {
         this.editedIndex = this.items.indexOf(item)
         this.editedItem = Object.assign({}, item)

@@ -42,6 +42,7 @@
               color="primary"
               dark
               class="mb-2"
+              @click.stop="isAddNewUserSidebarActive = !isAddNewUserSidebarActive"
               v-bind="attrs"
               v-on="on"
             >
@@ -49,7 +50,8 @@
             </v-btn>
           </template>
           <validation-observer ref="obs">
-          <v-card>
+          <v-card slot-scope="{ invalid }">
+            <v-form @submit.prevent="handleSubmit">
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
@@ -62,7 +64,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="first name" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.firstName"
                       :error-messages="errors[0]"
@@ -75,7 +77,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="last name" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.lastName"
                       :error-messages="errors[0]"
@@ -88,7 +90,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="username" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.username"
                       :error-messages="errors[0]"
@@ -101,7 +103,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="email" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.email"
                       :error-messages="errors[0]"
@@ -114,7 +116,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="company" rules="required" v-slot="{ errors }">
                     <v-text-field
                       v-model="editedItem.company"
                       :error-messages="errors[0]"
@@ -127,7 +129,7 @@
                     sm="6"
                     md="4"
                   >
-                  <validation-provider name="type" rules="required" v-slot="{ errors }">
+                  <validation-provider name="role" rules="required" v-slot="{ errors }">
                     <v-select
                       v-model="editedItem.authorities"
                       :error-messages="errors[0]"
@@ -151,7 +153,8 @@
               <v-btn
                 color="blue darken-1"
                 text
-                @click="close"
+                @click="dialog = false" 
+                type="button"
               >
                 Cancel
               </v-btn>
@@ -159,10 +162,12 @@
                 color="blue darken-1"
                 text
                 @click="save"
+                type="submit" :disabled="invalid"
               >
                 Save
               </v-btn>
             </v-card-actions>
+            </v-form>
           </v-card>
           </validation-observer>
         </v-dialog>
@@ -180,13 +185,6 @@
       </v-toolbar>
     </template>
     <template  #[`item.actions`]="{ item }">
-      <!-- <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon> -->
         <v-icon
               small
               color="secondary"
@@ -208,20 +206,9 @@
             >
               Delete
         </v-icon>
-      <!-- <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon> -->
     </template>
     <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
+      <v-text>No data available.</v-text>
     </template>
   </v-data-table>
     </v-card>
@@ -238,6 +225,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       dialogDelete: false,
       search:'',
       errors:'',
+      isAddNewUserSidebarActive: '',
       roleOptions: [
       { title: 'Admin', value: 'admin' },
       { title: 'User', value: 'user' },
@@ -302,96 +290,8 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       },
     },
 
-    created () {
-      this.initialize()
-    },
 
     methods: {
-      initialize () {
-        this.desserts = [
-          {
-            firstName: 'Frozen',
-            lastName: 'Yogurt',
-            username: 159,
-            email: 6.0,
-            company: 24,
-            authorities: 4.0,
-          },
-          {
-            firstName: 'Ice cream',
-            lastName: 'sandwich',
-            username: 237,
-            email: 9.0,
-            company: 37,
-            authorities: 4.3,
-          },
-          {
-            firstName: 'Eclair',
-            lastName: null,
-            username: 262,
-            email: 16.0,
-            company: 23,
-            authorities: 6.0,
-          },
-          {
-            firstName: 'Cupcake',
-            lastName: null,
-            username: 305,
-            email: 3.7,
-            company: 67,
-            authorities: 4.3,
-          },
-          {
-            firstName: 'Gingerbread',
-            lastName: '',
-            username: 356,
-            email: 16.0,
-            company: 49,
-            authorities: 3.9,
-          },
-          {
-            firstName: 'Jelly',
-            lastName: 'Bean',
-            username: 375,
-            email: 0.0,
-            company: 94,
-            authorities: 0.0,
-          },
-          {
-            firstName: 'Lollipop',
-            lastName: null,
-            username: 392,
-            email: 0.2,
-            company: 98,
-            authorities: 0,
-          },
-          {
-            firstName: 'Honeycomb',
-            lastName: '',
-            username: 408,
-            email: 3.2,
-            company: 87,
-            authorities: 6.5,
-          },
-          {
-            firstName: 'Donut',
-            lastName: null,
-            username: 452,
-            email: 25.0,
-            company: 51,
-            authorities: 4.9,
-          },
-          {
-            firstName: 'Kit',
-            lastName: 'Kat',
-            username: 518,
-            email: 26.0,
-            company: 65,
-            authorities: 7,
-          },
-        ]
-      },
-
       editItem (item) {
         this.editedIndex = this.items.indexOf(item)
         this.editedItem = Object.assign({}, item)
