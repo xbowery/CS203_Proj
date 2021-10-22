@@ -46,6 +46,14 @@ const routes = [
     },
   },
   {
+    path: '/RegisterConfirmation',
+    name: 'RegisterConfirmation',
+    component: () => import('@/views/user-management/RegisterConfirmation.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),
