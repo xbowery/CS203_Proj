@@ -93,6 +93,16 @@ const routes = [
     component: () => import('@/views/news/CovidNews.vue'),
   },
   {
+    path: '/F&BGuidelines',
+    name: 'F&BGuidelines',
+    component: () => import('@/views/news/F&BGuidelines.vue'),
+  },
+  {
+    path: '/F&BNews',
+    name: 'F&BNews',
+    component: () => import('@/views/news/F&BNews.vue'),
+  },
+  {
     path: '/UserList',
     name: 'UserList',
     component: () => import('@/views/user-management/admin/UserList.vue'),

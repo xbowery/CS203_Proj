@@ -39,7 +39,7 @@ export default {
     return {
       current: 0,
       maxCapacity: 100,
-      crowdLvl: 'low',
+      crowdLvl: 'Low',
     }
   },
   methods: {
@@ -48,11 +48,11 @@ export default {
         this.current += count
       }
       if (this.current >= this.maxCapacity * 0.4 && this.current < this.maxCapacity * 0.7) {
-        this.crowdLvl = 'medium'
+        this.crowdLvl = 'Medium'
       } else if (this.current >= this.maxCapacity * 0.7) {
-        this.crowdLvl = 'high'
+        this.crowdLvl = 'High'
       } else if (this.current < this.maxCapacity * 0.4) {
-        this.crowdLvl = 'low'
+        this.crowdLvl = 'Low'
       }
     },
   },
