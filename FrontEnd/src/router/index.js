@@ -107,6 +107,11 @@ const routes = [
     name: 'UserList',
     component: () => import('@/views/user-management/admin/UserList.vue'),
   },
+  {
+    path: '/RestaurantList',
+    name: 'RestaurantList',
+    component: () => import('@/views/user-management/admin/RestaurantList.vue'),
+  },
 ]
 
 const router = new VueRouter({
