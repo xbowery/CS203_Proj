@@ -32,7 +32,7 @@ public class CrowdLevelController {
      * List the latest crowd levels by datetime and restaurant in the system
      * @return list of latest crowd levels
      */
-    @GetMapping("restaurant/crowdLevels")
+    @GetMapping("restaurants/crowdLevels")
     public List<CrowdLevel> getCrowdLevels(){
         return crowdlevels.findAll();
     }
@@ -44,7 +44,7 @@ public class CrowdLevelController {
      * @param location location of restaurant
      * @return crowd level of the restaurant
      */
-    @GetMapping("/restaurant/{id}/crowdLevel")
+    @GetMapping("/restaurants/{id}/crowdLevel")
     public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable Long id) {
         Restaurant restaurant = restaurants.findById(id).orElse(null);
         return crowdlevels.findByRestaurant(restaurant);
@@ -57,7 +57,7 @@ public class CrowdLevelController {
      * @return the newly added CrowdLevel object
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/restaurant/{id}//crowdLevel")
+    @PostMapping("/restaurants/{id}//crowdLevel")
     public CrowdLevel addCrowdLevel(@PathVariable Long id, @Valid @RequestBody CrowdLevel crowdLevel) {
         return restaurants.findById(id).map(restaurant -> {
             crowdLevel.setRestaurant(restaurant);
@@ -73,7 +73,7 @@ public class CrowdLevelController {
      * @param newCrowdLevel a CrowdLevel object containing the new crowd level to be updated
      * @return the updated CrowdLevel object
      */
-    @PutMapping("/restaurant/{id}/crowdLevel/{crowdLevelDateTime}")
+    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelDateTime}")
     public CrowdLevel updateCrowdLevel(@PathVariable Long id,
     @PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date crowdLevelDateTime, @RequestBody CrowdLevel newCrowdLevel){
         return crowdlevels.findByDatetime(crowdLevelDateTime).map(crowdLevel -> {
