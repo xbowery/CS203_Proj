@@ -6,7 +6,7 @@ import com.app.APICode.passwordresettoken.PasswordResetToken;
 import java.util.List;
 
 public interface UserService {
-    List<User> listUsers();
+    List<UserDTO> listUsers();
 
     User getUserByUsername(String username);
 
