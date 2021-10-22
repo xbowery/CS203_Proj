@@ -15,6 +15,10 @@ class UserService {
     var request =  'employee/' + username + '/ctests'
     return api.post(request, ctest)
   }
+  async getRegistrationConfirm(token) {
+    var request = 'registrationConfirm?token=' + token
+    return api.get(request)
+  }
 }
 
 export default new UserService()

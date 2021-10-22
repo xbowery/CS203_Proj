@@ -25,7 +25,7 @@
         </v-card-text>
 
         <div class = "success" v-if="successful">
-          <p>Success! Please check your email to activate your account!</p>
+          <p>Success! Please check your email and click on the confirmation link to activate your account!</p>
         </div>
 
 
