@@ -16,18 +16,15 @@ const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
  */
 module.exports.getNews = async (req, res, next) => {
   try {
-    const latestGeneralNews = await News.find({ type: "Regular" })
-      .lean()
-      .sort("createdAt")
-      .select("-_id -createdAt")
-      .limit(8)
-      .exec();
-    const latestRestaurantNews = await News.find({ type: "Restaurant" })
-      .lean()
-      .sort("createdAt")
-      .select("-_id -createdAt")
-      .limit(8)
-      .exec();
+    const searchLimit = 8;
+    const latestGeneralNews = await fetchNewsFromDB(
+      { type: "Regular" },
+      searchLimit
+    );
+    const latestRestaurantNews = await fetchNewsFromDB(
+      { type: "Restaurant" },
+      searchLimit
+    );
 
     const returnObj = {
       success: true,
@@ -73,12 +70,8 @@ module.exports.searchNews = async (req, res, next) => {
 
   // queryObj will be empty if user does not specify any query parameters
   try {
-    const news = await News.find(queryObj)
-      .lean()
-      .sort("createdAt")
-      .select("-_id -createdAt")
-      .limit(5)
-      .exec();
+    const limit = 5;
+    const news = await fetchNewsFromDB(queryObj, limit);
 
     const returnObj = {
       success: true,
@@ -93,6 +86,21 @@ module.exports.searchNews = async (req, res, next) => {
 };
 
 /**
+ *
+ * @param {*} queryObj
+ * @param {*} searchLimit
+ * @returns an object containing News which are relevant based on the queryObj string
+ */
+const fetchNewsFromDB = async (query, searchLimit) => {
+  return await News.find(query)
+    .lean()
+    .sort("-updatedAt")
+    .select("-_id -createdAt")
+    .limit(searchLimit)
+    .exec();
+};
+
+/**
  * Internal function to retrieve the news and save to the DB
  *
  * @param {*} req
@@ -103,47 +111,18 @@ const fetchNews = async () => {
   try {
     const { general, restaurant } = await fetchLatestNewsFromExternal();
 
-    /**
-     * Generate a map of updates that will be passed to MongoDB at once using
-     * the bulkWrite function. It will create a new entry if an article is not found.
-     * In this case, the criteria to check (filter) is the url itself
-     */
-    const craftedBulkWriteObjectA = general.map((news) => {
-      news.source = news.source.name;
-      return {
-        updateOne: {
-          filter: {
-            url: news.url,
-          },
-          update: {
-            $set: news,
-          },
-          upsert: true,
-          timestamps: true,
-        },
-      };
-    });
-
-    const craftedBulkWriteObjectB = restaurant.map((news) => {
-      news.source = news.source.name;
-      news.type = "Restaurant";
-      return {
-        updateOne: {
-          filter: {
-            url: news.url,
-          },
-          update: {
-            $set: news,
-          },
-          upsert: true,
-          timestamps: true,
-        },
-      };
-    });
+    const craftedBulkWriteObjectGeneral = craftBulkWriteObject(
+      general,
+      "General"
+    );
+    const craftedBulkWriteObjectRestaurant = craftBulkWriteObject(
+      restaurant,
+      "Restaurant"
+    );
 
     const mergedBulkWriteArr = [
-      ...craftedBulkWriteObjectA,
-      ...craftedBulkWriteObjectB,
+      ...craftedBulkWriteObjectGeneral,
+      ...craftedBulkWriteObjectRestaurant,
     ];
 
     const dbResp = await News.bulkWrite(mergedBulkWriteArr);
@@ -153,6 +132,35 @@ const fetchNews = async () => {
   } catch (err) {
     console.error(err);
   }
+};
+
+/**
+ * Generate a map of updates that will be passed to MongoDB at once using
+ * the bulkWrite function. It will create a new entry if an article is not found.
+ * In this case, the criteria to check (filter) is the url itself
+ *
+ * @param {*} newsObj
+ * @param {*} category
+ * @returns an array-object of the necessary database operations
+ */
+const craftBulkWriteObject = (newsObj, category) => {
+  return newsObj.map((news) => {
+    news.source = news.source.name;
+    news.imageUrl = news.urlToImage;
+    news.type = category;
+    return {
+      updateOne: {
+        filter: {
+          url: news.url,
+        },
+        update: {
+          $set: news,
+        },
+        upsert: true,
+        timestamps: true,
+      },
+    };
+  });
 };
 
 module.exports.devFetch = async (req, res, next) => {
@@ -191,6 +199,7 @@ const apiQuery = async (query) => {
   try {
     return await newsapi.v2.everything({
       q: query,
+      qInTitle: query,
       domains: "straitstimes.com,channelnewsasia.com,nytimes.com,bbc.co.uk",
       language: "en",
       sortBy: "publishedAt",
@@ -200,6 +209,3 @@ const apiQuery = async (query) => {
     console.error(err);
   }
 };
-
-// Run it once upon init to populate database
-// fetchLatestNewsFromExternal("Covid AND Singapore");
