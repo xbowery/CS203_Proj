@@ -42,8 +42,7 @@ app.use((err, req, res, next) => {
   let errCode, errMessage;
 
   if (err.errors) {
-    // mongoose validation error
-    errCode = 400; // bad request
+    errCode = 400;
     const keys = Object.keys(err.errors);
     // report the first validation error
     errMessage = err.errors[keys[0]].message;
@@ -52,7 +51,7 @@ app.use((err, req, res, next) => {
     errCode = err.status || 500;
     errMessage = err.message || "Internal Server Error";
   }
-  res.status(errCode).type("txt").send(errMessage);
+  res.status(errCode).json({ error: errMessage });
 });
 
 const listener = app.listen(process.env.PORT || 3001, () => {

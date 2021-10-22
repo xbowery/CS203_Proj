@@ -35,7 +35,7 @@ module.exports.getNews = async (req, res, next) => {
     return res.status(200).json(returnObj);
   } catch (err) {
     console.error(err);
-    next(err);
+    next("An error occurred when fetching the news. Please try again.");
   }
 };
 
@@ -81,7 +81,7 @@ module.exports.searchNews = async (req, res, next) => {
     return res.status(200).json(returnObj);
   } catch (err) {
     console.error(err);
-    next(err);
+    next("An error occurred when fetching the news. Please try again.");
   }
 };
 
