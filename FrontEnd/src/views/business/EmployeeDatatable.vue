@@ -61,10 +61,13 @@ export default {
   data: () => ({
     items:[],
   }),
+  props: {
+    username: String,
+  },
 
   async mounted(){
     try{
-      const res = await UserService.getEmployees()
+      const res = await UserService.getEmployees(this.username)
       this.items = res.data
       console.log(this.items)
     }catch (error) {

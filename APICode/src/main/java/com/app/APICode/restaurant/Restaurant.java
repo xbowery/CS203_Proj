@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Restaurant {
@@ -38,6 +39,7 @@ public class Restaurant {
     // private String crowdLevel;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

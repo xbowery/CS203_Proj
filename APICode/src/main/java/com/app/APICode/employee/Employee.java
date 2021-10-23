@@ -30,6 +30,7 @@ public class Employee {
     private User user;
 
     @ManyToOne
+    @JsonBackReference 
     @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 

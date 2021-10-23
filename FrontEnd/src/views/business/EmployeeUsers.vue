@@ -34,7 +34,7 @@
     </v-col>
 
     <v-col cols="12">
-      <employee-datatable></employee-datatable>
+      <employee-datatable :username="user.username"></employee-datatable>
     </v-col>
   </v-row>
 </template>
@@ -42,7 +42,7 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiPoll, mdiLabelVariantOutline, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
-
+import { mapGetters } from 'vuex'
 // demos
 import EmployeeDatatable from './EmployeeDatatable.vue'
 
@@ -52,6 +52,12 @@ export default {
     // DashboardCongratulationJohn,
     // DashboardWeeklyOverview,
     EmployeeDatatable,
+  },
+
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
   },
   setup() {
     const totalProfit = {
