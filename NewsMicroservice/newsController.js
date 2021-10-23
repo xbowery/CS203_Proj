@@ -86,7 +86,7 @@ module.exports.searchNews = async (req, res, next) => {
 
 /**
  *
- * @param {*} queryObj
+ * @param {*} query
  * @param {*} searchLimit
  * @returns an object containing News which are relevant based on the queryObj string
  */
@@ -143,6 +143,10 @@ const fetchNews = async () => {
  * @returns an array-object of the necessary database operations
  */
 const craftBulkWriteObject = (newsObj, category) => {
+  if (!newsObj || !category) {
+    return [{}];
+  }
+
   return newsObj.map((news) => {
     news.source = news.source.name;
     news.imageUrl = news.urlToImage;
@@ -172,9 +176,11 @@ module.exports.devFetch = async (req, res, next) => {
  * It will update the database which automatically checks if the entry exists
  * If the entry exists, it will update the entry. Else, it will add a new entry.
  */
-cron.schedule("0 * * * *", () => {
-  fetchNews();
-});
+if (process.env.NODE_ENV !== "test") {
+  cron.schedule("0 * * * *", () => {
+    fetchNews();
+  });
+}
 
 const fetchLatestNewsFromExternal = async () => {
   const restaurantTerms = ["Restaurant", "Food", "Dining"].join(" OR ");

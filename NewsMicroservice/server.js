@@ -13,15 +13,19 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 // Connect to the MongoDB interface and logs for current and future errors
-mongoose.connect(process.env.MONGO_URI).then(
-  () => {
-    console.log("MongoDB server ready for use!");
-  },
-  (err) => {
-    console.error(err);
-    console.error("Something went wrong. Please try again.");
-  }
-);
+mongoose
+  .connect(
+    process.env.NODE_ENV === "test" ? process.env.DB_TEST : process.env.DB
+  )
+  .then(
+    () => {
+      console.log("MongoDB server ready for use!");
+    },
+    (err) => {
+      console.error(err);
+      console.error("Something went wrong. Please try again.");
+    }
+  );
 
 app.use(cors());
 
@@ -60,3 +64,5 @@ app.use((err, req, res, next) => {
 const listener = app.listen(process.env.PORT || 3001, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });
+
+module.exports = app;

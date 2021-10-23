@@ -6,6 +6,8 @@ router.get("/news", newsController.getNews);
 router.get("/news/search", newsController.searchNews);
 
 // For dev use only
-router.get("/dev", newsController.devFetch);
+if (process.env.NODE_ENV !== "prod") {
+  router.get("/dev", newsController.devFetch);
+}
 
 module.exports = router;
