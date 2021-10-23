@@ -8,7 +8,7 @@ class AuthService {
       const response = await api.post(
         '/login',
         {
-          username: user.email,
+          username: user.username,
           password: user.password,
         },
         {
@@ -35,11 +35,27 @@ class AuthService {
 
   register(user) {
     return api.post(
-      '/signup',
+      '/register',
       {
         username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         password: user.password,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
+
+  forgetPassword(email) {
+    return api.post(
+      '/forgotPassword',
+      {
+        email,
       },
       {
         headers: {

@@ -30,13 +30,13 @@
           <validation-observer v-slot="{ handleSubmit, invalid }">
             <v-form @submit.prevent="handleSubmit(handleLogin)">
               <!-- Commented out email validation for dev purposes -->
-              <!-- <validation-provider name="Email" rules="required|email" v-slot="{ errors }"> -->
-              <validation-provider name="Email" rules="required" v-slot="{ errors }">
+              <!-- <validation-provider name="Username" rules="required" v-slot="{ errors }"> -->
+              <validation-provider name="Username" rules="required" v-slot="{ errors }">
                 <v-text-field
-                  v-model="user.email"
+                  v-model="user.username"
                   outlined
-                  label="Email"
-                  placeholder="john@example.com"
+                  label="Username"
+                  placeholder="johndoe1"
                   hide-details="auto"
                   class="mb-3"
                   :error-messages="errors[0]"
@@ -84,15 +84,17 @@
     <!-- background triangle shape  -->
     <img
       class="auth-mask-bg"
-      height="173"
-      :src="require(`@/assets/images/misc/mask-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
+      height="1000"
+      :src="require('@/assets/images/misc/f&b background.jpg')"
+
+
     />
 
     <!-- tree -->
-    <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img>
+    <!-- <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img> -->
 
     <!-- tree  -->
-    <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img>
+    <!-- <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img> -->
   </div>
 </template>
 
@@ -106,20 +108,10 @@ import '@/validators'
 
 export default {
   components: { ValidationProvider, ValidationObserver },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn
-    },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push('/')
-    }
-  },
   methods: {
     async handleLogin() {
       this.loading = true
-      if (this.user.email && this.user.password) {
+      if (this.user.username && this.user.password) {
         try {
           await this.$store.dispatch('auth/login', this.user)
           this.$router.push('/')

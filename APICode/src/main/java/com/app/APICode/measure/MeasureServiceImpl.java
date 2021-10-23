@@ -22,6 +22,11 @@ public class MeasureServiceImpl implements MeasureService{
     }
 
     @Override
+    public Measure getLatestMeasure(){
+        return measures.findTopByOrderByCreationDateTimeDesc();
+    }
+
+    @Override
     public Measure getMeasure(Date creationDateTime) {
         return measures.findByCreationDateTime(creationDateTime).orElse(null);
     }
@@ -55,4 +60,5 @@ public class MeasureServiceImpl implements MeasureService{
     public void deleteMeasure(Date creationDateTime) {
         measures.deleteByCreationDateTime(creationDateTime);
     }
+
 }

@@ -34,8 +34,7 @@ public class JWTRefreshToken {
     Logger logger = LoggerFactory.getLogger(JWTRefreshToken.class);
 
     public void refreshJwtToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-        };
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
         Map<String, String> tokensMap = new ObjectMapper().readValue(req.getInputStream(), typeRef);
         String refreshToken = tokensMap.get("refreshToken");
 

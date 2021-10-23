@@ -46,6 +46,14 @@ const routes = [
     },
   },
   {
+    path: '/RegisterConfirmation',
+    name: 'RegisterConfirmation',
+    component: () => import('@/views/user-management/RegisterConfirmation.vue'),
+    meta: {
+      layout: 'blank',
+    },
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),
@@ -56,6 +64,14 @@ const routes = [
   {
     path: '*',
     redirect: 'error-404',
+  },
+  {
+    path: '/error-403',
+    name: 'error-403',
+    component: () => import('@/views/NotAuthorized.vue'),
+    meta: {
+      layout: 'blank',
+    },
   },
   {
     path: '/restaurants',
@@ -91,6 +107,26 @@ const routes = [
     path: '/CovidNews',
     name: 'CovidNews',
     component: () => import('@/views/news/CovidNews.vue'),
+  },
+  {
+    path: '/F&BGuidelines',
+    name: 'F&BGuidelines',
+    component: () => import('@/views/news/F&BGuidelines.vue'),
+  },
+  {
+    path: '/F&BNews',
+    name: 'F&BNews',
+    component: () => import('@/views/news/F&BNews.vue'),
+  },
+  {
+    path: '/UserList',
+    name: 'UserList',
+    component: () => import('@/views/user-management/admin/UserList.vue'),
+  },
+  {
+    path: '/RestaurantList',
+    name: 'RestaurantList',
+    component: () => import('@/views/user-management/admin/RestaurantList.vue'),
   },
 ]
 

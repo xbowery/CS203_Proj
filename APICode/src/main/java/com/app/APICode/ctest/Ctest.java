@@ -34,11 +34,17 @@ public class Ctest {
     @Pattern(regexp = "(Positive|Negative)")
     private String result;
 
-    public Ctest (Employee employee, String type, Date date, String result){
-        this.employee = employee;
+    public Ctest (String type, Date date, String result){
         this.type = type;
         this.date = date;
         this.result = result;
+    }
+    public Ctest(){
+        
+    }
+
+    public Long getId(){
+        return id;
     }
 
     public void setEmployee(Employee employee){

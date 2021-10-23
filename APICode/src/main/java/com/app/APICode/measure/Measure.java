@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Measure {
     public Measure() {}
-
     private @Id @GeneratedValue Long id;
 
     @NotNull(message = "Created date should not be null")
@@ -70,6 +69,7 @@ public class Measure {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+        
     }
 
     public boolean isVaccinationStatus() {

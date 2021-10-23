@@ -19,22 +19,28 @@
 
         <!-- login form -->
         <v-card-text>
-          <v-form>
-            <v-text-field
-              v-model="email"
-              outlined
-              label="Email"
-              placeholder="john@example.com"
-              hide-details
-              class="mb-4"
-            ></v-text-field>
+          <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
+          <validation-observer v-slot="{ invalid }">
+            <v-form @submit.prevent="handleForget">
+              <validation-provider name="Email" rules="required|email" v-slot="{ errors }">
+                <v-text-field
+                  v-model="user.email"
+                  outlined
+                  label="Email"
+                  placeholder="john@example.com"
+                  hide-details
+                  class="mb-4"
+                  :error-messages="errors[0]"
+                ></v-text-field>
+              </validation-provider>
 
-            <v-btn block color="primary"> Send reset link </v-btn>
-          </v-form>
+              <v-btn block color="primary" type="submit" :disabled="invalid"> Send reset link </v-btn>
+            </v-form>
+          </validation-observer>
         </v-card-text>
 
         <v-card-actions class="d-flex justify-center align-center">
-          <router-link :to="{ path: '/Login' }" class="d-flex align-center text-sm">
+          <router-link :to="{ name: 'login' }" class="d-flex align-center text-sm">
             <v-icon size="24" color="primary">
               {{ icons.mdiChevronLeft }}
             </v-icon>
@@ -47,31 +53,34 @@
     <!-- background triangle shape  -->
     <img
       class="auth-mask-bg"
-      height="190"
-      :src="require(`@/assets/images/misc/mask-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
+      height="1000"
+      :src="require('@/assets/images/misc/f&b background.jpg')"
     />
 
     <!-- tree -->
-    <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img>
+    <!-- <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img> -->
 
     <!-- tree  -->
-    <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img>
+    <!-- <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img> -->
   </div>
 </template>
 
 <script>
 import { mdiChevronLeft } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import themeConfig from '/themeConfig'
+import User from '@/model/user'
 
 export default {
+  components: { ValidationProvider, ValidationObserver },
   setup() {
     const isPasswordVisible = ref(false)
-    const email = ref('')
+    const user = new User('')
 
     return {
       isPasswordVisible,
-      email,
+      user,
 
       // themeConfig
       appName: themeConfig.app.name,
@@ -81,6 +90,22 @@ export default {
         mdiChevronLeft,
       },
     }
+  },
+  methods: {
+    async handleForget() {
+      this.loading = true
+      if (this.user.email) {
+        try {
+          await this.$store.dispatch('auth/forgetPassword', this.user.email)
+          console.log('success')
+          // this.$router.push('/')
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+        } finally {
+          this.loading = false
+        }
+      }
+    },
   },
 }
 </script>

@@ -6,10 +6,14 @@ const initialState = user ? { status: { loggedIn: true }, user } : { status: { l
 export const auth = {
   namespaced: true,
   state: initialState,
+  getters: {
+    user: state => state.user,
+  },
   actions: {
     login({ commit }, user) {
       return AuthService.login(user).then(
         user => {
+          user.password = null
           commit('loginSuccess', user)
           return Promise.resolve(user)
         },
@@ -35,6 +39,18 @@ export const auth = {
         },
       )
     },
+    forgetPassword({ commit }, email) {
+      return AuthService.forgetPassword(email).then(
+        response => {
+          commit('forgetPasswordSuccess')
+          return Promise.resolve(response.data)
+        },
+        error => {
+          commit('forgetPasswordFailure')
+          return Promise.reject(error)
+        },
+      )
+    },
     refreshToken({ commit }, accessToken) {
       commit('refreshToken', accessToken)
     },
@@ -56,6 +72,12 @@ export const auth = {
       state.status.loggedIn = false
     },
     registerFailure(state) {
+      state.status.loggedIn = false
+    },
+    forgetPasswordSuccess(state) {
+      state.status.loggedIn = false
+    },
+    forgetPasswordFailure(state) {
       state.status.loggedIn = false
     },
     refreshToken(state, accessToken) {
