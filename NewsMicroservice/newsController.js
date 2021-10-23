@@ -1,6 +1,9 @@
 const News = require("./newsSchema");
 const cron = require("node-cron");
 
+const Utils = require("./utils");
+const utils = new Utils();
+
 const NewsAPI = require("newsapi");
 const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
 
@@ -52,20 +55,7 @@ module.exports.searchNews = async (req, res, next) => {
   const searchStr = req.query.q;
 
   // Crafts an object that searches for that string in either the title or the content or both (case insensitive)
-  let queryObj = {};
-  if (searchStr !== "") {
-    const regex = new RegExp(searchStr, "i");
-    queryObj = {
-      $or: [
-        {
-          title: regex,
-        },
-        {
-          content: regex,
-        },
-      ],
-    };
-  }
+  const queryObj = utils.craftQueryObj(searchStr);
 
   // queryObj will be empty if user does not specify any query parameters
   try {
@@ -82,6 +72,12 @@ module.exports.searchNews = async (req, res, next) => {
     console.error(err);
     next("An error occurred when fetching the news. Please try again.");
   }
+};
+
+module.exports.devFetch = async (req, res, next) => {
+  const dbResp = await fetchNews();
+  const { nUpserted, nModified } = dbResp;
+  return res.status(200).json({ nUpserted, nModified });
 };
 
 /**
@@ -111,11 +107,11 @@ const fetchNews = async () => {
   try {
     const { general, restaurant } = await fetchLatestNewsFromExternal();
 
-    const craftedBulkWriteObjectGeneral = craftBulkWriteObject(
+    const craftedBulkWriteObjectGeneral = utils.craftBulkWriteObject(
       general,
       "General"
     );
-    const craftedBulkWriteObjectRestaurant = craftBulkWriteObject(
+    const craftedBulkWriteObjectRestaurant = utils.craftBulkWriteObject(
       restaurant,
       "Restaurant"
     );
@@ -136,44 +132,38 @@ const fetchNews = async () => {
   }
 };
 
-/**
- * Generate a map of updates that will be passed to MongoDB at once using
- * the bulkWrite function. It will create a new entry if an article is not found.
- * In this case, the criteria to check (filter) is the url itself
- *
- * @param {*} newsObj
- * @param {*} category
- * @returns an array-object of the necessary database operations
- */
-const craftBulkWriteObject = (newsObj, category) => {
-  if (!newsObj || !category) {
-    return [{}];
-  }
+// /**
+//  * Generate a map of updates that will be passed to MongoDB at once using
+//  * the bulkWrite function. It will create a new entry if an article is not found.
+//  * In this case, the criteria to check (filter) is the url itself
+//  *
+//  * @param {*} newsObj
+//  * @param {*} category
+//  * @returns an array-object of the necessary database operations
+//  */
+// const craftBulkWriteObject = (newsObj, category) => {
+//   if (!newsObj || !category) {
+//     return [{}];
+//   }
 
-  return newsObj.map((news) => {
-    news.source = news.source.name;
-    news.imageUrl = news.urlToImage;
-    news.type = category;
-    return {
-      updateOne: {
-        filter: {
-          url: news.url,
-        },
-        update: {
-          $set: news,
-        },
-        upsert: true,
-        timestamps: true,
-      },
-    };
-  });
-};
-
-module.exports.devFetch = async (req, res, next) => {
-  const dbResp = await fetchNews();
-  const { nUpserted, nModified } = dbResp;
-  return res.status(200).json({ nUpserted, nModified });
-};
+//   return newsObj.map((news) => {
+//     news.source = news.source.name;
+//     news.imageUrl = news.urlToImage;
+//     news.type = category;
+//     return {
+//       updateOne: {
+//         filter: {
+//           url: news.url,
+//         },
+//         update: {
+//           $set: news,
+//         },
+//         upsert: true,
+//         timestamps: true,
+//       },
+//     };
+//   });
+// };
 
 /**
  * Scheduled cron job that is ran every 60 mins to fetch the latest news
