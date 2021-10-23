@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
@@ -34,7 +35,7 @@ public class EmployeeController {
     @GetMapping("/employees") 
     public List<User> getEmployees(Principal principal) {
         Long principal_id = userService.getUserIdByUsername(principal.getName());
-
+    
         List<Employee> employeeList = employeeService.listEmployees(principal_id);
         List<User> userList = new ArrayList<>();
         for (Employee employee : employeeList) {
@@ -43,6 +44,30 @@ public class EmployeeController {
             userList.add(user);
         }
         return userList;
+    }
+
+    @GetMapping("/employees/{username}")
+    public List<User> getEmployees2(@PathVariable String username){
+        User user = userService.getUserByUsername(username);
+
+        if (user == null)
+            throw new UserNotFoundException(username);
+
+        Employee owner = user.getEmployee();
+        if (owner == null)
+            throw new EmployeeNotFoundException(username);
+        
+        Restaurant restaurant = owner.getRestaurant();
+        List<Employee> employeeList = restaurant.getEmployees();
+
+        List<User> userList = new ArrayList<>();
+        for (Employee employee : employeeList) {
+            Long user_id = employee.getUser().getId();
+            User userTemp = userService.getUserById(user_id);
+            userList.add(userTemp);
+        }
+        return userList;
+        
     }
 
     /**

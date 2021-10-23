@@ -108,6 +108,10 @@ public class Restaurant {
         this.id = id;
     }
 
+    public List<Employee> getEmployees(){
+        return this.employees;
+    }
+
 
     // public CrowdLevel getCrowdLevel() {
     //     return crowdLevel.getCrowdLevel();

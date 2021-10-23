@@ -55,8 +55,22 @@
 <script>
 import { mdiSquareEditOutline, mdiDotsVertical } from '@mdi/js'
 import data from './employeedatatable-data.js'
+import UserService from '@/services/user.service'
 
 export default {
+  data: () => ({
+    items:[],
+  }),
+
+  async mounted(){
+    try{
+      const res = await UserService.getEmployees()
+      this.items = res.data
+      console.log(this.items)
+    }catch (error) {
+      console.error(error)
+    }
+  },
   setup() {
     const statusColor = {
       /* eslint-disable key-spacing */
@@ -78,6 +92,7 @@ export default {
       { title: 'Active', value: 'active' },
       { title: 'Inactive', value: 'inactive' },
     ]
+  
 
     return {
       dialog: false,

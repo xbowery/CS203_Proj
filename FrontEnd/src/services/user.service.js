@@ -22,6 +22,9 @@ class UserService {
   async getMeasures(){
     return api.get('measures')
   }
+  async getEmployees(){
+    return api.get('employees')
+  }
 }
 
 export default new UserService()
