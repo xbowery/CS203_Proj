@@ -35,6 +35,60 @@ class UserService {
       },
     )
   }
+  deleteUser(user) {
+    return api.delete(
+      `users/${user.username}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
+  postRestaurant(restaurant) {
+    return api.post(
+      'restaurants',
+      {
+        name: restaurant.name,
+        location: restaurant.location,
+        cuisine: restaurant.cuisine,
+        description: restaurant.description,
+        maxCapacity: restaurant.maxCapacity,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
+  updateRestaurant(restaurant) {
+    return api.put(
+      `restaurants/${restaurant.name}/${restaurant.location}`,
+      {
+        name: restaurant.name,
+        location: restaurant.location,
+        cuisine: restaurant.cuisine,
+        description: restaurant.description,
+        maxCapacity: restaurant.maxCapacity,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
+  deleteRestaurant(restaurant) {
+    return api.delete(
+      `restaurants/${restaurant.name}/${restaurant.location}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
 }
 
 export default new UserService()

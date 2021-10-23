@@ -160,9 +160,6 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
-    deleteConfirm: false,
-    newUserConfirm: false,
-    editUserConfirm: true,
     search: '',
     errors: '',
     isAddNewUserSidebarActive: '',
@@ -255,9 +252,15 @@ export default {
     },
 
     deleteItemConfirm() {
+      const user = new User('')
+      user.username = this.items[this.editedIndex].username
+
       this.items.splice(this.editedIndex, 1)
-      this.deleteConfirm = true
-      this.closeDelete()
+      this.handleDeleteUser(user)
+
+      if (!this.message) {
+        this.closeDelete()
+      }
     },
 
     close() {
@@ -314,6 +317,16 @@ export default {
     //     console.log(error)
     //   }
     // },
+    
+    async handleDeleteUser(user) {
+      try {
+        const res = await UserService.deleteUser(user)
+        console.log(res.data)
+      } catch (error) {
+        this.message = error.response?.data?.message || error.message || error.toString()
+        console.error(error)
+      }
+    },
   },
 }
 </script>
