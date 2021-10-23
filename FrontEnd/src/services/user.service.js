@@ -21,7 +21,7 @@ class UserService {
   }
   updateUser(user) {
     return api.put(
-      `/updateUser/${user.username}`,
+      `/users/${user.username}`,
       {
         firstName: user.firstName,
         lastName: user.lastName,
