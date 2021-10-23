@@ -19,6 +19,9 @@ class UserService {
     var request = 'registrationConfirm?token=' + token
     return api.get(request)
   }
+  async getMeasures(){
+    return api.get('measures')
+  }
 }
 
 export default new UserService()
