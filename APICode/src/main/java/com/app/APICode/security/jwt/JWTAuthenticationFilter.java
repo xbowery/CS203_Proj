@@ -49,6 +49,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             creds = new ObjectMapper().readValue(req.getInputStream(), User.class);
         } catch (Exception e) {
+            System.out.println(e);
             // if the request parameters are malformed, just declare the credentials as bad
             throw new BadCredentialsException("Authentication Error");
         }
@@ -80,7 +81,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse res,
             AuthenticationException failed) throws IOException, ServletException {
-
+                System.out.println(failed);
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         res.setContentType(APPLICATION_JSON_VALUE);
 
