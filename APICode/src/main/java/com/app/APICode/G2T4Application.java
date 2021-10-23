@@ -5,11 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.app.APICode.measure.*;
-import com.app.APICode.news.*;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -40,13 +38,6 @@ public class G2T4Application {
 		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
 		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
 		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
-
-		NewsRepository news = ctx.getBean(NewsRepository.class);
-		News testNews = new News("Channel News Asia",
-				"Unvaccinated children aged 12 and below allowed to enter Singapore under vaccinated travel lanes: CAAS",
-				LocalDateTime.now(), "https://channelnewsasia.com", "https://channelnewsasia.com",
-				"CAAS has recently tightened the criteria...");
-		System.out.println("[Add News]:" + news.save(testNews).getTitle());
 	}
 
 }
