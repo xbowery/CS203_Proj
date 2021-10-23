@@ -21,3 +21,12 @@ The following endpoints are available and exposed for users to retrieve related,
 | ------ | --------------------------- | ------------------------------------------------------------------------------------------- |
 | GET    | /api/v1/news                | Get the top 8 news each for the "Restaurant" related news and "General" news                |
 | GET    | /api/v1/news/search?q=query | Top 5 news with either the title or content body containing the keyword in the query string |
+
+## Testing
+
+To run the test suites, run the command `npm test`. Both unit and integration tests will run.
+
+## Production
+
+To run it in production mode, run the command `npm run prod`.
+This is a temporary command before the docker deploy scripts are up.
