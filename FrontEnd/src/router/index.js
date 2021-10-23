@@ -14,11 +14,6 @@ const routes = [
     component: () => import('@/views/Home.vue'),
   },
   {
-    path: '/MeasuresHome',
-    name: 'MeasuresHome',
-    component: () => import('@/views/MeasuresHome.vue'),
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/user-management/Login.vue'),
