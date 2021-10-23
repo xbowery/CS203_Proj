@@ -19,6 +19,22 @@ class UserService {
     var request = 'registrationConfirm?token=' + token
     return api.get(request)
   }
+  updateUser(user) {
+    return api.put(
+      `/updateUser/${user.username}`,
+      {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        authorities: user.authorities,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
 }
 
 export default new UserService()

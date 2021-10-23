@@ -29,7 +29,6 @@ public class UserDTO {
         userDTO.isEnabled = user.isEnabled();
         if(user.getEmployee() != null){
             userDTO.company = user.getEmployee().getRestaurant().getName();
-            System.out.println(user.getEmployee().getRestaurant().getName());
         }
         userDTO.role = StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1];
         return userDTO;
