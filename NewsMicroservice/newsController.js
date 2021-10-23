@@ -17,7 +17,7 @@ module.exports.getNews = async (req, res, next) => {
   try {
     const searchLimit = 8;
     const latestGeneralNews = await fetchNewsFromDB(
-      { type: "Regular" },
+      { type: "General" },
       searchLimit
     );
     const latestRestaurantNews = await fetchNewsFromDB(
@@ -105,6 +105,7 @@ const fetchNewsFromDB = async (query, searchLimit) => {
  * @param {*} req
  * @param {*} res
  * @param {*} next
+ * @return dbResp a response in terms of an object of the status of insert / update
  */
 const fetchNews = async () => {
   try {
@@ -128,6 +129,8 @@ const fetchNews = async () => {
     const { nUpserted, nModified } = dbResp;
 
     console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
+
+    return dbResp;
   } catch (err) {
     console.error(err);
   }
@@ -167,8 +170,9 @@ const craftBulkWriteObject = (newsObj, category) => {
 };
 
 module.exports.devFetch = async (req, res, next) => {
-  await fetchNews();
-  return res.status(200).json();
+  const dbResp = await fetchNews();
+  const { nUpserted, nModified } = dbResp;
+  return res.status(200).json({ nUpserted, nModified });
 };
 
 /**
