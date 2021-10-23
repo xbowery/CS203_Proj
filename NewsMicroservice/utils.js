@@ -9,7 +9,7 @@ function Utils() {
    * @returns an array-object of the necessary database operations
    */
   this.craftBulkWriteObject = (newsObj, category) => {
-    if (!newsObj || !category) {
+    if (!newsObj || !category || Object.keys(newsObj[0]).length === 0) {
       return [{}];
     }
 
@@ -38,7 +38,7 @@ function Utils() {
    * @param {*} searchStr
    * @return object containing a regex, or an empty object if the searchStr is empty
    */
-  this.craftQueryObj = (searchStr) => {
+  this.craftQueryObj = (searchStr = "") => {
     if (searchStr === "") {
       return {};
     }

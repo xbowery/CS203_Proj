@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=dev nodemon -r dotenv/config server.js",
-    "test": "jest --setupFiles dotenv/config -i --testTimeout=10000 --forceExit"
+    "test": "jest --setupFiles dotenv/config -i tests/unit.test.js --testTimeout=10000 --forceExit"
   },
   "keywords": [],
   "author": "G2T4",
