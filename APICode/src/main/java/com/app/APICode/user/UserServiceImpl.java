@@ -172,16 +172,17 @@ public class UserServiceImpl implements UserService {
 
             Map<String, Object> dataModel = emailerService.getDataModel();
             dataModel.put("isRegisterConfirmation", true);
-            dataModel.put("token", token);
+            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + 
+                token);
 
             // try {
-            // emailerService.sendMessage(user.getEmail(), dataModel);
+            //     emailerService.sendMessage(user.getEmail(), dataModel);
             // } catch (MessagingException e) {
-            // System.out.println("Error occurred while trying to send an email to: " +
-            // user.getEmail());
+            //     System.out.println("Error occurred while trying to send an email to: " +
+            //         user.getEmail());
             // } catch (IOException e) {
-            // System.out.println("Error occurred while trying to send an email to: " +
-            // user.getEmail());
+            //     System.out.println("Error occurred while trying to send an email to: " +
+            //         user.getEmail());
             // }
 
             User savedUser = users.save(user);
@@ -195,8 +196,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserByUsername(String username, User newUserInfo) {
-        return users.findByUsername(username).map(user -> {
+    public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
+        return convertToUserDTO(users.findByUsername(username).map(user -> {
             // Check if email exists to prevent a unique index violation
             if (getUserByEmail(newUserInfo.getEmail()) == null) {
 
@@ -204,14 +205,16 @@ public class UserServiceImpl implements UserService {
                 return null;
             }
 
-            user.setEmail(newUserInfo.getEmail());
-            user.setFirstName(newUserInfo.getFirstName());
-            user.setLastName(newUserInfo.getLastName());
-            user.setPassword(encoder.encode(newUserInfo.getPassword()));
+            String email = newUserInfo.getEmail();
+            String firstName = newUserInfo.getFirstName();
+            String lastName = newUserInfo.getLastName();
+            // user.setPassword(encoder.encode(newUserInfo.getPassword()));
             // user.setUsername(newUserInfo.getUsername());
-            user.setIsVaccinated(newUserInfo.getIsVaccinated());
-            return users.save(user);
-        }).orElse(null);
+            // user.setIsVaccinated(newUserInfo.getIsVaccinated());
+            // user.setAuthorities(newUserInfo.getAuthorities());
+            users.setUserInfoByUsername(firstName, lastName, email, username);
+            return user;
+        }).orElse(null));
     }
 
     @Override
@@ -233,14 +236,14 @@ public class UserServiceImpl implements UserService {
         dataModel.put("requestPasswordChange", true);
         dataModel.put("password", tempPassword);
 
-        try {
-            emailerService.sendMessage(email, dataModel);
-        } catch (MessagingException e) {
-            System.out.println("Error occurred while trying to send an email to: " + email);
-        } catch (IOException e) {
-            System.out.println("Error occurred while trying to send an email to: " + email);
-        }
-        updatePasswordByEmail(email, encoder.encode(tempPassword));
+        // try {
+        //     emailerService.sendMessage(email, dataModel);
+        // } catch (MessagingException e) {
+        //     System.out.println("Error occurred while trying to send an email to: " + email);
+        // } catch (IOException e) {
+        //     System.out.println("Error occurred while trying to send an email to: " + email);
+        // }
+        // updatePasswordByEmail(email, encoder.encode(tempPassword));
     }
 
     @Override

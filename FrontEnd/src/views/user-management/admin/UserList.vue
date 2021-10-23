@@ -49,9 +49,10 @@
               Add New User
             </v-btn>
           </template>
-          <validation-observer ref="obs">
-          <v-card slot-scope="{ invalid }">
-            <v-form @submit.prevent="handleSubmit">
+          <validation-observer v-slot="{ handleSubmit, invalid }">
+          <!-- <v-card slot-scope="{ handleSubmit, invalid }"> -->
+            <!-- <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert> -->
+            <v-form @submit.prevent="handleSubmit(handleUser)">
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
@@ -168,7 +169,7 @@
               </v-btn>
             </v-card-actions>
             </v-form>
-          </v-card>
+          <!-- </v-card> -->
           </validation-observer>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">  
@@ -215,14 +216,19 @@
 </template>
 
 <script>
+import User from '@/model/user'
 import UserService from '@/services/user.service'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import '@/validators'
 
   export default {
     components: { ValidationProvider, ValidationObserver },
     data: () => ({
       dialog: false,
       dialogDelete: false,
+      deleteConfirm: false,
+      newUserConfirm: false,
+      editUserConfirm: true,
       search:'',
       errors:'',
       isAddNewUserSidebarActive: '',
@@ -264,6 +270,9 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         company: '',
         authorities: '',
       },
+      // user: new User('', '', '', ''),
+      // username: null,
+      // message: null,
     }),
 
     async mounted() {
@@ -290,6 +299,16 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       },
     },
 
+    setup() {
+      const user = new User('', '', '', '')
+      const username = null
+      const message = null
+      return {
+        user,
+        username,
+        message,
+      }
+    },
 
     methods: {
       editItem (item) {
@@ -306,6 +325,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
       deleteItemConfirm () {
         this.items.splice(this.editedIndex, 1)
+        this.deleteConfirm = true
         this.closeDelete()
       },
 
@@ -325,14 +345,35 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
         })
       },
 
-      save () {
+      save() {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.items[this.editedIndex], this.editedItem)
+          this.username = this.items[this.editedIndex].username
+          this.user.firstName = this.items[this.editedIndex].firstName
+          this.user.lastName = this.items[this.editedIndex].lastName
+          this.user.email = this.items[this.editedIndex].email
+          this.user.authorities = this.items[this.editedIndex].authorities
+          console.log(this.user.authorities)
+          this.editUserConfirm = true
+          console.log(this.editUserConfirm)
         } else {
           this.items.push(this.editedItem)
+          this.newUserConfirm = true
         }
         this.close()
       },
+      
+      async handleUser() {
+        if (this.editUserConfirm) {
+          try {
+            const res = this.$store.dispatch('auth/updateUser', this.username, this.user)
+            console.log(res)
+          } catch (error) {
+            this.message = error.response?.data?.message || error.message || error.toString()
+            console.log(error)
+          }
+        }
+      }
     },
   }
 

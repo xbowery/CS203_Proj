@@ -64,6 +64,23 @@ class AuthService {
       },
     )
   }
+
+  updateUser(username, user) {
+    return api.put(
+      `/updateUser/${username}`,
+      {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        authorities: user.authorities,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  }
 }
 
 export default new AuthService()

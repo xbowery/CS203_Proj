@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.user.User;
+import com.app.APICode.user.UserDTO;
 import com.app.APICode.user.UserOrEmailExistsException;
 import com.app.APICode.user.UserRepository;
 import com.app.APICode.user.UserServiceImpl;
@@ -91,7 +92,7 @@ public class UserServiceTest {
         when(users.save(any(User.class))).thenReturn(user2);
 
         // Act
-        User updatedUser = userService.updateUserByUsername(user.getUsername(), user2);
+        UserDTO updatedUser = userService.updateUserByUsername(user.getUsername(), UserDTO.convertToUserDTO(user2));
 
         // Assert
         assertNotNull(updatedUser);
