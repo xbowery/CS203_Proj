@@ -132,39 +132,6 @@ const fetchNews = async () => {
   }
 };
 
-// /**
-//  * Generate a map of updates that will be passed to MongoDB at once using
-//  * the bulkWrite function. It will create a new entry if an article is not found.
-//  * In this case, the criteria to check (filter) is the url itself
-//  *
-//  * @param {*} newsObj
-//  * @param {*} category
-//  * @returns an array-object of the necessary database operations
-//  */
-// const craftBulkWriteObject = (newsObj, category) => {
-//   if (!newsObj || !category) {
-//     return [{}];
-//   }
-
-//   return newsObj.map((news) => {
-//     news.source = news.source.name;
-//     news.imageUrl = news.urlToImage;
-//     news.type = category;
-//     return {
-//       updateOne: {
-//         filter: {
-//           url: news.url,
-//         },
-//         update: {
-//           $set: news,
-//         },
-//         upsert: true,
-//         timestamps: true,
-//       },
-//     };
-//   });
-// };
-
 /**
  * Scheduled cron job that is ran every 60 mins to fetch the latest news
  * It will update the database which automatically checks if the entry exists
