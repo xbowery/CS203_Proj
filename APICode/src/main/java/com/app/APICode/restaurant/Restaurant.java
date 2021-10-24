@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Restaurant {
@@ -34,10 +36,14 @@ public class Restaurant {
     @NotNull(message = "Max capacity should not be null")
     private int maxCapacity;
 
-    private String crowdLevel;
+    // private String crowdLevel;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     private List<Employee> employees;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<CrowdLevel> crowdLevel;
 
     public Restaurant() {}
 
@@ -96,19 +102,37 @@ public class Restaurant {
         this.maxCapacity = maxCapacity;
     }
 
-    public String getCrowdLevel() {
-        return this.crowdLevel;
+    public long getId() {
+        return id;
     }
 
-    public void setCrowdLevel() {
-        double utilization = (double)this.currentCapacity/this.maxCapacity;
-        if (utilization <= 0.4) {
-            this.crowdLevel = "Low";
-        } else if (utilization <= 0.7)  {
-            this.crowdLevel = "Medium";
-        } else {
-            this.crowdLevel = "High";
-        }
+    public void setId(long id) {
+        this.id = id;
     }
+
+    public List<Employee> getEmployees(){
+        return this.employees;
+    }
+
+
+    // public CrowdLevel getCrowdLevel() {
+    //     return crowdLevel.getCrowdLevel();
+    // }
+
+    // public void setCrowdLevel(CrowdLevel crowdLevel) {
+    //     this.crowdLevel = crowdLevel;
+    // }
+
+    // public void setCrowdLevel() {
+    //     double utilization = (double)this.currentCapacity/this.maxCapacity;
+    //     if (utilization <= 0.4) {
+    //         this.crowdLevel = "Low";
+    //     } else if (utilization <= 0.7)  {
+    //         this.crowdLevel = "Medium";
+    //     } else {
+    //         this.crowdLevel = "High";
+    //     }
+    // }
+
 }
 

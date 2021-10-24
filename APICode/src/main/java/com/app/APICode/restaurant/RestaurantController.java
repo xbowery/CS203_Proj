@@ -54,7 +54,7 @@ public class RestaurantController {
     }
 
     /**
-     * Search for user given the name and location and updates the relevant restaurant details
+     * Search for restaurant given the name and location and updates the relevant restaurant details
      * If there is no restaurant with the given name and location, throw a RestaurantNotFoundException
      * @param name name of restaurant
      * @param location location of restaurant

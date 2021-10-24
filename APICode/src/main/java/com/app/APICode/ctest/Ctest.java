@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.NotNull;
 
 import com.app.APICode.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Ctest {
@@ -21,6 +22,7 @@ public class Ctest {
     // but one user can have multiple tests
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
+    @JsonBackReference 
     private Employee employee;
 
     @NotNull(message = "type of test should not be null")
@@ -41,6 +43,10 @@ public class Ctest {
     }
     public Ctest(){
         
+    }
+
+    public Long getId(){
+        return id;
     }
 
     public void setEmployee(Employee employee){

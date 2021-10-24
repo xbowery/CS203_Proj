@@ -1,16 +1,21 @@
 package com.app.APICode.user;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.mail.MessagingException;
+
 import com.app.APICode.emailer.EmailerService;
+import com.app.APICode.passwordresettoken.PasswordResetToken;
+import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
-import com.app.APICode.passwordresettoken.PasswordResetToken;
-import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
-
-import java.io.IOException;
-import java.util.*;
-
-import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,7 +41,8 @@ public class UserServiceImpl implements UserService {
     public static final String TOKEN_VALID = "valid";
 
     @Autowired
-    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens, PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
+    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
+            PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
             BCryptPasswordEncoder encoder) {
         this.users = users;
         this.vTokens = vTokens;
@@ -52,8 +58,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> listUsers() {
-        return users.findAll();
+    public List<UserDTO> listUsers() {
+        List<User> usersList = users.findAll();
+        return usersList.stream().map(this::convertToUserDTO).collect(Collectors.toList());
+    }
+
+    private UserDTO convertToUserDTO(User user) {
+        return UserDTO.convertToUserDTO(user);
     }
 
     @Override
@@ -95,7 +106,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Add logic to validate verification token by calculating the expiry date of token
+     * Add logic to validate verification token by calculating the expiry date of
+     * token
      */
     @Override
     public String validateVerificationToken(String token) {
@@ -106,9 +118,7 @@ public class UserServiceImpl implements UserService {
 
         final User user = vToken.getUser();
         final Calendar cal = Calendar.getInstance();
-        if ((vToken.getExpiryDate()
-            .getTime() - cal.getTime()
-            .getTime()) <= 0) {
+        if ((vToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             vTokens.delete(vToken);
             return TOKEN_EXPIRED;
         }
@@ -132,12 +142,12 @@ public class UserServiceImpl implements UserService {
     public User getUserByPasswordResetToken(final String token) {
         return pTokens.findByToken(token).getUser();
     }
-    
+
     /**
-     * Add logic to avoid adding users with the same email or username
-     * Return null if there exists a user with the same email or username
+     * Add logic to avoid adding users with the same email or username Return null
+     * if there exists a user with the same email or username
      * 
-     * @param user a User object
+     * @param user    a User object
      * @param isAdmin boolean value to determine if user is admin or not
      * @return the newly added user object
      */
@@ -159,17 +169,20 @@ public class UserServiceImpl implements UserService {
 
         if (sameUsernames.size() == 0) {
             String token = UUID.randomUUID().toString();
-            
+
             Map<String, Object> dataModel = emailerService.getDataModel();
             dataModel.put("isRegisterConfirmation", true);
-            dataModel.put("token", token);
+            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + 
+                token);
 
             // try {
             //     emailerService.sendMessage(user.getEmail(), dataModel);
             // } catch (MessagingException e) {
-            //     System.out.println("Error occurred while trying to send an email to: " + user.getEmail());
+            //     System.out.println("Error occurred while trying to send an email to: " +
+            //         user.getEmail());
             // } catch (IOException e) {
-            //     System.out.println("Error occurred while trying to send an email to: " + user.getEmail());
+            //     System.out.println("Error occurred while trying to send an email to: " +
+            //         user.getEmail());
             // }
 
             User savedUser = users.save(user);
@@ -183,23 +196,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserByUsername(String username, User newUserInfo) {
-        return users.findByUsername(username).map(user -> {
+    public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
+        return convertToUserDTO(users.findByUsername(username).map(user -> {
             // Check if email exists to prevent a unique index violation
             if (getUserByEmail(newUserInfo.getEmail()) == null) {
-                
+
             } else if (!(getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username))) {
                 return null;
             }
 
-            user.setEmail(newUserInfo.getEmail());
-            user.setFirstName(newUserInfo.getFirstName());
-            user.setLastName(newUserInfo.getLastName());
-            user.setPassword(encoder.encode(newUserInfo.getPassword()));
+            String email = newUserInfo.getEmail();
+            String firstName = newUserInfo.getFirstName();
+            String lastName = newUserInfo.getLastName();
+            // user.setPassword(encoder.encode(newUserInfo.getPassword()));
             // user.setUsername(newUserInfo.getUsername());
-            user.setIsVaccinated(newUserInfo.getIsVaccinated());
-            return users.save(user);
-        }).orElse(null);
+            // user.setIsVaccinated(newUserInfo.getIsVaccinated());
+            // user.setAuthorities(newUserInfo.getAuthorities());
+            users.setUserInfoByUsername(firstName, lastName, email, username);
+            return user;
+        }).orElse(null));
     }
 
     @Override
@@ -221,14 +236,14 @@ public class UserServiceImpl implements UserService {
         dataModel.put("requestPasswordChange", true);
         dataModel.put("password", tempPassword);
 
-        try {
-            emailerService.sendMessage(email, dataModel);
-        } catch (MessagingException e) {
-            System.out.println("Error occurred while trying to send an email to: " + email);
-        } catch (IOException e) {
-            System.out.println("Error occurred while trying to send an email to: " + email);
-        }
-        updatePasswordByEmail(email, encoder.encode(tempPassword));
+        // try {
+        //     emailerService.sendMessage(email, dataModel);
+        // } catch (MessagingException e) {
+        //     System.out.println("Error occurred while trying to send an email to: " + email);
+        // } catch (IOException e) {
+        //     System.out.println("Error occurred while trying to send an email to: " + email);
+        // }
+        // updatePasswordByEmail(email, encoder.encode(tempPassword));
     }
 
     @Override

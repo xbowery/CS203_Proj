@@ -6,7 +6,7 @@ import com.app.APICode.passwordresettoken.PasswordResetToken;
 import java.util.List;
 
 public interface UserService {
-    List<User> listUsers();
+    List<UserDTO> listUsers();
 
     User getUserByUsername(String username);
 
@@ -30,7 +30,7 @@ public interface UserService {
 
     User addUser(User user, Boolean isAdmin);
 
-    User updateUserByUsername(String username, User user);
+    UserDTO updateUserByUsername(String username, UserDTO user);
 
     User updatePasswordByEmail(String email, String password);
 

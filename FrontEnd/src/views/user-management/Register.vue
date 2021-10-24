@@ -24,6 +24,11 @@
           <p class="mb-2">Make your "Normal" easy and fun!</p>
         </v-card-text>
 
+        <div class = "success" v-if="successful">
+          <p>Success! Please check your email and click on the confirmation link to activate your account!</p>
+        </div>
+
+
         <!-- login form -->
         <v-card-text>
           <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
@@ -126,15 +131,15 @@
     <!-- background triangle shape  -->
     <img
       class="auth-mask-bg"
-      height="190"
-      :src="require(`@/assets/images/misc/mask-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
+      height="1000"
+      :src="require('@/assets/images/misc/f&b background.jpg')"
     />
 
     <!-- tree -->
-    <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img>
+    <!-- <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img> -->
 
     <!-- tree  -->
-    <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img>
+    <!-- <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img> -->
   </div>
 </template>
 
@@ -148,16 +153,6 @@ import User from '@/model/user'
 
 export default {
   components: { ValidationProvider, ValidationObserver },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn
-    },
-  },
-  mounted() {
-    if (this.loggedIn) {
-      this.$router.push('/')
-    }
-  },
   methods: {
     handleRegister() {
       // this.message = ''

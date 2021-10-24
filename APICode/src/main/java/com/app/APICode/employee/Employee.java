@@ -16,6 +16,8 @@ import com.app.APICode.ctest.Ctest;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Employee {
@@ -26,14 +28,16 @@ public class Employee {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
-    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Ctest> ctests;
 
     public Employee() {
@@ -58,5 +62,9 @@ public class Employee {
 
     public Restaurant getRestaurant() {
         return restaurant;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

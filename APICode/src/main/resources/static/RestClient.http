@@ -93,6 +93,9 @@ GET http://localhost:8080/api/v1/measures
 GET http://localhost:8080/api/v1/measures/latest
 
 ###
+GET http://localhost:8080/api/v1/measures/2021-11-10T19:20:00.164+00:00
+
+###
 POST http://localhost:8080/api/v1/measures
 Content-Type: application/json
 Authorization: Basic admin:goodpassword
@@ -173,3 +176,52 @@ Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3ll
 ###
 GET http://localhost:8080/api/v1/employee/employee1/ctests
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJyb2xlcyI6WyJST0xFX0VNUExPWUVFIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDM5ODgzNCwidHlwZSI6ImFjY2VzcyJ9.6Odh9Ls71jsYQQ-hb69wIgK6cEE33OFsg5eCM4HjubbGbWBH38gOqnU8ZoqmaVQr-wsLyfm-tzxjM7qMsLXxUA
+
+###Crowd level testing
+GET http://localhost:8080/api/v1/restaurants/crowdLevels
+
+###
+GET http://localhost:8080/api/v1/restaurants/3/crowdLevel
+
+###
+POST  http://localhost:8080/api/v1/restaurants/3/crowdLevel
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "datetime": "Wed, 20 Oct 2021 21:50:30 GMT",
+    "noOfCustomers": 45
+}
+
+###
+POST  http://localhost:8080/api/v1/restaurants/4/crowdLevel
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "datetime": "2021-10-19T12:05:30.000+00:00",
+    "noOfCustomers": 25
+}
+
+###
+PUT   http://localhost:8080/api/v1/restaurants/4/crowdLevel/2021-10-19T12:05:30.000+00:00
+Content-Type: application/json
+Authorization: Basic admin:goodpassword
+
+{
+    "datetime": "2021-10-19T12:05:30.000+00:00",
+    "noOfCustomers": 1
+} 
+
+##### Testing for getting list of Employees
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+    "username": "business1",
+    "password": "testing12345"
+}
+###
+GET http://localhost:8080/api/v1/employees/business1
+Content-Type: application/json
+Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJidXNpbmVzczEiLCJyb2xlcyI6WyJST0xFX0JVU0lORVNTIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDk5NTU3MiwidHlwZSI6ImFjY2VzcyJ9.DPf70z2TNZwQRCSQYlu80aLUTI5LopMrfmcGOCbnpJK7IrngnkG3J6N4aR_s8D5RhaYq8TScdN4N09KUW5mPMA

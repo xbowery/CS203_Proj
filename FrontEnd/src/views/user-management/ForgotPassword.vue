@@ -21,7 +21,7 @@
         <v-card-text>
           <v-alert elevation="2" type="error" v-if="this.message">{{ this.message }}</v-alert>
           <validation-observer v-slot="{ invalid }">
-            <v-form @submit.prevent="handleRegister">
+            <v-form @submit.prevent="handleForget">
               <validation-provider name="Email" rules="required|email" v-slot="{ errors }">
                 <v-text-field
                   v-model="user.email"
@@ -40,7 +40,7 @@
         </v-card-text>
 
         <v-card-actions class="d-flex justify-center align-center">
-          <router-link :to="{ path: '/Login' }" class="d-flex align-center text-sm">
+          <router-link :to="{ name: 'login' }" class="d-flex align-center text-sm">
             <v-icon size="24" color="primary">
               {{ icons.mdiChevronLeft }}
             </v-icon>
@@ -53,15 +53,15 @@
     <!-- background triangle shape  -->
     <img
       class="auth-mask-bg"
-      height="190"
-      :src="require(`@/assets/images/misc/mask-${$vuetify.theme.dark ? 'dark' : 'light'}.png`)"
+      height="1000"
+      :src="require('@/assets/images/misc/f&b background.jpg')"
     />
 
     <!-- tree -->
-    <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img>
+    <!-- <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img> -->
 
     <!-- tree  -->
-    <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img>
+    <!-- <v-img class="auth-tree-3" width="377" height="289" src="@/assets/images/misc/tree-3.png"></v-img> -->
   </div>
 </template>
 
@@ -74,16 +74,6 @@ import User from '@/model/user'
 
 export default {
   components: { ValidationProvider, ValidationObserver },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn
-    },
-  },
-  mounted() {
-    if (this.loggedIn) {
-      this.$router.push('/')
-    }
-  },
   setup() {
     const isPasswordVisible = ref(false)
     const user = new User('')
@@ -104,9 +94,9 @@ export default {
   methods: {
     async handleForget() {
       this.loading = true
-      if (this.email) {
+      if (this.user.email) {
         try {
-          await this.$store.dispatch('auth/forgetPassword', this.email)
+          await this.$store.dispatch('auth/forgetPassword', this.user.email)
           console.log('success')
           // this.$router.push('/')
         } catch (error) {

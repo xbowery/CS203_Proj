@@ -49,7 +49,7 @@ public class UserController {
      * @return list of all users
      */
     @GetMapping("/users")
-    public List<User> getUsers() {
+    public List<UserDTO> getUsers() {
         return userService.listUsers();
     }
 
@@ -92,9 +92,10 @@ public class UserController {
      * @param newUserInfo a User object containing the new user info to be updated
      * @return the updated User object
      */
+    @Transactional
     @PutMapping("/users/{username}")
-    public User updateUser(@PathVariable String username, @Valid @RequestBody User newUserInfo) {
-        User user = userService.updateUserByUsername(username, newUserInfo);
+    public UserDTO updateUser(@PathVariable String username, @Valid @RequestBody UserDTO newUserInfo) {
+        UserDTO user = userService.updateUserByUsername(username, newUserInfo);
         if (user == null)
             throw new UserNotFoundException(username);
 

@@ -69,6 +69,16 @@ export default {
     AppBarUserMenu,
     AppBarNotification,
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn
+    },
+  },
+  created() {
+    if (!this.loggedIn) {
+      this.$router.push('/login')
+    }
+  },
   setup() {
     const isDrawerOpen = ref(null)
 

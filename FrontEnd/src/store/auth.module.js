@@ -6,10 +6,14 @@ const initialState = user ? { status: { loggedIn: true }, user } : { status: { l
 export const auth = {
   namespaced: true,
   state: initialState,
+  getters: {
+    user: state => state.user,
+  },
   actions: {
     login({ commit }, user) {
       return AuthService.login(user).then(
         user => {
+          user.password = null
           commit('loginSuccess', user)
           return Promise.resolve(user)
         },
