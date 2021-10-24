@@ -62,10 +62,10 @@
               <v-divider></v-divider>
 
               <v-list dense>
-                <v-list-item v-for="(keys, index) in keys" :key="index">
-                  <v-list-item-content :class="{ 'blue--text': sortBy === key }"> {{ keys.key }}: </v-list-item-content>
+                <v-list-item v-for="(key, index) in keys" :key="index">
+                  <v-list-item-content :class="{ 'blue--text': sortBy === key }"> {{ key.key }}: </v-list-item-content>
                   <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">
-                    {{ item[keys.value] }}
+                    {{ item[key.value] || item.restaurant[key.value] }}
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -131,10 +131,10 @@ export default {
       sortBy: 'name',
       items: [],
       keys: [
-        { key: 'Name', value: 'restaurant.name' },
-        { key: 'Location', value: 'restaurant.location' },
-        { key: 'Cuisine', value: 'restaurant.cuisine' },
-        { key: 'Description', value: 'restaurant.description' },
+        { key: 'Name', value: 'name' },
+        { key: 'Location', value: 'location' },
+        { key: 'Cuisine', value: 'cuisine' },
+        { key: 'Description', value: 'description' },
         { key: 'Crowd Level', value: 'latestCrowd' },
         // 'Name', 'Location'
       ],
