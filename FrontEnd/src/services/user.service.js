@@ -7,6 +7,9 @@ class UserService {
   async getRestaurants() {
     return api.get('restaurants')
   }
+  async getCrowdLevels(){
+    return api.get('restaurants/crowdLevels')
+  }
   async getCtests(username) {
     var request =  'employee/' + username + '/ctests'
     return api.get(request)

@@ -56,16 +56,16 @@
                 justify="center"
               ></v-img>
               <v-card-title class="subheading font-weight-bold">
-                {{ item.name }}
+                {{ item.restaurant.name }}
               </v-card-title>
 
               <v-divider></v-divider>
 
               <v-list dense>
-                <v-list-item v-for="(key, index) in filteredKeys" :key="index">
-                  <v-list-item-content :class="{ 'blue--text': sortBy === key }"> {{ key }}: </v-list-item-content>
+                <v-list-item v-for="(keys, index) in keys" :key="index">
+                  <v-list-item-content :class="{ 'blue--text': sortBy === key }"> {{ keys.key }}: </v-list-item-content>
                   <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">
-                    {{ item[key.toLowerCase()] }}
+                    {{ item[keys.value] }}
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -130,12 +130,20 @@ export default {
       itemsPerPage: 8,
       sortBy: 'name',
       items: [],
-      keys: ['Name', 'Location', 'Cuisine', 'Description', 'Crowd'],
+      keys: [
+        { key: 'Name', value: 'restaurant.name' },
+        { key: 'Location', value: 'restaurant.location' },
+        { key: 'Cuisine', value: 'restaurant.cuisine' },
+        { key: 'Description', value: 'restaurant.description' },
+        { key: 'Crowd Level', value: 'latestCrowd' },
+        // 'Name', 'Location'
+      ],
     }
   },
   async mounted() {
     try {
-      const res = await UserService.getRestaurants()
+      const res = await UserService.getCrowdLevels()
+      console.log(res)
       this.items = res.data
     } catch (error) {
       console.error(error)

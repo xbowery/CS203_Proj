@@ -7,6 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 
+import com.app.APICode.crowdlevel.Crowd;
+import com.app.APICode.crowdlevel.CrowdLevel;
+import com.app.APICode.crowdlevel.CrowdLevelRepository;
 import com.app.APICode.ctest.Ctest;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
@@ -52,6 +55,10 @@ public class G2T4Application {
 		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
 		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
 		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
+
+		CrowdLevelRepository crowdLevel = ctx.getBean(CrowdLevelRepository.class);
+		CrowdLevel testCrowdLevel = new CrowdLevel(new Date(), "medium", 22, testRestaurant);
+		crowdLevel.save(testCrowdLevel);
 	}
 
 }
