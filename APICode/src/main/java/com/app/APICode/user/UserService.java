@@ -30,7 +30,7 @@ public interface UserService {
 
     User addUser(User user, Boolean isAdmin);
 
-    User updateUserByUsername(String username, User user);
+    UserDTO updateUserByUsername(String username, UserDTO user);
 
     User updatePasswordByEmail(String email, String password);
 

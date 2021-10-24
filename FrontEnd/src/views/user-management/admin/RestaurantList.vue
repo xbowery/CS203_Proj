@@ -153,7 +153,7 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">  
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this user?</v-card-title>
+            <v-card-title class="text-h5">Are you sure you want to delete this restaurant?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -197,6 +197,7 @@
 <script>
 import UserService from '@/services/user.service'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import Restaurant from '@/model/restaurant'
 
   export default {
     components: { ValidationProvider, ValidationObserver },
@@ -276,8 +277,16 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       },
 
       deleteItemConfirm () {
+        const restaurant = new Restaurant('', '')
+        restaurant.name = this.items[this.editedIndex].name
+        restaurant.location = this.items[this.editedIndex].location
+        
         this.items.splice(this.editedIndex, 1)
-        this.closeDelete()
+        this.handleDeleteRestaurant(restaurant)
+
+        if (!this.message) {
+          this.closeDelete()
+        }
       },
 
       close () {
@@ -299,11 +308,55 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
       save () {
         if (this.editedIndex > -1) {
           Object.assign(this.items[this.editedIndex], this.editedItem)
+
+          const restaurant = new Restaurant('', '', '', '', '')
+          restaurant.name = this.items[this.editedIndex].name
+          restaurant.location = this.items[this.editedIndex].location
+          restaurant.cuisine = this.items[this.editedIndex].cuisine
+          restaurant.description = this.items[this.editedIndex].description
+          restaurant.maxCapacity = this.items[this.editedIndex].maxCapacity
+
+          this.handleEditRestaurant(restaurant)
         } else {
+          const restaurant = new Restaurant('', '', '', '', '')
+          restaurant.name = this.editedItem.name
+          restaurant.location = this.editedItem.location
+          restaurant.cuisine = this.editedItem.cuisine
+          restaurant.description = this.editedItem.description
+          restaurant.maxCapacity = this.editedItem.maxCapacity
+
+          this.handleNewRestaurant(restaurant)
           this.items.push(this.editedItem)
         }
         this.close()
       },
+      async handleEditRestaurant(restaurant) {
+        try {
+          const res = await UserService.updateRestaurant(restaurant)
+          console.log(res.data)
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+          console.error(error)
+        }
+      },
+      async handleNewRestaurant(restaurant) {
+        try {
+          const res = await UserService.postRestaurant(restaurant)
+          console.log(res.data)
+        } catch (error) {
+          this.message = error.response?.data?.message || error.message || error.toString()
+          console.error(error)
+        }
+      },
+      async handleDeleteRestaurant(restaurant) {
+      try {
+        const res = await UserService.deleteRestaurant(restaurant)
+        console.log(res.data)
+      } catch (error) {
+        this.message = error.response?.data?.message || error.message || error.toString()
+        console.error(error)
+      }
+    },
     },
   }
 

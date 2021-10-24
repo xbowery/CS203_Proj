@@ -1,5 +1,7 @@
 package com.app.APICode.security;
 
+import java.util.Arrays;
+
 import com.app.APICode.security.jwt.JWTAuthenticationFilter;
 import com.app.APICode.security.jwt.JWTAuthorizationFilter;
 import com.app.APICode.security.jwt.JWTHelper;
@@ -70,8 +72,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 
