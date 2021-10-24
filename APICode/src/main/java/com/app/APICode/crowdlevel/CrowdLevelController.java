@@ -38,11 +38,10 @@ public class CrowdLevelController {
     }
 
     /**
-     * Search for the crowd level of a restaurant with the given name and location 
+     * Search for the crowd level of a restaurant with the given restaurant id
      * 
-     * @param name name of restaurant
-     * @param location location of restaurant
-     * @return crowd level of the restaurant
+     * @param id restaurant id
+     * @return crowd level of restaurant
      */
     @GetMapping("/restaurants/{id}/crowdLevel")
     public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable Long id) {
@@ -53,7 +52,7 @@ public class CrowdLevelController {
     /**
      * Add a new crowd level with POST request to "/restaurant/{id}/crowdLevel"
      * 
-     * @param id id of restaurant
+     * @param id restaurant id
      * @return the newly added CrowdLevel object
      */
     @ResponseStatus(HttpStatus.CREATED)
