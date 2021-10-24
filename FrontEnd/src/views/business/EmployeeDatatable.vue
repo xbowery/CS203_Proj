@@ -26,7 +26,7 @@
 
     <v-data-table
       :headers="headers"
-      :items="usreList"
+      :items="this.items"
       :search="search"
       item-key="full_name"
       class="table-rounded"
@@ -102,7 +102,8 @@ export default {
       search: '',
       headers: [
         { text: 'EMPLOYEE ID', value: 'id' },
-        { text: 'NAME', value: 'full_name' },
+        { text: 'FIRST NAME', value: 'firstName' },
+        { text: 'LAST NAME', value: 'lastName' },
         { text: 'EMAIL', value: 'email' },
         { text: 'DESIGNATION', value: 'designation' },
         { text: 'STATUS', value: 'status' },
