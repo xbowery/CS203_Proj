@@ -294,13 +294,6 @@ export default {
         // this.handleSaveUser(this.editedItem)
       }
       if (!this.message) {
-      save () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.items[this.editedIndex], this.editedItem)
-        } else {
-          this.items.push(this.editedItem)
-        }
-
         this.close()
       }
     },
