@@ -26,7 +26,7 @@
 
     <v-data-table
       :headers="headers"
-      :items="usreList"
+      :items="this.items"
       :search="search"
       item-key="full_name"
       class="table-rounded"
@@ -55,8 +55,25 @@
 <script>
 import { mdiSquareEditOutline, mdiDotsVertical } from '@mdi/js'
 import data from './employeedatatable-data.js'
+import UserService from '@/services/user.service'
 
 export default {
+  data: () => ({
+    items:[],
+  }),
+  props: {
+    username: String,
+  },
+
+  async mounted(){
+    try{
+      const res = await UserService.getEmployees(this.username)
+      this.items = res.data
+      console.log(this.items)
+    }catch (error) {
+      console.error(error)
+    }
+  },
   setup() {
     const statusColor = {
       /* eslint-disable key-spacing */
@@ -78,13 +95,15 @@ export default {
       { title: 'Active', value: 'active' },
       { title: 'Inactive', value: 'inactive' },
     ]
+  
 
     return {
       dialog: false,
       search: '',
       headers: [
         { text: 'EMPLOYEE ID', value: 'id' },
-        { text: 'NAME', value: 'full_name' },
+        { text: 'FIRST NAME', value: 'firstName' },
+        { text: 'LAST NAME', value: 'lastName' },
         { text: 'EMAIL', value: 'email' },
         { text: 'DESIGNATION', value: 'designation' },
         { text: 'STATUS', value: 'status' },

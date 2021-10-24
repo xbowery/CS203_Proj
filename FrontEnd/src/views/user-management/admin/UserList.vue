@@ -12,7 +12,6 @@
         label="Search"
       >
       </v-text-field>
-
       <v-spacer></v-spacer>
     </v-card-text>
     <v-data-table :headers="headers" :items="items" :search="search" sort-by="username" class="elevation-1">
@@ -282,7 +281,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
-
+        
         const user = new User('', '', '', '')
         user.username = this.items[this.editedIndex].username
         user.firstName = this.items[this.editedIndex].firstName
@@ -295,6 +294,13 @@ export default {
         // this.handleSaveUser(this.editedItem)
       }
       if (!this.message) {
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.items[this.editedIndex], this.editedItem)
+        } else {
+          this.items.push(this.editedItem)
+        }
+
         this.close()
       }
     },

@@ -45,6 +45,15 @@ public class G2T4Application {
 		employee1.setEmployee(employee11);
 		users.save(employee1);
 
+		User employee2 = new User("business1@test.com", "business1", "business", "1", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+		employee2.setEnabled(true);
+		users.save(employee2);
+		Employee employee22 = new Employee(employee2);
+		employee22.setRestaurant(testRestaurant);
+		employee2.setEmployee(employee22);
+		users.save(employee2);
+
+
 		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 		Ctest ctest1 = new Ctest("ART", date, "Positive");
 		ctest1.setEmployee(employee1.getEmployee());

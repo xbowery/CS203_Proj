@@ -88,6 +88,12 @@ class UserService {
         },
       },
     )
+  async getMeasures(){
+    return api.get('measures')
+  }
+  async getEmployees(username){
+    return api.get('employees/' + username)
+
   }
 }
 

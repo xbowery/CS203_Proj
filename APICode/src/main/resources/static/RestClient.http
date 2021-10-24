@@ -212,3 +212,16 @@ Authorization: Basic admin:goodpassword
     "datetime": "2021-10-19T12:05:30.000+00:00",
     "noOfCustomers": 1
 } 
+
+##### Testing for getting list of Employees
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+    "username": "business1",
+    "password": "testing12345"
+}
+###
+GET http://localhost:8080/api/v1/employees/business1
+Content-Type: application/json
+Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJidXNpbmVzczEiLCJyb2xlcyI6WyJST0xFX0JVU0lORVNTIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDk5NTU3MiwidHlwZSI6ImFjY2VzcyJ9.DPf70z2TNZwQRCSQYlu80aLUTI5LopMrfmcGOCbnpJK7IrngnkG3J6N4aR_s8D5RhaYq8TScdN4N09KUW5mPMA
