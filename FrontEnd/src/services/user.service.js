@@ -88,6 +88,7 @@ class UserService {
         },
       },
     )
+  }
   async getMeasures(){
     return api.get('measures')
   }
