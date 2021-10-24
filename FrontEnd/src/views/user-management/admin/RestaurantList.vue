@@ -298,7 +298,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.items[this.editedIndex], this.editedItem)
         } else {
           this.items.push(this.editedItem)
         }

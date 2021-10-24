@@ -12,7 +12,6 @@
         label="Search"
       >
       </v-text-field>
-
       <v-spacer></v-spacer>
     </v-card-text>
   <v-data-table
@@ -217,7 +216,6 @@
 <script>
 import UserService from '@/services/user.service'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
-
   export default {
     components: { ValidationProvider, ValidationObserver },
     data: () => ({
@@ -327,7 +325,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.items[this.editedIndex], this.editedItem)
         } else {
           this.items.push(this.editedItem)
         }
