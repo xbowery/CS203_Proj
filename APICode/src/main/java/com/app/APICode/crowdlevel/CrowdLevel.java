@@ -66,6 +66,15 @@ public class CrowdLevel {
         this.restaurant = restaurant;
     }
 
+    public CrowdLevel(Date datetime, String latestCrowd, int noOfCustomers, Restaurant restaurant) {
+        this.datetime = datetime;
+        this.latestCrowd = latestCrowd;
+        this.noOfCustomers = noOfCustomers;
+        this.restaurant = restaurant;
+    }
+
+    
+
     // private Crowd latestCrowd;
 
     // @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
