@@ -153,7 +153,7 @@ router.beforeEach((to, from, next) => {
   // redirect to login page if not logged in and trying to access a restricted page
   const { authorize } = to.meta
   const currentUser = TokenService.getUser()
-  
+
   if (authorize) {
     if (!currentUser) {
       // not logged in so redirect to login page with the return url
