@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
-    Optional<Notification> findByDateTime(LocalDateTime datetime);
+    Optional<Notification> findByDatetime(LocalDateTime datetime);
 
     Optional<List<Notification>> findByUser(Long user_id);
 
