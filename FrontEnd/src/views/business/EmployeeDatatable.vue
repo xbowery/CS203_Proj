@@ -54,7 +54,6 @@
 
 <script>
 import { mdiSquareEditOutline, mdiDotsVertical } from '@mdi/js'
-import data from './employeedatatable-data.js'
 import UserService from '@/services/user.service'
 
 export default {
@@ -108,7 +107,6 @@ export default {
         { text: 'DESIGNATION', value: 'designation' },
         { text: 'STATUS', value: 'status' },
       ],
-      usreList: data,
       status: {
         1: 'Inactive',
         2: 'Pending',

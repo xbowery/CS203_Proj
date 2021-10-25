@@ -64,8 +64,6 @@ export default {
 
   components: {
     StatisticsCardVertical,
-    // DashboardCongratulationJohn,
-    // DashboardWeeklyOverview,
     CovidTestingDatatable,
   },
 
