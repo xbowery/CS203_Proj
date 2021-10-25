@@ -16,8 +16,8 @@ import com.app.APICode.user.User;
 public class Notification {
     private @Id @GeneratedValue Long id;
 
-    @NotNull(message = "date cannot be null")
-    private LocalDateTime date;
+    @NotNull(message = "datetime cannot be null")
+    private LocalDateTime datetime;
 
     @NotNull(message = "text cannot be null")
     private String text;
@@ -35,11 +35,11 @@ public class Notification {
     public Notification() {}
 
     public LocalDateTime getDate() {
-        return date;
+        return datetime;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDate(LocalDateTime datetime) {
+        this.datetime= datetime;
     }
 
     public String getText() {
@@ -74,8 +74,8 @@ public class Notification {
         this.user = user;
     }
 
-    public Notification(LocalDateTime date,String text, URL link, boolean isSeen) {
-        this.date = date;
+    public Notification(LocalDateTime datetime,String text, URL link, boolean isSeen) {
+        this.datetime = datetime;
         this.text = text;
         this.link = link;
         this.isSeen = isSeen;
