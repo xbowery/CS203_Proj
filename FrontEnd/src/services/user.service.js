@@ -22,6 +22,10 @@ class UserService {
     const request = `registrationConfirm?token=${token}`
     return api.get(request)
   }
+  async deleteCtest(username, ctestId){
+    const request = `/employee/${username}/ctests/${ctestId}`
+    return api.delete(request)
+  }
   updateUser(user) {
     return api.put(
       `/users/${user.username}`,

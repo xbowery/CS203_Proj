@@ -80,7 +80,7 @@ public class CtestController {
      * Updates the info an employee's ctest
      * If there is no employee with the given username, throw a EmployeeNotFoundException
      * 
-     * @param id a long value (Employee)
+     * @param username username of employee
      * @param ctestId a long value (Ctest)
      * @param newCtest a Ctest object containing the new Ctest info to be updated
      * @return the updated Ctest object
@@ -104,20 +104,25 @@ public class CtestController {
     }
 
     /**
-     * Remove a Ctest with the DELETE request to "/employee/{employee_id}/ctests/{ctestId}"
-     * If there is no employee with the given "id", throw a EmployeeNotFoundException
+     * Remove a Ctest with the DELETE request to "/employee/{username}/ctests/{ctestId}"
+     * If there is no user with the given "username" throw a UserNotFoundException
+     * If there is no employee with the user, throw a EmployeeNotFoundException
      * If there is no Ctest with the given "id", throw a CtestNotFoundException
      * 
-     * @param employeeId a long value (Employee)
+     * @param username username of employee
      * @param ctestId a long value (Ctest)
      */
-    @DeleteMapping("/employee/{employee_id}/ctests/{ctestId}")
-    public Ctest deleteCtest(@PathVariable (value = "employee_id") Long employeeId, @PathVariable (value = "ctestId") Long ctestId){
-        if(!employees.findById(employeeId).isPresent()) {
-            throw new EmployeeNotFoundException(employeeId);
+    @DeleteMapping("/employee/{username}/ctests/{ctestId}")
+    public Ctest deleteCtest(@PathVariable (value = "username") String username, @PathVariable (value = "ctestId") Long ctestId){
+        Optional<User> user = users.findByUsername(username);
+        if(!user.isPresent()){
+            throw new UserNotFoundException(username);
         }
-
-        return ctests.findByIdAndEmployeeId(ctestId, employeeId).map(ctest -> {
+        Employee employee = user.get().getEmployee();
+        if(employee == null){
+            throw new EmployeeNotFoundException(username);
+        }
+        return ctests.findByIdAndEmployeeId(ctestId, employee.getId()).map(ctest -> {
             ctests.delete(ctest);
             return ctest;
         }).orElseThrow(() -> new CtestNotFoundException(ctestId));
