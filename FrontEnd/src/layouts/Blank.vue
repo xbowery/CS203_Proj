@@ -7,18 +7,6 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn
-    },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push('/')
-    }
-  },
-}
 </script>
 
 <style></style>
