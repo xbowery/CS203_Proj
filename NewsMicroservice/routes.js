@@ -8,6 +8,8 @@ router.get("/news/search", newsController.searchNews);
 // For dev use only
 if (process.env.NODE_ENV !== "prod") {
   router.get("/dev", newsController.devFetch);
+
+  router.get("/rssFetch", newsController.rssFetch);
 }
 
 module.exports = router;

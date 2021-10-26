@@ -74,9 +74,32 @@ module.exports.searchNews = async (req, res, next) => {
   }
 };
 
+/**
+ * Internal function to fetch news on demand to test the News API service
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns JSON response of the number of entries updated or inserted
+ */
 module.exports.devFetch = async (req, res, next) => {
   const dbResp = await fetchNews();
   const { nUpserted, nModified } = dbResp;
+  return res.status(200).json({ nUpserted, nModified });
+};
+
+/**
+ * Internal function to force the query and update of news from MOH using their RSS
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns number of entries inserted or updated
+ */
+module.exports.rssFetch = async (req, res, next) => {
+  const rssUpdateObj = await utils.parseRss();
+  const { nUpserted, nModified } = await bulkWriteToDB(rssUpdateObj);
+
   return res.status(200).json({ nUpserted, nModified });
 };
 
@@ -121,10 +144,7 @@ const fetchNews = async () => {
       ...craftedBulkWriteObjectRestaurant,
     ];
 
-    const dbResp = await News.bulkWrite(mergedBulkWriteArr);
-    const { nUpserted, nModified } = dbResp;
-
-    console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
+    const dbResp = bulkWriteToDB(mergedBulkWriteArr);
 
     return dbResp;
   } catch (err) {
@@ -142,6 +162,14 @@ if (process.env.NODE_ENV !== "test") {
     fetchNews();
   });
 }
+
+const bulkWriteToDB = async (bulkWriteObj) => {
+  const dbResp = await News.bulkWrite(bulkWriteObj);
+  const { nUpserted, nModified } = dbResp;
+  console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
+
+  return dbResp;
+};
 
 const fetchLatestNewsFromExternal = async () => {
   const restaurantTerms = ["Restaurant", "Food", "Dining"].join(" OR ");
