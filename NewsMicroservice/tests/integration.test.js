@@ -15,6 +15,7 @@ beforeAll((done) => {
   }, 1500);
 });
 
+// Clean up all the prior entries.
 afterAll(async () => {
   return News.deleteMany({});
 });

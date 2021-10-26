@@ -6,45 +6,49 @@ const utils = new Utils();
 
 const { articles } = require("../output.json");
 
-test("craftObjSearchStr_NullInput_ReturnsNonGovFilter", () => {
-  const result = utils.craftQueryObj();
-  assert.deepEqual(result, {
-    type: {
-      $ne: "Gov",
-    },
+describe("testing craftObjSearchStr function", () => {
+  test("craftObjSearchStr_NullInput_ReturnsNonGovFilter", () => {
+    const result = utils.craftQueryObj();
+    assert.deepEqual(result, {
+      type: {
+        $ne: "Gov",
+      },
+    });
+  });
+
+  test("craftObjSearchStr_StrInput_ReturnsProperObjectWithNonGovFilter", () => {
+    const result = utils.craftQueryObj("covid");
+    assert.deepEqual(result, {
+      $or: [
+        {
+          title: /covid/i,
+        },
+        {
+          content: /covid/i,
+        },
+      ],
+      type: {
+        $ne: "Gov",
+      },
+    });
   });
 });
 
-test("craftObjSearchStr_StrInput_ReturnsProperObjectWithNonGovFilter", () => {
-  const result = utils.craftQueryObj("covid");
-  assert.deepEqual(result, {
-    $or: [
-      {
-        title: /covid/i,
-      },
-      {
-        content: /covid/i,
-      },
-    ],
-    type: {
-      $ne: "Gov",
-    },
+describe("testing craftBulkObject function with null inputs", () => {
+  test("craftBulkObject_NullInput_ReturnsEmptyObjectArray", () => {
+    const result = utils.craftBulkWriteObject();
+    assert.deepEqual(result, [{}]);
   });
-});
 
-test("craftBulkObject_NullInput_ReturnsEmptyObjectArray", () => {
-  const result = utils.craftBulkWriteObject();
-  assert.deepEqual(result, [{}]);
-});
+  test("craftBulkObject_NullInputNewsObj_ReturnsEmptyObjectArray", () => {
+    const result = utils.craftBulkWriteObject(articles);
+    assert.deepEqual(result, [{}]);
+  });
 
-test("craftBulkObject_NullInputNewsObj_ReturnsEmptyObjectArray", () => {
-  const result = utils.craftBulkWriteObject(articles);
-  assert.deepEqual(result, [{}]);
-});
-
-test("craftBulkObject_NullInputCategory_ReturnsEmptyObjectArray", () => {
-  const result = utils.craftBulkWriteObject([{}], "Regular");
-  assert.deepEqual(result, [{}]);
+  test("craftBulkObject_NullInputCategory_ReturnsEmptyObjectArray", () => {
+    const result = utils.craftBulkWriteObject([{}], "Regular");
+    assert.deepEqual(result, [{}]);
+  });
 });
 
 describe("craftBulkObjectProper", () => {
