@@ -3,31 +3,35 @@ package com.app.APICode.restaurant;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
-import java.util.Optional;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import io.restassured.RestAssured;
 import io.restassured.config.JsonConfig;
+import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.response.Response;
-import net.minidev.json.JSONObject;
+import io.restassured.specification.RequestSpecification;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 import static org.hamcrest.Matchers.equalTo;
 
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(Lifecycle.PER_CLASS)
 public class RestaurantIntegrationTest {
     
     @LocalServerPort
@@ -44,6 +48,9 @@ public class RestaurantIntegrationTest {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
+    @Autowired
+    private TestRestTemplate restTemplate;
+
     @BeforeAll
     public static void initClass() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -54,7 +61,18 @@ public class RestaurantIntegrationTest {
             .redirect(redirectConfig().followRedirects(false));
     }
 
-	@AfterEach
+    @BeforeAll
+    void setupDB() {
+        User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN");
+        admin.setEnabled(true);
+        users.save(admin);
+
+        User normalUser = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
+        normalUser.setEnabled(true);
+        users.save(normalUser);
+    }
+    
+	@AfterAll
 	void tearDown(){
 		// clear the database after each test
 		restaurants.deleteAll();
@@ -63,48 +81,142 @@ public class RestaurantIntegrationTest {
 
     @Test
     public void getRestaurants_Success() throws Exception {
+        Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
+        restaurants.save(testRestaurant).getId();
         URI uri = new URI(baseUrl + port + "/api/v1/restaurants");
 
         given().get(uri).
         then().
             statusCode(200).
-            body("size()", equalTo(2));
+            body("size()", equalTo(5));
     }
 
     @Test
-	public void getRestaurant_ValidRestaurantNameAndLocation_Success() throws Exception {
+	public void getRestaurant_ValidID_Success() throws Exception {
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
-        restaurants.save(testRestaurant);
-		String name = "Subway";
-        String location = "SMU%20SCIS";
-		URI uri = new URI(baseUrl + port + "/api/v1/restaurants/" + name + "/" + location);
+        Long id = restaurants.save(testRestaurant).getId();
+		URI uri = new URI(baseUrl + port + "/api/v1/restaurants/" + id);
 
 		given().get(uri).
 		then().
 			statusCode(200).
-			body("name", equalTo(name), "location", equalTo("SMU SCIS"), "cuisine", equalTo("Western"));
+			body("name", equalTo("Subway"), "location", equalTo("SMU SCIS"), "cuisine", equalTo("Western"));
 		
 	}
 
     @Test
-    public void addRestaurant_Success() throws Exception {
-        URI uri = new URI(baseUrl + port + "/api/v1/restaurants");
-        User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
-        "ROLE_ADMIN");
-        admin.setEnabled(true);
+    public void addRestaurant_AdminUser_Success() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
-        JSONObject requestParams = new JSONObject();
-        requestParams.put("name", "Subway");
-        requestParams.put("location", "SMU SCIS");
-        requestParams.put("cuisine", "Western");
-        requestParams.put("description", "Fast Food Chain");
-        requestParams.put("maxCapacity", 50);
+        RequestSpecification request = RestAssured.given();
 
-        given().auth().basic("admin", "goodpassword")
-			.accept("*/*").contentType("application/json")
-			.body(requestParams.toJSONString()).post(uri).
-		then().
-			statusCode(201).
-			body("name", equalTo("Subway"));
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+
+        String tokenGenerated = result.getBody().getAccessToken();
+
+        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+
+        String addRestaurantDetails = "{\r\n" +
+        "  \"name\": \"Subway\",\r\n" +
+        "  \"location\": \"SMU\",\r\n" +
+        "  \"cuisine\": \"Western\",\r\n" +
+        "  \"description\": \"Fast food chain\",\r\n" +
+        "  \"maxCapacity\": 50\r\n" +
+        "}";
+
+        Response addRestaurantResponse = request.body(addRestaurantDetails).post(uriRestaurant);
+
+        assertEquals(201, addRestaurantResponse.getStatusCode());
+        assertEquals("Subway", JsonPath.from(addRestaurantResponse.getBody().asString()).get("name"));
+    }
+
+    @Test
+    public void addRestaurant_NormalUser_Failure() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
+
+        RequestSpecification request = RestAssured.given();
+
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("test1", "password123"), TokenDetails.class);
+
+        String tokenGenerated = result.getBody().getAccessToken();
+
+        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+
+        String addRestaurantDetails = "{\r\n" +
+        "  \"name\": \"Subway\",\r\n" +
+        "  \"location\": \"SMU\",\r\n" +
+        "  \"cuisine\": \"Western\",\r\n" +
+        "  \"description\": \"Fast food chain\",\r\n" +
+        "  \"maxCapacity\": 50\r\n" +
+        "}";
+
+        Response addRestaurantResponse = request.body(addRestaurantDetails).post(uriRestaurant);
+
+        assertEquals(403, addRestaurantResponse.getStatusCode());
+    }
+
+    @Test
+    public void updateRestaurant_AdminUser_Success() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
+
+        RequestSpecification request = RestAssured.given();
+
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+
+        String tokenGenerated = result.getBody().getAccessToken();
+
+        Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
+        Long id = restaurants.save(testRestaurant).getId();
+
+        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+
+        String updateRestaurantDetails = "{\r\n" +
+        "  \"name\": \"Koufu\",\r\n" +
+        "  \"location\": \"SMU\",\r\n" +
+        "  \"cuisine\": \"All\",\r\n" +
+        "  \"description\": \"Eatery\",\r\n" +
+        "  \"maxCapacity\": 100\r\n" +
+        "}";
+
+        Response addRestaurantResponse = request.body(updateRestaurantDetails).put(uriRestaurant + "/" + id);
+
+        assertEquals(200, addRestaurantResponse.getStatusCode());
+        assertEquals("Koufu", JsonPath.from(addRestaurantResponse.getBody().asString()).get("name"));
+    }
+
+    @Test
+    public void updateRestaurant_NormalUser_Failure() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
+
+        RequestSpecification request = RestAssured.given();
+
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("test1", "password123"), TokenDetails.class);
+
+        String tokenGenerated = result.getBody().getAccessToken();
+
+        Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
+        Long id = restaurants.save(testRestaurant).getId();
+
+        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+
+        String updateRestaurantDetails = "{\r\n" +
+        "  \"name\": \"Koufu\",\r\n" +
+        "  \"location\": \"SMU\",\r\n" +
+        "  \"cuisine\": \"All\",\r\n" +
+        "  \"description\": \"Eatery\",\r\n" +
+        "  \"maxCapacity\": 100\r\n" +
+        "}";
+
+        Response addRestaurantResponse = request.body(updateRestaurantDetails).post(uriRestaurant + "/" + id);
+
+        assertEquals(403, addRestaurantResponse.getStatusCode());
     }
 }

@@ -44,6 +44,7 @@ public class JwtIntegrationTest {
         String email = "admin@test.com";
         String password = "goodpassword";
         User user = new User(email, "admin", "admin1", null, encoder.encode(password), true, "ROLE_ADMIN");
+        user.setEnabled(true);
         user = userRepository.save(user);
     }
 
@@ -57,6 +58,7 @@ public class JwtIntegrationTest {
         URI uri = new URI(baseUrl + port + "/api/v1/login");
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uri,
                 new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+        System.out.println(result.getBody().getAccessToken());
         assertEquals(200, result.getStatusCode().value());
         assertEquals("admin", result.getBody().getUsername());
         assertNull(result.getBody().getMessage());
