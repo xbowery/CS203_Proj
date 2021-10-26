@@ -1,22 +1,16 @@
 package com.app.APICode.user;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
-import com.app.APICode.security.jwt.JWTRefreshToken;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,23 +19,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private UserService userService;
     private BCryptPasswordEncoder encoder;
-    private JWTRefreshToken refreshToken;
 
     /**
      * Constructor method for UserController
      * 
      * @param userService UserService class
      * @param encoder BCryptPasswordEncoder class
-     * @param refreshToken JWTRefreshToken class
      */
-    public UserController(UserService userService, BCryptPasswordEncoder encoder, JWTRefreshToken refreshToken) {
+    public UserController(UserService userService, BCryptPasswordEncoder encoder) {
         this.userService = userService;
         this.encoder = encoder;
-        this.refreshToken = refreshToken;
     }
 
     /**
@@ -116,18 +110,6 @@ public class UserController {
         } catch (EmptyResultDataAccessException e) {
             throw new UserNotFoundException(username);
         }
-    }
-
-    /**
-     * Refreshes the JWT token
-     * 
-     * @param req a HttpServletRequest object
-     * @param res a HttpServletResponse cookie
-     * @throws IOException
-     */
-    @PostMapping("/refreshToken")
-    public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        refreshToken.refreshJwtToken(req, res);
     }
 
     /**

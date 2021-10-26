@@ -39,6 +39,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Autowired
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTHelper jwtHelper) {
+        
         this.authenticationManager = authenticationManager;
         this.jwtHelper = jwtHelper;
     }
