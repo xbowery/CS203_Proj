@@ -15,7 +15,7 @@
 
       <v-spacer></v-spacer>
     </v-card-text>
-    <v-data-table :headers="headers" :items="items" :search="search" sort-by="location" class="elevation-1">
+    <v-data-table :headers="headers" :items="items" :search="search" sort-by="name" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Restaurants List</v-toolbar-title>
@@ -36,7 +36,7 @@
             </template>
             <validation-observer ref="obs">
               <v-card slot-scope="{ invalid }">
-                <v-form @submit.prevent="handleSubmit">
+                <v-form @submit.prevent="save">
                   <v-card-title>
                     <span class="text-h5">{{ formTitle }}</span>
                   </v-card-title>
@@ -96,7 +96,7 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="dialog = false" type="button"> Cancel </v-btn>
-                    <v-btn color="blue darken-1" text @click="save" type="submit" :disabled="invalid"> Save </v-btn>
+                    <v-btn color="blue darken-1" text type="submit" :disabled="invalid"> Save </v-btn>
                   </v-card-actions>
                 </v-form>
               </v-card>
@@ -117,7 +117,6 @@
       </template>
       <template #[`item.actions`]="{ item }">
         <v-icon small color="secondary" outlined class="mr-2" @click="editItem(item)"> Edit </v-icon>
-
         <v-icon small color="secondary" outlined class="mr-2" @click="deleteItem(item)"> Delete </v-icon>
       </template>
       <template v-slot:no-data>
@@ -130,6 +129,7 @@
 <script>
 import UserService from '@/services/user.service'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import '@/validators'
 import Restaurant from '@/model/restaurant'
 
 export default {
@@ -141,10 +141,10 @@ export default {
     errors: '',
     isAddNewUserSidebarActive: '',
     headers: [
+      { test: 'ID', value: 'id' },
       {
         text: 'NAME',
         align: 'start',
-        sortable: false,
         value: 'name',
       },
       { text: 'LOCATION', value: 'location' },
@@ -210,12 +210,9 @@ export default {
     },
 
     deleteItemConfirm() {
-      const restaurant = new Restaurant('', '')
-      restaurant.name = this.items[this.editedIndex].name
-      restaurant.location = this.items[this.editedIndex].location
-
+      const deletedRestaurant = this.items[this.editedIndex]
       this.items.splice(this.editedIndex, 1)
-      this.handleDeleteRestaurant(restaurant)
+      this.handleDeleteRestaurant(deletedRestaurant.id)
 
       if (!this.message) {
         this.closeDelete()
@@ -238,7 +235,7 @@ export default {
       })
     },
 
-    save() {
+    async save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
 
@@ -249,7 +246,7 @@ export default {
         restaurant.description = this.items[this.editedIndex].description
         restaurant.maxCapacity = this.items[this.editedIndex].maxCapacity
 
-        this.handleEditRestaurant(restaurant)
+        this.handleEditRestaurant(this.items[this.editedIndex])
       } else {
         const restaurant = new Restaurant('', '', '', '', '')
         restaurant.name = this.editedItem.name
@@ -258,8 +255,9 @@ export default {
         restaurant.description = this.editedItem.description
         restaurant.maxCapacity = this.editedItem.maxCapacity
 
-        this.handleNewRestaurant(restaurant)
-        this.items.push(this.editedItem)
+        const restaurantId = await this.handleNewRestaurant(this.editedItem)
+        restaurant.id = restaurantId
+        this.items.push(restaurant)
       }
       this.close()
     },
@@ -275,15 +273,15 @@ export default {
     async handleNewRestaurant(restaurant) {
       try {
         const res = await UserService.postRestaurant(restaurant)
-        console.log(res.data)
+        return res.data.id
       } catch (error) {
         this.message = error.response?.data?.message || error.message || error.toString()
         console.error(error)
       }
     },
-    async handleDeleteRestaurant(restaurant) {
+    async handleDeleteRestaurant(id) {
       try {
-        const res = await UserService.deleteRestaurant(restaurant)
+        const res = await UserService.deleteRestaurant(id)
         console.log(res.data)
       } catch (error) {
         this.message = error.response?.data?.message || error.message || error.toString()
