@@ -1,11 +1,11 @@
 package com.app.APICode.restaurant;
 
-import java.util.*;
+import java.util.List;
 
 public interface RestaurantService {
     List<Restaurant> listRestaurants();
-    Restaurant getRestaurant(String name, String location);
+    Restaurant getRestaurant(long id);
     Restaurant addRestaurant(Restaurant restaurant);
-    Restaurant updateRestaurant(String name, String location, Restaurant restaurant);
-    void deleteRestaurant(String name, String location);
+    Restaurant updateRestaurant(long id, Restaurant restaurant);
+    void removeById(long id);
 }
