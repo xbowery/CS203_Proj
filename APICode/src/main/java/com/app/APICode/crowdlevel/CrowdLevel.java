@@ -31,6 +31,14 @@ public class CrowdLevel {
     public CrowdLevel() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Date getDatetime() {
         return datetime;
     }

@@ -1,14 +1,11 @@
 package com.app.APICode.crowdlevel;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import com.app.APICode.restaurant.*;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,14 +69,14 @@ public class CrowdLevelController {
      * @param newCrowdLevel a CrowdLevel object containing the new crowd level to be updated
      * @return the updated CrowdLevel object
      */
-    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelDateTime}")
+    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelId}")
     public CrowdLevel updateCrowdLevel(@PathVariable Long id,
-    @PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date crowdLevelDateTime, @RequestBody CrowdLevel newCrowdLevel){
-        return crowdlevels.findByDatetime(crowdLevelDateTime).map(crowdLevel -> {
+    @PathVariable Long crowdLevelId, @RequestBody CrowdLevel newCrowdLevel){
+        return crowdlevels.findById(crowdLevelId) .map(crowdLevel -> {
             crowdLevel.setNoOfCustomers(newCrowdLevel.getNoOfCustomers());
             crowdLevel.setLatestCrowd();
             return crowdlevels.save(crowdLevel);
-        }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelDateTime));
+        }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelId));
     }
 
 }

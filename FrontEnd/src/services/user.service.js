@@ -18,6 +18,10 @@ class UserService {
     var request = 'restaurants/' + id + '/crowdLevel'
     return api.post(request, crowdLevel)
   }
+  async updateCrowdLevel(restaurantId, crowdLevelId, crowdLevel) {
+    const request = `/restaurants/${restaurantId}/crowdLevel/${crowdLevelId}`
+    return api.put(request, crowdLevel)
+  }
   async getCtests(username) {
     const request = `employee/${username}/ctests`
     return api.get(request)
