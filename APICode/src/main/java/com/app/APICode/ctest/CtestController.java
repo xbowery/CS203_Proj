@@ -95,7 +95,7 @@ public class CtestController {
         if(employee == null){
             throw new EmployeeNotFoundException(username);
         }
-        return ctests.findByIdAndEmployeeId(employee.getId(), ctestId).map(ctest -> {
+        return ctests.findByIdAndEmployeeId(ctestId, employee.getId()).map(ctest -> {
             ctest.setType(newCtest.getType());
             ctest.setDate(newCtest.getDate());
             ctest.setResult(newCtest.getResult());

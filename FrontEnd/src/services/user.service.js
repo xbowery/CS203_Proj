@@ -34,6 +34,10 @@ class UserService {
     const request = `/employee/${username}/ctests/${ctestId}`
     return api.delete(request)
   }
+  async updateCtest(username, ctestId, ctest){
+    const request = `/employee/${username}/ctests/${ctestId}`
+    return api.put(request, ctest)
+  }
   updateUser(user) {
     return api.put(
       `/users/${user.username}`,
