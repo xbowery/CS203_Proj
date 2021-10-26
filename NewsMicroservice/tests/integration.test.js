@@ -26,9 +26,10 @@ test("getInitialNews_ReturnsEmptyObject", function (done) {
     .get(URI + "/news")
     .end(function (err, res) {
       assert.equal(res.status, 200);
-      const { generalNews, restaurantNews } = res.body;
+      const { generalNews, restaurantNews, officialGovNews } = res.body;
       assert.deepEqual(generalNews, []);
       assert.deepEqual(restaurantNews, []);
+      assert.deepEqual(officialGovNews, []);
       done();
     });
 });
@@ -45,16 +46,18 @@ test("InsertNews_Success", function (done) {
     });
 });
 
-test("RetrieveNews_ReturnsEightOfEachType", function (done) {
+test("RetrieveNews_ReturnsEightOfEachTypeExceptGov", function (done) {
   chai
     .request(server)
     .get(URI + "/news")
     .end(function (err, res) {
       assert.equal(res.status, 200);
 
-      const { generalNews, restaurantNews } = res.body;
+      const { generalNews, restaurantNews, officialGovNews } = res.body;
       assert.equal(generalNews.length, 8);
       assert.equal(restaurantNews.length, 8);
+      // We have yet to insert any news from MOH for the RSS
+      assert.equal(officialGovNews.length, 0);
       done();
     });
 });
@@ -90,6 +93,37 @@ test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (d
       assert.isAtMost(news.length, 5);
 
       assert.isFalse(news.some(gov));
+      done();
+    });
+});
+
+// Store a global variable for checking later
+let numOfficialInserted = 0;
+test("RetrieveRSSFeed_ReturnsSuccess", function (done) {
+  chai
+    .request(server)
+    .get(URI + "/rssFetch")
+    .end(function (err, res) {
+      assert.equal(res.status, 200);
+
+      numOfficialInserted = res.body.nUpserted + res.body.nModified;
+      assert.isAtLeast(numOfficialInserted, 1);
+      done();
+    });
+});
+
+// Test the endpoint again after fetching RSS news
+test("RetrieveNews_ReturnsEightOfEachType", function (done) {
+  chai
+    .request(server)
+    .get(URI + "/news")
+    .end(function (err, res) {
+      assert.equal(res.status, 200);
+
+      const { generalNews, restaurantNews, officialGovNews } = res.body;
+      assert.equal(generalNews.length, 8);
+      assert.equal(restaurantNews.length, 8);
+      assert.equal(officialGovNews.length, numOfficialInserted);
       done();
     });
 });

@@ -28,10 +28,13 @@ module.exports.getNews = async (req, res, next) => {
       searchLimit
     );
 
+    const latestGovNews = await fetchNewsFromDB({ type: "Gov" }, searchLimit);
+
     const returnObj = {
       success: true,
       generalNews: latestGeneralNews,
       restaurantNews: latestRestaurantNews,
+      officialGovNews: latestGovNews,
     };
 
     return res.status(200).json(returnObj);
