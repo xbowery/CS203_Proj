@@ -17,10 +17,10 @@ This is a project built for G2T4, CS203 project.
 
 The following endpoints are available and exposed for users to retrieve related, current and relevant news.
 
-| Method | Endpoint                    | Description                                                                                 |
-| ------ | --------------------------- | ------------------------------------------------------------------------------------------- |
-| GET    | /api/v1/news                | Get the top 8 news each for the "Restaurant" related news and "General" news                |
-| GET    | /api/v1/news/search?q=query | Top 5 news with either the title or content body containing the keyword in the query string |
+| Method | Endpoint                    | Description                                                                                                                                                             |
+| ------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | /api/v1/news                | Get the top 8 news each for the "Restaurant" related news and "General" news as well as "Gov" official news                                                             |
+| GET    | /api/v1/news/search?q=query | Top 5 news with either the title or content body containing the keyword in the query string. These news are only from the news api and not from the official gov source |
 
 ## Testing
 
@@ -28,5 +28,9 @@ To run the test suites, run the command `npm test`. Both unit and integration te
 
 ## Production
 
-To run it in production mode, run the command `npm run prod`.
-This is a temporary command before the docker deploy scripts are up.
+To run it in production mode, run the command `npm run prod`. Else, you may follow the instructions to spin up a docker instance.
+
+```bash
+docker build --rm -t news_microservice .
+docker run -d -p 3001:3001 news_microservice:latest
+```
