@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Authentication", description = "Authentication API")
 public class AuthenticationController {
 
-    JWTRefreshToken jwtRefreshToken;
+    private JWTRefreshToken jwtRefreshToken;
 
     @Autowired
     public AuthenticationController(JWTRefreshToken jwtRefreshToken) {

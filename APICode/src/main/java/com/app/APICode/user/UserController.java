@@ -19,10 +19,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "User", description = "User API")
 public class UserController {
     private UserService userService;
     private BCryptPasswordEncoder encoder;
@@ -31,7 +38,7 @@ public class UserController {
      * Constructor method for UserController
      * 
      * @param userService UserService class
-     * @param encoder BCryptPasswordEncoder class
+     * @param encoder     BCryptPasswordEncoder class
      */
     public UserController(UserService userService, BCryptPasswordEncoder encoder) {
         this.userService = userService;
@@ -40,19 +47,26 @@ public class UserController {
 
     /**
      * List all users in the database
+     * 
      * @return list of all users
      */
+    @Operation(summary = "List all Users", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))), })
     @GetMapping("/users")
     public List<UserDTO> getUsers() {
         return userService.listUsers();
     }
 
     /**
-     * Search for user with the given username
-     * If there is no user with the given username, throw a UserNotFoundException
+     * Search for user with the given username If there is no user with the given
+     * username, throw a UserNotFoundException
+     * 
      * @param username
      * @return user with the given username
      */
+    @Operation(summary = "Get User", description = "Get user by username", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "User" })
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
@@ -63,12 +77,15 @@ public class UserController {
     }
 
     /**
-     * Add a new user with POST request to "/users"
-     * Using BCrypt encoder to encrypt the password for storage
+     * Add a new user with POST request to "/users" Using BCrypt encoder to encrypt
+     * the password for storage
      * 
      * @param user a User object containing the user information to be added
      * @return user with the admin role
      */
+    @Operation(summary = "Add new user", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful created new User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user) {
@@ -79,13 +96,17 @@ public class UserController {
     }
 
     /**
-     * Search for user given the username and updates the relevant user details
-     * If there is no user with the given username, throw a UserNotFoundException
+     * Search for user given the username and updates the relevant user details If
+     * there is no user with the given username, throw a UserNotFoundException
      * 
-     * @param username username of user
+     * @param username    username of user
      * @param newUserInfo a User object containing the new user info to be updated
      * @return the updated User object
      */
+    @Operation(summary = "Update user information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
     @Transactional
     @PutMapping("/users/{username}")
     public UserDTO updateUser(@PathVariable String username, @Valid @RequestBody UserDTO newUserInfo) {
@@ -97,11 +118,14 @@ public class UserController {
     }
 
     /**
-     * Remove a user with the DELETE request to "/users/{username}"
-     * If there is no user with the given username, throw a UserNotFoundException
+     * Remove a user with the DELETE request to "/users/{username}" If there is no
+     * user with the given username, throw a UserNotFoundException
      * 
      * @param username username of user
      */
+    @Operation(summary = "Delete User", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content)})
     @Transactional
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
@@ -113,9 +137,9 @@ public class UserController {
     }
 
     /**
-     * Retrieves the email from the request parameter and finds the user 
-     * Resets the password for the user
-     * If there is no user with the given email, throw a UserNotFoundException
+     * Retrieves the email from the request parameter and finds the user Resets the
+     * password for the user If there is no user with the given email, throw a
+     * UserNotFoundException
      * 
      * @param payload the request parameter
      */
@@ -135,12 +159,16 @@ public class UserController {
     }
 
     /**
-     * Retrieves the new user information and proceed to save the user into the database
-     * If there is already an existing user with the given email or username, throw a UserOrEmailExistsException
+     * Retrieves the new user information and proceed to save the user into the
+     * database If there is already an existing user with the given email or
+     * username, throw a UserOrEmailExistsException
      * 
      * @param newUser a User object containing the new user info to be saved
      * @return the newly created user
      */
+    @Operation(summary = "Register User", tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful Registered User", content = @Content(schema = @Schema(implementation = User.class)))})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public User register(@Valid @RequestBody User newUser) {
