@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     // define a derived query to find restaurant by name and location
     Optional<Restaurant> findByNameAndLocation(String name, String location);
-    Long deleteByNameAndLocation(String name, String location);
 }
 

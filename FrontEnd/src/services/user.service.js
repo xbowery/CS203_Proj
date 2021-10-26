@@ -10,11 +10,11 @@ class UserService {
   async getCrowdLevels() {
     return api.get('restaurants/crowdLevels')
   }
-  async getCrowdLevel(id){
+  async getCrowdLevel(id) {
     var request = 'restaurants/' + id + '/crowdLevel'
     return api.get(request)
   }
-  async postCrowdLevel(id, crowdLevel){
+  async postCrowdLevel(id, crowdLevel) {
     var request = 'restaurants/' + id + '/crowdLevel'
     return api.post(request, crowdLevel)
   }
@@ -30,7 +30,7 @@ class UserService {
     const request = `registrationConfirm?token=${token}`
     return api.get(request)
   }
-  async deleteCtest(username, ctestId){
+  async deleteCtest(username, ctestId) {
     const request = `/employee/${username}/ctests/${ctestId}`
     return api.delete(request)
   }
@@ -65,11 +65,7 @@ class UserService {
     return api.post(
       'restaurants',
       {
-        name: restaurant.name,
-        location: restaurant.location,
-        cuisine: restaurant.cuisine,
-        description: restaurant.description,
-        maxCapacity: restaurant.maxCapacity,
+        ...restaurant,
       },
       {
         headers: {
@@ -80,13 +76,9 @@ class UserService {
   }
   updateRestaurant(restaurant) {
     return api.put(
-      `restaurants/${restaurant.name}/${restaurant.location}`,
+      `restaurants/${restaurant.id}`,
       {
-        name: restaurant.name,
-        location: restaurant.location,
-        cuisine: restaurant.cuisine,
-        description: restaurant.description,
-        maxCapacity: restaurant.maxCapacity,
+        ...restaurant,
       },
       {
         headers: {
@@ -95,12 +87,8 @@ class UserService {
       },
     )
   }
-  deleteRestaurant(restaurant) {
-    return api.delete(`restaurants/${restaurant.name}/${restaurant.location}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+  deleteRestaurant(id) {
+    return api.delete(`restaurants/${id}`)
   }
   async getMeasures() {
     return api.get('measures')
