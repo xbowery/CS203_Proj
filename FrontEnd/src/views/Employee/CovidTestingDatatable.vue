@@ -172,6 +172,11 @@ export default {
       result: '',
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
     },
+    ctestEmpty:{
+      type: '',
+      result: '',
+      date:'',
+    }
   }),
 
   async mounted() {
@@ -254,7 +259,9 @@ export default {
       try {
         const res = await UserService.getCtests(this.username)
         this.items = res.data
-
+          if(this.items.length == 0){
+            this.$emit('set_latest', this.ctestEmpty)
+          }
         console.log(this.items)
         var ctest = this.items[0]
         this.items.forEach(item => {
