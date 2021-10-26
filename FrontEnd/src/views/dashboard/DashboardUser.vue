@@ -7,7 +7,6 @@
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
             <p class="text-xl font-weight-semibold primary--text mb-2">{{ time() }}</p>
-            <!-- <p class="text-xl font-weight-semibold primary--text mb-2">09:00</p> -->
             <v-btn v-for="(item, index) in items" :key="index" small color="primary">
               {{ items[0].restaurant.name }}
             </v-btn>
@@ -97,7 +96,7 @@ export default defineComponent({
   methods: {
     time() {
       const today = new Date()
-      const time = today.getHours() + ':' + today.getMinutes()
+      const time = today.getHours() + ':' + ('00'+ today.getMinutes()).slice(-2);
 
       return time
     },
