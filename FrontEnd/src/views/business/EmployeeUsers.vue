@@ -49,8 +49,6 @@ import EmployeeDatatable from './EmployeeDatatable.vue'
 export default {
   components: {
     StatisticsCardVertical,
-    // DashboardCongratulationJohn,
-    // DashboardWeeklyOverview,
     EmployeeDatatable,
   },
 

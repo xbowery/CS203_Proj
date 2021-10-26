@@ -58,7 +58,7 @@
     </v-col>
 
     <v-col cols="12">
-      <dashboard-datatable></dashboard-datatable>
+      <dashboard-datatable :username="user.username"></dashboard-datatable>
     </v-col>
   </v-row>
 </template>
@@ -73,6 +73,7 @@ import DashboardUser from './DashboardUser.vue'
 import CrowdLevel from './CrowdLevel.vue'
 import DashboardDailyOverview from './DashboardDailyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -81,6 +82,11 @@ export default {
     CrowdLevel,
     DashboardDailyOverview,
     DashboardDatatable,
+  },
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
   },
   setup() {
     /*providing statistics on status of employees */

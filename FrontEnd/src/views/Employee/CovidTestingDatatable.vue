@@ -113,6 +113,26 @@
 
     <!-- removed item-key="date" from below -->
     <v-data-table :headers="headers" :items="items" :search="search" class="table-rounded" hide-default-footer>
+      <template v-slot:top>
+        <v-toolbar flat>
+      <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-card>
+          <v-card-title class="text-h5">Are you sure you want to delete this Covid Test?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+        </v-toolbar>
+      </template>
+      <template #[`item.actions`]="{ item }">
+        <v-icon small color="secondary" outlined class="mr-2" @click="editItem(item)"> Edit </v-icon>
+
+        <v-icon small color="secondary" outlined class="mr-2" @click="deleteItem(item)"> Delete </v-icon>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -138,11 +158,25 @@ export default {
     attrs: '',
     isAddNewUserSidebarActive: '',
 
+    dialogDelete: false,
+    editedIndex: -1,
+    editedItem: {
+      date: '',
+      result: '',
+      type: '',
+
+    },
+
     ctest: {
       type: '',
       result: '',
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
     },
+    ctestEmpty:{
+      type: '',
+      result: '',
+      date:'',
+    }
   }),
 
   async mounted() {
@@ -162,8 +196,45 @@ export default {
       console.error(error)
     }
   },
+    watch: {
+    dialogDelete(val) {
+      val || this.closeDelete()
+    },
+  },
 
   methods: {
+    deleteItem(item) {
+      this.editedIndex = this.items.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      console.log(this.editedIndex)
+      console.log(this.editedItem)
+      this.dialogDelete = true
+    },
+    closeDelete() {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    deleteItemConfirm() {
+      // this.items.splice(this.editedIndex, 1)
+      this.handleDeleteCtest(this.editedItem.id)
+      if (!this.message) {
+        this.closeDelete()
+      }
+    },
+    async handleDeleteCtest(ctestId) {
+      try {
+        const res = await UserService.deleteCtest( this.username, ctestId)
+        console.log(res.data)
+        this.reloadTable()
+      } catch (error) {
+        this.message = error.response?.data?.message || error.message || error.toString()
+        console.error(error)
+      }
+    },
+
     disableFutureDates(val) {
       return val <= new Date().toISOString().substr(0, 10)
     },
@@ -188,7 +259,9 @@ export default {
       try {
         const res = await UserService.getCtests(this.username)
         this.items = res.data
-
+          if(this.items.length == 0){
+            this.$emit('set_latest', this.ctestEmpty)
+          }
         console.log(this.items)
         var ctest = this.items[0]
         this.items.forEach(item => {
@@ -201,6 +274,7 @@ export default {
         console.error(error)
       }
     },
+
   },
 
   setup() {
@@ -211,6 +285,7 @@ export default {
         { text: 'Date', value: 'date' },
         { text: 'Type of test (PCR/ART)', value: 'type' },
         { text: 'Result', value: 'result' },
+        { text: 'ACTIONS', value: 'actions', sortable: true },
       ],
       // icons
       icons: {

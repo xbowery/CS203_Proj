@@ -1,8 +1,7 @@
 <template>
   <v-card>
     <v-card-title> Employees </v-card-title>
-    <v-row class="px-2 ma-0">
-    </v-row>
+    <v-row class="px-2 ma-0"> </v-row>
 
     <v-divider class="mt-4"></v-divider>
 
@@ -21,7 +20,6 @@
       </v-text-field>
 
       <v-spacer></v-spacer>
-
     </v-card-text>
 
     <v-data-table
@@ -54,23 +52,22 @@
 
 <script>
 import { mdiSquareEditOutline, mdiDotsVertical } from '@mdi/js'
-import data from './employeedatatable-data.js'
 import UserService from '@/services/user.service'
 
 export default {
   data: () => ({
-    items:[],
+    items: [],
   }),
   props: {
     username: String,
   },
 
-  async mounted(){
-    try{
+  async mounted() {
+    try {
       const res = await UserService.getEmployees(this.username)
       this.items = res.data
       console.log(this.items)
-    }catch (error) {
+    } catch (error) {
       console.error(error)
     }
   },
@@ -95,7 +92,6 @@ export default {
       { title: 'Active', value: 'active' },
       { title: 'Inactive', value: 'inactive' },
     ]
-  
 
     return {
       dialog: false,
@@ -108,7 +104,6 @@ export default {
         { text: 'DESIGNATION', value: 'designation' },
         { text: 'STATUS', value: 'status' },
       ],
-      usreList: data,
       status: {
         1: 'Inactive',
         2: 'Pending',

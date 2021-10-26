@@ -11,7 +11,7 @@
                 <span class="text-no-wrap font-weight-bold mx-1"> {{ user.username }} </span>
                 <span>🎉</span>
               </v-card-title>
-               <v-card-text> What would you like to know more about today? </v-card-text>
+              <v-card-text> What would you like to know more about today? </v-card-text>
             </v-col>
             <v-col cols="4" sm="6">
               <div>
@@ -26,7 +26,7 @@
         </v-card>
       </v-col>
     </v-row>
-    
+
     <v-row>
       <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
         <v-card>
