@@ -58,7 +58,10 @@ test("RetrieveNews_ReturnsEightOfEachType", function (done) {
     });
 });
 
-test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFive", function (done) {
+// A simple function to check if there are any Gov articles in the array of news
+const gov = (article) => article.type === "Gov";
+
+test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFiveWithoutGov", function (done) {
   chai
     .request(server)
     .get(URI + "/news/search")
@@ -67,11 +70,13 @@ test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFive", function (done) {
 
       const { news } = res.body;
       assert.equal(news.length, 5);
+
+      assert.isFalse(news.some(gov));
       done();
     });
 });
 
-test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFive", function (done) {
+test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (done) {
   chai
     .request(server)
     .get(URI + "/news/search")
@@ -82,6 +87,8 @@ test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFive", function (done) {
       const { news } = res.body;
       assert.isAtLeast(news.length, 0);
       assert.isAtMost(news.length, 5);
+
+      assert.isFalse(news.some(gov));
       done();
     });
 });

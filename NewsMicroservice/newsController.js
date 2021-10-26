@@ -83,9 +83,14 @@ module.exports.searchNews = async (req, res, next) => {
  * @returns JSON response of the number of entries updated or inserted
  */
 module.exports.devFetch = async (req, res, next) => {
-  const dbResp = await fetchNews();
-  const { nUpserted, nModified } = dbResp;
-  return res.status(200).json({ nUpserted, nModified });
+  try {
+    const dbResp = await fetchNews();
+    const { nUpserted, nModified } = dbResp;
+    return res.status(200).json({ nUpserted, nModified });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 };
 
 /**
@@ -97,10 +102,15 @@ module.exports.devFetch = async (req, res, next) => {
  * @returns number of entries inserted or updated
  */
 module.exports.rssFetch = async (req, res, next) => {
-  const rssUpdateObj = await utils.parseRss();
-  const { nUpserted, nModified } = await bulkWriteToDB(rssUpdateObj);
+  try {
+    const rssUpdateObj = await utils.parseRss();
+    const { nUpserted, nModified } = await bulkWriteToDB(rssUpdateObj);
 
-  return res.status(200).json({ nUpserted, nModified });
+    return res.status(200).json({ nUpserted, nModified });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 };
 
 /**
@@ -167,7 +177,6 @@ const bulkWriteToDB = async (bulkWriteObj) => {
   const dbResp = await News.bulkWrite(bulkWriteObj);
   const { nUpserted, nModified } = dbResp;
   console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
-
   return dbResp;
 };
 

@@ -36,14 +36,19 @@ function Utils() {
   };
 
   /**
-   * Craft a query string for the news API when fetching data
+   * Craft a query string for the news API when fetching data. This only fetches news and not government
+   * related press releases.
    *
    * @param {*} searchStr
    * @return object containing a regex, or an empty object if the searchStr is empty
    */
   this.craftQueryObj = (searchStr = "") => {
     if (searchStr === "") {
-      return {};
+      return {
+        type: {
+          $ne: "Gov",
+        },
+      };
     }
 
     const regex = new RegExp(searchStr, "i");
@@ -56,6 +61,9 @@ function Utils() {
           content: regex,
         },
       ],
+      type: {
+        $ne: "Gov",
+      },
     };
   };
 

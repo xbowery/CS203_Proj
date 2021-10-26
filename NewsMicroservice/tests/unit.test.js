@@ -6,12 +6,16 @@ const utils = new Utils();
 
 const { articles } = require("../output.json");
 
-test("craftObjSearchStr_NullInput_ReturnsEmptyObject", () => {
+test("craftObjSearchStr_NullInput_ReturnsNonGovFilter", () => {
   const result = utils.craftQueryObj();
-  assert.deepEqual(result, {});
+  assert.deepEqual(result, {
+    type: {
+      $ne: "Gov",
+    },
+  });
 });
 
-test("craftObjSearchStr_StrInput_ReturnsProperObject", () => {
+test("craftObjSearchStr_StrInput_ReturnsProperObjectWithNonGovFilter", () => {
   const result = utils.craftQueryObj("covid");
   assert.deepEqual(result, {
     $or: [
@@ -22,6 +26,9 @@ test("craftObjSearchStr_StrInput_ReturnsProperObject", () => {
         content: /covid/i,
       },
     ],
+    type: {
+      $ne: "Gov",
+    },
   });
 });
 
