@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
 import java.util.Optional;
 
+import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
 
 import org.junit.jupiter.api.AfterEach;
@@ -71,7 +72,7 @@ public class RestaurantIntegrationTest {
     }
 
     @Test
-	public void getRestaurant_ValidRestaurantId_Success() throws Exception {
+	public void getRestaurant_ValidRestaurantNameAndLocation_Success() throws Exception {
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
         restaurants.save(testRestaurant);
 		String name = "Subway";
@@ -84,4 +85,26 @@ public class RestaurantIntegrationTest {
 			body("name", equalTo(name), "location", equalTo("SMU SCIS"), "cuisine", equalTo("Western"));
 		
 	}
+
+    @Test
+    public void addRestaurant_Success() throws Exception {
+        URI uri = new URI(baseUrl + port + "/api/v1/restaurants");
+        User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
+        "ROLE_ADMIN");
+        admin.setEnabled(true);
+
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("name", "Subway");
+        requestParams.put("location", "SMU SCIS");
+        requestParams.put("cuisine", "Western");
+        requestParams.put("description", "Fast Food Chain");
+        requestParams.put("maxCapacity", 50);
+
+        given().auth().basic("admin", "goodpassword")
+			.accept("*/*").contentType("application/json")
+			.body(requestParams.toJSONString()).post(uri).
+		then().
+			statusCode(201).
+			body("name", equalTo("Subway"));
+    }
 }
