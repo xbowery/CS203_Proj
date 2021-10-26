@@ -106,14 +106,18 @@ module.exports.devFetch = async (req, res, next) => {
  */
 module.exports.rssFetch = async (req, res, next) => {
   try {
-    const rssUpdateObj = await utils.parseRss();
-    const { nUpserted, nModified } = await bulkWriteToDB(rssUpdateObj);
+    const { nUpserted, nModified } = await parseRssAndSaveToDB();
 
     return res.status(200).json({ nUpserted, nModified });
   } catch (err) {
     console.error(err);
     next(err);
   }
+};
+
+const parseRssAndSaveToDB = async () => {
+  const rssUpdateObj = await utils.parseRss();
+  return await bulkWriteToDB(rssUpdateObj);
 };
 
 /**
@@ -169,10 +173,16 @@ const fetchNews = async () => {
  * Scheduled cron job that is ran every 60 mins to fetch the latest news
  * It will update the database which automatically checks if the entry exists
  * If the entry exists, it will update the entry. Else, it will add a new entry.
+ *
+ * The second cron is for RSS Feeds that will run once every day at midnight
  */
 if (process.env.NODE_ENV !== "test") {
   cron.schedule("0 * * * *", () => {
     fetchNews();
+  });
+
+  cron.schedule("0 0 * * *", () => {
+    parseRssAndSaveToDB();
   });
 }
 
