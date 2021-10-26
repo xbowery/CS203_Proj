@@ -1,6 +1,6 @@
-package com.app.APICode.security.model;
+package com.app.APICode.security.message;
 
-public class Credential {
+public class CredentialMessage {
     private String username;
     private String password;
 

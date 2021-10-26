@@ -2,29 +2,29 @@ package com.app.APICode.security;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.app.APICode.security.jwt.JWTRefreshToken;
-import com.app.APICode.security.model.Credential;
+import com.app.APICode.security.message.AccessTokenMessage;
+import com.app.APICode.security.message.CredentialMessage;
+import com.app.APICode.security.message.RefreshTokenMessage;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthenticationController {
 
-    JWTRefreshToken refreshToken;
+    JWTRefreshToken jwtRefreshToken;
 
     @Autowired
-    public AuthenticationController(JWTRefreshToken refreshToken) {
-        this.refreshToken = refreshToken;
+    public AuthenticationController(JWTRefreshToken jwtRefreshToken) {
+        this.jwtRefreshToken = jwtRefreshToken;
     }
     
     @PostMapping("/login")
-    public void login(Credential credential) {
+    public AccessTokenMessage login(CredentialMessage credential) {
         throw new NotImplementedException("/login should not be called");
     }
 
@@ -36,8 +36,8 @@ public class AuthenticationController {
      * @throws IOException
      */
     @PostMapping("/refreshToken")
-    public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        refreshToken.refreshJwtToken(req, res);
+    public AccessTokenMessage refreshToken(@RequestBody RefreshTokenMessage refreshToken) {
+        return jwtRefreshToken.refreshJwtToken(refreshToken.getRefreshToken());
     }
 
     

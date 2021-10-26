@@ -28,12 +28,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
-    private JWTHelper jwtHelper;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userSvc, JWTHelper jwtHelper) {
+    public SecurityConfig(UserDetailsService userSvc) {
         this.userDetailsService = userSvc;
-        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -62,8 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/register").permitAll().antMatchers("/h2-console/**").permitAll()
 
-                .and().addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtHelper))
-                .addFilterBefore(new JWTAuthorizationFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class)
+                .and().addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
