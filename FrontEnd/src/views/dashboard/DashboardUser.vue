@@ -2,13 +2,15 @@
   <v-card class="greeting-card">
     <v-row class="ma-0 pa-0">
       <v-col cols="8">
-        <v-card-title class="text-no-wrap pt-1 ps-2"> Good Morning, John 🥳 </v-card-title>
+        <v-card-title class="text-no-wrap pt-1 ps-2"> Good Morning, {{ user.username }} 🥳 </v-card-title>
         <v-card-subtitle class="text-no-wrap ps-2"> Covid Suisse Business Dashboard </v-card-subtitle>
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
-            <p class="text-xl font-weight-semibold primary--text mb-2">09:00</p>
-
-            <v-btn small color="primary"> Astons </v-btn>
+            <p class="text-xl font-weight-semibold primary--text mb-2">{{ time() }}</p>
+            <!-- <p class="text-xl font-weight-semibold primary--text mb-2">09:00</p> -->
+            <v-btn v-for="(item, index) in items" :key="index" small color="primary">
+              {{ items[0].restaurant.name }}
+            </v-btn>
           </div>
         </v-card-text>
       </v-col>
@@ -62,3 +64,43 @@
   }
 }
 </style>
+
+<script>
+import { defineComponent } from '@vue/composition-api'
+import UserService from '@/services/user.service'
+import { mapGetters } from 'vuex'
+
+export default defineComponent({
+  setup() {},
+
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
+  },
+
+  data() {
+    return {
+      items: [],
+      keys: ['name'],
+    }
+  },
+
+  async mounted() {
+    try {
+      const res = await UserService.getCrowdLevels()
+      this.items = res.data
+    } catch (error) {
+      console.error(error)
+    }
+  },
+  methods: {
+    time() {
+      const today = new Date()
+      const time = today.getHours() + ':' + today.getMinutes()
+
+      return time
+    },
+  },
+})
+</script>

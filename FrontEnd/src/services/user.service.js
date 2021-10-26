@@ -10,6 +10,14 @@ class UserService {
   async getCrowdLevels(){
     return api.get('restaurants/crowdLevels')
   }
+  async getCrowdLevel(id){
+    var request = 'restaurants/' + id + '/crowdLevel'
+    return api.get(request)
+  }
+  async postCrowdLevel(id, crowdLevel){
+    var request = 'restaurants/' + id + '/crowdLevel'
+    return api.post(request, crowdLevel)
+  }
   async getCtests(username) {
     var request =  'employee/' + username + '/ctests'
     return api.get(request)
