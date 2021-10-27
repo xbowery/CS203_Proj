@@ -177,10 +177,7 @@ public class UserIntegrationTest {
 
         User testUser = new User("testing@test.com", "test2", "test2", null, encoder.encode("password123"), true, "ROLE_USER");
         testUser.setEnabled(true);
-        User savedUser = users.save(testUser);
-        String savedUsername = savedUser.getUsername();
-
-        System.out.println(savedUsername);
+        String savedUsername = users.save(testUser).getUsername();
 
         RequestSpecification request = RestAssured.given();
 
@@ -199,10 +196,13 @@ public class UserIntegrationTest {
         "  \"password\": \"testing123\"\r\n" +
         "}";
 
-        Response updateUserResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
+        Response updateResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
 
-        System.out.println(updateUserResponse.getBody().asString());
+        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
 
+        Response updateUserResponse = request.get(uriUsers + "/" + savedUsername);
+
+        assertEquals(200, updateResponse.getStatusCode());
         assertEquals(200, updateUserResponse.getStatusCode());
         assertEquals("New", JsonPath.from(updateUserResponse.getBody().asString()).get("firstName"));
         assertEquals("User", JsonPath.from(updateUserResponse.getBody().asString()).get("lastName"));
@@ -227,7 +227,7 @@ public class UserIntegrationTest {
 
         request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
 
-        String addUserDetails = "{\r\n" +
+        String updateUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
         "  \"username\": \"newuser\",\r\n" +
         "  \"firstName\": \"New\",\r\n" +
@@ -235,9 +235,13 @@ public class UserIntegrationTest {
         "  \"password\": \"testing123\"\r\n" +
         "}";
 
-        Response addUserResponse = request.body(addUserDetails).put(uriUsers + "/" + savedUsername);
+        Response updateUserResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
 
-        assertEquals(403, addUserResponse.getStatusCode());
+        User updatedUser = users.findByUsername(savedUsername).orElse(null);
+
+        assertEquals(200, updateUserResponse.getStatusCode());
+        assertEquals("", updateUserResponse.getBody().asString());
+        assertNotNull(updatedUser);
     }
 
     @Test
@@ -247,8 +251,7 @@ public class UserIntegrationTest {
 
         User testUser = new User("testing@test.com", "test2", "test2", null, encoder.encode("password123"), true, "ROLE_USER");
         testUser.setEnabled(true);
-        User savedUser = users.save(testUser);
-        String savedUsername = savedUser.getUsername();
+        String savedUsername = users.save(testUser).getUsername();
 
         RequestSpecification request = RestAssured.given();
 
@@ -259,18 +262,12 @@ public class UserIntegrationTest {
 
         request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
 
-        String updateUserDetails = "{\r\n" +
-        "  \"email\": \"newuser@test.com\",\r\n" +
-        "  \"username\": \"newuser\",\r\n" +
-        "  \"firstName\": \"New\",\r\n" +
-        "  \"lastName\": \"User\",\r\n" +
-        "  \"password\": \"testing123\"\r\n" +
-        "}";
+        Response deleteUserResponse = request.delete(uriUsers + "/" + savedUsername);
 
-        Response addUserResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
+        User savedUser = users.findByUsername(savedUsername).orElse(null);
 
-        assertEquals(200, addUserResponse.getStatusCode());
-        assertEquals("newuser", JsonPath.from(addUserResponse.getBody().asString()).get("username"));
+        assertEquals(200, deleteUserResponse.getStatusCode());
+        assertNull(savedUser);
     }
 
     @Test
@@ -280,8 +277,7 @@ public class UserIntegrationTest {
 
         User testUser = new User("testuser@test.com", "testuser", "testuser", null, encoder.encode("password123"), true, "ROLE_USER");
         testUser.setEnabled(true);
-        User savedUser = users.save(testUser);
-        String savedUsername = savedUser.getUsername();
+        String savedUsername = users.save(testUser).getUsername();
 
         RequestSpecification request = RestAssured.given();
 
@@ -292,16 +288,11 @@ public class UserIntegrationTest {
 
         request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
 
-        String addUserDetails = "{\r\n" +
-        "  \"email\": \"newuser@test.com\",\r\n" +
-        "  \"username\": \"newuser\",\r\n" +
-        "  \"firstName\": \"New\",\r\n" +
-        "  \"lastName\": \"User\",\r\n" +
-        "  \"password\": \"testing123\"\r\n" +
-        "}";
+        Response deleteUserResponse = request.delete(uriUsers + "/" + savedUsername);
 
-        Response addUserResponse = request.body(addUserDetails).put(uriUsers + "/" + savedUsername);
+        User savedUser = users.findByUsername(savedUsername).orElse(null);
 
-        assertEquals(403, addUserResponse.getStatusCode());
+        assertEquals(200, deleteUserResponse.getStatusCode());
+        assertNotNull(savedUser);
     }
 }

@@ -3,6 +3,7 @@ package com.app.APICode.user;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
@@ -30,7 +31,7 @@ public interface UserService {
 
     User addUser(User user, Boolean isAdmin);
 
-    UserDTO updateUserByUsername(String username, UserDTO user);
+    User updateUserByUsername(String username, UserDTO user);
 
     User updatePasswordByEmail(String email, String password);
 

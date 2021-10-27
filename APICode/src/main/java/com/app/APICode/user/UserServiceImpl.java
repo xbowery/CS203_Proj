@@ -1,6 +1,7 @@
 package com.app.APICode.user;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.app.APICode.verificationtoken.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -196,8 +198,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
-        return convertToUserDTO(users.findByUsername(username).map(user -> {
+    public User updateUserByUsername(String username, UserDTO newUserInfo) {
+        return users.findByUsername(username).map(user -> {
             // Check if email exists to prevent a unique index violation
             if (getUserByEmail(newUserInfo.getEmail()) == null) {
 
@@ -214,7 +216,7 @@ public class UserServiceImpl implements UserService {
             // user.setAuthorities(newUserInfo.getAuthorities());
             users.setUserInfoByUsername(firstName, lastName, email, username);
             return user;
-        }).orElse(null));
+        }).orElse(null);
     }
 
     @Override

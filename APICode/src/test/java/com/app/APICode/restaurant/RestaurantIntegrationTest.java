@@ -217,7 +217,7 @@ public class RestaurantIntegrationTest {
         "  \"maxCapacity\": 100\r\n" +
         "}";
 
-        Response updateRestaurantResponse = request.body(updateRestaurantDetails).post(uriRestaurant + "/" + id);
+        Response updateRestaurantResponse = request.body(updateRestaurantDetails).put(uriRestaurant + "/" + id);
 
         assertEquals(403, updateRestaurantResponse.getStatusCode());
     }
