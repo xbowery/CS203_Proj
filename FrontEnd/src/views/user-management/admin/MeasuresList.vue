@@ -40,23 +40,12 @@
           <v-form @submit.prevent="handleSubmit(save)">
             <v-alert elevation="2" type="error" v-if="message">{{ message }}</v-alert>
             <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
+              <span class="text-h5">Edit measure</span>
             </v-card-title>
 
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" md="6">
-                    <validation-provider name="Business Type" rules="required" v-slot="{ errors }">
-                      <v-select
-                        :items="dropdown_type"
-                        v-model="editedItem.businessType"
-                        :error-messages="errors[0]"
-                        label="Select Business Type"
-                        required
-                      ></v-select>
-                    </validation-provider>
-                  </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <validation-provider name="Max Capacity" rules="required" v-slot="{ errors }">
                       <v-text-field
@@ -67,7 +56,7 @@
                     </validation-provider>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
+                    <validation-provider name="Vaccinated? (true/false)" rules="required" v-slot="{ errors }">
                       <v-text-field
                         v-model="editedItem.vaccinationStatus"
                         :error-messages="errors[0]"
@@ -110,7 +99,6 @@ import '@/validators'
 export default {
   components: { ValidationProvider, ValidationObserver },
   data: () => ({
-    dropdown_type: [{ text: 'Restaurant' }, { text: 'Events' }, { text: 'Gym' }, { text: 'Gathering' }],
     dialog: false,
     dialogDelete: false,
     search: '',
@@ -124,13 +112,11 @@ export default {
     items: [],
     editedIndex: -1,
     editedItem: {
-      businessType: '',
       maxCapacity: '',
       vaccinationStatus: '',
       maskStatus: '',
     },
     defaultItem: {
-      businessType: '',
       maxCapacity: '',
       vaccinationStatus: '',
       maskStatus: '',
@@ -144,12 +130,6 @@ export default {
     } catch (error) {
       console.error(error)
     }
-  },
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Edit Measure' : 'New Measure'
-    },
   },
 
   watch: {
