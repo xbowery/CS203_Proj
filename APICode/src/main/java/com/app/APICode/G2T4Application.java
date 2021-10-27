@@ -34,7 +34,7 @@ public class G2T4Application {
 		user.setEnabled(true);
 		users.save(user);
 
-		User business_owner = new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+		User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
 		business_owner.setEnabled(true);
 		users.save(business_owner);
 
