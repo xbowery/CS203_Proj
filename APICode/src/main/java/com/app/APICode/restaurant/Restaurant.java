@@ -39,7 +39,7 @@ public class Restaurant {
     @Schema(description = "Description of Restaurant.", example = "Lovely food", required = true)
     private String description;
 
-    @Schema(description = "Current number of people in Restaurant.", example = "50", hidden = true)
+    @Schema(description = "Current number of people in Restaurant.", example = "50")
     private int currentCapacity;
 
     @NotNull(message = "Max capacity should not be null")
@@ -48,11 +48,11 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
     @JsonManagedReference
-    @Schema(description = "List of Employees working at the restaurant.", hidden = true)
+    @Schema(description = "List of Employees working at the restaurant.")
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @Schema(description = "List of Crowd Level recording in restaurant.", hidden = true)
+    @Schema(description = "List of Crowd Level recording in restaurant.")
     private List<CrowdLevel> crowdLevel;
 
     public Restaurant() {
