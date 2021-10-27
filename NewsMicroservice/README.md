@@ -17,10 +17,11 @@ This is a project built for G2T4, CS203 project.
 
 The following endpoints are available and exposed for users to retrieve related, current and relevant news.
 
-| Method | Endpoint                    | Description                                                                                                                                                             |
-| ------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GET    | /api/v1/news                | Get the top 8 news each for the "Restaurant" related news and "General" news as well as "Gov" official news                                                             |
-| GET    | /api/v1/news/search?q=query | Top 5 news with either the title or content body containing the keyword in the query string. These news are only from the news api and not from the official gov source |
+| Method | Endpoint            | Params                        | Description                                                                                                                                                                                                                                                                                                                                           |
+| ------ | ------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | /api/v1/news        | -                             | Get the top 8 news each for the "Restaurant" related news and "General" news as well as "Gov" official news                                                                                                                                                                                                                                           |
+| GET    | /api/v1/news/search | q=SearchStr&#10;type=newsType | Top 5 news with either the title or content body containing the keyword in the query string. The 2 query parameters are optional. The default is 5 latest articles from non-Gov sources. If type is invalid, throw an error. If type is provided, the type of news will be queried ['Gov', 'General', 'Restaurant']. Else, it will default to non-Gov |
+| GET    | /api/v1/news/:type  | type                          | Top 8 news of that specific type. For the available types, refer to the API above.                                                                                                                                                                                                                                                                    |
 
 ## Testing
 
@@ -32,7 +33,7 @@ To run it in production mode, run the command `npm run prod`. Else, you may foll
 
 ```bash
 # To start
-docker-compose up -d
+docker-compose up -d --build
 
 # To stop
 docker-compose down
