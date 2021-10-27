@@ -13,35 +13,46 @@ import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.employee.Employee;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Entity
 public class Restaurant {
 
     @Id
     @GeneratedValue
+    @Schema(description = "Unique identifier of the Restaurant.", example = "1", required = true)
     private long id;
 
     @NotNull(message = "Restaurant name should not be null")
+    @Schema(description = "Name of Restaurant.", example = "Koufu", required = true)
     private String name;
 
     @NotNull(message = "Location should not be null")
+    @Schema(description = "Location of Restaurant.", example = "SMU", required = true)
     private String location;
 
     @NotNull(message = "Cuisine should not be null")
+    @Schema(description = "Cuisine of Restaurant.", example = "Asian", required = true)
     private String cuisine;
 
     @NotNull(message = "Description should not be null")
+    @Schema(description = "Description of Restaurant.", example = "Lovely food", required = true)
     private String description;
 
+    @Schema(description = "Current number of people in Restaurant.", example = "50", hidden = true)
     private int currentCapacity;
 
     @NotNull(message = "Max capacity should not be null")
+    @Schema(description = "Seating capacity in Restaurant.", example = "100")
     private int maxCapacity;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
     @JsonManagedReference
+    @Schema(description = "List of Employees working at the restaurant.", hidden = true)
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @Schema(description = "List of Crowd Level recording in restaurant.", hidden = true)
     private List<CrowdLevel> crowdLevel;
 
     public Restaurant() {

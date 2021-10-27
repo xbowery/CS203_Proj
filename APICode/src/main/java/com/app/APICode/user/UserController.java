@@ -67,6 +67,8 @@ public class UserController {
      */
     @Operation(summary = "Get User", description = "Get user by username", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
@@ -124,8 +126,7 @@ public class UserController {
      * @param username username of user
      */
     @Operation(summary = "Delete User", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content)})
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content) })
     @Transactional
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
@@ -167,17 +168,15 @@ public class UserController {
      * @return the newly created user
      */
     @Operation(summary = "Register User", tags = { "User" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Successful Registered User", content = @Content(schema = @Schema(implementation = User.class)))})
-    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful Registered User") })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/register")
-    public User register(@Valid @RequestBody User newUser) {
+    public void register(@Valid @RequestBody User newUser) {
         newUser.setPassword(encoder.encode(newUser.getPassword()));
         Boolean isAdmin = false;
         final User savedUser = userService.addUser(newUser, isAdmin);
         if (savedUser == null)
             throw new UserOrEmailExistsException(newUser.getUsername());
-        return savedUser;
     }
 
     /**

@@ -28,7 +28,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Unique identifier of the User.", example = "1", required = true)
+    @Schema(description = "Unique identifier of the User.", example = "1", required = true, hidden = true)
     private Long id;
 
     @Email
@@ -51,20 +51,28 @@ public class User implements UserDetails {
 
     @NotNull(message = "Password must not be null")
     @Size(min = 8, max = 100, message = "Password must be at least 8 characters")
-    @Schema(description = "Hashed password of the User.", required = true)
+    @Schema(description = "Password of the User.", required = true)
     private String password;
 
     @NotNull(message = "Vaccination status must not be null")
-    @Schema(description = "Vaccination Status of User.", required = true)
+    @Schema(description = "Vaccination Status of User.", required = true, hidden = true)
     private boolean isVaccinated = false;
 
     @NotNull(message = "Authorities must not be null")
-    @Schema(description = "Role of User.", required = true)
+    @Schema(description = "Role of User.", required = true, hidden = true)
     private String authorities = UserRole.USER.role;
 
+    @Schema(description = "If the user account is enabled.", required = true, hidden = true)
+    private boolean enabled = false;
     
-    @Schema(description = "If the user account is enabled.", required = true)
-    private boolean isEnabled = false;
+    @Schema(description = "If the user account has expired.", required = true, hidden = true)
+    private boolean accountNonExpired = false;
+
+    @Schema(description = "If the user account is locked.", required = true, hidden = true)
+    private boolean accountNonLocked = false;
+
+    @Schema(description = "If the user credential has expired.", required = true, hidden = true)
+    private boolean credentialsNonExpired = false;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -111,11 +119,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 
-    public void setEnabled(final boolean isEnabled) {
-        this.isEnabled = isEnabled;
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId() {
