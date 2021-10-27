@@ -5,11 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=dev nodemon -r dotenv/config server.js",
-    "test": "jest --setupFiles dotenv/config -i --testTimeout=10000 --forceExit",
+    "test": "jest --setupFiles dotenv/config -i --testTimeout=15000 --forceExit",
     "prod": "NODE_ENV=prod node -r dotenv/config server.js"
   },
   "jest": {
-    "collectCoverage": false,
+    "collectCoverage": true,
     "coverageReporters": [
       "json",
       "html"

@@ -32,6 +32,28 @@ describe("testing craftQueryObj function", () => {
       },
     });
   });
+
+  test("craftQueryObj_StrInput_ReturnsProperObjectWithFilter", () => {
+    const result = utils.craftQueryObj("covid", "General");
+    assert.deepEqual(result, {
+      $or: [
+        {
+          title: /covid/i,
+        },
+        {
+          content: /covid/i,
+        },
+      ],
+      type: "General",
+    });
+  });
+
+  test("craftQueryObj_InvalidStrInput_ThrowsError", () => {
+    assert.throws(
+      () => utils.craftQueryObj("covid", "restaurant"),
+      "Please select one of the following types: 'General', 'Gov', 'Restaurant'"
+    );
+  });
 });
 
 describe("testing craftBulkObject function with null inputs", () => {

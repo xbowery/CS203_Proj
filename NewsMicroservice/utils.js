@@ -42,12 +42,18 @@ function Utils() {
    * @param {*} searchStr
    * @return object containing a regex, or an empty object if the searchStr is empty
    */
-  this.craftQueryObj = (searchStr = "", type = "") => {
-    const newsType = this.validateType(type)
-      ? type
-      : {
-          $ne: "Gov",
-        };
+  this.craftQueryObj = (searchStr = "", type) => {
+    let newsType = type;
+
+    if (!type) {
+      newsType = {
+        $ne: "Gov",
+      };
+    } else if (!this.validateType(type)) {
+      throw new Error(
+        "Please select one of the following types: 'General', 'Gov', 'Restaurant'"
+      );
+    }
 
     if (!searchStr || searchStr === "") {
       return {

@@ -55,9 +55,15 @@ module.exports.getNews = async (req, res, next) => {
  * @return JSON object of the top 8 news of each category
  */
 module.exports.searchNews = async (req, res, next) => {
-  const { q, type } = req.params;
+  const { q, type } = req.query;
   // Crafts an object that searches for that string in either the title or the content or both (case insensitive)
-  const queryObj = utils.craftQueryObj(q, type);
+  let queryObj;
+
+  try {
+    queryObj = utils.craftQueryObj(q, type);
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
 
   // queryObj will be empty if user does not specify any query parameters
   try {

@@ -80,6 +80,24 @@ test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFiveWithoutGov", function (d
     });
 });
 
+test("RetrieveNewsWithInvalidType_ReturnsErrorMessage", function (done) {
+  chai
+    .request(server)
+    .get(URI + "/news/search")
+    .query({ q: "covid", type: "doesNotExist" })
+    .end(function (err, res) {
+      assert.equal(res.status, 400);
+
+      const { error } = res.body;
+      assert.equal(
+        error,
+        "Please select one of the following types: 'General', 'Gov', 'Restaurant'"
+      );
+
+      done();
+    });
+});
+
 test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (done) {
   chai
     .request(server)
@@ -93,6 +111,23 @@ test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (d
       assert.isAtMost(news.length, 5);
 
       assert.isFalse(news.some(checkType.bind(null, "Gov")));
+      done();
+    });
+});
+
+test("RetrieveNewsWithGivenSearchQueryAndType_ReturnsAtMostOfType", function (done) {
+  chai
+    .request(server)
+    .get(URI + "/news/search")
+    .query({ q: "covid", type: "General" })
+    .end(function (err, res) {
+      assert.equal(res.status, 200);
+
+      const { news } = res.body;
+      assert.isAtLeast(news.length, 0);
+      assert.isAtMost(news.length, 5);
+
+      assert.isTrue(news.every(checkType.bind(null, "General")));
       done();
     });
 });
