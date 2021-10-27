@@ -184,10 +184,10 @@ public class RestaurantIntegrationTest {
         "  \"maxCapacity\": 100\r\n" +
         "}";
 
-        Response addRestaurantResponse = request.body(updateRestaurantDetails).put(uriRestaurant + "/" + id);
+        Response updateRestaurantResponse = request.body(updateRestaurantDetails).put(uriRestaurant + "/" + id);
 
-        assertEquals(200, addRestaurantResponse.getStatusCode());
-        assertEquals("Koufu", JsonPath.from(addRestaurantResponse.getBody().asString()).get("name"));
+        assertEquals(200, updateRestaurantResponse.getStatusCode());
+        assertEquals("Koufu", JsonPath.from(updateRestaurantResponse.getBody().asString()).get("name"));
     }
 
     @Test
@@ -215,8 +215,58 @@ public class RestaurantIntegrationTest {
         "  \"maxCapacity\": 100\r\n" +
         "}";
 
-        Response addRestaurantResponse = request.body(updateRestaurantDetails).post(uriRestaurant + "/" + id);
+        Response updateRestaurantResponse = request.body(updateRestaurantDetails).post(uriRestaurant + "/" + id);
 
-        assertEquals(403, addRestaurantResponse.getStatusCode());
+        assertEquals(403, updateRestaurantResponse.getStatusCode());
+    }
+
+    @Test
+    public void deleteRestaurant_AdminUser_Success() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
+
+        RequestSpecification request = RestAssured.given();
+
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+
+        String tokenGenerated = result.getBody().getAccessToken();
+
+        Restaurant testRestaurant = new Restaurant("Bricklanes", "SMU", "Western", "Bar", 40);
+        Long id = restaurants.save(testRestaurant).getId();
+
+        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+
+        Response deleteRestaurantResponse = request.delete(uriRestaurant + "/" + id);
+
+        Restaurant savedRestaurant = restaurants.findById(id).orElse(null);
+
+        assertEquals(200, deleteRestaurantResponse.getStatusCode());
+        assertNull(savedRestaurant);
+    }
+
+    @Test
+    public void deleteRestaurant_NormalUser_Failure() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
+
+        RequestSpecification request = RestAssured.given();
+
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("test1", "password123"), TokenDetails.class);
+
+        String tokenGenerated = result.getBody().getAccessToken();
+
+        Restaurant testRestaurant = new Restaurant("Koufu", "SMU", "All", "Restaurant Food Chain", 100);
+        Long id = restaurants.save(testRestaurant).getId();
+
+        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+
+        Response deleteRestaurantResponse = request.delete(uriRestaurant + "/" + id);
+
+        Restaurant savedRestaurant = restaurants.findById(id).orElse(null);
+
+        assertEquals(403, deleteRestaurantResponse.getStatusCode());
+        assertNotNull(savedRestaurant);
     }
 }
