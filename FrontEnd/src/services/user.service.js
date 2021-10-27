@@ -7,11 +7,15 @@ class UserService {
   async getRestaurants() {
     return api.get('restaurants')
   }
+  async getRestaurant(username){
+    var request = 'restaurants/user/' + username
+    return api.get(request)
+  }
   async getCrowdLevels() {
     return api.get('restaurants/crowdLevels')
   }
-  async getCrowdLevel(id) {
-    var request = 'restaurants/' + id + '/crowdLevel'
+  async getCrowdLevel(username) {
+    var request = 'restaurants/' + username + '/crowdLevel'
     return api.get(request)
   }
   async postCrowdLevel(id, crowdLevel) {

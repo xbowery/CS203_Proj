@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.app.APICode.restaurant.Restaurant;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class CrowdLevel {
@@ -25,7 +26,8 @@ public class CrowdLevel {
     private int noOfCustomers;
 
     @ManyToOne
-    @JoinColumn(name = "restaurantId")
+    @JoinColumn(name = "restaurantId", nullable = false)
+    @JsonBackReference 
     private Restaurant restaurant;
 
     public CrowdLevel() {

@@ -38,6 +38,9 @@ export default {
   components: {
     VueApexCharts,
   },
+  props: {
+    username: String,
+  },
 
   data() {
     return {
@@ -144,7 +147,7 @@ export default {
 
   async mounted() {
     try {
-      const res = await UserService.getCrowdLevel(4)
+      const res = await UserService.getCrowdLevel(this.username)
       this.items = res.data
     } catch (error) {
       console.error(error)

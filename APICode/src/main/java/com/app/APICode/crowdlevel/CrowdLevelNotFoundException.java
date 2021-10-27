@@ -11,5 +11,9 @@ public class CrowdLevelNotFoundException extends RuntimeException{
         super("Could not find crowd level with id:  " + id);
     }
 
+    public CrowdLevelNotFoundException(String restaurantName){
+        super("Could not find crowd level with Restaurant Name:  " + restaurantName);
+    }
+
 
 }
