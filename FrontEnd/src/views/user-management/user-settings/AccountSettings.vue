@@ -19,21 +19,26 @@
       <v-tab-item>
         <account-settings-security></account-settings-security>
       </v-tab-item>
+      <v-tab-item>
+        <account-settings-business></account-settings-business>
+      </v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>
 
 <script>
-import { mdiAccountOutline, mdiLockOpenOutline } from '@mdi/js'
+import { mdiAccountOutline, mdiAlphaFCircleOutline, mdiLockOpenOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 
 import AccountSettingsAccount from './AccountSettingsAccount.vue'
 import AccountSettingsSecurity from './AccountSettingsSecurity.vue'
+import AccountSettingsBusiness from './AccountSettingsBusiness.vue'
 
 export default {
   components: {
     AccountSettingsAccount,
     AccountSettingsSecurity,
+    AccountSettingsBusiness,
   },
   setup() {
     const tab = ref('')
@@ -42,6 +47,7 @@ export default {
     const tabs = [
       { title: 'Account', icon: mdiAccountOutline },
       { title: 'Security', icon: mdiLockOpenOutline },
+      {title: 'Business', icon:mdiAlphaFCircleOutline},
     ]
 
     // account settings data
@@ -51,7 +57,6 @@ export default {
         username: 'johnDoe',
         firstname: 'John',
         lastname: 'Doe',
-        dob: 'February 22, 1995',
         email: 'johnDoe@example.com',
         phone: '90458731',
         role: 'Admin',
@@ -66,6 +71,7 @@ export default {
       icons: {
         mdiAccountOutline,
         mdiLockOpenOutline,
+        mdiAlphaFCircleOutline,
       },
     }
   },
