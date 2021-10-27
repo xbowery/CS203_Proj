@@ -118,9 +118,9 @@ const routes = [
     meta: { authorize: [] },
   },
   {
-    path: '/F&BGuidelines',
-    name: 'F&BGuidelines',
-    component: () => import('@/views/news/F&BGuidelines.vue'),
+    path: '/OfficialNews',
+    name: 'OfficialNews',
+    component: () => import('@/views/news/OfficialNews.vue'),
     meta: { authorize: [] },
   },
   {
