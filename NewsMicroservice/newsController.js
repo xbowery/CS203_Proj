@@ -78,6 +78,32 @@ module.exports.searchNews = async (req, res, next) => {
 };
 
 /**
+ * An outward facing function to fetch news for a specific type of the 3 different allowed types
+ * Types: [General, Gov, Restuarant]
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+module.exports.getNewsWithType = async (req, res, next) => {
+  const { type } = req.params;
+  if (type !== "General" && type !== "Gov" && type != "Restaurant") {
+    const errorMsg =
+      "Please select one of the following types: 'General', 'Gov', 'Restaurant'";
+    return res.status(400).json({ success: false, error: errorMsg });
+  }
+
+  try {
+    const searchLimit = 8;
+    const latestNews = await fetchNewsFromDB({ type }, searchLimit);
+    res.status(200).json({ success: true, latestNews });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+/**
  * Internal function to fetch news on demand to test the News API service
  *
  * @param {*} req

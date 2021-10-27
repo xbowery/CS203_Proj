@@ -127,3 +127,61 @@ test("RetrieveNews_ReturnsEightOfEachType", function (done) {
       done();
     });
 });
+
+describe("Retrieve News of specific types", () => {
+  test("RetrieveNewsOfUnknownType_ReturnsErrorMessage", function (done) {
+    chai
+      .request(server)
+      .get(URI + "/news/doesNotExist")
+      .end(function (err, res) {
+        assert.equal(res.status, 400);
+
+        const { error } = res.body;
+        assert.equal(
+          error,
+          "Please select one of the following types: 'General', 'Gov', 'Restaurant'"
+        );
+        done();
+      });
+  });
+
+  test("RetrieveNewsOfAllowedTypeGeneral_ReturnsMaxEightOfThatType", function (done) {
+    chai
+      .request(server)
+      .get(URI + "/news/General")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+
+        const { latestNews } = res.body;
+        assert.equal(latestNews.length, 8);
+        done();
+      });
+  });
+
+  test("RetrieveNewsOfAllowedTypeRestaurant_ReturnsMaxEightOfThatType", function (done) {
+    chai
+      .request(server)
+      .get(URI + "/news/Restaurant")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+
+        const { latestNews } = res.body;
+        assert.equal(latestNews.length, 8);
+        done();
+      });
+  });
+
+  test("RetrieveNewsOfAllowedTypeGov_ReturnsMaxEightOfThatType", function (done) {
+    chai
+      .request(server)
+      .get(URI + "/news/Gov")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+
+        const { latestNews } = res.body;
+        assert.isAtLeast(latestNews.length, 1);
+        assert.isAtMost(latestNews.length, 8);
+        done();
+      });
+  });
+});
