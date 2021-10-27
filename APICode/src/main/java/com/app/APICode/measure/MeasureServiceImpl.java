@@ -7,17 +7,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MeasureServiceImpl implements MeasureService{
+public class MeasureServiceImpl implements MeasureService {
     private MeasureRepository measures;
 
-    //for testing purposes
+    // for testing purposes
     public MeasureServiceImpl(MeasureRepository measures) {
         this.measures = measures;
-        measures.save(new Measure(new Date(), "Restaurant", 50, true, false, null));
+        measures.save(new Measure(new Date(), "Restaurant", 2, true, false, null));
         measures.save(new Measure(new Date(), "Gym", 50, true, false, null));
-        measures.save(new Measure(new Date(), "Events",100,true,true,null));
-        measures.save(new Measure(new Date(),"Gathering",2, true,false,null));
-    } 
+        measures.save(new Measure(new Date(), "Events", 1000, true, true, null));
+        measures.save(new Measure(new Date(), "Gathering", 2, true, true, null));
+    }
 
     @Override
     public List<Measure> listMeasures() {
@@ -25,7 +25,7 @@ public class MeasureServiceImpl implements MeasureService{
     }
 
     @Override
-    public Measure getLatestMeasure(){
+    public Measure getLatestMeasure() {
         return measures.findTopByOrderByCreationDateTimeDesc();
     }
 

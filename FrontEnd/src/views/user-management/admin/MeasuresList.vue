@@ -45,6 +45,17 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
+                      <v-col cols="12" md="6">
+                        <validation-provider name="Business Type" rules="required" v-slot="{ errors }">
+                          <v-select
+                            :items="dropdown_type"
+                            v-model="editedItem.businessType"
+                            :error-messages="errors[0]"
+                            label="Select Business Type"
+                            required
+                          ></v-select>
+                        </validation-provider>
+                      </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <validation-provider name="Max Capacity" rules="required" v-slot="{ errors }">
                           <v-text-field
@@ -100,6 +111,7 @@ import '@/validators'
 export default {
   components: { ValidationProvider, ValidationObserver },
   data: () => ({
+    dropdown_type: [{ text: 'Restaurant' }, { text: 'Events' }, { text: 'Gym' }, { text: 'Gathering' }],
     dialog: false,
     dialogDelete: false,
     search: '',
@@ -113,11 +125,13 @@ export default {
     items: [],
     editedIndex: -1,
     editedItem: {
+      businessType: '',
       maxCapacity: '',
       vaccinationStatus: '',
       maskStatus: '',
     },
     defaultItem: {
+      businessType: '',
       maxCapacity: '',
       vaccinationStatus: '',
       maskStatus: '',
@@ -155,7 +169,6 @@ export default {
       measure,
       items: [],
       headers: [
-        // { text: 'Date of creation', value: 'creationDateTime' },
         { text: 'Max capacity', value: 'maxCapacity' },
         { text: 'Vaccinated?', value: 'vaccinationStatus' },
         { text: 'Mask required?', value: 'maskStatus' },
@@ -215,13 +228,13 @@ export default {
         Object.assign(this.items[this.editedIndex], this.editedItem)
 
         const measure = new Measure('', '', '', '')
+        measure.businessType = this.items[this.editedIndex].businessType
         measure.maxCapacity = this.items[this.editedIndex].maxCapacity
         measure.vaccinationStatus = this.items[this.editedIndex].vaccinationStatus
         measure.maskStatus = this.items[this.editedIndex].maskStatus
         this.handleEditUser(measure)
       } else {
         this.items.push(this.editedItem)
-        // this.handleSaveUser(this.editedItem)
       }
       if (!this.message) {
         this.close()

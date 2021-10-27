@@ -66,7 +66,6 @@ export default {
     return {
       items: [],
       headers: [
-        // { text: 'Date of creation', value: 'creationDateTime' },
         { text: 'Max capacity', value: 'maxCapacity' },
         { text: 'Vaccinated?', value: 'vaccinationStatus' },
         { text: 'Mask required?', value: 'maskStatus' },
