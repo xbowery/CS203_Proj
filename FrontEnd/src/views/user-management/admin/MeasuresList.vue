@@ -1,40 +1,36 @@
 <template>
-<div>
+  <div>
+    <v-row>
+      <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
+        <v-card>
+          <v-img
+            class="misc-tree"
+            :src="images[item.businessType.toLowerCase()]"
+            align="center"
+            justify="center"
+          ></v-img>
+          <v-card-title class="subheading font-weight-bold">
+            {{ item.businessType }}
+          </v-card-title>
 
-  <v-row>
-    <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
-      <v-card>
-        <v-img class="misc-tree" :src="images[item.businessType.toLowerCase()]" align="center" justify="center"></v-img>
-        <v-card-title class="subheading font-weight-bold">
-          {{ item.businessType }}
-        </v-card-title>
+          <v-divider></v-divider>
 
-        <v-divider></v-divider>
+          <v-list dense>
+            <v-list-item v-for="(header, index) in headers" :key="index">
+              <v-list-item-content> {{ header.text }}: </v-list-item-content>
+              <v-list-item-content class="align-end">
+                {{ item[header.value] }}
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
 
-        <v-list dense>
-          <v-list-item v-for="(header, index) in headers" :key="index">
-            <v-list-item-content> {{ header.text }}: </v-list-item-content>
-            <v-list-item-content class="align-end">
-              {{ item[header.value] }}
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-
-        <div class="d-flex justify-center">
-          <v-btn
-            color="primary"
-            dark
-            class="mb-4 me-3"
-            @click.stop="editItem(item)"
-            v-bind="attrs"
-          >
-            Edit
-          </v-btn>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-dialog v-model="dialog" max-width="500px">
+          <div class="d-flex justify-center">
+            <v-btn color="primary" dark class="mb-4 me-3" @click.stop="editItem(item)" v-bind="attrs"> Edit </v-btn>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <validation-observer v-slot="{ handleSubmit, invalid }">
           <v-form @submit.prevent="handleSubmit(save)">
@@ -49,6 +45,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <validation-provider name="Max Capacity" rules="required" v-slot="{ errors }">
                       <v-text-field
+                        type="number"
                         v-model="editedItem.maxCapacity"
                         :error-messages="errors[0]"
                         label="Max Capacity"
@@ -56,21 +53,25 @@
                     </validation-provider>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <validation-provider name="Vaccinated? (true/false)" rules="required" v-slot="{ errors }">
-                      <v-text-field
+                    <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
+                      <v-select
+                        :items="dropdown"
                         v-model="editedItem.vaccinationStatus"
                         :error-messages="errors[0]"
                         label="Vaccinated?"
-                      ></v-text-field>
+                        required
+                      ></v-select>
                     </validation-provider>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <validation-provider name="Mask Required?" rules="required" v-slot="{ errors }">
-                      <v-text-field
+                      <v-select
+                        :items="dropdown"
                         v-model="editedItem.maskStatus"
                         :error-messages="errors[0]"
                         label="Mask Required?"
-                      ></v-text-field>
+                        required
+                      ></v-select>
                     </validation-provider>
                   </v-col>
                 </v-row>
@@ -85,8 +86,7 @@
         </validation-observer>
       </v-card>
     </v-dialog>
-</div>
-  
+  </div>
 </template>
 
 <script>
@@ -99,10 +99,11 @@ import '@/validators'
 export default {
   components: { ValidationProvider, ValidationObserver },
   data: () => ({
+    dropdown: [{ text: 'true' }, { text: 'false' }],
     dialog: false,
     dialogDelete: false,
     search: '',
-    errors: '',
+    errors: [],
     isAddNewUserSidebarActive: '',
     headers: [
       { text: 'Max capacity', value: 'maxCapacity' },
@@ -162,7 +163,6 @@ export default {
   },
 
   methods: {
-
     editItem(item) {
       this.dialog = true
       this.editedIndex = this.items.indexOf(item)
