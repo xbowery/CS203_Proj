@@ -34,8 +34,8 @@
               </v-avatar>
             </v-badge>
             <div class="d-inline-flex flex-column justify-center ms-3" style="vertical-align: middle">
-              <span class="text--primary font-weight-semibold mb-n1"> John Doe </span>
-              <small class="text--disabled text-capitalize">Admin</small>
+              <span class="text--primary font-weight-semibold mb-n1"> {{ user.username }} </span>
+              <small class="text--disabled text-capitalize"> {{ user.role }}</small>
             </div>
           </div>
 
@@ -98,9 +98,13 @@ import {
   mdiBellOutline,
 } from '@mdi/js'
 import EventBus from '@/common/EventBus'
+import TokenService from '@/services/token.service'
 
 export default {
   computed: {
+    user(){
+      return TokenService.getUser()
+    },
     loggedIn() {
       return this.$store.state.auth.status.loggedIn
     },
