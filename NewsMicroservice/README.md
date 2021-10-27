@@ -31,6 +31,9 @@ To run the test suites, run the command `npm test`. Both unit and integration te
 To run it in production mode, run the command `npm run prod`. Else, you may follow the instructions to spin up a docker instance.
 
 ```bash
-docker build --rm -t news_microservice .
-docker run -d -p 3001:3001 news_microservice:latest
+# To start
+docker-compose up -d
+
+# To stop
+docker-compose down
 ```
