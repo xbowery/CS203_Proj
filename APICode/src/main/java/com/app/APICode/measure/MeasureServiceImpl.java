@@ -13,7 +13,10 @@ public class MeasureServiceImpl implements MeasureService{
     //for testing purposes
     public MeasureServiceImpl(MeasureRepository measures) {
         this.measures = measures;
-        measures.save(new Measure(new Date(), "restaurant", 50, true, false, null));
+        measures.save(new Measure(new Date(), "Restaurant", 50, true, false, null));
+        measures.save(new Measure(new Date(), "Gym", 50, true, false, null));
+        measures.save(new Measure(new Date(), "Events",100,true,true,null));
+        measures.save(new Measure(new Date(),"Gathering",2, true,false,null));
     } 
 
     @Override
