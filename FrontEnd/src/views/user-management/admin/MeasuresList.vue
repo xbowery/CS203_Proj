@@ -1,4 +1,6 @@
 <template>
+<div>
+
   <v-row>
     <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
       <v-card>
@@ -18,87 +20,84 @@
           </v-list-item>
         </v-list>
 
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <div class="d-flex justify-center">
-              <v-btn
-                color="primary"
-                dark
-                class="mb-4 me-3"
-                @click.stop="isAddNewUserSidebarActive = !isAddNewUserSidebarActive"
-                v-bind="attrs"
-                v-on="on"
-              >
-                Edit
-              </v-btn>
-            </div>
-          </template>
-          <v-spacer></v-spacer>
-          <v-card>
-            <validation-observer v-slot="{ handleSubmit, invalid }">
-              <v-form @submit.prevent="handleSubmit(save)">
-                <v-alert elevation="2" type="error" v-if="message">{{ message }}</v-alert>
-                <v-card-title>
-                  <span class="text-h5">{{ formTitle }}</span>
-                </v-card-title>
-
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" md="6">
-                        <validation-provider name="Business Type" rules="required" v-slot="{ errors }">
-                          <v-select
-                            :items="dropdown_type"
-                            v-model="editedItem.businessType"
-                            :error-messages="errors[0]"
-                            label="Select Business Type"
-                            required
-                          ></v-select>
-                        </validation-provider>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <validation-provider name="Max Capacity" rules="required" v-slot="{ errors }">
-                          <v-text-field
-                            v-model="editedItem.maxCapacity"
-                            :error-messages="errors[0]"
-                            label="Max Capacity"
-                          ></v-text-field>
-                        </validation-provider>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
-                          <v-text-field
-                            v-model="editedItem.vaccinationStatus"
-                            :error-messages="errors[0]"
-                            label="Vaccinated?"
-                          ></v-text-field>
-                        </validation-provider>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <validation-provider name="Mask Required?" rules="required" v-slot="{ errors }">
-                          <v-text-field
-                            v-model="editedItem.maskStatus"
-                            :error-messages="errors[0]"
-                            label="Mask Required?"
-                            :disabled="editedIndex > -1"
-                          ></v-text-field>
-                        </validation-provider>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions class="justify-center">
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="dialog = false" type="button"> Cancel </v-btn>
-                  <v-btn color="blue darken-1" text type="submit" :disabled="invalid"> Save </v-btn>
-                </v-card-actions>
-              </v-form>
-            </validation-observer>
-          </v-card>
-        </v-dialog>
+        <div class="d-flex justify-center">
+          <v-btn
+            color="primary"
+            dark
+            class="mb-4 me-3"
+            @click.stop="editItem(item)"
+            v-bind="attrs"
+          >
+            Edit
+          </v-btn>
+        </div>
       </v-card>
     </v-col>
   </v-row>
+  <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <validation-observer v-slot="{ handleSubmit, invalid }">
+          <v-form @submit.prevent="handleSubmit(save)">
+            <v-alert elevation="2" type="error" v-if="message">{{ message }}</v-alert>
+            <v-card-title>
+              <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <validation-provider name="Business Type" rules="required" v-slot="{ errors }">
+                      <v-select
+                        :items="dropdown_type"
+                        v-model="editedItem.businessType"
+                        :error-messages="errors[0]"
+                        label="Select Business Type"
+                        required
+                      ></v-select>
+                    </validation-provider>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <validation-provider name="Max Capacity" rules="required" v-slot="{ errors }">
+                      <v-text-field
+                        v-model="editedItem.maxCapacity"
+                        :error-messages="errors[0]"
+                        label="Max Capacity"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
+                      <v-text-field
+                        v-model="editedItem.vaccinationStatus"
+                        :error-messages="errors[0]"
+                        label="Vaccinated?"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <validation-provider name="Mask Required?" rules="required" v-slot="{ errors }">
+                      <v-text-field
+                        v-model="editedItem.maskStatus"
+                        :error-messages="errors[0]"
+                        label="Mask Required?"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions class="justify-center">
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false" type="button"> Cancel </v-btn>
+              <v-btn color="blue darken-1" text type="submit" :disabled="invalid"> Save </v-btn>
+            </v-card-actions>
+          </v-form>
+        </validation-observer>
+      </v-card>
+    </v-dialog>
+</div>
+  
 </template>
 
 <script>
@@ -149,7 +148,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Measure' : 'Edit Measure'
+      return this.editedIndex === -1 ? 'Edit Measure' : 'New Measure'
     },
   },
 
@@ -183,7 +182,9 @@ export default {
   },
 
   methods: {
+
     editItem(item) {
+      this.dialog = true
       this.editedIndex = this.items.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
@@ -232,7 +233,7 @@ export default {
         measure.maxCapacity = this.items[this.editedIndex].maxCapacity
         measure.vaccinationStatus = this.items[this.editedIndex].vaccinationStatus
         measure.maskStatus = this.items[this.editedIndex].maskStatus
-        this.handleEditUser(measure)
+        // this.handleEditMeasure(measure)
       } else {
         this.items.push(this.editedItem)
       }
