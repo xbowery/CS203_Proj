@@ -14,22 +14,6 @@
             Singapore will change testing and quarantine requirements for COVID-19 as Prime Minister Lee Hsien Loong
             said on Saturday (Oct 9) that people should update their mindsets and not be paralysed by fear of the virus.
           </v-card-text>
-          <!-- <v-card-actions class="dense">
-            <v-btn color="primary" text> Details </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="isCardDetailsVisible = !isCardDetailsVisible">
-              <v-icon>{{ isCardDetailsVisible ? icons.mdiChevronUp : icons.mdiChevronDown }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-expand-transition>
-            <div v-show="isCardDetailsVisible">
-              <v-divider></v-divider>
-              <v-card-text>
-                The country will also introduce more vaccination-differentiated measures and expand home recovery to
-                include people as it moves towards the new normal of living with COVID-19.
-              </v-card-text>
-            </div>
-          </v-expand-transition> -->
         </v-card>
       </v-col>
       <!-- send request card -->
@@ -48,22 +32,6 @@
             Singapore reported more than 3,000 new COVID-19 cases for a fifth straight day on Saturday (Oct 9) as 11
             more people died from complications due to the virus.
           </v-card-text>
-          <!-- <v-card-actions class="dense">
-            <v-btn color="primary" text> Details </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="isCardDetailsVisible = !isCardDetailsVisible">
-              <v-icon>{{ isCardDetailsVisible ? icons.mdiChevronUp : icons.mdiChevronDown }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-expand-transition>
-            <div v-show="isCardDetailsVisible">
-              <v-divider></v-divider>
-              <v-card-text>
-                The fatalities are five men and six women aged between 56 and 90. Four of them were unvaccinated against
-                COVID-19, three were partially vaccinated and four were fully vaccinated.
-              </v-card-text>
-            </div>
-          </v-expand-transition> -->
         </v-card>
       </v-col>
       <!-- card explore -->
@@ -80,23 +48,6 @@
             Singapore is extending its vaccinated travel lane scheme to eight more countries, allowing those who are
             fully vaccinated against COVID-19 to enter Singapore without having to serve quarantine.
           </v-card-text>
-          <!-- <v-card-actions class="dense">
-            <v-btn color="primary" text> Details </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="isCardDetailsVisible = !isCardDetailsVisible">
-              <v-icon>{{ isCardDetailsVisible ? icons.mdiChevronUp : icons.mdiChevronDown }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-expand-transition>
-            <div v-show="isCardDetailsVisible">
-              <v-divider></v-divider>
-              <v-card-text>
-                From Oct 19, fully vaccinated travellers from Canada, Denmark, France, Italy, the Netherlands, Spain,
-                the United Kingdom and the United States will be able to enter Singapore under this arrangement, the
-                Civil Aviation Authority of Singapore (CAAS) announced on Saturday (Oct 9).
-              </v-card-text>
-            </div>
-          </v-expand-transition> -->
         </v-card>
       </v-col>
     </v-row>
@@ -104,43 +55,11 @@
 </template>
 
 <script>
-import { ref } from '@vue/composition-api'
-//import useVuetify from '~@/plugins/vuetify'
-import {
-  mdiChevronUp,
-  mdiChevronDown,
-  mdiCartPlus,
-  mdiShareVariantOutline,
-  mdiLockOpenOutline,
-  mdiStarOutline,
-  mdiAccountOutline,
-  mdiTrendingUp,
-  mdiHelpCircleOutline,
-} from '@mdi/js'
-
 export default {
   setup() {
-    //const { rootThemeClasses } = useVuetify()
-    const isCardDetailsVisible = false
-    const rating = ref(5)
-
+    
     return {
-      //rootThemeClasses,
-      isCardDetailsVisible,
-      rating,
 
-      // icons
-      icons: {
-        mdiChevronUp,
-        mdiChevronDown,
-        mdiCartPlus,
-        mdiShareVariantOutline,
-        mdiLockOpenOutline,
-        mdiStarOutline,
-        mdiAccountOutline,
-        mdiTrendingUp,
-        mdiHelpCircleOutline,
-      },
     }
   },
 }

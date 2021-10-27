@@ -1,4 +1,5 @@
 import api from './api'
+import newsApi from './newsApi'
 
 class UserService {
   async getUsers() {
@@ -10,11 +11,11 @@ class UserService {
   async getCrowdLevels() {
     return api.get('restaurants/crowdLevels')
   }
-  async getCrowdLevel(id){
+  async getCrowdLevel(id) {
     var request = 'restaurants/' + id + '/crowdLevel'
     return api.get(request)
   }
-  async postCrowdLevel(id, crowdLevel){
+  async postCrowdLevel(id, crowdLevel) {
     var request = 'restaurants/' + id + '/crowdLevel'
     return api.post(request, crowdLevel)
   }
@@ -30,11 +31,11 @@ class UserService {
     const request = `registrationConfirm?token=${token}`
     return api.get(request)
   }
-  async deleteCtest(username, ctestId){
+  async deleteCtest(username, ctestId) {
     const request = `/employee/${username}/ctests/${ctestId}`
     return api.delete(request)
   }
-  async updateCtest(username, ctestId, ctest){
+  async updateCtest(username, ctestId, ctest) {
     const request = `/employee/${username}/ctests/${ctestId}`
     return api.put(request, ctest)
   }
@@ -107,6 +108,10 @@ class UserService {
   }
   async getEmployees(username) {
     return api.get('employees/' + username)
+  }
+
+  async getNews(newsType) {
+    return newsApi.get(`news/${newsType}`)
   }
 }
 
