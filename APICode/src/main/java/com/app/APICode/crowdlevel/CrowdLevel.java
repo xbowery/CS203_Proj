@@ -32,7 +32,7 @@ public class CrowdLevel {
 
     @ManyToOne
     @JoinColumn(name = "restaurantId")
-    @Schema(description = "Restaurant that the Crowd Level belong to.", required = true)
+    @Schema(description = "Restaurant that the Crowd Level belongs to.", required = true)
     private Restaurant restaurant;
 
     public CrowdLevel() {
