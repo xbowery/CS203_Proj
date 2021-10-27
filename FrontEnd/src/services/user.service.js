@@ -1,5 +1,5 @@
 import api from './api'
-import newsApi from './newsApi'
+import newsapi from '@/services/newsApi'
 
 class UserService {
   async getUsers() {
@@ -111,7 +111,15 @@ class UserService {
   }
 
   async getNews(newsType) {
-    return newsApi.get(`news/${newsType}`)
+    return newsapi.get(`news/${newsType}`)
+  }
+
+  async getNewsWithFilters(newsType, queryString) {
+    let url = 'news/search/?'
+    url += newsType ? `type=${newsType}` : ''
+    url += queryString ? `q=${queryString}` : ''
+
+    return newsapi.get(url)
   }
 }
 

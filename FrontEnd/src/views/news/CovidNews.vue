@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <h1>Home</h1> -->
+    <h1>General News</h1>
     <!-- Influencing The Influencer -->
     <v-row>
       <v-col md="4" sm="6" cols="12">
@@ -55,11 +55,23 @@
 </template>
 
 <script>
+import UserService from '@/services/user.service'
+import { ref, onMounted } from '@vue/composition-api'
+
 export default {
   setup() {
-    
-    return {
+    let newsData = ref([])
 
+    const getNewsData = async() => {
+      const res = await UserService.getNews("General")
+      newsData = res.data.latestNews
+    }
+
+    onMounted(getNewsData)
+
+    return {
+      newsData,
+      getNewsData
     }
   },
 }
