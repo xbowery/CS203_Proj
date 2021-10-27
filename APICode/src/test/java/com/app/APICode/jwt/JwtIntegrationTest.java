@@ -7,6 +7,8 @@ import java.net.URI;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.templates.LoginDetails;
+import com.app.APICode.templates.TokenDetails;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

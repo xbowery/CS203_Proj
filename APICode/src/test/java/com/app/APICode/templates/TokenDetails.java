@@ -1,4 +1,4 @@
-package com.app.APICode.jwt;
+package com.app.APICode.templates;
 
 public class TokenDetails {
     private String username;

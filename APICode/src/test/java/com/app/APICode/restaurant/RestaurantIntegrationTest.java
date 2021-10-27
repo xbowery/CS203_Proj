@@ -6,6 +6,8 @@ import java.net.URI;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.templates.LoginDetails;
+import com.app.APICode.templates.TokenDetails;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -116,7 +118,7 @@ public class RestaurantIntegrationTest {
 
         String tokenGenerated = result.getBody().getAccessToken();
 
-        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
 
         String addRestaurantDetails = "{\r\n" +
         "  \"name\": \"Subway\",\r\n" +
