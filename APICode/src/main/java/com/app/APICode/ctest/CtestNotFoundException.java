@@ -8,7 +8,7 @@ public class CtestNotFoundException extends RuntimeException{
     private static final long serialVersionUID = 1L;
 
     public CtestNotFoundException(Long id) {
-        super("Could not find review " + id);
+        super("Could not find Covid Test " + id);
     }
 }
 

@@ -89,7 +89,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-@import '~@/plugins/vuetify/default-preset/preset/pages/auth.scss';
-</style>

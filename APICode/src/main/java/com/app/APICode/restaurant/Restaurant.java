@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Restaurant {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private long id;
 
     @NotNull(message = "Restaurant name should not be null")
@@ -36,8 +37,6 @@ public class Restaurant {
     @NotNull(message = "Max capacity should not be null")
     private int maxCapacity;
 
-    // private String crowdLevel;
-
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<Employee> employees;
@@ -45,7 +44,8 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<CrowdLevel> crowdLevel;
 
-    public Restaurant() {}
+    public Restaurant() {
+    }
 
     public Restaurant(String name, String location, String cuisine, String description, int maxCapacity) {
         this.name = name;
@@ -82,6 +82,7 @@ public class Restaurant {
     public String getDescription() {
         return this.description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -110,10 +111,9 @@ public class Restaurant {
         this.id = id;
     }
 
-    public List<Employee> getEmployees(){
+    public List<Employee> getEmployees() {
         return this.employees;
     }
-
 
     // public CrowdLevel getCrowdLevel() {
     //     return crowdLevel.getCrowdLevel();
@@ -135,4 +135,3 @@ public class Restaurant {
     // }
 
 }
-

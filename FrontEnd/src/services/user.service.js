@@ -10,17 +10,33 @@ class UserService {
   async getCrowdLevels() {
     return api.get('restaurants/crowdLevels')
   }
+  async getCrowdLevel(id) {
+    var request = 'restaurants/' + id + '/crowdLevel'
+    return api.get(request)
+  }
+  async postCrowdLevel(id, crowdLevel) {
+    var request = 'restaurants/' + id + '/crowdLevel'
+    return api.post(request, crowdLevel)
+  }
   async getCtests(username) {
-    var request = 'employee/' + username + '/ctests'
+    const request = `employee/${username}/ctests`
     return api.get(request)
   }
   async postCtest(username, ctest) {
-    var request = 'employee/' + username + '/ctests'
+    const request = `employee/${username}/ctests`
     return api.post(request, ctest)
   }
   async getRegistrationConfirm(token) {
-    var request = 'registrationConfirm?token=' + token
+    const request = `registrationConfirm?token=${token}`
     return api.get(request)
+  }
+  async deleteCtest(username, ctestId) {
+    const request = `/employee/${username}/ctests/${ctestId}`
+    return api.delete(request)
+  }
+  async updateCtest(username, ctestId, ctest){
+    const request = `/employee/${username}/ctests/${ctestId}`
+    return api.put(request, ctest)
   }
   updateUser(user) {
     return api.put(
@@ -49,11 +65,7 @@ class UserService {
     return api.post(
       'restaurants',
       {
-        name: restaurant.name,
-        location: restaurant.location,
-        cuisine: restaurant.cuisine,
-        description: restaurant.description,
-        maxCapacity: restaurant.maxCapacity,
+        ...restaurant,
       },
       {
         headers: {
@@ -64,13 +76,9 @@ class UserService {
   }
   updateRestaurant(restaurant) {
     return api.put(
-      `restaurants/${restaurant.name}/${restaurant.location}`,
+      `restaurants/${restaurant.id}`,
       {
-        name: restaurant.name,
-        location: restaurant.location,
-        cuisine: restaurant.cuisine,
-        description: restaurant.description,
-        maxCapacity: restaurant.maxCapacity,
+        ...restaurant,
       },
       {
         headers: {
@@ -79,12 +87,8 @@ class UserService {
       },
     )
   }
-  deleteRestaurant(restaurant) {
-    return api.delete(`restaurants/${restaurant.name}/${restaurant.location}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+  deleteRestaurant(id) {
+    return api.delete(`restaurants/${id}`)
   }
   async getMeasures() {
     return api.get('measures')

@@ -29,7 +29,7 @@
               flat
               solo-inverted
               hide-details
-              :items="keys"
+              :items="sortKeys"
               :prepend-inner-icon="icons.mdiMagnify"
               label="Sort by"
             ></v-select>
@@ -150,6 +150,9 @@ export default {
     }
   },
   computed: {
+    sortKeys() {
+      return this.keys.map(key => key.key)
+    },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage)
     },

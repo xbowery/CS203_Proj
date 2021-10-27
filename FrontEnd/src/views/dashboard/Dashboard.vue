@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12" md="4" sm="6">
-      <dashboard-congratulation-john></dashboard-congratulation-john>
+      <dashboard-user></dashboard-user>
     </v-col>
     <v-col cols="12" md="8" sm="6">
       <crowd-level></crowd-level>
@@ -69,7 +69,7 @@ import { mdiAccountGroup, mdiNeedle, mdiHospitalBoxOutline, mdiThumbUp } from '@
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 
 // demos
-import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
+import DashboardUser from './DashboardUser.vue'
 import CrowdLevel from './CrowdLevel.vue'
 import DashboardDailyOverview from './DashboardDailyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
@@ -78,7 +78,7 @@ import { mapGetters } from 'vuex'
 export default {
   components: {
     StatisticsCardVertical,
-    DashboardCongratulationJohn,
+    DashboardUser,
     CrowdLevel,
     DashboardDailyOverview,
     DashboardDatatable,

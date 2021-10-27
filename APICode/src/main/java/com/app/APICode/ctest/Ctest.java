@@ -33,7 +33,7 @@ public class Ctest {
     private Date date;
 
     @NotNull(message = "result should not be null")
-    @Pattern(regexp = "(Positive|Negative)")
+    @Pattern(regexp = "(Positive|Negative|Pending)")
     private String result;
 
     public Ctest (String type, Date date, String result){
