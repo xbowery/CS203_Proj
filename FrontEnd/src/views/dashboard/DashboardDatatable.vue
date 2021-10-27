@@ -50,23 +50,23 @@ import UserService from '@/services/user.service'
 
 export default {
   data: () => ({
-    items:[],
-    processedItems:[],
+    items: [],
+    processedItems: [],
   }),
   props: {
     username: String,
   },
 
-  async mounted(){
-    try{
+  async mounted() {
+    try {
       const res = await UserService.getEmployees(this.username)
       this.items = res.data
       this.items.forEach(user => {
-        if(user.employee.ctests.length > 0){
+        if (user.employee.ctests.length > 0) {
           var latestDate = user.employee.ctests[0].date
           var latestResult = user.employee.ctests[0].result
-          user.employee.ctests.forEach(ctest =>{
-            if(latestDate < ctest.date){
+          user.employee.ctests.forEach(ctest => {
+            if (latestDate < ctest.date) {
               latestDate = ctest.date
               latestResult = ctest.result
             }
@@ -75,17 +75,16 @@ export default {
 
         var dict = {
           id: user.id,
-          full_name: user.firstName + " " +  user.lastName,
+          full_name: user.firstName + ' ' + user.lastName,
           isVaccinated: user.isVaccinated,
           latestCtestDate: latestDate,
-          latestCtestResult: latestResult, 
+          latestCtestResult: latestResult,
         }
         this.processedItems.push(dict)
-
       })
-      console.log(this.processedItems)  
+      console.log(this.processedItems)
       console.log(this.items)
-    }catch (error) {
+    } catch (error) {
       console.error(error)
     }
   },

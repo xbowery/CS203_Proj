@@ -7,15 +7,15 @@ class UserService {
   async getRestaurants() {
     return api.get('restaurants')
   }
-  async getCrowdLevels(){
+  async getCrowdLevels() {
     return api.get('restaurants/crowdLevels')
   }
   async getCtests(username) {
-    var request =  'employee/' + username + '/ctests'
+    var request = 'employee/' + username + '/ctests'
     return api.get(request)
   }
   async postCtest(username, ctest) {
-    var request =  'employee/' + username + '/ctests'
+    var request = 'employee/' + username + '/ctests'
     return api.post(request, ctest)
   }
   async getRegistrationConfirm(token) {
@@ -39,14 +39,11 @@ class UserService {
     )
   }
   deleteUser(user) {
-    return api.delete(
-      `users/${user.username}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    return api.delete(`users/${user.username}`, {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    )
+    })
   }
   postRestaurant(restaurant) {
     return api.post(
@@ -83,21 +80,17 @@ class UserService {
     )
   }
   deleteRestaurant(restaurant) {
-    return api.delete(
-      `restaurants/${restaurant.name}/${restaurant.location}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    return api.delete(`restaurants/${restaurant.name}/${restaurant.location}`, {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    )
+    })
   }
-  async getMeasures(){
+  async getMeasures() {
     return api.get('measures')
   }
-  async getEmployees(username){
+  async getEmployees(username) {
     return api.get('employees/' + username)
-
   }
 }
 

@@ -12,19 +12,14 @@
             </h2>
           </router-link>
         </v-card-title>
-        
+
         <div v-if="validToken">
-          <v-img
-              src="@/assets/images/3d-characters/launching-soon.png"
-              height="300"
-            />
+          <v-img src="@/assets/images/3d-characters/launching-soon.png" height="300" />
           <v-card-text>
             <p class="text-2xl font-weight-semibold text--primary mb-2">Great! Everything is ready.</p>
             <!-- <p class="mb-2">Your registration is complete</p> -->
           </v-card-text>
-          <v-card-text>
-              Your registration is complete.
-          </v-card-text>
+          <v-card-text> Your registration is complete. </v-card-text>
 
           <!-- back to login -->
           <v-card-actions class="d-flex justify-center align-center">
@@ -38,17 +33,12 @@
         </div>
 
         <div v-if="invalidToken">
-          <v-img
-              src="@/assets/images/3d-characters/launching-soon.png"
-              height="300"
-            />
+          <v-img src="@/assets/images/3d-characters/launching-soon.png" height="300" />
           <v-card-text>
             <p class="text-2xl font-weight-semibold text--primary mb-2">Oh no!</p>
             <!-- <p class="mb-2">Your registration is complete</p> -->
           </v-card-text>
-          <v-card-text>
-              Your token is invalid.
-          </v-card-text>
+          <v-card-text> Your token is invalid. </v-card-text>
 
           <!-- back to login -->
           <v-card-actions class="d-flex justify-center align-center">
@@ -62,17 +52,12 @@
         </div>
 
         <div v-if="expiredToken">
-          <v-img
-              src="@/assets/images/3d-characters/launching-soon.png"
-              height="300"
-            />
+          <v-img src="@/assets/images/3d-characters/launching-soon.png" height="300" />
           <v-card-text>
             <p class="text-2xl font-weight-semibold text--primary mb-2">Oh no!</p>
             <!-- <p class="mb-2">Your registration is complete</p> -->
           </v-card-text>
-          <v-card-text>
-              Your token has expired. Please check your email again for a new link.
-          </v-card-text>
+          <v-card-text> Your token has expired. Please check your email again for a new link. </v-card-text>
 
           <!-- back to login -->
           <v-card-actions class="d-flex justify-center align-center">

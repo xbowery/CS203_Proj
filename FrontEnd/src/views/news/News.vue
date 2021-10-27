@@ -65,7 +65,7 @@ export default {
         characterSize: '139',
         title: 'F&B Guidelines',
         desc: 'Be informed of the latest news on F&B business guidelines and safety measures',
-        path: {name: 'F&BGuidelines'}
+        path: { name: 'F&BGuidelines' },
       },
       {
         character: require('@/assets/images/3d-characters/pose-f-28.png'),
@@ -73,7 +73,7 @@ export default {
         characterSize: '188',
         title: 'F&B-related news',
         desc: 'Be informed of latest news in the F&B industry',
-        path: {name: 'F&BNews'}
+        path: { name: 'F&BNews' },
       },
       {
         character: require('@/assets/images/3d-characters/pose-m-34.png'),
@@ -81,7 +81,7 @@ export default {
         characterSize: '126',
         title: 'Covid-related news',
         desc: 'Be informed of the latest news on the pandemic and safety management measures',
-        path: {name: 'CovidNews'}
+        path: { name: 'CovidNews' },
       },
       // {
       //   character: require('@/assets/images/3d-characters/pose-f-39.png'),

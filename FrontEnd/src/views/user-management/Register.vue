@@ -24,10 +24,9 @@
           <p class="mb-2">Make your "Normal" easy and fun!</p>
         </v-card-text>
 
-        <div class = "success" v-if="successful">
+        <div class="success" v-if="successful">
           <p>Success! Please check your email and click on the confirmation link to activate your account!</p>
         </div>
-
 
         <!-- login form -->
         <v-card-text>
@@ -129,11 +128,7 @@
     </div>
 
     <!-- background triangle shape  -->
-    <img
-      class="auth-mask-bg"
-      height="1000"
-      :src="require('@/assets/images/misc/f&b background.jpg')"
-    />
+    <img class="auth-mask-bg" height="1000" :src="require('@/assets/images/misc/f&b background.jpg')" />
 
     <!-- tree -->
     <!-- <v-img class="auth-tree" width="247" height="185" src="@/assets/images/misc/tree.png"></v-img> -->

@@ -281,7 +281,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
-        
+
         const user = new User('', '', '', '')
         user.username = this.items[this.editedIndex].username
         user.firstName = this.items[this.editedIndex].firstName
@@ -316,7 +316,7 @@ export default {
     //     console.log(error)
     //   }
     // },
-    
+
     async handleDeleteUser(user) {
       try {
         const res = await UserService.deleteUser(user)

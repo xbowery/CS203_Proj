@@ -128,6 +128,11 @@ const routes = [
     name: 'RestaurantList',
     component: () => import('@/views/user-management/admin/RestaurantList.vue'),
   },
+  {
+    path: '/MeasuresList',
+    name: 'MeasuresList',
+    component: () => import('@/views/user-management/admin/MeasuresList.vue'),
+  },
 ]
 
 const router = new VueRouter({

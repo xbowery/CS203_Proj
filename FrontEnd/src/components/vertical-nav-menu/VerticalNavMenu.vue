@@ -40,9 +40,9 @@
       <nav-menu-link title="News" :to="{ name: 'News' }" :icon="icons.mdiDomain"></nav-menu-link>
       <nav-menu-link title="User List" :to="{ name: 'UserList' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
       <nav-menu-link title="RestaurantList" :to="{ name: 'RestaurantList' }" :icon="icons.mdiFood"></nav-menu-link>
-      
+      <nav-menu-link title="MeasuresList" :to="{ name: 'MeasuresList' }" :icon="icons.mdiFood"></nav-menu-link>
     </v-list>
-    </v-navigation-drawer>
+  </v-navigation-drawer>
 </template>
 
 <script>
