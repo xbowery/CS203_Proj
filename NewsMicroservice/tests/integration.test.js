@@ -63,7 +63,7 @@ test("RetrieveNews_ReturnsEightOfEachTypeExceptGov", function (done) {
 });
 
 // A simple function to check if there are any Gov articles in the array of news
-const gov = (article) => article.type === "Gov";
+const checkType = (type, article) => article.type === type;
 
 test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFiveWithoutGov", function (done) {
   chai
@@ -75,7 +75,7 @@ test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFiveWithoutGov", function (d
       const { news } = res.body;
       assert.equal(news.length, 5);
 
-      assert.isFalse(news.some(gov));
+      assert.isFalse(news.some(checkType.bind(null, "Gov")));
       done();
     });
 });
@@ -92,7 +92,7 @@ test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (d
       assert.isAtLeast(news.length, 0);
       assert.isAtMost(news.length, 5);
 
-      assert.isFalse(news.some(gov));
+      assert.isFalse(news.some(checkType.bind(null, "Gov")));
       done();
     });
 });
@@ -154,6 +154,10 @@ describe("Retrieve News of specific types", () => {
 
         const { latestNews } = res.body;
         assert.equal(latestNews.length, 8);
+
+        assert.isTrue(latestNews.every(checkType.bind(null, "General")));
+        assert.isFalse(latestNews.some(checkType.bind(null, "Gov")));
+        assert.isFalse(latestNews.some(checkType.bind(null, "Restaurant")));
         done();
       });
   });
@@ -167,6 +171,10 @@ describe("Retrieve News of specific types", () => {
 
         const { latestNews } = res.body;
         assert.equal(latestNews.length, 8);
+
+        assert.isTrue(latestNews.every(checkType.bind(null, "Restaurant")));
+        assert.isFalse(latestNews.some(checkType.bind(null, "Gov")));
+        assert.isFalse(latestNews.some(checkType.bind(null, "General")));
         done();
       });
   });
@@ -181,6 +189,10 @@ describe("Retrieve News of specific types", () => {
         const { latestNews } = res.body;
         assert.isAtLeast(latestNews.length, 1);
         assert.isAtMost(latestNews.length, 8);
+
+        assert.isTrue(latestNews.every(checkType.bind(null, "Gov")));
+        assert.isFalse(latestNews.some(checkType.bind(null, "Restaurant")));
+        assert.isFalse(latestNews.some(checkType.bind(null, "General")));
         done();
       });
   });

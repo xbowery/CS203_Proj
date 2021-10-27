@@ -36,18 +36,22 @@ function Utils() {
   };
 
   /**
-   * Craft a query string for the news API when fetching data. This only fetches news and not government
-   * related press releases.
+   * Craft a query string for the news API when fetching data. By default, it will fetch news based on the
+   * search string and the type if provided
    *
    * @param {*} searchStr
    * @return object containing a regex, or an empty object if the searchStr is empty
    */
-  this.craftQueryObj = (searchStr = "") => {
-    if (searchStr === "") {
-      return {
-        type: {
+  this.craftQueryObj = (searchStr = "", type = "") => {
+    const newsType = this.validateType(type)
+      ? type
+      : {
           $ne: "Gov",
-        },
+        };
+
+    if (!searchStr || searchStr === "") {
+      return {
+        type: newsType,
       };
     }
 
@@ -61,10 +65,18 @@ function Utils() {
           content: regex,
         },
       ],
-      type: {
-        $ne: "Gov",
-      },
+      type: newsType,
     };
+  };
+
+  /**
+   * Validate the type of news passed into the API
+   *
+   * @returns boolean whether it is allowed
+   */
+  this.validateType = (type) => {
+    const allowedTypes = ["General", "Gov", "Restaurant"];
+    return allowedTypes.indexOf(type) > -1;
   };
 
   /**

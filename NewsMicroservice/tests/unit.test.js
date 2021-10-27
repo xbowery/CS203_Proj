@@ -150,3 +150,26 @@ describe("Testing create RSS DB Update Object", () => {
     });
   });
 });
+
+describe("test validateType function", () => {
+  test("validateTypeWithEmptyString_ReturnsFalse", () => {
+    const isValidated = utils.validateType("");
+    assert.isFalse(isValidated);
+  });
+
+  test("validateTypeWithWrongTypeString_ReturnsFalse", () => {
+    const isValidated = utils.validateType("gov");
+    assert.isFalse(isValidated);
+  });
+
+  test("validateTypeWithWrongTypeString2_ReturnsFalse", () => {
+    const isValidated = utils.validateType("restaurant");
+    assert.isFalse(isValidated);
+  });
+
+  test("validateTypeWithCorrectTypes_ReturnsTrueForAll", () => {
+    const allowed = ["Restaurant", "Gov", "General"];
+    const isAllValidated = allowed.every(utils.validateType);
+    assert.isTrue(isAllValidated);
+  });
+});

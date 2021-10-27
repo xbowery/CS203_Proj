@@ -8,6 +8,13 @@
     "test": "jest --setupFiles dotenv/config -i --testTimeout=10000 --forceExit",
     "prod": "NODE_ENV=prod node -r dotenv/config server.js"
   },
+  "jest": {
+    "collectCoverage": false,
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
+  },
   "keywords": [],
   "author": "G2T4",
   "private": true,

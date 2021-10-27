@@ -55,10 +55,9 @@ module.exports.getNews = async (req, res, next) => {
  * @return JSON object of the top 8 news of each category
  */
 module.exports.searchNews = async (req, res, next) => {
-  const searchStr = req.query.q;
-
+  const { q, type } = req.params;
   // Crafts an object that searches for that string in either the title or the content or both (case insensitive)
-  const queryObj = utils.craftQueryObj(searchStr);
+  const queryObj = utils.craftQueryObj(q, type);
 
   // queryObj will be empty if user does not specify any query parameters
   try {
@@ -87,7 +86,7 @@ module.exports.searchNews = async (req, res, next) => {
  */
 module.exports.getNewsWithType = async (req, res, next) => {
   const { type } = req.params;
-  if (type !== "General" && type !== "Gov" && type != "Restaurant") {
+  if (!utils.validateType(type)) {
     const errorMsg =
       "Please select one of the following types: 'General', 'Gov', 'Restaurant'";
     return res.status(400).json({ success: false, error: errorMsg });
