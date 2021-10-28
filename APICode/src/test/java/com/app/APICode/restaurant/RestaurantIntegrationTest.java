@@ -90,7 +90,7 @@ public class RestaurantIntegrationTest {
         given().get(uri).
         then().
             statusCode(200).
-            body("size()", equalTo(5));
+            body("size()", equalTo(6));
     }
 
     @Test

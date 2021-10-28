@@ -3,6 +3,7 @@ package com.app.APICode.User;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import com.app.APICode.templates.LoginDetails;
 import com.app.APICode.templates.TokenDetails;
@@ -11,6 +12,7 @@ import com.app.APICode.user.UserRepository;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -28,9 +30,6 @@ import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import static io.restassured.config.RedirectConfig.redirectConfig;
-import static org.hamcrest.Matchers.equalTo;
-
-import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -49,6 +48,10 @@ public class UserIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    private String tokenGeneratedAdmin;
+
+    private String tokenGeneratedUser;
 
     @BeforeAll
     public static void initClass() {
@@ -71,6 +74,26 @@ public class UserIntegrationTest {
         users.save(normalUser);
     }
 
+    @BeforeEach
+    void getAdminRequestToken() throws URISyntaxException {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+
+        tokenGeneratedAdmin = result.getBody().getAccessToken();
+    }
+
+    @BeforeEach
+    void getUserRequestToken() throws URISyntaxException {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("test1", "password123"), TokenDetails.class);
+
+        tokenGeneratedUser = result.getBody().getAccessToken();
+    }
+
     @AfterAll
 	void tearDown(){
 		// clear the database after each test
@@ -79,17 +102,11 @@ public class UserIntegrationTest {
 
     @Test
     public void getAllUsers_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUsers);
 
@@ -98,17 +115,11 @@ public class UserIntegrationTest {
 
     @Test
     public void getAllUsers_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUsers);
 
@@ -117,17 +128,11 @@ public class UserIntegrationTest {
 
     @Test
     public void addNewUsers_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         String addUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -145,17 +150,11 @@ public class UserIntegrationTest {
 
     @Test
     public void addNewUsers_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         String addUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -172,7 +171,6 @@ public class UserIntegrationTest {
 
     @Test
     public void updateUsers_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         User testUser = new User("testing@test.com", "test2", "test2", null, encoder.encode("password123"), true, "ROLE_USER");
@@ -181,16 +179,11 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         String updateUserDetails = "{\r\n" +
-        "  \"email\": \"newuser@test.com\",\r\n" +
-        "  \"username\": \"newuser\",\r\n" +
+        "  \"email\": \"newusers@test.com\",\r\n" +
+        "  \"username\": \"test2\",\r\n" +
         "  \"firstName\": \"New\",\r\n" +
         "  \"lastName\": \"User\",\r\n" +
         "  \"password\": \"testing123\"\r\n" +
@@ -198,7 +191,7 @@ public class UserIntegrationTest {
 
         Response updateResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
 
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         Response updateUserResponse = request.get(uriUsers + "/" + savedUsername);
 
@@ -210,7 +203,6 @@ public class UserIntegrationTest {
 
     @Test
     public void updateUsers_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         User testUser = new User("testuser@test.com", "testuser", "testuser", null, encoder.encode("password123"), true, "ROLE_USER");
@@ -220,12 +212,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         String updateUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -246,7 +233,6 @@ public class UserIntegrationTest {
 
     @Test
     public void deleteUsers_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
         User testUser = new User("testing@test.com", "test2", "test2", null, encoder.encode("password123"), true, "ROLE_USER");
@@ -255,12 +241,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         Response deleteUserResponse = request.delete(uriUsers + "/" + savedUsername);
 
@@ -272,21 +253,15 @@ public class UserIntegrationTest {
 
     @Test
     public void deleteUsers_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
-        User testUser = new User("testuser@test.com", "testuser", "testuser", null, encoder.encode("password123"), true, "ROLE_USER");
+        User testUser = new User("testusers@test.com", "testuser3", "testuser3", null, encoder.encode("password123"), true, "ROLE_USER");
         testUser.setEnabled(true);
         String savedUsername = users.save(testUser).getUsername();
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response deleteUserResponse = request.delete(uriUsers + "/" + savedUsername);
 

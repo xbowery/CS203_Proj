@@ -198,13 +198,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserByUsername(String username, UserDTO newUserInfo) {
+    public User updateUserByUsername(String username, UserDTO newUserInfo) throws UserOrEmailExistsException {
         return users.findByUsername(username).map(user -> {
             // Check if email exists to prevent a unique index violation
             if (getUserByEmail(newUserInfo.getEmail()) == null) {
 
             } else if (!(getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username))) {
-                return null;
+                throw new UserOrEmailExistsException("This email already exists.");
             }
 
             String email = newUserInfo.getEmail();
