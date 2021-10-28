@@ -7,9 +7,17 @@
     content-class="list-style notification-menu-content"
   >
     <template v-slot:activator="{ on, attrs }">
+      <v-badge
+      :content="messages"
+      :value="messages"
+      color="success"
+      overlap
+      class="me-10"
+    >
       <v-icon v-bind="attrs" v-on="on">
         {{ icons.mdiBellOutline }}
       </v-icon>
+      </v-badge>
     </template>
     <v-card class="app-bar-notification-content-container">
       <perfect-scrollbar class="ps-user-notifications" :options="perfectScrollbarOptions">
@@ -25,7 +33,7 @@
 
           <!-- Notifications -->
           <template v-for="(notification, index) in notifications">
-            <v-list-item :key="notification.title" link>
+            <v-list-item :key="notification.title" link @click="messages--">
               <!-- Avatar -->
               <v-list-item-avatar
                 :class="[
@@ -58,7 +66,7 @@
             <v-divider :key="index"></v-divider>
           </template>
           <v-list-item key="read-all-btn" class="read-all-btn-list-item">
-            <v-btn block color="primary"> Read All Notifications </v-btn>
+            <v-btn block color="primary" @click="messages++"> Read All Notifications </v-btn>
           </v-list-item>
         </v-list>
       </perfect-scrollbar>
@@ -79,6 +87,7 @@ export default {
     //PerfectScrollbar,
   },
   setup() {
+    const messages = 0
     const notifications = [
       {
         user: {
@@ -140,6 +149,7 @@ export default {
     }
 
     return {
+      messages,
       notifications,
       getInitialName,
       perfectScrollbarOptions,
