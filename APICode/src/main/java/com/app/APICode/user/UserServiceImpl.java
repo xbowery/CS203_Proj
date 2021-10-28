@@ -245,7 +245,7 @@ public class UserServiceImpl implements UserService {
         // } catch (IOException e) {
         //     System.out.println("Error occurred while trying to send an email to: " + email);
         // }
-        // updatePasswordByEmail(email, encoder.encode(tempPassword));
+        updatePasswordByEmail(email, tempPassword);
     }
 
     @Override
