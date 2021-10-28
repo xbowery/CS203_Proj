@@ -1,5 +1,6 @@
 package com.app.APICode.restaurant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,6 +35,8 @@ public class Restaurant {
 
     private int currentCapacity;
 
+    private String currentCrowdLevel;
+
     @NotNull(message = "Max capacity should not be null")
     private int maxCapacity;
 
@@ -41,7 +44,8 @@ public class Restaurant {
     @JsonManagedReference
     private List<Employee> employees;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<CrowdLevel> crowdLevel;
 
     public Restaurant() {
@@ -53,6 +57,8 @@ public class Restaurant {
         this.cuisine = cuisine;
         this.description = description;
         this.maxCapacity = maxCapacity;
+        crowdLevel = new ArrayList<>();
+        this.currentCrowdLevel = "Low";
     }
 
     public String getName() {
@@ -113,6 +119,13 @@ public class Restaurant {
 
     public List<Employee> getEmployees() {
         return this.employees;
+    }
+
+    public void setcurrentCrowdLevel(String currentCrowdLevel){
+        this.currentCrowdLevel = currentCrowdLevel;
+    }
+    public String getcurrentCrowdLevel(){
+        return this.currentCrowdLevel;
     }
 
     // public CrowdLevel getCrowdLevel() {

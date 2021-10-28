@@ -71,6 +71,9 @@ import { mapGetters } from 'vuex'
 
 export default defineComponent({
   setup() {},
+  props: {
+    username: String,
+  },
 
   computed: {
     ...mapGetters({
