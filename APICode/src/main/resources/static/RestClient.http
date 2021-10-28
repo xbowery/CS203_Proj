@@ -181,7 +181,7 @@ Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbXBsb3llZTEiLCJy
 GET http://localhost:8080/api/v1/restaurants/crowdLevels
 
 ###
-GET http://localhost:8080/api/v1/restaurants/3/crowdLevel
+GET http://localhost:8080/api/v1/restaurants/4/crowdLevel
 
 ###
 POST  http://localhost:8080/api/v1/restaurants/3/crowdLevel
@@ -204,12 +204,11 @@ Authorization: Basic admin:goodpassword
 }
 
 ###
-PUT   http://localhost:8080/api/v1/restaurants/4/crowdLevel/2021-10-19T12:05:30.000+00:00
+PUT   http://localhost:8080/api/v1/restaurants/4/crowdLevel/6
 Content-Type: application/json
 Authorization: Basic admin:goodpassword
 
 {
-    "datetime": "2021-10-19T12:05:30.000+00:00",
     "noOfCustomers": 1
 } 
 

@@ -30,7 +30,7 @@
     <v-row>
       <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
         <v-card>
-          <v-img class="misc-tree" :src="images[item.businessType]" align="center" justify="center"></v-img>
+          <v-img class="misc-tree" :src="images[item.businessType.toLowerCase()]" align="center" justify="center"></v-img>
           <v-card-title class="subheading font-weight-bold">
             {{ item.businessType }}
           </v-card-title>
@@ -66,7 +66,6 @@ export default {
     return {
       items: [],
       headers: [
-        // { text: 'Date of creation', value: 'creationDateTime' },
         { text: 'Max capacity', value: 'maxCapacity' },
         { text: 'Vaccinated?', value: 'vaccinationStatus' },
         { text: 'Mask required?', value: 'maskStatus' },

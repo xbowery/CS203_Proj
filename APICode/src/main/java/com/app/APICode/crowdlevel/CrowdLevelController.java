@@ -1,14 +1,18 @@
 package com.app.APICode.crowdlevel;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.app.APICode.employee.Employee;
+import com.app.APICode.employee.EmployeeNotFoundException;
 import com.app.APICode.restaurant.*;
+import com.app.APICode.user.User;
+import com.app.APICode.user.UserNotFoundException;
+import com.app.APICode.user.UserRepository;
+import com.app.APICode.crowdlevel.CrowdLevelNotFoundException;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class CrowdLevelController {
     private CrowdLevelRepository crowdlevels;
     private RestaurantRepository restaurants;
+    private UserRepository users;
 
-    public CrowdLevelController(CrowdLevelRepository crowdlevels, RestaurantRepository restaurants) {
+    public CrowdLevelController(CrowdLevelRepository crowdlevels, RestaurantRepository restaurants, UserRepository users) {
         this.crowdlevels = crowdlevels;
         this.restaurants = restaurants;
+        this.users = users;
     }
 
         /**
@@ -43,9 +49,28 @@ public class CrowdLevelController {
      * @param id restaurant id
      * @return crowd level of restaurant
      */
-    @GetMapping("/restaurants/{id}/crowdLevel")
-    public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable Long id) {
-        Restaurant restaurant = restaurants.findById(id).orElse(null);
+    @GetMapping("/restaurants/{username}/crowdLevel")
+    public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable (value = "username") String username) {
+
+        Optional<User> user = users.findByUsername(username);
+        if(!user.isPresent()){
+            throw new UserNotFoundException(username);
+        }
+        
+        Employee employee = user.get().getEmployee();
+        if(employee == null){
+            throw new EmployeeNotFoundException(username);
+        }
+
+        Restaurant restaurant = employee.getRestaurant();
+        if(restaurant == null){
+            throw new RestaurantNotFoundException(username); 
+        }
+
+        List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(restaurant);
+        if(crowdLevel == null){
+            throw new CrowdLevelNotFoundException(restaurant.getName());
+        }
         return crowdlevels.findByRestaurant(restaurant);
     }
 
@@ -61,6 +86,9 @@ public class CrowdLevelController {
         return restaurants.findById(id).map(restaurant -> {
             crowdLevel.setRestaurant(restaurant);
             crowdLevel.setLatestCrowd();
+
+            restaurant.setCurrentCapacity(crowdLevel.getNoOfCustomers());
+            restaurant.setcurrentCrowdLevel(crowdLevel.getLatestCrowd());
             return crowdlevels.save(crowdLevel);
         }).orElse(null);
     }
@@ -72,14 +100,14 @@ public class CrowdLevelController {
      * @param newCrowdLevel a CrowdLevel object containing the new crowd level to be updated
      * @return the updated CrowdLevel object
      */
-    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelDateTime}")
+    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelId}")
     public CrowdLevel updateCrowdLevel(@PathVariable Long id,
-    @PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) Date crowdLevelDateTime, @RequestBody CrowdLevel newCrowdLevel){
-        return crowdlevels.findByDatetime(crowdLevelDateTime).map(crowdLevel -> {
+    @PathVariable Long crowdLevelId, @RequestBody CrowdLevel newCrowdLevel){
+        return crowdlevels.findById(crowdLevelId) .map(crowdLevel -> {
             crowdLevel.setNoOfCustomers(newCrowdLevel.getNoOfCustomers());
             crowdLevel.setLatestCrowd();
             return crowdlevels.save(crowdLevel);
-        }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelDateTime));
+        }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelId));
     }
 
 }
