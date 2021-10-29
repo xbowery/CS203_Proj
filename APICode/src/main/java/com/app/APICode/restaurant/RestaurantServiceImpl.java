@@ -1,6 +1,7 @@
 package com.app.APICode.restaurant;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<Restaurant> listRestaurants() {
-        return restaurants.findAll();
+    // public List<Restaurant> listRestaurants() {
+    //     return restaurants.findAll();
+    // }
+    public List<RestaurantDTO> listRestaurants() {
+        List<Restaurant> restaurantsList = restaurants.findAll();
+        return restaurantsList.stream().map(this::convertToRestaurantDTO).collect(Collectors.toList());
+    }
+
+    private RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
+        return RestaurantDTO.convertToRestaurantDTO(restaurant);
     }
 
     @Override
