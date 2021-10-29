@@ -1,7 +1,7 @@
 package com.app.APICode.notification;
 
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,16 +17,16 @@ public class Notification {
     private @Id @GeneratedValue Long id;
 
     @NotNull(message = "datetime cannot be null")
-    private LocalDateTime datetime;
+    private LocalDate datetime;
 
     @NotNull(message = "text cannot be null")
     private String text;
 
-    @NotNull(message = "link cannot be null")
-    private URL link;
+    // @NotNull(message = "link cannot be null")
+    // private URL link;
 
     @NotNull(message = "seen cannot be null")
-    private boolean isSeen;
+    private boolean isSeen = false;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -34,11 +34,18 @@ public class Notification {
 
     public Notification() {}
 
-    public LocalDateTime getDate() {
+    public Notification(String text, User user) {
+        this.datetime = LocalDate.now();
+        // this.link = link;
+        this.text = text;
+        this.user = user;
+    }
+
+    public LocalDate getDate() {
         return datetime;
     }
 
-    public void setDate(LocalDateTime datetime) {
+    public void setDate(LocalDate datetime) {
         this.datetime= datetime;
     }
 
@@ -50,13 +57,13 @@ public class Notification {
         this.text = text;
     }
 
-    public URL getLink() {
-        return link;
-    }
+    // public URL getLink() {
+    //     return link;
+    // }
 
-    public void setLink(URL link) {
-        this.link = link;
-    }
+    // public void setLink(URL link) {
+    //     this.link = link;
+    // }
 
     public boolean isSeen() {
         return isSeen;
@@ -72,13 +79,6 @@ public class Notification {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Notification(LocalDateTime datetime,String text, URL link, boolean isSeen) {
-        this.datetime = datetime;
-        this.text = text;
-        this.link = link;
-        this.isSeen = isSeen;
     }
 
 }
