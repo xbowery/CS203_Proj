@@ -5,12 +5,12 @@
         <v-card>
           <v-img
             class="misc-tree"
-            :src="images[item.businessType.toLowerCase()]"
+            :src="images[item.measureType.toLowerCase()]"
             align="center"
             justify="center"
           ></v-img>
           <v-card-title class="subheading font-weight-bold">
-            {{ item.businessType }}
+            {{ item.measureType }}
           </v-card-title>
 
           <v-divider></v-divider>
@@ -25,7 +25,7 @@
           </v-list>
 
           <div class="d-flex justify-center">
-            <v-btn color="primary" dark class="mb-4 me-3" @click.stop="editItem(item)" v-bind="attrs"> Edit </v-btn>
+            <v-btn color="primary" dark class="mb-4 me-3" @click.stop="editItem(item)"> Edit </v-btn>
           </div>
         </v-card>
       </v-col>
@@ -56,6 +56,8 @@
                     <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
                       <v-select
                         :items="dropdown"
+                        item-text="text"
+                        item-value="value"
                         v-model="editedItem.vaccinationStatus"
                         :error-messages="errors[0]"
                         label="Vaccinated?"
@@ -99,7 +101,8 @@ import '@/validators'
 export default {
   components: { ValidationProvider, ValidationObserver },
   data: () => ({
-    dropdown: [{ text: 'true' }, { text: 'false' }],
+    message: "",
+    dropdown: [{ text: "Yes", value: true }, { text: "No", value: false }],
     dialog: false,
     dialogDelete: false,
     search: '',
