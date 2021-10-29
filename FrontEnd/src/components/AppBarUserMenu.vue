@@ -1,86 +1,67 @@
 <template>
   <div>
-    <div v-if="!loggedIn">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon small class="ms-3" :to="{ name: 'login' }" v-bind="attrs" v-on="on">
-            <v-icon>
-              {{ icons.mdiLoginVariant }}
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Login</span>
-      </v-tooltip>
-    </div>
-    <div v-else>
-      <!-- <v-btn icon small class="ms-3">
-        <v-icon>
-          {{ icons.mdiBellOutline }}
-        </v-icon>
-      </v-btn> -->
-      <v-menu offset-y left nudge-bottom="14" min-width="230" content-class="user-profile-menu-content">
-        <template v-slot:activator="{ on, attrs }">
+    <v-menu offset-y left nudge-bottom="14" min-width="230" content-class="user-profile-menu-content">
+      <template v-slot:activator="{ on, attrs }">
+        <v-badge bottom color="success" overlap offset-x="12" offset-y="12" class="ms-4" dot>
+          <v-avatar size="40px" v-bind="attrs" v-on="on">
+            <v-img :src="require('@/assets/images/avatars/1.png')"></v-img>
+          </v-avatar>
+        </v-badge>
+      </template>
+      <v-list>
+        <div class="pb-3 pt-2">
           <v-badge bottom color="success" overlap offset-x="12" offset-y="12" class="ms-4" dot>
-            <v-avatar size="40px" v-bind="attrs" v-on="on">
+            <v-avatar size="40px">
               <v-img :src="require('@/assets/images/avatars/1.png')"></v-img>
             </v-avatar>
           </v-badge>
-        </template>
-        <v-list>
-          <div class="pb-3 pt-2">
-            <v-badge bottom color="success" overlap offset-x="12" offset-y="12" class="ms-4" dot>
-              <v-avatar size="40px">
-                <v-img :src="require('@/assets/images/avatars/1.png')"></v-img>
-              </v-avatar>
-            </v-badge>
-            <div class="d-inline-flex flex-column justify-center ms-3" style="vertical-align: middle">
-              <span class="text--primary font-weight-semibold mb-n1"> {{ user.username }} </span>
-              <small class="text--disabled text-capitalize"> {{ user.role }}</small>
-            </div>
+          <div class="d-inline-flex flex-column justify-center ms-3" style="vertical-align: middle">
+            <span class="text--primary font-weight-semibold mb-n1"> {{ user.username }} </span>
+            <small class="text--disabled text-capitalize"> {{ user.role }}</small>
           </div>
+        </div>
 
-          <v-divider></v-divider>
+        <v-divider></v-divider>
 
-          <!-- Profile -->
-          <v-list-item link>
-            <v-list-item-icon class="me-2">
-              <v-icon size="22">
-                {{ icons.mdiAccountOutline }}
-              </v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Profile</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+        <!-- Profile -->
+        <v-list-item link>
+          <v-list-item-icon class="me-2">
+            <v-icon size="22">
+              {{ icons.mdiAccountOutline }}
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Profile</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-          <!-- Settings -->
-          <v-list-item link @click="$router.push('/settings')">
-            <v-list-item-icon class="me-2">
-              <v-icon size="22">
-                {{ icons.mdiCogOutline }}
-              </v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Settings</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+        <!-- Settings -->
+        <v-list-item link @click="$router.push('/settings')">
+          <v-list-item-icon class="me-2">
+            <v-icon size="22">
+              {{ icons.mdiCogOutline }}
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Settings</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-          <v-divider class="my-2"></v-divider>
+        <v-divider class="my-2"></v-divider>
 
-          <!-- Logout -->
-          <v-list-item link @click="handleLogout">
-            <v-list-item-icon class="me-2">
-              <v-icon size="22">
-                {{ icons.mdiLogoutVariant }}
-              </v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Logout</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
+        <!-- Logout -->
+        <v-list-item link @click="handleLogout">
+          <v-list-item-icon class="me-2">
+            <v-icon size="22">
+              {{ icons.mdiLogoutVariant }}
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 
@@ -102,7 +83,7 @@ import TokenService from '@/services/token.service'
 
 export default {
   computed: {
-    user(){
+    user() {
       return TokenService.getUser()
     },
     loggedIn() {

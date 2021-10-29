@@ -50,16 +50,17 @@ public class G2T4Application {
 		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
 		employee1.setEnabled(true);
 		users.save(employee1);
-		Employee employee11 = new Employee(employee1);
+		Employee employee11 = new Employee(employee1, "Employee");
 		employee11.setRestaurant(testRestaurant);
 		employee1.setEmployee(employee11);
+		employee11.setStatus("Pending");
 		users.save(employee1);
 
 		User employee2 = new User("business1@test.com", "business1", "business", "1", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
 		employee2.setEnabled(true);
 		users.save(employee2);
 
-		Employee employee22 = new Employee(employee2);
+		Employee employee22 = new Employee(employee2, "Owner");
 		employee22.setRestaurant(testRestaurant);
 		employee2.setEmployee(employee22);
 		users.save(employee2);

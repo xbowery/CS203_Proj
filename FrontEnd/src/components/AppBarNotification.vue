@@ -12,7 +12,6 @@
       :value="messages"
       color="success"
       overlap
-      class="me-10"
     >
       <v-icon v-bind="attrs" v-on="on">
         {{ icons.mdiBellOutline }}

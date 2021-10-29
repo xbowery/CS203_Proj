@@ -40,11 +40,15 @@ public class Employee {
     @JsonManagedReference
     private List<Ctest> ctests;
 
+    private String designation;
+
+    private String status;
     public Employee() {
     }
 
-    public Employee(User user) {
+    public Employee(User user, String designation) {
         this.user = user;
+        this.designation = designation;
         ctests = new ArrayList<>();
     }
 
@@ -66,5 +70,19 @@ public class Employee {
 
     public Long getId() {
         return id;
+    }
+
+    public String getDesignation(){
+        return this.designation;
+    }
+    public void setDesignation(String designation){
+        this.designation = designation;
+    }
+
+    public String getStatus(){
+        return this.status;
+    }
+    public void setStatus(String status){
+        this.status = status;
     }
 }

@@ -5,12 +5,12 @@
         <v-card>
           <v-img
             class="misc-tree"
-            :src="images[item.businessType.toLowerCase()]"
+            :src="images[item.measureType.toLowerCase()]"
             align="center"
             justify="center"
           ></v-img>
           <v-card-title class="subheading font-weight-bold">
-            {{ item.businessType }}
+            {{ item.measureType }}
           </v-card-title>
 
           <v-divider></v-divider>
@@ -25,7 +25,7 @@
           </v-list>
 
           <div class="d-flex justify-center">
-            <v-btn color="primary" dark class="mb-4 me-3" @click.stop="editItem(item)" v-bind="attrs"> Edit </v-btn>
+            <v-btn color="primary" dark class="mb-4 me-3" @click.stop="editItem(item)"> Edit </v-btn>
           </div>
         </v-card>
       </v-col>
@@ -56,6 +56,8 @@
                     <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
                       <v-select
                         :items="dropdown"
+                        item-text="text"
+                        item-value="value"
                         v-model="editedItem.vaccinationStatus"
                         :error-messages="errors[0]"
                         label="Vaccinated?"
@@ -99,7 +101,8 @@ import '@/validators'
 export default {
   components: { ValidationProvider, ValidationObserver },
   data: () => ({
-    dropdown: [{ text: 'true' }, { text: 'false' }],
+    message: "",
+    dropdown: [{ text: "Yes", value: true }, { text: "No", value: false }],
     dialog: false,
     dialogDelete: false,
     search: '',
@@ -112,16 +115,8 @@ export default {
     ],
     items: [],
     editedIndex: -1,
-    editedItem: {
-      maxCapacity: '',
-      vaccinationStatus: '',
-      maskStatus: '',
-    },
-    defaultItem: {
-      maxCapacity: '',
-      vaccinationStatus: '',
-      maskStatus: '',
-    },
+    editedItem: new Measure(),
+    defaultItem: new Measure(),
   }),
 
   async mounted() {
@@ -143,10 +138,7 @@ export default {
   },
 
   setup() {
-    const measure = new Measure('', '', '', '')
-
     return {
-      measure,
       items: [],
       headers: [
         { text: 'Max capacity', value: 'maxCapacity' },
@@ -207,13 +199,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
-
-        const measure = new Measure('', '', '', '')
-        measure.businessType = this.items[this.editedIndex].businessType
-        measure.maxCapacity = this.items[this.editedIndex].maxCapacity
-        measure.vaccinationStatus = this.items[this.editedIndex].vaccinationStatus
-        measure.maskStatus = this.items[this.editedIndex].maskStatus
-        // this.handleEditMeasure(measure)
+        this.handleEditMeasure(this.editedItem)
       } else {
         this.items.push(this.editedItem)
       }

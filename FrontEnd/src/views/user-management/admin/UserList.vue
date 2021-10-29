@@ -184,22 +184,8 @@ export default {
     ],
     items: [],
     editedIndex: -1,
-    editedItem: {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      company: '',
-      authorities: '',
-    },
-    defaultItem: {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      company: '',
-      authorities: '',
-    },
+    editedItem: new User(),
+    defaultItem: new User(),
   }),
 
   async mounted() {
@@ -227,12 +213,8 @@ export default {
   },
 
   setup() {
-    const user = new User('', '', '', '')
-    const username = null
     const message = null
     return {
-      user,
-      username,
       message,
     }
   },
@@ -281,14 +263,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
-
-        const user = new User('', '', '', '')
-        user.username = this.items[this.editedIndex].username
-        user.firstName = this.items[this.editedIndex].firstName
-        user.lastName = this.items[this.editedIndex].lastName
-        user.email = this.items[this.editedIndex].email
-        user.authorities = this.items[this.editedIndex].authorities
-        this.handleEditUser(user)
+        this.handleEditUser(this.editedItem)
       } else {
         this.items.push(this.editedItem)
         // this.handleSaveUser(this.editedItem)
