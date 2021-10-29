@@ -5,11 +5,13 @@ import java.util.List;
 import com.app.APICode.employee.Employee;
 
 public interface CtestService {
-    List<Ctest> getAllCtestsByEmployee(Employee employee);
+    List<Ctest> getAllCtestsByUsername(String username);
 
-    Ctest saveCtest(Ctest ctest);
+    Ctest saveCtestByUsername(String username, Ctest ctest);
 
-    Ctest updateCtestByCtestIdAndEmployeeId(Long ctestId, Long employeeId, Ctest newCtest);
+    Ctest updateCtestByCtestIdAndUsername(String username, Long ctestId, Ctest newCtest);
 
-    Ctest deleteCtestByCtestIdAndEmployeeId(Long ctestId, Long employeeId);
+    Ctest deleteCtestByCtestIdAndUsername(String username, Long ctestId);
+
+    Employee getEmployee(String username);
 }
