@@ -16,6 +16,7 @@ import com.app.APICode.ctest.Ctest;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +31,7 @@ public class Employee {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
-    // @JsonIgnore
+    @JsonIgnore
     @Schema(description = "User Details of Employee.", required = true)
     private User user;
 

@@ -54,6 +54,10 @@ public class MeasureController {
      * @param measure
      * @return the newly added measure
      */
+    @Operation(summary = "Add new measure", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Covid Measures" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful created new Measure", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/measures")
     public Measure addMeasure(@Valid @RequestBody Measure measure) {
@@ -64,10 +68,13 @@ public class MeasureController {
      * Update the info of a measure If there is no measure with the given
      * creationDateTime, throw MeasureNotFoundException
      * 
-     * @param updatedMeasure   a Measure object containing the new measure info to
-     *                         be updated
+     * @param updatedMeasure a Measure object containing the new measure info to be
      * @return the updated Measure object
      */
+    @Operation(summary = "Update Measures information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Covid Measures" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful updated Measures information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), })
     @PutMapping("/measures")
     public Measure updateMeasure(@Valid @RequestBody Measure updatedMeasure) {
         return measureService.updateMeasure(updatedMeasure);
@@ -80,7 +87,7 @@ public class MeasureController {
      * 
      * @param measureType the type of the measure
      */
-    @Operation(summary = "Delete Measures", description = "Delete Covid Measures by the DateTime", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+    @Operation(summary = "Delete Measures", description = "Delete Covid Measures by the Type", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Covid Measures" })
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Successful deleted Covid Measures", content = @Content) })

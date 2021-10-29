@@ -37,7 +37,8 @@ public class RestaurantController {
     private RestaurantRepository restaurants;
     private UserRepository users;
 
-    public RestaurantController(RestaurantService restaurantService, RestaurantRepository restaurants, UserRepository users) {
+    public RestaurantController(RestaurantService restaurantService, RestaurantRepository restaurants,
+            UserRepository users) {
         this.restaurantService = restaurantService;
         this.restaurants = restaurants;
         this.users = users;
@@ -74,21 +75,25 @@ public class RestaurantController {
         return restaurantService.getRestaurant(id);
     }
 
+    @Operation(summary = "Get Restaurant managed by User", description = "Get Restaurant that belongs to User according by Credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))) })
     @GetMapping("/restaurants/user/{username}")
-    public Restaurant getRestaurant(@PathVariable (value = "username") String username) {
+    public Restaurant getRestaurant(@PathVariable(value = "username") String username) {
         Optional<User> user = users.findByUsername(username);
-        if(!user.isPresent()){
+        if (!user.isPresent()) {
             throw new UserNotFoundException(username);
         }
-        
+
         Employee employee = user.get().getEmployee();
-        if(employee == null){
+        if (employee == null) {
             throw new EmployeeNotFoundException(username);
         }
 
         Restaurant restaurant = employee.getRestaurant();
-        if(restaurant == null){
-            throw new RestaurantNotFoundException(username); 
+        if (restaurant == null) {
+            throw new RestaurantNotFoundException(username);
         }
 
         return restaurant;
@@ -102,7 +107,8 @@ public class RestaurantController {
      * @throws RestaurantDuplicateException in case a restaurant with the same
      *                                      {@literal id} exist
      */
-    @Operation(summary = "Add new restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @Operation(summary = "Add new restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successful created new Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))), })
     @ResponseStatus(HttpStatus.CREATED)

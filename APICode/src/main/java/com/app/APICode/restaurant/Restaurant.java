@@ -50,13 +50,13 @@ public class Restaurant {
     private int maxCapacity;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
-    @JsonManagedReference
     @Schema(description = "List of Employees working at the restaurant.")
+    @JsonManagedReference
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
-    @JsonManagedReference
     @Schema(description = "List of Crowd Level recording in restaurant.")
+    @JsonManagedReference
     private List<CrowdLevel> crowdLevel;
 
     public Restaurant() {
