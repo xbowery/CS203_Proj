@@ -7,15 +7,10 @@
     content-class="list-style notification-menu-content"
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-badge
-      :content="messages"
-      :value="messages"
-      color="success"
-      overlap
-    >
-      <v-icon v-bind="attrs" v-on="on">
-        {{ icons.mdiBellOutline }}
-      </v-icon>
+      <v-badge :content="messages" :value="messages" color="success" overlap>
+        <v-icon v-bind="attrs" v-on="on">
+          {{ icons.mdiBellOutline }}
+        </v-icon>
       </v-badge>
     </template>
     <v-card class="app-bar-notification-content-container">

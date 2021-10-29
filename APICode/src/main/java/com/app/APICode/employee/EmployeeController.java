@@ -82,22 +82,17 @@ public class EmployeeController {
     }
 
     /**
-     * Search for employee with the given username
-     * If there is no user with the given username, throw a UserNotFoundException
-     * If there is no employee with the given username, throw a EmployeeNotFoundException
+     * Get user by username
+     * set its authorities to "ROLE_USER"
+     * get the employee 
+     * set the employee restraunt to null
+     * set the user employee to null
+     * 
+     * return the deleted user
      * 
      * @param username username of employee
-     * @return employee with the given username
+     * @return deleted employee 
      */
-    // @DeleteMapping("/users/employee/{employeeId}")
-    // public Employee deleteEmployee(@PathVariable (value = "employeeId") long employeeId){
-    //     Optional<Employee> employeeOp = employeeService.findById(employeeId);
-    //     if(!employeeOp.isPresent()){
-    //         throw new EmployeeNotFoundException(employeeId);
-    //     }
-    //     Employee employee = employeeOp.get();
-    //     return employee;
-    // }
     @DeleteMapping("/users/employee/{username}")
     public Employee deleteEmployee(@PathVariable (value = "username") String username){
         return employeeService.deleteEmployee(username);

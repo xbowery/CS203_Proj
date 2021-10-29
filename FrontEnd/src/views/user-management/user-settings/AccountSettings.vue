@@ -47,7 +47,7 @@ export default {
     const tabs = [
       { title: 'Account', icon: mdiAccountOutline },
       { title: 'Security', icon: mdiLockOpenOutline },
-      {title: 'Business', icon:mdiAlphaFCircleOutline},
+      { title: 'Business', icon: mdiAlphaFCircleOutline },
     ]
 
     // account settings data

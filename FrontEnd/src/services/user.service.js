@@ -14,17 +14,16 @@ class UserService {
   getEmployees() {
     return api.get('/employees')
   }
-  postEmployee(username, restaurantId, designation){
+  postEmployee(username, restaurantId, designation) {
     var request = `/users/${username}/employee/${restaurantId}`
     return api.post(request, designation)
   }
-  approveEmployee(username){
-    return api.put("/users/employee/" + username)
+  approveEmployee(username) {
+    return api.put('/users/employee/' + username)
   }
-  deleteEmployee(username){
-    return api.delete("/users/employee/" + username)
+  deleteEmployee(username) {
+    return api.delete('/users/employee/' + username)
   }
-
 
   getRestaurants() {
     return api.get('restaurants')

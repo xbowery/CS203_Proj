@@ -30,33 +30,36 @@
       class="table-rounded"
       hide-default-footer
     >
+      <template v-slot:[`item.status`]="{ item }">
+        <v-chip :color="getColor(item.employee.status)" dark>
+          {{ item.employee.status }}
+        </v-chip>
+      </template>
 
-    <template v-slot:[`item.status`]="{ item }">
-      <v-chip
-        :color="getColor(item.employee.status)"
-        dark
-      >
-        {{ item.employee.status }}
-      </v-chip>
-    </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          small
+          outlined
+          class="mr-3"
+          @click="statusClick(item.username)"
+          :disabled="disableButton(item.employee.status)"
+        >
+          Approve/ Reject</v-icon
+        >
 
-      <template v-slot:[`item.actions`]="{ item }" > 
-        <v-icon small outlined class="mr-3" @click="statusClick(item.username)" :disabled="disableButton(item.employee.status)"> Approve/ Reject</v-icon>
+        <v-dialog v-model="dialogApprove" max-width="555px">
+          <v-card>
+            <v-card-title class="text-h5">Do you want to approve or reject this employee?</v-card-title>
 
-          <v-dialog v-model="dialogApprove" max-width="555px">
-            <v-card>
-              <v-card-title class="text-h5">Do you want to approve or reject this employee?</v-card-title>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="success" @click="approveEmployee()">Approve</v-btn>
-                <v-spacer></v-spacer>       
-                <v-btn color="error" @click="rejectEmployee()" >Reject</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-
-            </v-card>
-          </v-dialog>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="success" @click="approveEmployee()">Approve</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="error" @click="rejectEmployee()">Reject</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
     </v-data-table>
   </v-card>
@@ -88,53 +91,55 @@ export default {
   },
 
   methods: {
-    statusClick(username){
+    statusClick(username) {
       this.curUsername = username
       this.dialogApprove = true
     },
-    disableButton(status){
-      if(status == "Pending"){
+    disableButton(status) {
+      if (status == 'Pending') {
         return false
       }
       return true
     },
-    getColor(status){
+    getColor(status) {
       console.log(status)
-      if(status == "Pending"){
+      if (status == 'Pending') {
         return 'orange'
-      }else if(status == "Active"){return 'green'}
+      } else if (status == 'Active') {
+        return 'green'
+      }
     },
 
-    approveEmployee(){
+    approveEmployee() {
       this.handleApproveEmployee()
       this.dialogApprove = false
-      this.getEmployees();
+      this.getEmployees()
     },
 
-    rejectEmployee(){
+    rejectEmployee() {
       this.handleRejectEmployee()
       this.dialogApprove = false
-      this.getEmployees();
+      this.getEmployees()
     },
 
-    async handleApproveEmployee(){
+    async handleApproveEmployee() {
       try {
-        const res = await UserService.approveEmployee(this.curUsername )
+        const res = await UserService.approveEmployee(this.curUsername)
         console.log(res)
       } catch (error) {
         console.error(error)
       }
     },
-    async handleRejectEmployee(){
+    async handleRejectEmployee() {
       try {
-        const res = await UserService.deleteEmployee(this.curUsername )
+        const res = await UserService.deleteEmployee(this.curUsername)
         console.log(res)
       } catch (error) {
         console.error(error)
       }
     },
 
-    async getEmployees(){
+    async getEmployees() {
       try {
         const res = await UserService.getEmployees(this.username)
         this.items = res.data
@@ -142,11 +147,10 @@ export default {
       } catch (error) {
         console.error(error)
       }
-    }
+    },
   },
 
   setup() {
-
     return {
       dialog: false,
       search: '',
@@ -159,7 +163,6 @@ export default {
         { text: 'STATUS', value: 'employee.status' },
         { text: 'ACTIONS', value: 'actions', sortable: false },
       ],
-
 
       // icons
       icons: {

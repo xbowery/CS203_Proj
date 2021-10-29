@@ -44,35 +44,35 @@ export default {
     username: String,
   },
   data: () => ({
-      error: '',
-      items: [],
+    error: '',
+    items: [],
 
-      restaurant: {
-        name:'',
-        location: '',
-        cuisine: '',
-        description: '',
-        currentCapacity: '',
-        maxCapacity: '',
-        crowdLevel: []
-      },
+    restaurant: {
+      name: '',
+      location: '',
+      cuisine: '',
+      description: '',
+      currentCapacity: '',
+      maxCapacity: '',
+      crowdLevel: [],
+    },
 
-      updatedCrowd:{
-        date:'nil',
-        latestCrowd: 'nil',
-        noOfCustomers: 'nil',
-      },
+    updatedCrowd: {
+      date: 'nil',
+      latestCrowd: 'nil',
+      noOfCustomers: 'nil',
+    },
   }),
 
   async mounted() {
     try {
       const res = await UserService.getRestaurant(this.username)
       this.restaurant = res.data
-      if(this.restaurant.crowdLevel != null){
+      if (this.restaurant.crowdLevel != null) {
         var crowdLevel = this.restaurant.crowdLevel
         var latestCrowd = crowdLevel[0]
         crowdLevel.forEach(item => {
-          if(item.datetime > latestCrowd.datetime){
+          if (item.datetime > latestCrowd.datetime) {
             latestCrowd = item
           }
         })
@@ -85,36 +85,34 @@ export default {
     }
   },
 
-
   methods: {
-    increment(count){
+    increment(count) {
       if (
-            this.updatedCrowd.noOfCustomers + count >= 0 &&
-            this.updatedCrowd.noOfCustomers + count <= this.restaurant.maxCapacity
-          ) {
-            // send a post request
-            const newCrowd = new CrowdLevel('', '', '')
-            newCrowd.datetime = new Date(Date.now())
-            newCrowd.noOfCustomers = this.updatedCrowd.noOfCustomers + count
-            newCrowd.latestCrowd = this.getNewCrowd(this.updatedCrowd.noOfCustomers + count)
-            this.handlePostCrowdlevel(newCrowd)
-            //then a new get request
-            this.handleGetCrowdlevel()
-          }
+        this.updatedCrowd.noOfCustomers + count >= 0 &&
+        this.updatedCrowd.noOfCustomers + count <= this.restaurant.maxCapacity
+      ) {
+        // send a post request
+        const newCrowd = new CrowdLevel('', '', '')
+        newCrowd.datetime = new Date(Date.now())
+        newCrowd.noOfCustomers = this.updatedCrowd.noOfCustomers + count
+        newCrowd.latestCrowd = this.getNewCrowd(this.updatedCrowd.noOfCustomers + count)
+        this.handlePostCrowdlevel(newCrowd)
+        //then a new get request
+        this.handleGetCrowdlevel()
+      }
     },
-    getNewCrowd(count){
-      var utilization = count/this.restaurant.maxCapacity
-      if(utilization <= 0.4){
-        return "Low"
-      } else if(utilization <= 0.7){
-        return "Medium"
-      } else{
-        return "High"
+    getNewCrowd(count) {
+      var utilization = count / this.restaurant.maxCapacity
+      if (utilization <= 0.4) {
+        return 'Low'
+      } else if (utilization <= 0.7) {
+        return 'Medium'
+      } else {
+        return 'High'
       }
     },
 
-
-      async handlePostCrowdlevel(newCrowd) {
+    async handlePostCrowdlevel(newCrowd) {
       try {
         const res = await UserService.postCrowdLevel(this.restaurant.id, newCrowd)
         console.log(res)
@@ -123,14 +121,14 @@ export default {
       }
     },
 
-    async handleGetCrowdlevel(){
-        try {
+    async handleGetCrowdlevel() {
+      try {
         const res = await UserService.getCrowdLevel(this.username)
         this.items = res.data
-        if(this.items.length != 0){
+        if (this.items.length != 0) {
           var latestCrowd = this.items[0]
           this.items.forEach(item => {
-            if(item.datetime > latestCrowd.datetime){
+            if (item.datetime > latestCrowd.datetime) {
               latestCrowd = item
             }
           })
@@ -139,7 +137,7 @@ export default {
       } catch (error) {
         console.error(error)
       }
-    }
+    },
   },
 }
 </script>

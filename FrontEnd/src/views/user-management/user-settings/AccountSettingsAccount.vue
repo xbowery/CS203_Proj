@@ -36,7 +36,6 @@
             <v-text-field v-model="accountDataLocale.lastname" label="Last Name" dense outlined></v-text-field>
           </v-col>
 
-
           <v-col cols="12" md="6">
             <v-text-field v-model="accountDataLocale.email" label="E-mail" dense outlined></v-text-field>
           </v-col>

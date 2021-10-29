@@ -11,7 +11,4 @@ public interface EmployeeService {
     Employee addEmployeeToBusiness(String username, String designation, long businessId);
     Employee approveEmployee(String username);
     Employee deleteEmployee(String username);
-    // void save(Employee employee);
-
-    // Optional<Employee> findById(long employeeId);
 }

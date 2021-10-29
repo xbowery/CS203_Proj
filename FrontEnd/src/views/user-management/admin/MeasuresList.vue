@@ -101,8 +101,11 @@ import '@/validators'
 export default {
   components: { ValidationProvider, ValidationObserver },
   data: () => ({
-    message: "",
-    dropdown: [{ text: "Yes", value: true }, { text: "No", value: false }],
+    message: '',
+    dropdown: [
+      { text: 'Yes', value: true },
+      { text: 'No', value: false },
+    ],
     dialog: false,
     dialogDelete: false,
     search: '',

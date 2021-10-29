@@ -99,7 +99,7 @@ export default defineComponent({
   methods: {
     time() {
       const today = new Date()
-      const time = today.getHours() + ':' + ('00'+ today.getMinutes()).slice(-2);
+      const time = today.getHours() + ':' + ('00' + today.getMinutes()).slice(-2)
 
       return time
     },
