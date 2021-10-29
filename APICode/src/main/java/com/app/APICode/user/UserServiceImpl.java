@@ -2,7 +2,6 @@ package com.app.APICode.user;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,6 +17,7 @@ import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         User user = users.findByUsername(username).orElse(null);
-        if(user == null){
+        if (user == null) {
             throw new UserNotFoundException(username);
         }
         return user;
@@ -78,7 +78,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        return users.findByEmail(email).orElse(null);
+        User user = users.findByEmail(email).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException(email);
+        }
+        return user;
     }
 
     @Override
@@ -156,11 +160,10 @@ public class UserServiceImpl implements UserService {
      * @return the newly added user object
      */
     @Override
-    public User addUser(User user, Boolean isAdmin) {
-        List<User> sameUsernames = users.findByUsername(user.getUsername()).map(Collections::singletonList)
-                .orElseGet(Collections::emptyList);
+    public UserDTO addUser(User user, Boolean isAdmin) {
+        User duplicate = users.findByUsername(user.getUsername()).orElse(null);
 
-        if (getUserByEmail(user.getEmail()) != null) {
+        if (duplicate != null || getUserByEmail(user.getEmail()) != null) {
             throw new UserOrEmailExistsException("This email already exists. Please sign in instead.");
         }
 
@@ -171,54 +174,54 @@ public class UserServiceImpl implements UserService {
             user.setIsVaccinated(false);
         }
 
-        if (sameUsernames.size() == 0) {
-            String token = UUID.randomUUID().toString();
+        user.setPassword(encoder.encode(user.getPassword()));
 
-            Map<String, Object> dataModel = emailerService.getDataModel();
-            dataModel.put("isRegisterConfirmation", true);
-            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + 
-                token);
+        String token = UUID.randomUUID().toString();
 
-            // try {
-            //     emailerService.sendMessage(user.getEmail(), dataModel);
-            // } catch (MessagingException e) {
-            //     System.out.println("Error occurred while trying to send an email to: " +
-            //         user.getEmail());
-            // } catch (IOException e) {
-            //     System.out.println("Error occurred while trying to send an email to: " +
-            //         user.getEmail());
-            // }
+        Map<String, Object> dataModel = emailerService.getDataModel();
+        dataModel.put("isRegisterConfirmation", true);
+        dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + token);
 
-            User savedUser = users.save(user);
-            VerificationToken vToken = new VerificationToken(token, user);
-            vTokens.save(vToken);
+        // try {
+        // emailerService.sendMessage(user.getEmail(), dataModel);
+        // } catch (MessagingException e) {
+        // System.out.println("Error occurred while trying to send an email to: " +
+        // user.getEmail());
+        // } catch (IOException e) {
+        // System.out.println("Error occurred while trying to send an email to: " +
+        // user.getEmail());
+        // }
 
-            return savedUser;
-        } else {
-            throw new UserOrEmailExistsException("This username is already used. Please choose another username");
-        }
+        User savedUser = users.save(user);
+        VerificationToken vToken = new VerificationToken(token, user);
+        vTokens.save(vToken);
+
+        return convertToUserDTO(savedUser);
     }
 
     @Override
     public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
-        return convertToUserDTO(users.findByUsername(username).map(user -> {
-            // Check if email exists to prevent a unique index violation
-            if (getUserByEmail(newUserInfo.getEmail()) == null) {
+        User user = getUserByUsername(username);
 
-            } else if (!(getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username))) {
-                return null;
-            }
+        // Check if email exists to prevent a unique index violation
+        if (!(getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username))) {
+            throw new UserOrEmailExistsException("This email already exists.");
+        }
+        user.setEmail(newUserInfo.getEmail());
+        user.setFirstName(newUserInfo.getFirstName());
+        user.setLastName(newUserInfo.getLastName());
 
-            String email = newUserInfo.getEmail();
-            String firstName = newUserInfo.getFirstName();
-            String lastName = newUserInfo.getLastName();
-            // user.setPassword(encoder.encode(newUserInfo.getPassword()));
-            // user.setUsername(newUserInfo.getUsername());
-            // user.setIsVaccinated(newUserInfo.getIsVaccinated());
-            // user.setAuthorities(newUserInfo.getAuthorities());
-            users.setUserInfoByUsername(firstName, lastName, email, username);
-            return user;
-        }).orElse(null));
+        // String email = newUserInfo.getEmail();
+        // String firstName = newUserInfo.getFirstName();
+        // String lastName = newUserInfo.getLastName();
+
+        // user.setPassword(encoder.encode(newUserInfo.getPassword()));
+        // user.setUsername(newUserInfo.getUsername());
+        // user.setIsVaccinated(newUserInfo.getIsVaccinated());
+        // user.setAuthorities(newUserInfo.getAuthorities());
+        // users.setUserInfoByUsername(firstName, lastName, email, username);
+        return convertToUserDTO(users.save(user));
+
     }
 
     @Override
@@ -241,26 +244,32 @@ public class UserServiceImpl implements UserService {
         dataModel.put("password", tempPassword);
 
         // try {
-        //     emailerService.sendMessage(email, dataModel);
+        // emailerService.sendMessage(email, dataModel);
         // } catch (MessagingException e) {
-        //     System.out.println("Error occurred while trying to send an email to: " + email);
+        // System.out.println("Error occurred while trying to send an email to: " +
+        // email);
         // } catch (IOException e) {
-        //     System.out.println("Error occurred while trying to send an email to: " + email);
+        // System.out.println("Error occurred while trying to send an email to: " +
+        // email);
         // }
         // updatePasswordByEmail(email, encoder.encode(tempPassword));
     }
 
     @Override
     public void deleteUser(String username) {
-        User user = users.findByUsername(username).orElse(null);
+        User user = getUserByUsername(username);
+        
+        try {
+            final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
+            if (verificationToken != null) {
+                vTokens.delete(verificationToken);
+            }
 
-        final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
-
-        if (verificationToken != null) {
-            vTokens.delete(verificationToken);
+            users.deleteByUsername(username);
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(username);
         }
 
-        users.deleteByUsername(username);
     }
 
     @Override

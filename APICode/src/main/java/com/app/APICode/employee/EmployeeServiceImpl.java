@@ -33,10 +33,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployeeByUsername(String username) {
         User user = users.getUserByUsername(username);
-        if (user == null) {
-            throw new UserNotFoundException(username);
-        }
-
         Employee employee = user.getEmployee();
         if (employee == null) {
             throw new EmployeeNotFoundException(username);
@@ -47,10 +43,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee addEmployeeToBusiness(String username, String designation, long businessId) {
         User user = users.getUserByUsername(username);
-        if(user == null){
-            throw new UserNotFoundException(username);
-        }
-
         Restaurant restaurant = restaurants.getRestaurantById(businessId);
 
         Employee employee = new Employee(user, designation);
