@@ -1,7 +1,6 @@
 package com.app.APICode.employee;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.app.APICode.restaurant.Restaurant;
@@ -21,14 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class EmployeeController {
-    private UserService userService;
     private EmployeeService employeeService;
-    private RestaurantService restrurantService;
 
-    public EmployeeController(UserService userService, EmployeeService employeeService, RestaurantService restrurantService) {
-        this.userService = userService;
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.restrurantService = restrurantService;
     }
 
     /**
@@ -39,40 +34,7 @@ public class EmployeeController {
      */
     @GetMapping("/employees") 
     public List<User> getEmployees(Principal principal) {
-        Long principal_id = userService.getUserIdByUsername(principal.getName());
-    
-        List<Employee> employeeList = employeeService.listEmployees(principal_id);
-        List<User> userList = new ArrayList<>();
-        for (Employee employee : employeeList) {
-            Long user_id = employee.getUser().getId();
-            User user = userService.getUserById(user_id);
-            userList.add(user);
-        }
-        return userList;
-    }
-
-    @GetMapping("/employees/{username}")
-    public List<User> getEmployees2(@PathVariable String username){
-        User user = userService.getUserByUsername(username);
-
-        if (user == null)
-            throw new UserNotFoundException(username);
-
-        Employee owner = user.getEmployee();
-        if (owner == null)
-            throw new EmployeeNotFoundException(username);
-        
-        Restaurant restaurant = owner.getRestaurant();
-        List<Employee> employeeList = restaurant.getEmployees();
-
-        List<User> userList = new ArrayList<>();
-        for (Employee employee : employeeList) {
-            Long user_id = employee.getUser().getId();
-            User userTemp = userService.getUserById(user_id);
-            userList.add(userTemp);
-        }
-        return userList;
-        
+        return employeeService.getAllEmployeesByBusinessOwner(principal.getName());
     }
 
     /**
@@ -84,17 +46,8 @@ public class EmployeeController {
      * @return employee with the given username
      */
     @GetMapping("/users/{username}/employee")
-    public Employee getEmployee(@PathVariable String username){
-        User user = userService.getUserByUsername(username);
-
-        if (user == null)
-            throw new UserNotFoundException(username);
-
-        Employee employee = user.getEmployee();
-        if (employee == null)
-            throw new EmployeeNotFoundException(username);
-
-        return user.getEmployee();
+    public Employee getEmployee(Principal principal){
+        return employeeService.getEmployeeByUsername(principal.getName());
     }
 
     /**
@@ -109,26 +62,7 @@ public class EmployeeController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{username}/employee/{restaurantId}")
-    public Employee postEmployee(@PathVariable (value = "username") String username,@PathVariable (value = "restaurantId") long restaurantId, @RequestBody String designation){
-        User user = userService.getUserByUsername(username);
-        if(user == null){
-            throw new UserNotFoundException(username);
-        }
-
-        Restaurant restaurant = restrurantService.getRestaurant(restaurantId);
-        if(restaurant == null){
-            throw new RestaurantNotFoundException(restaurantId);
-        }
-
-        Employee employee = new Employee(user, designation);
-
-        employee.setRestaurant(restaurant);
-        employee.setStatus("Pending");
-
-
-        userService.save(user);
-        employeeService.save(employee);
-
-        return employee;
+    public Employee postEmployee(Principal principal, @PathVariable (value = "restaurantId") long restaurantId, @RequestBody String designation){
+        return employeeService.addEmployeeToBusiness(principal.getName(), designation, restaurantId);
     }
 }

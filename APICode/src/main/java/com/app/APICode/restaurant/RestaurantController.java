@@ -53,7 +53,7 @@ public class RestaurantController {
      */
     @GetMapping("/restaurants/{id}")
     public Restaurant getRestaurant(@PathVariable long id) {
-        return restaurantService.getRestaurant(id);
+        return restaurantService.getRestaurantById(id);
     }
 
     @GetMapping("/restaurants/user/{username}")

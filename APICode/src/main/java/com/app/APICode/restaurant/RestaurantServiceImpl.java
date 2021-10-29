@@ -24,7 +24,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant getRestaurant(long id) {
+    public Restaurant getRestaurantById(long id) {
         Restaurant restaurant = restaurants.findById(id).orElse(null);
         if (restaurant == null)
             throw new RestaurantNotFoundException(id);

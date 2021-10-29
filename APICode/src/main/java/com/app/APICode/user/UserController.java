@@ -61,10 +61,6 @@ public class UserController {
      */
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
-
-        if (user == null)
-            throw new UserNotFoundException(username);
         return userService.getUserByUsername(username);
     }
 

@@ -42,5 +42,5 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void save(User user);
+    User save(User user);
 }

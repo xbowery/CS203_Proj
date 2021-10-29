@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-        users.save(user);
+    public User save(User user) {
+        return users.save(user);
     }
 
     @Override
@@ -69,7 +69,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        return users.findByUsername(username).orElse(null);
+        User user = users.findByUsername(username).orElse(null);
+        if(user == null){
+            throw new UserNotFoundException(username);
+        }
+        return user;
     }
 
     @Override
