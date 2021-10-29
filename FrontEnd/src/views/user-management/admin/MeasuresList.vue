@@ -199,7 +199,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
-        // this.handleEditMeasure(this.editedItem)
+        this.handleEditMeasure(this.editedItem)
       } else {
         this.items.push(this.editedItem)
       }
