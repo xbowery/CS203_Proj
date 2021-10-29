@@ -1,5 +1,6 @@
 package com.app.APICode.ctest;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,36 +43,36 @@ public class CtestController {
      * @param username username of employee
      * @return list of the ctests done by the employee
      */
-    @GetMapping("/employee/{username}/ctests")
-    public List<Ctest> getAllTestsByEmployee(@PathVariable (value = "username") String username) {
-        User user = users.getUserByUsername(username);
+    @GetMapping("/employee/ctests")
+    public List<Ctest> getAllTestsByEmployee(Principal principal) {
+        User user = users.getUserByUsername(principal.getName());
         if(user == null){
-            throw new UserNotFoundException(username);
+            throw new UserNotFoundException(principal.getName());
         }
         Employee employee = user.getEmployee();
         if(employee == null){
-            throw new EmployeeNotFoundException(username);
+            throw new EmployeeNotFoundException(principal.getName());
         }
         return ctests.getAllCtestsByEmployee(employee);
     }
 
     /**
-     * Add a new ctest with POST request to "/employee/{username}/ctests"
+     * Add a new ctest with POST request to "/employee/ctests"
      * 
      * @param username username of employee
      * @param ctest a new ctest object to be added
      * @return the newly added ctest object
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/employee/{username}/ctests")
-    public Ctest addCtest(@PathVariable (value = "username") String username, @RequestBody Ctest ctest){
-        User user = users.getUserByUsername(username);
+    @PostMapping("/employee/ctests")
+    public Ctest addCtest(Principal principal, @RequestBody Ctest ctest){
+        User user = users.getUserByUsername(principal.getName());
         if(user == null){
-            throw new UserNotFoundException(username);
+            throw new UserNotFoundException(principal.getName());
         }
         Employee employee = user.getEmployee();
         if(employee == null){
-            throw new EmployeeNotFoundException(username);
+            throw new EmployeeNotFoundException(principal.getName());
         }
         ctest.setEmployee(employee);
         return ctests.saveCtest(ctest);
@@ -86,15 +87,15 @@ public class CtestController {
      * @param newCtest a Ctest object containing the new Ctest info to be updated
      * @return the updated Ctest object
      */
-    @PutMapping("/employee/{username}/ctests/{ctestId}")
-    public Ctest updateCtest(@PathVariable (value = "username") String username, @PathVariable(value = "ctestId") Long ctestId, @RequestBody Ctest newCtest){
-        User user = users.getUserByUsername(username);
+    @PutMapping("/employee/ctests/{ctestId}")
+    public Ctest updateCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId, @RequestBody Ctest newCtest){
+        User user = users.getUserByUsername(principal.getName());
         if(user == null){
-            throw new UserNotFoundException(username);
+            throw new UserNotFoundException(principal.getName());
         }
         Employee employee = user.getEmployee();
         if(employee == null){
-            throw new EmployeeNotFoundException(username);
+            throw new EmployeeNotFoundException(principal.getName());
         }
         return ctests.updateCtestByCtestIdAndEmployeeId(ctestId, employee.getId(), newCtest);
     }
@@ -108,15 +109,15 @@ public class CtestController {
      * @param username username of employee
      * @param ctestId a long value (Ctest)
      */
-    @DeleteMapping("/employee/{username}/ctests/{ctestId}")
-    public Ctest deleteCtest(@PathVariable (value = "username") String username, @PathVariable (value = "ctestId") Long ctestId){
-        User user = users.getUserByUsername(username);
+    @DeleteMapping("/employee/ctests/{ctestId}")
+    public Ctest deleteCtest(Principal principal, @PathVariable (value = "ctestId") Long ctestId){
+        User user = users.getUserByUsername(principal.getName());
         if(user == null){
-            throw new UserNotFoundException(username);
+            throw new UserNotFoundException(principal.getName());
         }
         Employee employee = user.getEmployee();
         if(employee == null){
-            throw new EmployeeNotFoundException(username);
+            throw new EmployeeNotFoundException(principal.getName());
         }
         return ctests.deleteCtestByCtestIdAndEmployeeId(ctestId, employee.getId());
     }

@@ -32,24 +32,24 @@ class UserService {
     const request = `/restaurants/${restaurantId}/crowdLevel/${crowdLevelId}`
     return api.put(request, crowdLevel)
   }
-  getCtests(username) {
-    const request = `employee/${username}/ctests`
+  getCtests() {
+    const request = `employee/ctests`
     return api.get(request)
   }
-  postCtest(username, ctest) {
-    const request = `employee/${username}/ctests`
+  postCtest(ctest) {
+    const request = `employee/ctests`
     return api.post(request, ctest)
   }
   getRegistrationConfirm(token) {
     const request = `registrationConfirm?token=${token}`
     return api.get(request)
   }
-  deleteCtest(username, ctestId) {
-    const request = `/employee/${username}/ctests/${ctestId}`
+  deleteCtest(ctestId) {
+    const request = `/employee/ctests/${ctestId}`
     return api.delete(request)
   }
-  updateCtest(username, ctestId, ctest) {
-    const request = `/employee/${username}/ctests/${ctestId}`
+  updateCtest(ctestId, ctest) {
+    const request = `/employee/ctests/${ctestId}`
     return api.put(request, ctest)
   }
   updateUser(user) {

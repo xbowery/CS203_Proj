@@ -178,7 +178,7 @@ export default {
 
   async mounted() {
     try {
-      const res = await UserService.getCtests(this.username)
+      const res = await UserService.getCtests()
       this.items = res.data
 
       var ctest = this.items[0]
@@ -270,7 +270,7 @@ export default {
 
     async handleDeleteCtest(ctestId) {
       try {
-        const res = await UserService.deleteCtest(this.username, ctestId)
+        const res = await UserService.deleteCtest(ctestId)
         console.log(res.data)
         this.reloadTable()
       } catch (error) {
@@ -281,7 +281,7 @@ export default {
 
     async handleNewCtest(ctest) {
       try {
-        const res = await UserService.postCtest(this.username, ctest)
+        const res = await UserService.postCtest(ctest)
         console.log(res)
       } catch (error) {
         console.log(error)
@@ -296,7 +296,7 @@ export default {
 
     async handleEditCtest(ctest, ctestId){
         try {
-        const res = await UserService.updateCtest(this.username, ctestId, ctest)
+        const res = await UserService.updateCtest(ctestId, ctest)
         console.log(res.data)
       } catch (error) {
         this.message = error.response?.data?.message || error.message || error.toString()
@@ -306,7 +306,7 @@ export default {
 
     async reloadTable() {
       try {
-        const res = await UserService.getCtests(this.username)
+        const res = await UserService.getCtests()
         this.items = res.data
           if(this.items.length == 0){
             this.$emit('set_latest', this.ctestEmpty)
