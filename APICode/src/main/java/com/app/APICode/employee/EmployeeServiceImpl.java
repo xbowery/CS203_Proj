@@ -54,6 +54,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         return users.save(user).getEmployee();
     }
 
+    @Override
+    public Employee approveEmployee(String username){
+        User user = users.getUserByUsername(username);
+        user.setAuthorities("ROLE_EMPLOYEE");
+
+        Employee employee = user.getEmployee();
+        employee.setStatus("Active");
+
+        users.save(user);
+        return employee;
+    }
+    @Override
+    public Employee deleteEmployee(String username){
+        User user = users.getUserByUsername(username);
+
+        user.setAuthorities("ROLE_USER");
+        Employee employee = user.getEmployee();
+        employee.setRestaurant(null);
+        user.setEmployee(null);
+        users.save(user);
+        return employee;
+    }
+
     // @Override
     // public Optional<Employee> findById(long employeeId){
     //     return employees.findById(employeeId);

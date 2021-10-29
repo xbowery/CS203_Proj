@@ -70,25 +70,16 @@ public class EmployeeController {
     }
 
     /**
-     * Search for employee with the given username
-     * If there is no user with the given username, throw a UserNotFoundException
-     * If there is no employee with the given username, throw a EmployeeNotFoundException
+     * Change the Employee status to "Active"
+     * Change the User authorities to "ROLE_EMPLOYEE"
      * 
      * @param username username of employee
      * @return employee with the given username
      */
-    // @PutMapping("/users/employee/{employeeId}")
-    // public Employee editEmployeeStatus(@PathVariable (value = "employeeId") long employeeId){
-    //     Optional<Employee> employeeOp = employeeService.findById(employeeId);
-    //     if(!employeeOp.isPresent()){
-    //         throw new EmployeeNotFoundException(employeeId);
-    //     }
-    //     Employee employee = employeeOp.get();
-    //     employee.setStatus("Active");
-    //     User user = employee.getUser();
-    //     user.setAuthorities("ROLE_EMPLOYEE");
-    //     return employee;
-    // }
+    @PutMapping("/users/employee/{username}")
+    public Employee approveEmployee(@PathVariable (value = "username") String username){
+        return employeeService.approveEmployee(username);
+    }
 
     /**
      * Search for employee with the given username
@@ -107,4 +98,8 @@ public class EmployeeController {
     //     Employee employee = employeeOp.get();
     //     return employee;
     // }
+    @DeleteMapping("/users/employee/{username}")
+    public Employee deleteEmployee(@PathVariable (value = "username") String username){
+        return employeeService.deleteEmployee(username);
+    }
 }
