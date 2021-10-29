@@ -8,6 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,9 +36,9 @@ public class MeasureServiceTest {
     @Test
     void addNewMeasure_ReturnSavedMeasure() {
         // Arrange
-        Measure measure = new Measure(new Date(), "gym", 50, true, false, null);
+        Measure measure = new Measure("gym", 50, true, false);
 
-        when(measures.findByCreationDateTime(any(Date.class))).thenReturn(Optional.empty());
+        when(measures.findByMeasureType(any(String.class))).thenReturn(Optional.empty());
         when(measures.save(any(Measure.class))).thenReturn(measure);
 
         // Act
@@ -45,7 +46,7 @@ public class MeasureServiceTest {
 
         // Assert
         assertNotNull(savedMeasure);
-        verify(measures).findByCreationDateTime(measure.getCreationDateTime());
+        verify(measures).findByMeasureType(measure.getMeasureType());
         verify(measures).save(measure);
     }
 
