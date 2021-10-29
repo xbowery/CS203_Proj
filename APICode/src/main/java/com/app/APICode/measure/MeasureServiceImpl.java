@@ -14,10 +14,10 @@ public class MeasureServiceImpl implements MeasureService {
     // for testing purposes
     public MeasureServiceImpl(MeasureRepository measures) {
         this.measures = measures;
-        measures.save(new Measure("Restaurant", 2, true, false, null));
-        measures.save(new Measure("Gym", 50, true, false, null));
-        measures.save(new Measure("Events", 1000, true, true, null));
-        measures.save(new Measure("Gathering", 2, true, true, null));
+        measures.save(new Measure("Restaurant", 2, true, false));
+        measures.save(new Measure("Gym", 50, true, false));
+        measures.save(new Measure("Events", 1000, true, true));
+        measures.save(new Measure("Gathering", 2, true, true));
     }
 
     @Override
@@ -57,7 +57,6 @@ public class MeasureServiceImpl implements MeasureService {
         measure.setMaxCapacity(updatedMeasure.getMaxCapacity());
         measure.setVaccinationStatus(updatedMeasure.isVaccinationStatus());
         measure.setMaskStatus(updatedMeasure.isMaskStatus());
-        measure.setDetails(updatedMeasure.getDetails());
         return measures.save(measure);
     }
 

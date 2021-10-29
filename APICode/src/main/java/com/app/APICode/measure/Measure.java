@@ -27,18 +27,15 @@ public class Measure {
     @NotNull(message = "Mask status should not be null")
     private boolean maskStatus;
 
-    private String details;
-
     public Measure() {
     }
 
-    public Measure(String measureType, int maxCapacity, boolean vaccinationStatus, boolean maskStatus, String details) {
+    public Measure(String measureType, int maxCapacity, boolean vaccinationStatus, boolean maskStatus) {
         this.dateUpdated = LocalDate.now();
         this.measureType = measureType;
         this.maxCapacity = maxCapacity;
         this.vaccinationStatus = vaccinationStatus;
         this.maskStatus = maskStatus;
-        this.details = details;
     }
 
     public Long getId() {
@@ -89,13 +86,4 @@ public class Measure {
     public void setMaskStatus(boolean maskStatus) {
         this.maskStatus = maskStatus;
     }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
 }

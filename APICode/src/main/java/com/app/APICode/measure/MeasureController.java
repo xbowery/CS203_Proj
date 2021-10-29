@@ -35,18 +35,6 @@ public class MeasureController {
     }
 
     /**
-     * Search for the measure given the creationDateTime If there is no measure with
-     * the given creationDateTime, throw a MeasureNotFoundException
-     * 
-     * @param measureType the type of the measure
-     * @return measure with the given type
-     */
-    @GetMapping("/measures/{measureType}")
-    public Measure getMeasure(@PathVariable @NotNull String measureType) {
-        return measureService.getMeasure(measureType);
-    }
-
-    /**
      * Add a new measure with POST request to "/measures"
      * 
      * @param measure
