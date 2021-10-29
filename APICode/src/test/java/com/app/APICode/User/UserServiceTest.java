@@ -2,6 +2,7 @@ package com.app.APICode.User;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
@@ -52,7 +53,7 @@ public class UserServiceTest {
         when(users.save(any(User.class))).thenReturn(user);
 
         // Act
-        User savedUser = userService.addUser(user, true);
+        UserDTO savedUser = userService.addUser(user, true);
 
         // Assert
         assertNotNull(savedUser);
@@ -68,7 +69,7 @@ public class UserServiceTest {
         when(users.findByUsername(any(String.class))).thenReturn(Optional.of(user));
 
         // Act
-        User savedUser = null;
+        UserDTO savedUser = null;
         try {
             savedUser = userService.addUser(user, true);
         } catch (UserOrEmailExistsException e) {
