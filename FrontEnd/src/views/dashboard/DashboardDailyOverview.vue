@@ -17,7 +17,8 @@
       <vue-apex-charts :options="chartOptions" :series="chartData" height="210"></vue-apex-charts>
 
       <div class="d-flex align-center">
-        <h3 class="text-2xl font-weight-semibold me-4">30</h3>
+        <!-- <h3 class="text-2xl font-weight-semibold me-4">30</h3> -->
+        <h3 class="text-2xl font-weight-semibold me-4">{{ lastItem.noOfCustomers }}</h3>
         <span>individuals have visited your restaurant in the past hour</span>
       </div>
 
@@ -31,11 +32,29 @@ import VueApexCharts from 'vue-apexcharts'
 // eslint-disable-next-line object-curly-newline
 import { mdiDotsVertical, mdiTrendingUp, mdiCurrencyUsd } from '@mdi/js'
 import { getCurrentInstance } from '@vue/composition-api'
+import UserService from '@/services/user.service'
 
 export default {
   components: {
     VueApexCharts,
   },
+  props: {
+    username: String,
+  },
+
+  data() {
+    return {
+      items: [],
+      keys: ['latestCrowd', 'noOfCustomers'],
+    }
+  },
+
+  computed: {
+    lastItem() {
+      return this.items.slice(-1)[0]
+    },
+  },
+
   setup() {
     const ins = getCurrentInstance()?.proxy
     const $vuetify = ins && ins.$vuetify ? ins.$vuetify : null
@@ -123,6 +142,15 @@ export default {
         mdiTrendingUp,
         mdiCurrencyUsd,
       },
+    }
+  },
+
+  async mounted() {
+    try {
+      const res = await UserService.getCrowdLevel(this.username)
+      this.items = res.data
+    } catch (error) {
+      console.error(error)
     }
   },
 }

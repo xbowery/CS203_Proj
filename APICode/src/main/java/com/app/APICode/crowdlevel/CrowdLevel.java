@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.app.APICode.restaurant.Restaurant;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -33,9 +34,18 @@ public class CrowdLevel {
     @ManyToOne
     @JoinColumn(name = "restaurantId")
     @Schema(description = "Restaurant that the Crowd Level belong to.", required = true)
+    @JsonBackReference 
     private Restaurant restaurant;
 
     public CrowdLevel() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getDatetime() {

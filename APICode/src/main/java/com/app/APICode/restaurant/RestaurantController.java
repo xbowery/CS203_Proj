@@ -1,8 +1,15 @@
 package com.app.APICode.restaurant;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
+
+import com.app.APICode.employee.Employee;
+import com.app.APICode.employee.EmployeeNotFoundException;
+import com.app.APICode.user.User;
+import com.app.APICode.user.UserNotFoundException;
+import com.app.APICode.user.UserRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +34,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Restaurant", description = "Restaurant API")
 public class RestaurantController {
     private RestaurantService restaurantService;
+    private RestaurantRepository restaurants;
+    private UserRepository users;
 
-    public RestaurantController(RestaurantService restaurantService) {
+    public RestaurantController(RestaurantService restaurantService, RestaurantRepository restaurants, UserRepository users) {
         this.restaurantService = restaurantService;
+        this.restaurants = restaurants;
+        this.users = users;
     }
 
     /**
@@ -61,6 +72,26 @@ public class RestaurantController {
     @GetMapping("/restaurants/{id}")
     public Restaurant getRestaurant(@PathVariable long id) {
         return restaurantService.getRestaurant(id);
+    }
+
+    @GetMapping("/restaurants/user/{username}")
+    public Restaurant getRestaurant(@PathVariable (value = "username") String username) {
+        Optional<User> user = users.findByUsername(username);
+        if(!user.isPresent()){
+            throw new UserNotFoundException(username);
+        }
+        
+        Employee employee = user.get().getEmployee();
+        if(employee == null){
+            throw new EmployeeNotFoundException(username);
+        }
+
+        Restaurant restaurant = employee.getRestaurant();
+        if(restaurant == null){
+            throw new RestaurantNotFoundException(username); 
+        }
+
+        return restaurant;
     }
 
     /**
