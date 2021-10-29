@@ -39,7 +39,7 @@ public class RestaurantController {
      * @return list of all {@link Restaurant}
      */
     @GetMapping("/restaurants")
-    public List<Restaurant> getAllRestaurants() {
+    public List<RestaurantDTO> getAllRestaurants() {
         return restaurantService.listRestaurants();
     }
 
