@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.app.APICode.restaurant.Restaurant;
+import com.app.APICode.restaurant.RestaurantNotFoundException;
+import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
     private UserService userService;
     private EmployeeService employeeService;
+    private RestaurantService restrurantService;
 
-    public EmployeeController(UserService userService, EmployeeService employeeService, EmployeeRepository employeeRepository) {
+    public EmployeeController(UserService userService, EmployeeService employeeService, RestaurantService restrurantService) {
         this.userService = userService;
         this.employeeService = employeeService;
+        this.restrurantService = restrurantService;
     }
 
     /**
@@ -93,22 +98,37 @@ public class EmployeeController {
     }
 
     /**
-     * Add new employee with POST request to "/users/{username}/employee"
+     * Add new employee with POST request to "/users/{username}/employee/{restaurantId}"
      * If there is no user with the given username, throw a UserNotFoundException
      * 
+     * 
      * @param username username of employee
+     * @param restrauntId id of the restraunt the employee wants to apply to
+     * @param designation Designation of the employee
      * @return the newly added employee
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/users/{username}/employee")
-    public Employee addEmployee(@PathVariable (value = "username") String username){
+    @PostMapping("/users/{username}/employee/{restaurantId}")
+    public Employee postEmployee(@PathVariable (value = "username") String username,@PathVariable (value = "restaurantId") long restaurantId, @RequestBody String designation){
         User user = userService.getUserByUsername(username);
         if(user == null){
             throw new UserNotFoundException(username);
         }
-        Employee employee = new Employee(user);
-        user.setEmployee(employee);
+
+        Restaurant restaurant = restrurantService.getRestaurant(restaurantId);
+        if(restaurant == null){
+            throw new RestaurantNotFoundException(restaurantId);
+        }
+
+        Employee employee = new Employee(user, designation);
+
+        employee.setRestaurant(restaurant);
+        employee.setStatus("Pending");
+
+
         userService.save(user);
+        employeeService.save(employee);
+
         return employee;
     }
 }

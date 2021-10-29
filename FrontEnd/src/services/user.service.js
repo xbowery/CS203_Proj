@@ -10,6 +10,10 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
+  postEmployee(username, restaurantId, designation){
+    var request = `/users/${username}/employee/${restaurantId}`
+    return api.post(request, designation)
+  }
   getRestaurants() {
     return api.get('restaurants')
   }

@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface EmployeeService {
     List<Employee> listEmployees(Long user_id);
+
+    void save(Employee employee);
 }
