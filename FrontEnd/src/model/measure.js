@@ -1,6 +1,6 @@
 export default class Measure {
-  constructor(creationDateTime, businessType, maxCapacity, vaccinationStatus, maskStatus, details) {
-    this.creationDateTime = creationDateTime
+  constructor(updatedDate, businessType, maxCapacity, vaccinationStatus, maskStatus, details) {
+    this.updatedDate = updatedDate
     this.businessType = businessType
     this.maxCapacity = maxCapacity
     this.vaccinationStatus = vaccinationStatus

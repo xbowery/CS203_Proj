@@ -112,16 +112,8 @@ export default {
     ],
     items: [],
     editedIndex: -1,
-    editedItem: {
-      maxCapacity: '',
-      vaccinationStatus: '',
-      maskStatus: '',
-    },
-    defaultItem: {
-      maxCapacity: '',
-      vaccinationStatus: '',
-      maskStatus: '',
-    },
+    editedItem: new Measure(),
+    defaultItem: new Measure(),
   }),
 
   async mounted() {
@@ -143,10 +135,7 @@ export default {
   },
 
   setup() {
-    const measure = new Measure('', '', '', '')
-
     return {
-      measure,
       items: [],
       headers: [
         { text: 'Max capacity', value: 'maxCapacity' },
@@ -207,13 +196,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
-
-        const measure = new Measure('', '', '', '')
-        measure.businessType = this.items[this.editedIndex].businessType
-        measure.maxCapacity = this.items[this.editedIndex].maxCapacity
-        measure.vaccinationStatus = this.items[this.editedIndex].vaccinationStatus
-        measure.maskStatus = this.items[this.editedIndex].maskStatus
-        // this.handleEditMeasure(measure)
+        // this.handleEditMeasure(this.editedItem)
       } else {
         this.items.push(this.editedItem)
       }
