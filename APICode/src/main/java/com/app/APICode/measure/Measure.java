@@ -23,11 +23,11 @@ public class Measure {
     private String measureType;
 
     @NotNull(message = "Max capacity should not be null")
-    @Schema(description = "Maximum number of pax permitted for the measure", example = "100", required = true)
+    @Schema(description = "Maximum number of pax permitted for the measure.", example = "100", required = true)
     private int maxCapacity;
 
     @NotNull(message = "Vaccination status should not be null")
-    @Schema(description = "If the specified measure requires vaccination", example = "true", required = true)
+    @Schema(description = "If the specified measure requires vaccination.", example = "true", required = true)
     private boolean vaccinationStatus;
 
     // indicates whether mask needs to be worn at the venue
