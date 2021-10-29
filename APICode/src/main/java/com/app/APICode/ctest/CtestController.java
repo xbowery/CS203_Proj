@@ -9,6 +9,7 @@ import com.app.APICode.employee.EmployeeRepository;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.user.UserService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CtestController {
-    private CtestRepository ctests;
+    private CtestService ctests;
     private EmployeeRepository employees;
-    private UserRepository users;
+    private UserService users;
 
-    public CtestController(CtestRepository ctests, EmployeeRepository employees, UserRepository users){
+    public CtestController(CtestService ctests, EmployeeRepository employees, UserService users) {
         this.ctests = ctests;
         this.employees = employees;
         this.users = users;
@@ -42,16 +43,16 @@ public class CtestController {
      * @return list of the ctests done by the employee
      */
     @GetMapping("/employee/{username}/ctests")
-    public List<Ctest> getAllTestsByEmployeeId(@PathVariable (value = "username") String username) {
-        Optional<User> user = users.findByUsername(username);
-        if(!user.isPresent()){
+    public List<Ctest> getAllTestsByEmployee(@PathVariable (value = "username") String username) {
+        User user = users.getUserByUsername(username);
+        if(user == null){
             throw new UserNotFoundException(username);
         }
-        Employee employee = user.get().getEmployee();
+        Employee employee = user.getEmployee();
         if(employee == null){
             throw new EmployeeNotFoundException(username);
         }
-        return ctests.findByEmployee(employee);
+        return ctests.getAllCtestsByEmployee(employee);
     }
 
     /**
@@ -64,16 +65,16 @@ public class CtestController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/employee/{username}/ctests")
     public Ctest addCtest(@PathVariable (value = "username") String username, @RequestBody Ctest ctest){
-        Optional<User> user = users.findByUsername(username);
-        if(!user.isPresent()){
+        User user = users.getUserByUsername(username);
+        if(user == null){
             throw new UserNotFoundException(username);
         }
-        Employee employee = user.get().getEmployee();
+        Employee employee = user.getEmployee();
         if(employee == null){
             throw new EmployeeNotFoundException(username);
         }
         ctest.setEmployee(employee);
-        return ctests.save(ctest);
+        return ctests.saveCtest(ctest);
     }
 
     /**
@@ -87,20 +88,15 @@ public class CtestController {
      */
     @PutMapping("/employee/{username}/ctests/{ctestId}")
     public Ctest updateCtest(@PathVariable (value = "username") String username, @PathVariable(value = "ctestId") Long ctestId, @RequestBody Ctest newCtest){
-        Optional<User> user = users.findByUsername(username);
-        if(!user.isPresent()){
+        User user = users.getUserByUsername(username);
+        if(user == null){
             throw new UserNotFoundException(username);
         }
-        Employee employee = user.get().getEmployee();
+        Employee employee = user.getEmployee();
         if(employee == null){
             throw new EmployeeNotFoundException(username);
         }
-        return ctests.findByIdAndEmployeeId(ctestId, employee.getId()).map(ctest -> {
-            ctest.setType(newCtest.getType());
-            ctest.setDate(newCtest.getDate());
-            ctest.setResult(newCtest.getResult());
-            return ctests.save(ctest);
-        }).orElseThrow(() -> new CtestNotFoundException(ctestId));
+        return ctests.updateCtestByCtestIdAndEmployeeId(ctestId, employee.getId(), newCtest);
     }
 
     /**
@@ -114,17 +110,14 @@ public class CtestController {
      */
     @DeleteMapping("/employee/{username}/ctests/{ctestId}")
     public Ctest deleteCtest(@PathVariable (value = "username") String username, @PathVariable (value = "ctestId") Long ctestId){
-        Optional<User> user = users.findByUsername(username);
-        if(!user.isPresent()){
+        User user = users.getUserByUsername(username);
+        if(user == null){
             throw new UserNotFoundException(username);
         }
-        Employee employee = user.get().getEmployee();
+        Employee employee = user.getEmployee();
         if(employee == null){
             throw new EmployeeNotFoundException(username);
         }
-        return ctests.findByIdAndEmployeeId(ctestId, employee.getId()).map(ctest -> {
-            ctests.delete(ctest);
-            return ctest;
-        }).orElseThrow(() -> new CtestNotFoundException(ctestId));
+        return ctests.deleteCtestByCtestIdAndEmployeeId(ctestId, employee.getId());
     }
 }
