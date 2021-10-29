@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<List<Employee>> findByRestaurant(Long restaurant_id);
 
     Optional<Employee> findById(Long id);
+
+    @Query("select Employee e where u.restaurantId = ?1, u.designation = Owner")
+    Optional<Employee> findBusinessOwnerByRestaurantId(Long restaurant_id);
 }

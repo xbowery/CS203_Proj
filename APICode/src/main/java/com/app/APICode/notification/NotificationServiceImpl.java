@@ -3,6 +3,7 @@ package com.app.APICode.notification;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeRepository;
 import com.app.APICode.restaurant.RestaurantRepository;
+import com.app.APICode.user.User;
 
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,15 @@ public class NotificationServiceImpl implements NotificationService {
         // TODO Auto-generated method stub
         Employee pendingEmployee = employees.findById(userId).orElse(null);
 
-        
+        // find Business owner -> set business owner as user -> save notifications
+        User owner = employees.findBusinessOwnerByRestaurantId(restaurantId).get().getUser();
 
         String notificationText = "You have a pending employee request from " + pendingEmployee.getUser().getFirstName() + " "
          + pendingEmployee.getUser().getLastName() + ". Please review it under your Employee List.";
-        return null;
+
+        Notification newNotification = new Notification(notificationText, owner);
+        
+        return notifications.save(newNotification);
     }
 
     @Override
