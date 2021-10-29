@@ -8,6 +8,7 @@ import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,4 +61,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return users.save(user).getEmployee();
     }
+
+    // @Override
+    // public Optional<Employee> findById(long employeeId){
+    //     return employees.findById(employeeId);
+    // }
 }

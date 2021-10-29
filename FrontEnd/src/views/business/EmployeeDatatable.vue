@@ -41,10 +41,23 @@
         {{ `$${item.salary}` }}
       </template>
       <!-- status -->
-      <template #[`item.status`]="{ item }">
-        <v-chip small :color="statusColor[status[item.status]]" class="font-weight-medium">
-          {{ status[item.status] }}
-        </v-chip>
+      <template #[`item.employee.status`]="{ item }">
+        <v-icon small :color="statusColor[status[item.status]]" outlined class="mr-3" @click="statusClick()"> {{item.employee.status}} </v-icon>
+      </template>
+    
+      <template v-slot:top> 
+          <v-dialog v-model="dialogApprove" max-width="555px">
+            <v-card>
+              <v-card-title class="text-h5">Do you want to approve or reject this employee?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="error" @click="approveEmployee()">Approve</v-btn>
+                <v-spacer></v-spacer>       
+                <v-btn color="success" @click="rejectEmployee()" >Reject</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
       </template>
     </v-data-table>
   </v-card>
@@ -56,6 +69,7 @@ import UserService from '@/services/user.service'
 
 export default {
   data: () => ({
+    dialogApprove: false,
     items: [],
   }),
   props: {
@@ -71,6 +85,20 @@ export default {
       console.error(error)
     }
   },
+
+  methods: {
+    statusClick(){
+      this.dialogApprove = true
+    },
+
+    approveEmployee(){
+
+    },
+    rejectEmployee(){
+
+    }
+  },
+
   setup() {
     const statusColor = {
       /* eslint-disable key-spacing */
@@ -105,8 +133,8 @@ export default {
         { text: 'STATUS', value: 'employee.status' },
       ],
       status: {
-        1: 'Inactive',
-        2: 'Pending',
+        'Pending': 'Inactive',
+        'Active': 'Pending',
         3: 'Active',
       },
       statusColor,

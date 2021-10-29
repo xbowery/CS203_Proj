@@ -10,10 +10,17 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
+
+  getEmployees() {
+    return api.get('/employees')
+  }
+
   postEmployee(username, restaurantId, designation){
     var request = `/users/${username}/employee/${restaurantId}`
     return api.post(request, designation)
   }
+
+
   getRestaurants() {
     return api.get('restaurants')
   }
@@ -95,9 +102,7 @@ class UserService {
   getMeasures() {
     return api.get('measures')
   }
-  getEmployees(username) {
-    return api.get('employees/' + username)
-  }
+
   updateMeasure(measure) {
     return api.put(
       'measures',

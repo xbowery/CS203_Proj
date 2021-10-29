@@ -2,6 +2,7 @@ package com.app.APICode.employee;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantNotFoundException;
@@ -11,9 +12,11 @@ import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,4 +68,43 @@ public class EmployeeController {
     public Employee postEmployee(Principal principal, @PathVariable (value = "restaurantId") long restaurantId, @RequestBody String designation){
         return employeeService.addEmployeeToBusiness(principal.getName(), designation, restaurantId);
     }
+
+    /**
+     * Search for employee with the given username
+     * If there is no user with the given username, throw a UserNotFoundException
+     * If there is no employee with the given username, throw a EmployeeNotFoundException
+     * 
+     * @param username username of employee
+     * @return employee with the given username
+     */
+    // @PutMapping("/users/employee/{employeeId}")
+    // public Employee editEmployeeStatus(@PathVariable (value = "employeeId") long employeeId){
+    //     Optional<Employee> employeeOp = employeeService.findById(employeeId);
+    //     if(!employeeOp.isPresent()){
+    //         throw new EmployeeNotFoundException(employeeId);
+    //     }
+    //     Employee employee = employeeOp.get();
+    //     employee.setStatus("Active");
+    //     User user = employee.getUser();
+    //     user.setAuthorities("ROLE_EMPLOYEE");
+    //     return employee;
+    // }
+
+    /**
+     * Search for employee with the given username
+     * If there is no user with the given username, throw a UserNotFoundException
+     * If there is no employee with the given username, throw a EmployeeNotFoundException
+     * 
+     * @param username username of employee
+     * @return employee with the given username
+     */
+    // @DeleteMapping("/users/employee/{employeeId}")
+    // public Employee deleteEmployee(@PathVariable (value = "employeeId") long employeeId){
+    //     Optional<Employee> employeeOp = employeeService.findById(employeeId);
+    //     if(!employeeOp.isPresent()){
+    //         throw new EmployeeNotFoundException(employeeId);
+    //     }
+    //     Employee employee = employeeOp.get();
+    //     return employee;
+    // }
 }
