@@ -1,6 +1,7 @@
 package com.app.APICode.user;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.app.APICode.security.jwt.JWTRefreshToken;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -94,12 +96,18 @@ public class UserController {
      */
     @Transactional
     @PutMapping("/users/{username}")
-    public UserDTO updateUser(@PathVariable String username, @Valid @RequestBody UserDTO newUserInfo) {
-        UserDTO user = userService.updateUserByUsername(username, newUserInfo);
-        if (user == null)
-            throw new UserNotFoundException(username);
+    public UserDTO updateUser(@PathVariable String username, @Valid @RequestBody UserDTO newUserInfo, Principal principal) {
+        User checkUser = userService.getUserByUsername(principal.getName());
+        
+        if ((StringUtils.collectionToCommaDelimitedString(checkUser.getAuthorities())).equals("ROLE_ADMIN") || checkUser.getUsername().equals(username)) {
+            UserDTO user = UserDTO.convertToUserDTO(userService.updateUserByUsername(username, newUserInfo));
+            if (user == null)
+                throw new UserNotFoundException(username);
 
-        return user;
+            return user;
+        }
+
+        return null;
     }
 
     /**
@@ -110,11 +118,15 @@ public class UserController {
      */
     @Transactional
     @DeleteMapping("/users/{username}")
-    public void deleteUser(@PathVariable String username) {
-        try {
-            userService.deleteUser(username);
-        } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(username);
+    public void deleteUser(@PathVariable String username, Principal principal) {
+        User checkUser = userService.getUserByUsername(principal.getName());
+        
+        if ((StringUtils.collectionToCommaDelimitedString(checkUser.getAuthorities())).equals("ROLE_ADMIN") || checkUser.getUsername().equals(username)) {
+            try {
+                userService.deleteUser(username);
+            } catch (EmptyResultDataAccessException e) {
+                throw new UserNotFoundException(username);
+            }
         }
     }
 
