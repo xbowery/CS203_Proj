@@ -14,7 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "Restaurant", description = "Restaurant API")
 public class RestaurantController {
     private RestaurantService restaurantService;
 
@@ -27,6 +37,10 @@ public class RestaurantController {
      * 
      * @return list of all {@link Restaurant}
      */
+    @Operation(summary = "List all Restaurants", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Restaurant.class)))), })
     @GetMapping("/restaurants")
     public List<Restaurant> getAllRestaurants() {
         return restaurantService.listRestaurants();
@@ -40,11 +54,19 @@ public class RestaurantController {
      * @throws RestaurantNotFoundException in case a restaurant with the provided
      *                                     {@literal id} does not exist
      */
+    @Operation(summary = "Get Restaurant", description = "Get Restaurant by id", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))) })
     @GetMapping("/restaurants/{id}")
     public Restaurant getRestaurant(@PathVariable long id) {
         return restaurantService.getRestaurantById(id);
     }
 
+    @Operation(summary = "Get Restaurant managed by User", description = "Get Restaurant that belongs to User according by Credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))) })
     @GetMapping("/restaurants/user/{username}")
     public Restaurant getRestaurant(@PathVariable(value = "username") String username) {
         return restaurantService.getRestaurantByUsername(username);
@@ -58,6 +80,10 @@ public class RestaurantController {
      * @throws RestaurantDuplicateException in case a restaurant with the same
      *                                      {@literal id} exist
      */
+    @Operation(summary = "Add new restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful created new Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/restaurants")
     public Restaurant addRestaurant(@Valid @RequestBody Restaurant restaurant) {
@@ -74,6 +100,10 @@ public class RestaurantController {
      * @throws RestaurantNotFoundException in case a restaurant with the provided
      *                                     {@literal id} does not exist
      */
+    @Operation(summary = "Update Restaurant information", description = "Updates Restaurants infomation with the provided ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful updated Restaurant information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))), })
     @PutMapping("/restaurants/{id}")
     public Restaurant updateRestaurant(@PathVariable long id, @Valid @RequestBody Restaurant updatedRestaurant) {
         return restaurantService.updateRestaurant(id, updatedRestaurant);
@@ -86,6 +116,10 @@ public class RestaurantController {
      * @throws RestaurantNotFoundException in case a restaurant with the provided
      *                                     {@literal id} does not exist
      */
+    @Operation(summary = "Delete Restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Restaurant" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful deleted Restaurant", content = @Content) })
     @DeleteMapping("/restaurants/{id}")
     public void deleteRestaurant(@PathVariable long id) {
         restaurantService.removeById(id);

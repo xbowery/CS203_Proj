@@ -1,16 +1,11 @@
 package com.app.APICode.user;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
-import com.app.APICode.security.jwt.JWTRefreshToken;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -24,21 +19,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "User", description = "User API")
 public class UserController {
     private UserService userService;
-    private JWTRefreshToken refreshToken;
 
     /**
      * Constructor method for UserController
      * 
-     * @param userService  UserService class
-     * @param encoder      BCryptPasswordEncoder class
-     * @param refreshToken JWTRefreshToken class
+     * @param userService UserService class
      */
-    public UserController(UserService userService, JWTRefreshToken refreshToken) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.refreshToken = refreshToken;
     }
 
     /**
@@ -46,6 +47,9 @@ public class UserController {
      * 
      * @return list of all users
      */
+    @Operation(summary = "List all Users", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))), })
     @GetMapping("/users")
     public List<UserDTO> getUsers() {
         return userService.listUsers();
@@ -58,6 +62,10 @@ public class UserController {
      * @param username
      * @return user with the given username
      */
+    @Operation(summary = "Get User", description = "Get user by username", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
     public User getUser(@PathVariable String username) {
         return userService.getUserByUsername(username);
@@ -70,6 +78,9 @@ public class UserController {
      * @param user a User object containing the user information to be added
      * @return user with the admin role
      */
+    @Operation(summary = "Add new user", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful created new User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
     public UserDTO addUser(@Valid @RequestBody User user) {
@@ -85,6 +96,10 @@ public class UserController {
      * @param newUserInfo a User object containing the new user info to be updated
      * @return the updated User object
      */
+    @Operation(summary = "Update user information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "User" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
     @Transactional
     @PutMapping("/users")
     public UserDTO updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
@@ -97,22 +112,12 @@ public class UserController {
      * 
      * @param username username of user
      */
+    @Operation(summary = "Delete User", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content) })
     @Transactional
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
-    }
-
-    /**
-     * Refreshes the JWT token
-     * 
-     * @param req a HttpServletRequest object
-     * @param res a HttpServletResponse cookie
-     * @throws IOException
-     */
-    @PostMapping("/refreshToken")
-    public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        refreshToken.refreshJwtToken(req, res);
     }
 
     /**
@@ -145,7 +150,9 @@ public class UserController {
      * @param newUser a User object containing the new user info to be saved
      * @return the newly created user
      */
-    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Register User", tags = { "User" })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful Registered User") })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/register")
     public UserDTO register(@Valid @RequestBody User newUser) {
         Boolean isAdmin = false;

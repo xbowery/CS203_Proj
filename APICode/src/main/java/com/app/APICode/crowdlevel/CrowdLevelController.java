@@ -7,11 +7,12 @@ import javax.validation.Valid;
 
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeNotFoundException;
-import com.app.APICode.restaurant.*;
+import com.app.APICode.restaurant.Restaurant;
+import com.app.APICode.restaurant.RestaurantNotFoundException;
+import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserRepository;
-import com.app.APICode.crowdlevel.CrowdLevelNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "Crowd Level", description = "Crowd Level API")
 public class CrowdLevelController {
     private CrowdLevelRepository crowdlevels;
     private RestaurantRepository restaurants;

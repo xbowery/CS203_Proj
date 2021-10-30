@@ -5,16 +5,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.app.APICode.security.message.AccessTokenMessage;
+import com.app.APICode.security.message.CredentialMessage;
 import com.app.APICode.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,7 +25,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -35,23 +34,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
-    JWTHelper jwtHelper;
 
     @Autowired
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTHelper jwtHelper) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+        
         this.authenticationManager = authenticationManager;
-        this.jwtHelper = jwtHelper;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
             throws AuthenticationException {
 
-        User creds;
+        CredentialMessage creds;
         try {
-            creds = new ObjectMapper().readValue(req.getInputStream(), User.class);
+            creds = new ObjectMapper().readValue(req.getInputStream(), CredentialMessage.class);
         } catch (Exception e) {
-            System.out.println(e);
             // if the request parameters are malformed, just declare the credentials as bad
             throw new BadCredentialsException("Authentication Error");
         }
@@ -65,19 +62,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication auth) throws IOException {
 
         User user = (User) auth.getPrincipal();
-
-        String accessToken = jwtHelper.generateAccessToken(user);
-        String refreshToken = jwtHelper.generateRefreshToken(user);
-
+        
         res.setStatus(HttpServletResponse.SC_OK);
         res.setContentType(APPLICATION_JSON_VALUE);
 
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", accessToken);
-        tokens.put("refreshToken", refreshToken);
-        tokens.put("username", user.getUsername());
-        tokens.put("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).get(0));
-        new ObjectMapper().writeValue(res.getOutputStream(), tokens);
+        AccessTokenMessage message = new AccessTokenMessage(user);
+        new ObjectMapper().writeValue(res.getOutputStream(), message);
     }
 
     @Override

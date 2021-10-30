@@ -19,25 +19,31 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Entity
 public class Employee {
 
     @Id
+    @Schema(description = "Unique identifier of the Employee. Shared Key with User.", example = "1", required = true)
     private Long id;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
     @JsonIgnore
+    @Schema(description = "User Details of Employee.", required = true)
     private User user;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "restaurantId")
+    @Schema(description = "Restaurant Employee is working at.", required = true)
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "employee", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Schema(description = "List of Covid Testing records.")
     private List<Ctest> ctests;
 
     private String designation;

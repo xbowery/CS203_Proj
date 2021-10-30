@@ -13,7 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "COVID-19 Test", description = "COVID-19 Test API")
 public class CtestController {
     private CtestService ctests;
 
@@ -29,6 +39,10 @@ public class CtestController {
      * @param username username of employee
      * @return list of the ctests done by the employee
      */
+    @Operation(summary = "Get all Tests Results", description = "Get all Covid-19 Test results by their credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "COVID-19 Test" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))) })
     @GetMapping("/employee/ctests")
     public List<Ctest> getAllTestsByEmployee(Principal principal) {
         return ctests.getAllCtestsByUsername(principal.getName());
@@ -41,6 +55,10 @@ public class CtestController {
      * @param ctest    a new ctest object to be added
      * @return the newly added ctest object
      */
+    @Operation(summary = "Add new Test result", description = "Add new Covid-19 Test result by credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "COVID-19 Test" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful created new Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/employee/ctests")
     public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {
@@ -56,6 +74,10 @@ public class CtestController {
      * @param newCtest a Ctest object containing the new Ctest info to be updated
      * @return the updated Ctest object
      */
+    @Operation(summary = "Update Test result", description = "Update Covid-19 Test result by credentials and provided ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "COVID-19 Test" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful updated  Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
     @PutMapping("/employee/ctests/{ctestId}")
     public Ctest updateCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId,
             @RequestBody Ctest newCtest) {
@@ -72,6 +94,10 @@ public class CtestController {
      * @param username username of employee
      * @param ctestId  a long value (Ctest)
      */
+    @Operation(summary = "Delete Test result", description = "Delete Covid-19 Test result by credentials and provided ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "COVID-19 Test" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful deleted Covid-19 Test result", content = @Content) })
     @DeleteMapping("/employee/ctests/{ctestId}")
     public Ctest deleteCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId) {
         return ctests.deleteCtestByCtestIdAndUsername(principal.getName(), ctestId);

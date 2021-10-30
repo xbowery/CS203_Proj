@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,14 +40,8 @@ import org.slf4j.LoggerFactory;
  * tampered
  */
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    JWTHelper jwtHelper;
-
     Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-    @Autowired
-    public JWTAuthorizationFilter(JWTHelper jwtHelper) {
-        this.jwtHelper = jwtHelper;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
@@ -116,7 +109,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
         String token = tokenHeader.replace(TOKEN_PREFIX, "");
 
-        DecodedJWT decodedJWT = jwtHelper.decodeJwt(token);
+        DecodedJWT decodedJWT = JWTHelper.decodeJwt(token);
 
         // Check if it is an accessToken, since only access tokens have their roles
         if (!decodedJWT.getClaim("type").asString().equals("access")) {

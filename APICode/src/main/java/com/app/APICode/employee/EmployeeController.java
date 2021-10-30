@@ -15,7 +15,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
+@Tag(name = "Employee", description = "Employee API")
 public class EmployeeController {
     private EmployeeService employeeService;
 
@@ -29,6 +39,11 @@ public class EmployeeController {
      * @param principal name of the user logged in currently
      * @return list of employees in a particular business
      */
+    @Operation(summary = "List all Employees", description = "List all employees by the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Employee" })
+        @ApiResponses({
+                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
+        
     @GetMapping("/employees")
     public List<User> getEmployees(Principal principal) {
         return employeeService.getAllEmployeesByBusinessOwner(principal.getName());
@@ -42,6 +57,10 @@ public class EmployeeController {
      * @param username username of employee
      * @return employee with the given username
      */
+    @Operation(summary = "Get Employee details", description = "Get employee details by username", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
     @GetMapping("/users/{username}/employee")
     public Employee getEmployee(Principal principal) {
         return employeeService.getEmployeeByUsername(principal.getName());

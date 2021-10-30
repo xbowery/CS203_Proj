@@ -7,24 +7,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Entity
 public class Measure {
+    @Schema(description = "Unique identifier of the Restaurant.", example = "1", required = true)
     private @Id @GeneratedValue Long id;
 
-    @NotNull(message = "Created date should not be null")
+    @NotNull(message = "Date updated should not be null")
+    @Schema(description = "The Date this Measure was updated/created.", example = "2007-12-03", required = true)
     private LocalDate dateUpdated;
 
-    @NotNull(message = "Buisness type should not be null")
+    @NotNull(message = "Measure type should not be null")
+    @Schema(description = "Who the measure is targeted for", example = "Gym", required = true)
     private String measureType;
 
     @NotNull(message = "Max capacity should not be null")
+    @Schema(description = "Maximum number of pax permitted for the measure.", example = "100", required = true)
     private int maxCapacity;
 
     @NotNull(message = "Vaccination status should not be null")
+    @Schema(description = "If the specified measure requires vaccination.", example = "true", required = true)
     private boolean vaccinationStatus;
 
     // indicates whether mask needs to be worn at the venue
     @NotNull(message = "Mask status should not be null")
+    @Schema(description = "If the specified measure requires mask", example = "false")
     private boolean maskStatus;
 
     public Measure() {
@@ -68,7 +76,6 @@ public class Measure {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
-
     }
 
     public boolean isVaccinationStatus() {

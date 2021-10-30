@@ -16,6 +16,13 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+		<!-- Documentation -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.12</version>
+		</dependency>
+
 		<!-- Security -->
 		<dependency>
 			<groupId>com.auth0</groupId>
