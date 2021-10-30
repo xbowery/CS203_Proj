@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>General News</h1>
+    <h1>{{ header }} News</h1>
     <v-toolbar color="blue darken-3" class="mb-1">
       <v-icon color="primary">
         {{ icons.mdiMagnify }}
@@ -9,16 +9,18 @@
       <v-text-field clearable flat hide-details label="Search" v-model="searchQuery"></v-text-field>
     </v-toolbar>
     <br />
-    <v-row>
+    <v-row v-if="error">
       <!-- Shown when there is an error -->
-      <v-col md="4" sm="6" cols="12" v-if="error">
+      <v-col md="4" sm="6" cols="12">
         <v-card>
           <v-card-title class="title-nob">An error occurred</v-card-title>
           <v-card-text> Please try again later. </v-card-text>
         </v-card>
       </v-col>
+    </v-row>
+    <v-row v-if="!error">
       <!-- Shown to inform that there are no results -->
-      <v-col md="4" sm="6" cols="12" v-if="!newsData.length && !error">
+      <v-col md="4" sm="6" cols="12" v-if="!newsData.length">
         <v-card>
           <v-card-title class="title-nob">No news found</v-card-title>
           <v-card-text> Please try a different search term. </v-card-text>
@@ -44,8 +46,18 @@ import { ref, onMounted, watch } from '@vue/composition-api'
 import { mdiMagnify } from '@mdi/js'
 
 export default {
-  setup() {
-    const NEWSTYPE = 'General'
+  props: {
+    NEWSTYPE: {
+      type: String,
+      required: true,
+    },
+    header: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
+    const { NEWSTYPE } = props
     const newsData = ref([])
     const searchQuery = ref('')
     const error = ref(false)
