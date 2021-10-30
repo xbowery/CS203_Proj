@@ -125,6 +125,7 @@ public class MeasureIntegrationTest {
 
         List<String> resultMeasureType = new ArrayList<>();
         resultMeasureType.add("gym");
+        resultMeasureType.add("test");
         resultMeasureType.add("Office");
 
         assertEquals(200, measureListResponse.getStatusCode());
@@ -274,7 +275,7 @@ public class MeasureIntegrationTest {
     }
 
     @Test
-    public void updateMeasure_AdminUser_Success() throws Exception {
+    public void updateExistingMeasure_AdminUser_Success() throws Exception {
         URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
 
         RequestSpecification request = RestAssured.given();
@@ -296,7 +297,7 @@ public class MeasureIntegrationTest {
     }
 
     @Test
-    public void updateMeasure_NormalUser_Failure() throws Exception {
+    public void updateExistingMeasure_NormalUser_Failure() throws Exception {
         URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
 
         RequestSpecification request = RestAssured.given();
@@ -317,20 +318,62 @@ public class MeasureIntegrationTest {
     }
 
     @Test
-    public void deleteMeasure_NormalUser_Failure() throws Exception {
+    public void updateNonExistingMeasure_AdminUser_Success() throws Exception {
+        URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        String updateMeasureDetails = "{\r\n" +
+        "  \"dateUpdated\": \"" + LocalDate.now() + "\",\r\n" +
+        "  \"measureType\": \"invalidMeasure\",\r\n" +
+        "  \"maxCapacity\": 40,\r\n" +
+        "  \"vaccinationStatus\": true,\r\n" +
+        "  \"maskStatus\": true\r\n" +
+        "}";
+
+        Response updateMeasureResponse = request.body(updateMeasureDetails).put(uriMeasures);
+
+        assertEquals(404, updateMeasureResponse.getStatusCode());
+    }
+
+    @Test
+    public void updateNonExistingMeasure_NormalUser_Failure() throws Exception {
         URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
 
         RequestSpecification request = RestAssured.given();
 
         request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
-        Response deleteMeasureResponse = request.delete(uriMeasures + "/gym");
+        String updateMeasureDetails = "{\r\n" +
+        "  \"dateUpdated\": \"" + LocalDate.now() + "\",\r\n" +
+        "  \"measureType\": \"invalidMeasure\",\r\n" +
+        "  \"maxCapacity\": 40,\r\n" +
+        "  \"vaccinationStatus\": true,\r\n" +
+        "  \"maskStatus\": true\r\n" +
+        "}";
+
+        Response updateMeasureResponse = request.body(updateMeasureDetails).put(uriMeasures);
+
+        assertEquals(403, updateMeasureResponse.getStatusCode());
+    }
+
+    @Test
+    public void deleteExistingMeasure_NormalUser_Failure() throws Exception {
+        URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response deleteMeasureResponse = request.delete(uriMeasures + "/test");
 
         assertEquals(403, deleteMeasureResponse.getStatusCode());
     }
 
     @Test
-    public void deleteMeasure_AdminUser_Success() throws Exception {
+    public void deleteExistingMeasure_AdminUser_Success() throws Exception {
         URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
 
         RequestSpecification request = RestAssured.given();
