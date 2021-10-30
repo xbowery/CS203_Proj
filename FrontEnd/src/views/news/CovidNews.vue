@@ -10,6 +10,14 @@
     </v-toolbar>
     <br />
     <v-row>
+      <!-- Shown to inform that there are no results -->
+      <v-col md="4" sm="6" cols="12" v-if="!newsData.length">
+        <v-card>
+          <v-card-title class="title-nob">No news found</v-card-title>
+          <v-card-text> Please try a different search term. </v-card-text>
+        </v-card>
+      </v-col>
+      <!-- Loop over the various news -->
       <v-col md="4" sm="6" cols="12" v-for="news in newsData" v-bind:key="news.title">
         <v-card :href="news.url" target="_blank">
           <v-img :src="news.imageUrl" height="250" />
