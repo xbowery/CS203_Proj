@@ -23,7 +23,7 @@ afterAll(async () => {
 test("getInitialNews_ReturnsEmptyObject", function (done) {
   chai
     .request(server)
-    .get(URI + "/news")
+    .get(URI + "/news/all")
     .end(function (err, res) {
       assert.equal(res.status, 200);
       const { generalNews, restaurantNews, officialGovNews } = res.body;
@@ -46,10 +46,10 @@ test("InsertNews_Success", function (done) {
     });
 });
 
-test("RetrieveNews_ReturnsEightOfEachTypeExceptGov", function (done) {
+test("RetrieveAllNews_ReturnsEightOfEachTypeExceptGov", function (done) {
   chai
     .request(server)
-    .get(URI + "/news")
+    .get(URI + "/news/all")
     .end(function (err, res) {
       assert.equal(res.status, 200);
 
@@ -68,7 +68,7 @@ const checkType = (type, article) => article.type === type;
 test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFiveWithoutGov", function (done) {
   chai
     .request(server)
-    .get(URI + "/news/search")
+    .get(URI + "/news")
     .end(function (err, res) {
       assert.equal(res.status, 200);
 
@@ -83,7 +83,7 @@ test("RetrieveNewsWithEmptySearchQuery_ReturnsLatestFiveWithoutGov", function (d
 test("RetrieveNewsWithInvalidType_ReturnsErrorMessage", function (done) {
   chai
     .request(server)
-    .get(URI + "/news/search")
+    .get(URI + "/news")
     .query({ q: "covid", type: "doesNotExist" })
     .end(function (err, res) {
       assert.equal(res.status, 400);
@@ -101,7 +101,7 @@ test("RetrieveNewsWithInvalidType_ReturnsErrorMessage", function (done) {
 test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (done) {
   chai
     .request(server)
-    .get(URI + "/news/search")
+    .get(URI + "/news")
     .query({ q: "covid" })
     .end(function (err, res) {
       assert.equal(res.status, 200);
@@ -118,7 +118,7 @@ test("RetrieveNewsWithGivenSearchQuery_ReturnsAtMostFiveWithoutGov", function (d
 test("RetrieveNewsWithGivenSearchQueryAndType_ReturnsAtMostOfType", function (done) {
   chai
     .request(server)
-    .get(URI + "/news/search")
+    .get(URI + "/news")
     .query({ q: "covid", type: "General" })
     .end(function (err, res) {
       assert.equal(res.status, 200);
@@ -148,10 +148,10 @@ test("RetrieveRSSFeed_ReturnsSuccess", function (done) {
 });
 
 // Test the endpoint again after fetching RSS news
-test("RetrieveNews_ReturnsEightOfEachType", function (done) {
+test("RetrieveAllNews_ReturnsEightOfEachType", function (done) {
   chai
     .request(server)
-    .get(URI + "/news")
+    .get(URI + "/news/all")
     .end(function (err, res) {
       assert.equal(res.status, 200);
 

@@ -18,17 +18,17 @@ const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
  */
 module.exports.getNews = async (req, res, next) => {
   try {
-    const searchLimit = 8;
+    const SEARCHLIMIT = 8;
     const latestGeneralNews = await fetchNewsFromDB(
       { type: "General" },
-      searchLimit
+      SEARCHLIMIT
     );
     const latestRestaurantNews = await fetchNewsFromDB(
       { type: "Restaurant" },
-      searchLimit
+      SEARCHLIMIT
     );
 
-    const latestGovNews = await fetchNewsFromDB({ type: "Gov" }, searchLimit);
+    const latestGovNews = await fetchNewsFromDB({ type: "Gov" }, SEARCHLIMIT);
 
     const returnObj = {
       success: true,
@@ -67,8 +67,8 @@ module.exports.searchNews = async (req, res, next) => {
 
   // queryObj will be empty if user does not specify any query parameters
   try {
-    const limit = 5;
-    const news = await fetchNewsFromDB(queryObj, limit);
+    const LIMIT = 5;
+    const news = await fetchNewsFromDB(queryObj, LIMIT);
 
     const returnObj = {
       success: true,
