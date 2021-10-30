@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=dev nodemon -r dotenv/config server.js",
+    "start_windows": "set NODE_ENV=dev&&node -r dotenv/config server.js",
     "test": "jest --setupFiles dotenv/config -i --testTimeout=15000 --forceExit",
     "prod": "NODE_ENV=prod node -r dotenv/config server.js"
   },

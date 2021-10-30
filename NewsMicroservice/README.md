@@ -7,6 +7,9 @@ Just a backend API built using [express.js](https://expressjs.com/), powered by 
 ```bash
 npm install
 npm start
+
+# If you are in windows
+npm start_windows
 ```
 
 ## About
