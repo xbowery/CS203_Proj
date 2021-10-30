@@ -1,4 +1,4 @@
-import api from './api'
+import { axiosInstance as api } from './api'
 
 const JSON_HEADER = {
   headers: {
