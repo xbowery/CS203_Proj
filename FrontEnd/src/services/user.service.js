@@ -115,8 +115,8 @@ class UserService {
   }
 
   async getNewsWithFilters(newsType, queryString) {
-    let url = 'news/search/?'
-    url += newsType ? `type=${newsType}` : ''
+    let url = 'news?'
+    url += newsType ? `type=${newsType}&` : ''
     url += queryString ? `q=${queryString}` : ''
 
     return newsapi.get(url)
