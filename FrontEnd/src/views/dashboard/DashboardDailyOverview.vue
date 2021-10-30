@@ -14,11 +14,12 @@
 
     <v-card-text>
       <!-- Chart -->
-      <vue-apex-charts :options="chartOptions" :series="chartData" height="210"></vue-apex-charts>
+      <vue-apex-charts ref="realtimeChart" :options="chartOptions" :series="chartData" height="210"></vue-apex-charts>
 
       <div class="d-flex align-center">
         <!-- <h3 class="text-2xl font-weight-semibold me-4">30</h3> -->
-        <h3 class="text-2xl font-weight-semibold me-4">{{ lastItem.noOfCustomers }}</h3>
+        <h3 class="text-2xl font-weight-semibold me-4">{{ restaurant.currentCapacity }}</h3>
+        <!-- <h3 class="text-2xl font-weight-semibold me-4"> </h3> -->
         <span>individuals have visited your restaurant in the past hour</span>
       </div>
 
@@ -40,19 +41,24 @@ export default {
   },
   props: {
     username: String,
+    // chartData: Array,
   },
 
   data() {
     return {
+      error: '',
       items: [],
-      keys: ['latestCrowd', 'noOfCustomers'],
-    }
-  },
 
-  computed: {
-    lastItem() {
-      return this.items.slice(-1)[0]
-    },
+      restaurant: {
+        name: '',
+        location: '',
+        cuisine: '',
+        description: '',
+        currentCapacity: '',
+        maxCapacity: '',
+        crowdLevel: [],
+      },
+    }
   },
 
   setup() {
@@ -129,7 +135,9 @@ export default {
 
     const chartData = [
       {
-        data: [10, 10, 10, 25, 30, 0, 0, 0, 0],
+        // data: [10, 10, 10, 25, 30, 0, 0, 0, 0],
+        // data:[currentCapacity],
+        data: [],
       },
     ]
 
@@ -144,11 +152,52 @@ export default {
       },
     }
   },
+  methods: {
+    setDataChart() {
+      setInterval(() => {
+        this.chartData.push(this.restaurant.currentCapacity)
+        this.updateSeriesLine()
+      }, 3000)
+    },
+
+    updateSeriesLine() {
+      this.$refs.realtimeChart.updateSeries([{
+        data: this.chartData,
+      }], false, true);
+    },
+
+    // fetchData() {
+    //   let time = 24
+    //   const timeValue = setInterval(mounted => {
+    //     time = this.time - 1
+    //     if (time <= 0) {
+    //       clearInterval(timeValue)
+    //     }
+    //   }, 1000)
+    // },
+  },
 
   async mounted() {
     try {
-      const res = await UserService.getCrowdLevel(this.username)
-      this.items = res.data
+      // let time = 24
+      // const timeValue = setInterval(() => {
+      //   time = this.time - 1
+      //   if (time <= 0) {
+      //     clearInterval(timeValue)
+      //   }
+      // }, 3600000)
+
+      const res = await UserService.getRestaurant(this.username)
+      this.restaurant = res.data
+      console.log(this.restaurant.crowdLevel)
+      this.chartData = this.restaurant.crowdLevel.map(level => level.noOfCustomers)
+      this.updateSeriesLine()
+      console.log(this.chartData)
+      // this.chartData.push(this.restaurant.currentCapacity)
+      // this.insertSeries(this.chartData)
+      // this.setDataChart()
+
+      // console.log(this.restaurant)
     } catch (error) {
       console.error(error)
     }
