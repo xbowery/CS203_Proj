@@ -99,8 +99,8 @@ module.exports.getNewsWithType = async (req, res, next) => {
   }
 
   try {
-    const searchLimit = 8;
-    const latestNews = await fetchNewsFromDB({ type }, searchLimit);
+    const SEARCHLIMIT = 8;
+    const latestNews = await fetchNewsFromDB({ type }, SEARCHLIMIT);
     res.status(200).json({ success: true, latestNews });
   } catch (err) {
     console.error(err);

@@ -63,6 +63,11 @@ export default {
     }
 
     const getNewsWithSearch = async val => {
+      if (!val) {
+        await getNewsData()
+        return
+      }
+
       const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
       let { news } = res.data
       parseNews(news)
