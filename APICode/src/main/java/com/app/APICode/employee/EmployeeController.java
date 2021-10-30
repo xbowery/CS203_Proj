@@ -3,6 +3,10 @@ package com.app.APICode.employee;
 import java.security.Principal;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import com.app.APICode.employee.message.RequestMessage;
+import com.app.APICode.employee.message.UsernameMessage;
 import com.app.APICode.user.User;
 
 import org.springframework.http.HttpStatus;
@@ -40,10 +44,10 @@ public class EmployeeController {
      * @return list of employees in a particular business
      */
     @Operation(summary = "List all Employees", description = "List all employees by the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-        "Employee" })
-        @ApiResponses({
-                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
-        
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/employees")
     public List<User> getEmployees(Principal principal) {
         return employeeService.getAllEmployeesByBusinessOwner(principal.getName());
@@ -60,8 +64,9 @@ public class EmployeeController {
     @Operation(summary = "Get Employee details", description = "Get employee details by username", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Employee" })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
-    @GetMapping("/users/{username}/employee")
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/employee")
     public Employee getEmployee(Principal principal) {
         return employeeService.getEmployeeByUsername(principal.getName());
     }
@@ -77,11 +82,13 @@ public class EmployeeController {
      * @param designation Designation of the employee
      * @return the newly added employee
      */
+    @Operation(summary = "Add User to Business", description = "Add a pending request for User to join Business", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Employee" })
+    @ApiResponses({ @ApiResponse(responseCode = "201", description = "Successful added request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/users/{username}/employee/{restaurantId}")
-    public Employee postEmployee(Principal principal, @PathVariable(value = "restaurantId") long restaurantId,
-            @RequestBody String designation) {
-        return employeeService.addEmployeeToBusiness(principal.getName(), designation, restaurantId);
+    @PostMapping("/users/employee")
+    public Employee postEmployee(Principal principal, @RequestBody RequestMessage message) {
+        return employeeService.addEmployeeToBusiness(principal.getName(), message.getDesignation(), message.getRestaurantId());
     }
 
     /**
@@ -91,9 +98,13 @@ public class EmployeeController {
      * @param username username of employee
      * @return employee with the given username
      */
-    @PutMapping("/users/employee/{username}")
-    public Employee approveEmployee(@PathVariable(value = "username") String username) {
-        return employeeService.approveEmployee(username);
+    @Operation(summary = "Approve Employee request", description = "Update request status of Employee", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Employee" })
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful approved request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/users/employee")
+    public Employee approveEmployee(@Valid @RequestBody UsernameMessage message) {
+        return employeeService.approveEmployee(message.getUsername());
     }
 
     /**
@@ -105,6 +116,10 @@ public class EmployeeController {
      * @param username username of employee
      * @return deleted employee
      */
+    @Operation(summary = "Delete Employee information", description = "Delete Employee information by the Owner or the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Employee" })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted Employee data", content = @Content), })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/employee/{username}")
     public Employee deleteEmployee(@PathVariable(value = "username") String username) {
         return employeeService.deleteEmployee(username);

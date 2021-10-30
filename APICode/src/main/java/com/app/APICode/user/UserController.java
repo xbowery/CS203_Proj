@@ -127,6 +127,8 @@ public class UserController {
      * 
      * @param payload the request parameter
      */
+    @Operation(summary = "Reset Password", description = "Resets user's password by their email", tags = { "User" })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
         String email = "";
@@ -154,9 +156,9 @@ public class UserController {
     @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful Registered User") })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/register")
-    public UserDTO register(@Valid @RequestBody User newUser) {
+    public void register(@Valid @RequestBody User newUser) {
         Boolean isAdmin = false;
-        return userService.addUser(newUser, isAdmin);
+        userService.addUser(newUser, isAdmin);
     }
 
     /**

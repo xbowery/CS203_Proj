@@ -48,7 +48,7 @@ export default {
     async handlePostEmployee() {
       try {
         console.log(this.user)
-        const res = await UserService.postEmployee(this.user.username, this.restaurantId, this.designation)
+        const res = await UserService.postEmployee(this.restaurantId, this.designation)
         console.log(res)
         this.message = 'Request sent to Business succesfully! Please wait for the business to confirm your request.'
       } catch (error) {
