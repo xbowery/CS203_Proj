@@ -160,8 +160,8 @@ const parseRssAndSaveToDB = async () => {
 const fetchNewsFromDB = async (query, searchLimit) => {
   return await News.find(query)
     .lean()
-    .sort("-updatedAt")
-    .select("-_id -createdAt")
+    .sort("-createdAt -updatedAt")
+    .select("-_id")
     .limit(searchLimit)
     .exec();
 };

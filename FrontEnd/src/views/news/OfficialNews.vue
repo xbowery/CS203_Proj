@@ -1,14 +1,11 @@
 <template>
   <div>
     <h1>Press Releases</h1>
-    <v-row>
-      <v-col md="4" sm="6" cols="12" v-for="news in newsData" v-bind:key="news.title">
+    <v-row dense>
+      <v-col cols="8" v-for="news in newsData" v-bind:key="news.title">
         <v-card :href="news.url" target="_blank">
-          <v-img :src="news.imageUrl" height="250" />
           <v-card-title class="title-nob">{{ news.title }}</v-card-title>
-          <v-card-text>
-            {{ news.content }}
-          </v-card-text>
+          <v-card-text> Date Updated: {{ news.updatedAt }} </v-card-text>
         </v-card>
       </v-col>
     </v-row>
