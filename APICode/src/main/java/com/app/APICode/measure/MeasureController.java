@@ -30,8 +30,13 @@ public class MeasureController {
      * @return list of all measures
      */
     @GetMapping("/measures")
-    public List<Measure> getMeasures() {
+    public List<Measure> getAllMeasures() {
         return measureService.listMeasures();
+    }
+
+    @GetMapping("/measures/{measureType}")
+    public Measure getMeasure(@PathVariable @NotNull String measureType) {
+        return measureService.getMeasure(measureType);
     }
 
     /**

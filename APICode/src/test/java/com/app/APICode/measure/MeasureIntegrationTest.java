@@ -150,6 +150,60 @@ public class MeasureIntegrationTest {
     }
 
     @Test
+    public void getExistentMeasure_AdminUser_Success() throws Exception {
+        URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        Response measureResponse = request.get(uriMeasures + "/gym");
+
+        assertEquals(200, measureResponse.getStatusCode());
+        assertEquals("gym", JsonPath.from(measureResponse.getBody().asString()).get("measureType"));
+    }
+
+    @Test
+    public void getExistentMeasure_NormalUser_Success() throws Exception {
+        URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response measureResponse = request.get(uriMeasures + "/gym");
+
+        assertEquals(200, measureResponse.getStatusCode());
+        assertEquals("gym", JsonPath.from(measureResponse.getBody().asString()).get("measureType"));
+    }
+
+    @Test
+    public void getNonExistentMeasure_AdminUser_Failure() throws Exception {
+        URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        Response measureResponse = request.get(uriMeasures + "/invalid");
+
+        assertEquals(404, measureResponse.getStatusCode());
+    }
+
+    @Test
+    public void getNonExistentMeasure_NormalUser_Failure() throws Exception {
+        URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response measureResponse = request.get(uriMeasures + "/invalid");
+
+        assertEquals(404, measureResponse.getStatusCode());
+    }
+
+    @Test
     public void addNewMeasures_AdminUser_Success() throws Exception {
         URI uriMeasures = new URI(baseUrl + port + "/api/v1/measures");
 
