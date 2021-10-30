@@ -10,8 +10,15 @@
     </v-toolbar>
     <br />
     <v-row>
+      <!-- Shown when there is an error -->
+      <v-col md="4" sm="6" cols="12" v-if="error">
+        <v-card>
+          <v-card-title class="title-nob">An error occurred</v-card-title>
+          <v-card-text> Please try again later. </v-card-text>
+        </v-card>
+      </v-col>
       <!-- Shown to inform that there are no results -->
-      <v-col md="4" sm="6" cols="12" v-if="!newsData.length">
+      <v-col md="4" sm="6" cols="12" v-if="!newsData.length && !error">
         <v-card>
           <v-card-title class="title-nob">No news found</v-card-title>
           <v-card-text> Please try a different search term. </v-card-text>
@@ -41,10 +48,16 @@ export default {
     const NEWSTYPE = 'General'
     const newsData = ref([])
     const searchQuery = ref('')
+    const error = ref(false)
 
     const getNewsData = async () => {
-      const res = await UserService.getNews(NEWSTYPE)
-      newsData.value = res.data.latestNews
+      error.value = false
+      try {
+        const res = await UserService.getNews(NEWSTYPE)
+        newsData.value = res.data.latestNews
+      } catch (err) {
+        error.value = true
+      }
     }
 
     const debounce = (fn, delay = 300) => {
@@ -64,8 +77,14 @@ export default {
         await getNewsData()
         return
       }
-      const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
-      newsData.value = res.data.news
+
+      error.value = false
+      try {
+        const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
+        newsData.value = res.data.news
+      } catch (err) {
+        error.value = true
+      }
     }
 
     watch(
@@ -83,6 +102,7 @@ export default {
       },
       searchQuery,
       getNewsWithSearch,
+      error,
     }
   },
 }

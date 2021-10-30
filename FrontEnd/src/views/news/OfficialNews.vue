@@ -13,7 +13,17 @@
       </v-col>
     </v-row>
     <br />
-    <v-row dense>
+    <v-row dense v-if="error">
+      <!-- Shown when there is an error -->
+      <v-col cols="8" v-if="error">
+        <v-card>
+          <v-card-title class="title-nob">An error occurred</v-card-title>
+          <v-card-text> Please try again later. </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row dense v-if="!error">
       <!-- Shown to inform that there are no results -->
       <v-col cols="8" v-if="!newsData.length">
         <v-card>
@@ -42,12 +52,18 @@ export default {
     const NEWSTYPE = 'Gov'
     const newsData = ref([])
     const searchQuery = ref('')
+    const error = ref(false)
 
     const getNewsData = async () => {
-      const res = await UserService.getNews(NEWSTYPE)
-      let { latestNews } = res.data
-      parseNews(latestNews)
-      newsData.value = latestNews
+      try {
+        error.value = false
+        const res = await UserService.getNews(NEWSTYPE)
+        let { latestNews } = res.data
+        parseNews(latestNews)
+        newsData.value = latestNews
+      } catch (err) {
+        error.value = true
+      }
     }
 
     const debounce = (fn, delay = 300) => {
@@ -68,10 +84,15 @@ export default {
         return
       }
 
-      const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
-      let { news } = res.data
-      parseNews(news)
-      newsData.value = news
+      try {
+        error.value = false
+        const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
+        let { news } = res.data
+        parseNews(news)
+        newsData.value = news
+      } catch (err) {
+        error.value = true
+      }
     }
 
     const parseDate = rawDateString => {
@@ -111,6 +132,7 @@ export default {
       },
       searchQuery,
       getNewsWithSearch,
+      error,
     }
   },
 }

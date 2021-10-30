@@ -9,7 +9,16 @@
       <v-text-field clearable flat hide-details label="Search" v-model="searchQuery"></v-text-field>
     </v-toolbar>
     <br />
-    <v-row>
+    <v-row v-if="error">
+      <!-- Shown when there is an error -->
+      <v-col md="4" sm="6" cols="12">
+        <v-card>
+          <v-card-title class="title-nob">An error occurred</v-card-title>
+          <v-card-text> Please try again later. </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-if="!error">
       <!-- Shown to inform that there are no results -->
       <v-col md="4" sm="6" cols="12" v-if="!newsData.length">
         <v-card>
@@ -41,10 +50,16 @@ export default {
     const NEWSTYPE = 'Restaurant'
     const newsData = ref([])
     const searchQuery = ref('')
+    const error = ref(false)
 
     const getNewsData = async () => {
-      const res = await UserService.getNews(NEWSTYPE)
-      newsData.value = res.data.latestNews
+      error.value = false
+      try {
+        const res = await UserService.getNews(NEWSTYPE)
+        newsData.value = res.data.latestNews
+      } catch (err) {
+        error.value = true
+      }
     }
 
     const debounce = (fn, delay = 300) => {
@@ -65,8 +80,13 @@ export default {
         return
       }
 
-      const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
-      newsData.value = res.data.news
+      error.value = false
+      try {
+        const res = await UserService.getNewsWithFilters(NEWSTYPE, val)
+        newsData.value = res.data.news
+      } catch (err) {
+        error.value = true
+      }
     }
 
     watch(
@@ -84,6 +104,7 @@ export default {
       },
       searchQuery,
       getNewsWithSearch,
+      error,
     }
   },
 }
