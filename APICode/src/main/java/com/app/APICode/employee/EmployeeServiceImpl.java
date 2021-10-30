@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
-import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,15 +18,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     private RestaurantService restaurants;
 
     @Autowired
-    public EmployeeServiceImpl(UserService users, RestaurantService restaurants){
+    public EmployeeServiceImpl(UserService users) {
         this.users = users;
+    }
+
+    // To break circular dependency
+    @Autowired
+    public void setRestaurants(RestaurantService restaurants) {
         this.restaurants = restaurants;
+    }
+
+    public RestaurantService getRestaurants() {
+        return restaurants;
     }
 
     @Override
     public List<User> getAllEmployeesByBusinessOwner(String username) {
         Employee owner = getEmployeeByUsername(username);
-        return owner.getRestaurant().getEmployees().stream().map(employee -> employee.getUser()).collect(Collectors.toList());
+        return owner.getRestaurant().getEmployees().stream().map(employee -> employee.getUser())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -55,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee approveEmployee(String username){
+    public Employee approveEmployee(String username) {
         User user = users.getUserByUsername(username);
         user.setAuthorities("ROLE_EMPLOYEE");
 
@@ -65,8 +73,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         users.save(user);
         return employee;
     }
+
     @Override
-    public Employee deleteEmployee(String username){
+    public Employee deleteEmployee(String username) {
         User user = users.getUserByUsername(username);
 
         user.setAuthorities("ROLE_USER");

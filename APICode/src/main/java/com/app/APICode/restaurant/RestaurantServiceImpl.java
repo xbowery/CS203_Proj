@@ -2,6 +2,10 @@ package com.app.APICode.restaurant;
 
 import java.util.List;
 
+import com.app.APICode.employee.Employee;
+import com.app.APICode.employee.EmployeeService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,13 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurants;
+    private EmployeeService employees;
 
     // for testing purposes
+    @Autowired
     public RestaurantServiceImpl(RestaurantRepository restaurants) {
         this.restaurants = restaurants;
         restaurants.save(new Restaurant("Astons", "Cathay", "Western", "Western steakhouse", 50));
         restaurants.save(new Restaurant("Dian Xiao Er", "Hillion", "Chinese",
                 "Chinese dining experience in an ancient Inn", 50));
+    }
+
+    // To break circular dependency
+    @Autowired
+    public void setEmployees(EmployeeService employees) {
+        this.employees = employees;
+    }
+
+    public EmployeeService getEmployees() {
+        return this.employees;
     }
 
     @Override
@@ -25,7 +41,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurantById(long id) {
-        Restaurant restaurant = restaurants.findById(id).orElse(null);
+        Restaurant restaurant = restaurants.findById(id).orElse(null);  
         if (restaurant == null)
             throw new RestaurantNotFoundException(id);
         return restaurant;
@@ -62,5 +78,16 @@ public class RestaurantServiceImpl implements RestaurantService {
         } catch (EmptyResultDataAccessException e) {
             throw new RestaurantNotFoundException(id);
         }
+    }
+
+    public Restaurant getRestaurantByUsername(String username) {
+        Employee employee = employees.getEmployeeByUsername(username);
+
+        Restaurant restaurant = employee.getRestaurant();
+        if (restaurant == null) {
+            throw new RestaurantNotFoundException(username);
+        }
+
+        return restaurant;
     }
 }
