@@ -71,4 +71,23 @@ public class MeasureServiceTest {
         verify(measures).findByMeasureType(measure.getMeasureType());
         verify(measures, never()).save(measure);
     }
+
+    // @Test
+    // void updateExistingMeasure_ReturnUpdatedMeasure() {
+    //     // Arrange
+    //     Measure measure = new Measure("gym", 50, true, false);
+
+    //     when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.of(measure));
+        
+    //     Measure measure1 = measure;
+    //     measure1.setMaskStatus(true);
+
+    //     // Act
+    //     Measure updatedMeasure = measureService.updateMeasure(measure1);
+
+    //     // Assert
+    //     assertNotNull(updatedMeasure);
+    //     verify(measures).findByMeasureType(measure.getMeasureType());
+    //     verify(measures).save(measure);
+    // }
 }
