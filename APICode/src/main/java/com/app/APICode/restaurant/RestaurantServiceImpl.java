@@ -1,59 +1,75 @@
 package com.app.APICode.restaurant;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RestaurantServiceImpl implements RestaurantService{
+public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurants;
 
-    //for testing purposes 
+    // for testing purposes
     public RestaurantServiceImpl(RestaurantRepository restaurants) {
         this.restaurants = restaurants;
         restaurants.save(new Restaurant("Astons", "Cathay", "Western", "Western steakhouse", 50));
-        restaurants.save(new Restaurant("Dian Xiao Er", "Hillion", "Chinese","Chinese dining experience in an ancient Inn",50));
+        restaurants.save(new Restaurant("Dian Xiao Er", "Hillion", "Chinese",
+                "Chinese dining experience in an ancient Inn", 50));
     }
 
     @Override
-    public List<Restaurant> listRestaurants() {
-        return restaurants.findAll();
+    // public List<Restaurant> listRestaurants() {
+    //     return restaurants.findAll();
+    // }
+    public List<RestaurantDTO> listRestaurants() {
+        List<Restaurant> restaurantsList = restaurants.findAll();
+        return restaurantsList.stream().map(this::convertToRestaurantDTO).collect(Collectors.toList());
     }
 
-    @Override 
-    public Restaurant getRestaurant(String name, String location){
-        return restaurants.findByNameAndLocation(name, location).orElse(null);
+    private RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
+        return RestaurantDTO.convertToRestaurantDTO(restaurant);
+    }
+
+    @Override
+    public Restaurant getRestaurant(long id) {
+        Restaurant restaurant = restaurants.findById(id).orElse(null);
+        if (restaurant == null)
+            throw new RestaurantNotFoundException(id);
+        return restaurant;
     }
 
     @Override
     public Restaurant addRestaurant(Restaurant restaurant) {
-        List<Restaurant> sameRestaurantNameAndLocations = restaurants.findByNameAndLocation(restaurant.getName(), restaurant.getLocation())
-        .map(Collections::singletonList)
-        .orElseGet(Collections::emptyList);
-
-        if (sameRestaurantNameAndLocations.size() == 0) {
-            return restaurants.save(restaurant);
-        } else {
-            return null;
-        }
+        Restaurant duplicate = restaurants.findByNameAndLocation(restaurant.getName(), restaurant.getLocation())
+                .orElse(null);
+        if (duplicate != null)
+            throw new RestaurantDuplicateException(duplicate.getName(), duplicate.getLocation());
+        return restaurants.save(restaurant);
     }
 
     @Override
-    public Restaurant updateRestaurant(String name, String location, Restaurant newRestaurantInfo) {
-        return restaurants.findByNameAndLocation(name, location).map(restaurant -> {
-            restaurant.setName(newRestaurantInfo.getName());
-                restaurant.setLocation(newRestaurantInfo.getLocation());
-                restaurant.setCuisine(newRestaurantInfo.getCuisine());
-                restaurant.setDescription(newRestaurantInfo.getDescription());
-                restaurant.setMaxCapacity(newRestaurantInfo.getMaxCapacity());
-                return restaurants.save(restaurant);
-        }).orElse(null);
+    public Restaurant updateRestaurant(long id, Restaurant updatedRestaurant) {
+        Restaurant restaurant = restaurants.findById(id).orElse(null);
+        if (restaurant == null)
+            throw new RestaurantNotFoundException(updatedRestaurant.getId());
+
+        restaurant.setName(updatedRestaurant.getName());
+        restaurant.setLocation(updatedRestaurant.getLocation());
+        restaurant.setCuisine(updatedRestaurant.getCuisine());
+        restaurant.setDescription(updatedRestaurant.getDescription());
+        restaurant.setMaxCapacity(updatedRestaurant.getMaxCapacity());
+        return restaurants.save(restaurant);
     }
 
-    @Override 
-    public void deleteRestaurant(String name, String location) {
-        //using iterator to iterate through the restaurants
-        restaurants.deleteByNameAndLocation(name, location);
+    @Override
+    @Transactional
+    public void removeById(long id) {
+        try {
+            restaurants.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RestaurantNotFoundException(id);
+        }
     }
 }

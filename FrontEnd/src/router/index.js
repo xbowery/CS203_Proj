@@ -92,12 +92,13 @@ const routes = [
     path: '/Dashboard',
     name: 'Dashboard',
     component: () => import('@/views/dashboard/Dashboard.vue'),
+    meta: { authorize: [Role.business] },
   },
   {
     path: '/Employees',
     name: 'Employees',
     component: () => import('@/views/business/EmployeeUsers.vue'),
-    meta: { authorize: [Role.employee] },
+    meta: { authorize: [Role.business] },
   },
   {
     path: '/CovidTesting',
@@ -141,6 +142,12 @@ const routes = [
     path: '/RestaurantList',
     name: 'RestaurantList',
     component: () => import('@/views/user-management/admin/RestaurantList.vue'),
+    meta: { authorize: [Role.admin] },
+  },
+  {
+    path: '/MeasuresList',
+    name: 'MeasuresList',
+    component: () => import('@/views/user-management/admin/MeasuresList.vue'),
     meta: { authorize: [Role.admin] },
   },
 ]

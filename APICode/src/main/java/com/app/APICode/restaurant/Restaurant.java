@@ -1,5 +1,6 @@
 package com.app.APICode.restaurant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Restaurant {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private long id;
 
     @NotNull(message = "Restaurant name should not be null")
@@ -33,19 +35,21 @@ public class Restaurant {
 
     private int currentCapacity;
 
+    private String currentCrowdLevel;
+
     @NotNull(message = "Max capacity should not be null")
     private int maxCapacity;
-
-    // private String crowdLevel;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<Employee> employees;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<CrowdLevel> crowdLevel;
 
-    public Restaurant() {}
+    public Restaurant() {
+    }
 
     public Restaurant(String name, String location, String cuisine, String description, int maxCapacity) {
         this.name = name;
@@ -53,6 +57,8 @@ public class Restaurant {
         this.cuisine = cuisine;
         this.description = description;
         this.maxCapacity = maxCapacity;
+        crowdLevel = new ArrayList<>();
+        this.currentCrowdLevel = "Low";
     }
 
     public String getName() {
@@ -82,6 +88,7 @@ public class Restaurant {
     public String getDescription() {
         return this.description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -110,10 +117,16 @@ public class Restaurant {
         this.id = id;
     }
 
-    public List<Employee> getEmployees(){
+    public List<Employee> getEmployees() {
         return this.employees;
     }
 
+    public void setcurrentCrowdLevel(String currentCrowdLevel){
+        this.currentCrowdLevel = currentCrowdLevel;
+    }
+    public String getcurrentCrowdLevel(){
+        return this.currentCrowdLevel;
+    }
 
     // public CrowdLevel getCrowdLevel() {
     //     return crowdLevel.getCrowdLevel();
@@ -135,4 +148,3 @@ public class Restaurant {
     // }
 
 }
-

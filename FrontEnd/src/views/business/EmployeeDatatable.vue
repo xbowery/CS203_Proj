@@ -101,8 +101,8 @@ export default {
         { text: 'FIRST NAME', value: 'firstName' },
         { text: 'LAST NAME', value: 'lastName' },
         { text: 'EMAIL', value: 'email' },
-        { text: 'DESIGNATION', value: 'designation' },
-        { text: 'STATUS', value: 'status' },
+        { text: 'DESIGNATION', value: 'employee.designation' },
+        { text: 'STATUS', value: 'employee.status' },
       ],
       status: {
         1: 'Inactive',
