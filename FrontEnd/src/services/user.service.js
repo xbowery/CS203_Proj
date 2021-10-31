@@ -1,4 +1,5 @@
 import api from './api'
+import newsapi from '@/services/newsApi'
 
 const JSON_HEADER = {
   headers: {
@@ -10,7 +11,7 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
-  postEmployee(username, restaurantId, designation){
+  postEmployee(username, restaurantId, designation) {
     var request = `/users/${username}/employee/${restaurantId}`
     return api.post(request, designation)
   }
@@ -98,6 +99,19 @@ class UserService {
   getEmployees(username) {
     return api.get('employees/' + username)
   }
+
+  async getNews(newsType) {
+    return newsapi.get(`news/${newsType}`)
+  }
+
+  async getNewsWithFilters(newsType, queryString) {
+    let url = 'news?'
+    url += newsType ? `type=${newsType}&` : ''
+    url += queryString ? `q=${queryString}` : ''
+
+    return newsapi.get(url)
+  }
+
   updateMeasure(measure) {
     return api.put(
       'measures',

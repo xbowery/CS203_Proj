@@ -1,3 +1,6 @@
+const Parser = require("rss-parser");
+const parser = new Parser();
+
 function Utils() {
   /**
    * Generate a map of updates that will be passed to MongoDB at once using
@@ -33,14 +36,29 @@ function Utils() {
   };
 
   /**
-   * Craft a query string for the news API when fetching data
+   * Craft a query string for the news API when fetching data. By default, it will fetch news based on the
+   * search string and the type if provided
    *
    * @param {*} searchStr
    * @return object containing a regex, or an empty object if the searchStr is empty
    */
-  this.craftQueryObj = (searchStr = "") => {
-    if (searchStr === "") {
-      return {};
+  this.craftQueryObj = (searchStr = "", type) => {
+    let newsType = type;
+
+    if (!type) {
+      newsType = {
+        $ne: "Gov",
+      };
+    } else if (!this.validateType(type)) {
+      throw new Error(
+        "Please select one of the following types: 'General', 'Gov', 'Restaurant'"
+      );
+    }
+
+    if (!searchStr || searchStr === "") {
+      return {
+        type: newsType,
+      };
     }
 
     const regex = new RegExp(searchStr, "i");
@@ -53,6 +71,76 @@ function Utils() {
           content: regex,
         },
       ],
+      type: newsType,
+    };
+  };
+
+  /**
+   * Validate the type of news passed into the API
+   *
+   * @returns boolean whether it is allowed
+   */
+  this.validateType = (type) => {
+    const allowedTypes = ["General", "Gov", "Restaurant"];
+    return allowedTypes.indexOf(type) > -1;
+  };
+
+  /**
+   * Fetch the data from the MOH website RSS feed and create an object to insert into the database
+   * This function will effectively ignore any entries older than 3 days to save processing time
+   *
+   * The RSS is sorted based on date of publish, hence it will stop immediately upon reaching the
+   * first document that is older than 3 days
+   */
+  this.parseRss = async () => {
+    const feed = await parser.parseURL(process.env.MOHRSS);
+    let updateArr = [];
+
+    let dateThresh = new Date();
+    dateThresh.setDate(dateThresh.getDate() - 3);
+
+    for (const item of feed.items) {
+      if (new Date(item.pubDate) < dateThresh) {
+        break;
+      }
+
+      const feedItem = this.craftFeedObject(item);
+      updateArr.push(this.createRssUpdateObj(feedItem));
+    }
+
+    return updateArr;
+  };
+
+  /**
+   * Intermediate function to craft a specialised object only with the required fields
+   *
+   * @param {*} item
+   * @returns
+   */
+  this.craftFeedObject = (item) => {
+    const { title, link: url } = item;
+    return {
+      title,
+      url,
+      source: "MOH",
+      content: "-",
+      imageUrl: "-",
+      type: "Gov",
+    };
+  };
+
+  this.createRssUpdateObj = (feedItem) => {
+    return {
+      updateOne: {
+        filter: {
+          url: feedItem.url,
+        },
+        update: {
+          $set: feedItem,
+        },
+        upsert: true,
+        timestamps: true,
+      },
     };
   };
 }
