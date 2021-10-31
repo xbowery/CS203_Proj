@@ -22,13 +22,13 @@ public class AccessTokenMessage {
     private String username;
 
     @Schema(description = "Roles that the user have", example = "ROLE_USER", required = true)
-    private String roles;
+    private String role;
 
     public AccessTokenMessage(User user) {
         this.accessTokenString = JWTHelper.generateAccessToken(user);
         this.refreshToken = JWTHelper.generateRefreshToken(user);
         this.username = user.getUsername();
-        this.roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
+        this.role = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
                 .get(0);
     }
 
@@ -56,11 +56,11 @@ public class AccessTokenMessage {
         this.username = username;
     }
 
-    public String getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public void setRoles(String role) {
+        this.role = role;
     }
 }
