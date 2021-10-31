@@ -5,5 +5,4 @@ public interface NotificationService {
 
     Notification upcomingCtestNotification(Long user_id);
 
-    Notification updateUserRoleNotification(Long user_id);
 }

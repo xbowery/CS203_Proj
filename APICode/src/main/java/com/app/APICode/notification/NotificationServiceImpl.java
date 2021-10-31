@@ -43,13 +43,6 @@ public class NotificationServiceImpl implements NotificationService {
         return null;
     }
 
-    @Override
-    public Notification updateUserRoleNotification(Long user_id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    
-    
 
 }
