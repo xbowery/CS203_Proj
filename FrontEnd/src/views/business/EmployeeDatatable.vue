@@ -30,21 +30,36 @@
       class="table-rounded"
       hide-default-footer
     >
-      <!-- name -->
-      <template #[`item.full_name`]="{ item }">
-        <div class="d-flex flex-column">
-          <span class="d-block font-weight-semibold text--primary text-truncate">{{ item.full_name }}</span>
-          <small>{{ item.post }}</small>
-        </div>
-      </template>
-      <template #[`item.salary`]="{ item }">
-        {{ `$${item.salary}` }}
-      </template>
-      <!-- status -->
-      <template #[`item.status`]="{ item }">
-        <v-chip small :color="statusColor[status[item.status]]" class="font-weight-medium">
-          {{ status[item.status] }}
+      <template v-slot:[`item.status`]="{ item }">
+        <v-chip :color="getColor(item.employee.status)" dark>
+          {{ item.employee.status }}
         </v-chip>
+      </template>
+
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          small
+          outlined
+          class="mr-3"
+          @click="statusClick(item.username)"
+          :disabled="disableButton(item.employee.status)"
+        >
+          Approve/ Reject</v-icon
+        >
+
+        <v-dialog v-model="dialogApprove" max-width="555px">
+          <v-card>
+            <v-card-title class="text-h5">Do you want to approve or reject this employee?</v-card-title>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="success" @click="approveEmployee()">Approve</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="error" @click="rejectEmployee()">Reject</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
     </v-data-table>
   </v-card>
@@ -56,7 +71,10 @@ import UserService from '@/services/user.service'
 
 export default {
   data: () => ({
+    dialogApprove: false,
     items: [],
+
+    curUsername: '',
   }),
   props: {
     username: String,
@@ -71,28 +89,68 @@ export default {
       console.error(error)
     }
   },
+
+  methods: {
+    statusClick(username) {
+      this.curUsername = username
+      this.dialogApprove = true
+    },
+    disableButton(status) {
+      if (status == 'Pending') {
+        return false
+      }
+      return true
+    },
+    getColor(status) {
+      console.log(status)
+      if (status == 'Pending') {
+        return 'orange'
+      } else if (status == 'Active') {
+        return 'green'
+      }
+    },
+
+    approveEmployee() {
+      this.handleApproveEmployee()
+      this.dialogApprove = false
+      this.getEmployees()
+    },
+
+    rejectEmployee() {
+      this.handleRejectEmployee()
+      this.dialogApprove = false
+      this.getEmployees()
+    },
+
+    async handleApproveEmployee() {
+      try {
+        const res = await UserService.approveEmployee(this.curUsername)
+        console.log(res)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async handleRejectEmployee() {
+      try {
+        const res = await UserService.deleteEmployee(this.curUsername)
+        console.log(res)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async getEmployees() {
+      try {
+        const res = await UserService.getEmployees(this.username)
+        this.items = res.data
+        console.log(this.items)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  },
+
   setup() {
-    const statusColor = {
-      /* eslint-disable key-spacing */
-      Inactive: 'error',
-      Active: 'success',
-      Pending: 'warning',
-      /* eslint-enable key-spacing */
-    }
-    const roleOptions = [
-      { title: 'Admin', value: 'admin' },
-      { title: 'Author', value: 'author' },
-      { title: 'Editor', value: 'editor' },
-      { title: 'Maintainer', value: 'maintainer' },
-      { title: 'Subscriber', value: 'subscriber' },
-    ]
-
-    const statusOptions = [
-      { title: 'Pending', value: 'pending' },
-      { title: 'Active', value: 'active' },
-      { title: 'Inactive', value: 'inactive' },
-    ]
-
     return {
       dialog: false,
       search: '',
@@ -103,15 +161,8 @@ export default {
         { text: 'EMAIL', value: 'email' },
         { text: 'DESIGNATION', value: 'employee.designation' },
         { text: 'STATUS', value: 'employee.status' },
+        { text: 'ACTIONS', value: 'actions', sortable: false },
       ],
-      status: {
-        1: 'Inactive',
-        2: 'Pending',
-        3: 'Active',
-      },
-      statusColor,
-      statusOptions,
-      roleOptions,
 
       // icons
       icons: {

@@ -1,4 +1,4 @@
-import axiosInstance from './api'
+import { axiosInstance } from './api'
 import TokenService from './token.service'
 
 const setup = store => {

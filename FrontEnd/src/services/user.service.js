@@ -1,4 +1,4 @@
-import api from './api'
+import { axiosInstance as api } from './api'
 import newsapi from '@/services/newsApi'
 
 const JSON_HEADER = {
@@ -11,9 +11,23 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
-  postEmployee(username, restaurantId, designation) {
-    var request = `/users/${username}/employee/${restaurantId}`
-    return api.post(request, designation)
+  getEmployees() {
+    return api.get('/employees')
+  }
+  postEmployee(restaurantId, designation) {
+    var request = `/users/employee`
+    return api.post(request, {
+      restaurantId,
+      designation
+    } )
+  }
+  approveEmployee(username) {
+    return api.put('/users/employee', {
+      username,
+    })
+  }
+  deleteEmployee(username) {
+    return api.delete('/users/employee/' + username)
   }
   getRestaurants() {
     return api.get('restaurants')
@@ -37,24 +51,24 @@ class UserService {
     const request = `/restaurants/${restaurantId}/crowdLevel/${crowdLevelId}`
     return api.put(request, crowdLevel)
   }
-  getCtests(username) {
-    const request = `employee/${username}/ctests`
+  getCtests() {
+    const request = `employee/ctests`
     return api.get(request)
   }
-  postCtest(username, ctest) {
-    const request = `employee/${username}/ctests`
+  postCtest(ctest) {
+    const request = `employee/ctests`
     return api.post(request, ctest)
   }
   getRegistrationConfirm(token) {
     const request = `registrationConfirm?token=${token}`
     return api.get(request)
   }
-  deleteCtest(username, ctestId) {
-    const request = `/employee/${username}/ctests/${ctestId}`
+  deleteCtest(ctestId) {
+    const request = `/employee/ctests/${ctestId}`
     return api.delete(request)
   }
-  updateCtest(username, ctestId, ctest) {
-    const request = `/employee/${username}/ctests/${ctestId}`
+  updateCtest(ctestId, ctest) {
+    const request = `/employee/ctests/${ctestId}`
     return api.put(request, ctest)
   }
   updateUser(user) {
@@ -95,9 +109,6 @@ class UserService {
   }
   getMeasures() {
     return api.get('measures')
-  }
-  getEmployees(username) {
-    return api.get('employees/' + username)
   }
 
   async getNews(newsType) {

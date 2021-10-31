@@ -28,7 +28,7 @@ public interface UserService {
 
     User getUserByPasswordResetToken(String token);
 
-    User addUser(User user, Boolean isAdmin);
+    UserDTO addUser(User user, Boolean isAdmin);
 
     UserDTO updateUserByUsername(String username, UserDTO user);
 
@@ -42,5 +42,5 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void save(User user);
+    User save(User user);
 }

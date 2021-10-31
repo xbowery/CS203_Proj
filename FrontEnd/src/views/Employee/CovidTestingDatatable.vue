@@ -37,7 +37,7 @@
           <validation-observer ref="obs">
             <v-card slot-scope="{ invalid }">
               <v-form @submit.prevent="save">
-                <v-card-title class="text-h5 grey lighten-2">{{formTitle}}</v-card-title>
+                <v-card-title class="text-h5 grey lighten-2">{{ formTitle }}</v-card-title>
 
                 <v-container>
                   <v-row>
@@ -87,7 +87,12 @@
                             ></v-text-field>
                           </validation-provider>
                         </template>
-                        <v-date-picker v-model="editedItem.date" no-title scrollable :allowed-dates="disableFutureDates">
+                        <v-date-picker
+                          v-model="editedItem.date"
+                          no-title
+                          scrollable
+                          :allowed-dates="disableFutureDates"
+                        >
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="menu = false" v-bind="attrs" v-on="on"> Cancel </v-btn>
                           <v-btn text color="primary" @click="$refs.menu.save(editedItem.date)"> OK </v-btn>
@@ -115,17 +120,17 @@
     <v-data-table :headers="headers" :items="items" :search="search" class="table-rounded" hide-default-footer>
       <template v-slot:top>
         <v-toolbar flat>
-      <v-dialog v-model="dialogDelete" max-width="500px">
-        <v-card>
-          <v-card-title class="text-h5">Are you sure you want to delete this Covid Test?</v-card-title>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h5">Are you sure you want to delete this Covid Test?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-toolbar>
       </template>
       <template #[`item.actions`]="{ item }">
@@ -169,16 +174,16 @@ export default {
 
     items: [],
 
-    defaultItem:{
+    defaultItem: {
       type: '',
       result: '',
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
-    }
+    },
   }),
 
   async mounted() {
     try {
-      const res = await UserService.getCtests(this.username)
+      const res = await UserService.getCtests()
       this.items = res.data
 
       var ctest = this.items[0]
@@ -238,7 +243,7 @@ export default {
         this.editedIndex = -1
       })
     },
-  
+
     deleteItemConfirm() {
       this.handleDeleteCtest(this.editedItem.id)
       if (!this.message) {
@@ -246,7 +251,7 @@ export default {
       }
     },
 
-    save(){
+    save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
 
@@ -270,7 +275,7 @@ export default {
 
     async handleDeleteCtest(ctestId) {
       try {
-        const res = await UserService.deleteCtest(this.username, ctestId)
+        const res = await UserService.deleteCtest(ctestId)
         console.log(res.data)
         this.reloadTable()
       } catch (error) {
@@ -281,7 +286,7 @@ export default {
 
     async handleNewCtest(ctest) {
       try {
-        const res = await UserService.postCtest(this.username, ctest)
+        const res = await UserService.postCtest(ctest)
         console.log(res)
       } catch (error) {
         console.log(error)
@@ -294,9 +299,9 @@ export default {
       }
     },
 
-    async handleEditCtest(ctest, ctestId){
-        try {
-        const res = await UserService.updateCtest(this.username, ctestId, ctest)
+    async handleEditCtest(ctest, ctestId) {
+      try {
+        const res = await UserService.updateCtest(ctestId, ctest)
         console.log(res.data)
       } catch (error) {
         this.message = error.response?.data?.message || error.message || error.toString()
@@ -306,11 +311,11 @@ export default {
 
     async reloadTable() {
       try {
-        const res = await UserService.getCtests(this.username)
+        const res = await UserService.getCtests()
         this.items = res.data
-          if(this.items.length == 0){
-            this.$emit('set_latest', this.ctestEmpty)
-          }
+        if (this.items.length == 0) {
+          this.$emit('set_latest', this.ctestEmpty)
+        }
         var ctest = this.items[0]
         this.items.forEach(item => {
           if (ctest.date < item.date) {

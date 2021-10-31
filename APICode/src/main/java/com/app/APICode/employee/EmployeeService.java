@@ -2,8 +2,12 @@ package com.app.APICode.employee;
 
 import java.util.List;
 
-public interface EmployeeService {
-    List<Employee> listEmployees(Long user_id);
+import com.app.APICode.user.User;
 
-    void save(Employee employee);
+public interface EmployeeService {
+    List<User> getAllEmployeesByBusinessOwner(String username);
+    Employee getEmployeeByUsername(String username);
+    Employee addEmployeeToBusiness(String username, String designation, long businessId);
+    Employee approveEmployee(String username);
+    Employee deleteEmployee(String username);
 }

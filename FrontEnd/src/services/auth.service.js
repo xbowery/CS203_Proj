@@ -1,22 +1,14 @@
-import api from '@/services/api'
+import { post } from './api'
 
 import TokenService from '@/services/token.service'
 
 class AuthService {
   async login(user) {
     try {
-      const response = await api.post(
-        '/login',
-        {
-          username: user.username,
-          password: user.password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      const response = await post('/login', {
+        username: user.username,
+        password: user.password,
+      })
 
       if (response.data.accessToken) {
         TokenService.setUser(response.data)
@@ -34,35 +26,19 @@ class AuthService {
   }
 
   register(user) {
-    return api.post(
-      '/register',
-      {
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        password: user.password,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    return post('/register', {
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
+    })
   }
 
   forgetPassword(email) {
-    return api.post(
-      '/forgotPassword',
-      {
-        email,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    return post('/forgotPassword', {
+      email,
+    })
   }
 }
 
