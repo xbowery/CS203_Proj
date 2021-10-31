@@ -3,7 +3,8 @@ package com.app.APICode.restaurant;
 import java.util.List;
 
 public interface RestaurantService {
-    List<Restaurant> listRestaurants();
+
+    List<RestaurantDTO> listRestaurants();
     Restaurant getRestaurantById(long id);
     Restaurant getRestaurantByUsername(String username);
     Restaurant addRestaurant(Restaurant restaurant);

@@ -1,6 +1,7 @@
 package com.app.APICode.restaurant;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
@@ -35,8 +36,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<Restaurant> listRestaurants() {
-        return restaurants.findAll();
+    // public List<Restaurant> listRestaurants() {
+    //     return restaurants.findAll();
+    // }
+    public List<RestaurantDTO> listRestaurants() {
+        List<Restaurant> restaurantsList = restaurants.findAll();
+        return restaurantsList.stream().map(this::convertToRestaurantDTO).collect(Collectors.toList());
+    }
+
+    private RestaurantDTO convertToRestaurantDTO(Restaurant restaurant) {
+        return RestaurantDTO.convertToRestaurantDTO(restaurant);
     }
 
     @Override

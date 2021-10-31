@@ -7,8 +7,8 @@
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
             <p class="text-xl font-weight-semibold primary--text mb-2">{{ time() }}</p>
-            <v-btn v-for="(item, index) in items" :key="index" small color="primary">
-              {{ items[0].restaurant.name }}
+            <v-btn small color="primary">
+              {{ restaurant.name }}
             </v-btn>
           </div>
         </v-card-text>
@@ -83,15 +83,24 @@ export default defineComponent({
 
   data() {
     return {
-      items: [],
       keys: ['name'],
+
+      restaurant: {
+        name: '',
+        location: '',
+        cuisine: '',
+        description: '',
+        currentCapacity: '',
+        maxCapacity: '',
+        crowdLevel: [],
+      },
     }
   },
 
   async mounted() {
     try {
-      const res = await UserService.getCrowdLevels()
-      this.items = res.data
+      const res = await UserService.getRestaurant(this.username)
+      this.restaurant = res.data
     } catch (error) {
       console.error(error)
     }

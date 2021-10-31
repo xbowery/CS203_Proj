@@ -42,7 +42,7 @@ public class RestaurantController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Restaurant.class)))), })
     @GetMapping("/restaurants")
-    public List<Restaurant> getAllRestaurants() {
+    public List<RestaurantDTO> getAllRestaurants() {
         return restaurantService.listRestaurants();
     }
 
