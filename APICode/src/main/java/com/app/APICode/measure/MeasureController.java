@@ -39,7 +39,7 @@ public class MeasureController {
      * 
      * @return list of all measures
      */
-    @Operation(summary = "List all Restaurants", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+    @Operation(summary = "List all Measures", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Covid Measures" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), })
