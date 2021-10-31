@@ -85,7 +85,7 @@ public class CrowdLevelController {
      * @return the newly added CrowdLevel object
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/restaurants/{id}//crowdLevel")
+    @PostMapping("/restaurants/{id}/crowdLevel")
     public CrowdLevel addCrowdLevel(@PathVariable Long id, @Valid @RequestBody CrowdLevel crowdLevel) {
         return restaurants.findById(id).map(restaurant -> {
             crowdLevel.setRestaurant(restaurant);

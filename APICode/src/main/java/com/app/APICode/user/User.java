@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.app.APICode.employee.Employee;
+import com.app.APICode.verificationtoken.VerificationToken;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -78,6 +79,9 @@ public class User implements UserDetails {
     @PrimaryKeyJoinColumn
     @Schema(description = "Employee details of User.")
     private Employee employee;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private VerificationToken vToken;
 
     public User() {
     }

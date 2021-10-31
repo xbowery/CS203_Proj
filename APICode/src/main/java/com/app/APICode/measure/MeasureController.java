@@ -44,8 +44,13 @@ public class MeasureController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), })
     @GetMapping("/measures")
-    public List<Measure> getMeasures() {
+    public List<Measure> getAllMeasures() {
         return measureService.listMeasures();
+    }
+
+    @GetMapping("/measures/{measureType}")
+    public Measure getMeasure(@PathVariable @NotNull String measureType) {
+        return measureService.getMeasure(measureType);
     }
 
     /**

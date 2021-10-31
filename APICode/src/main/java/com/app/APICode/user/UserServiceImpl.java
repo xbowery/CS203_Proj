@@ -1,6 +1,7 @@
 package com.app.APICode.user;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -252,7 +254,7 @@ public class UserServiceImpl implements UserService {
         // System.out.println("Error occurred while trying to send an email to: " +
         // email);
         // }
-        // updatePasswordByEmail(email, encoder.encode(tempPassword));
+        updatePasswordByEmail(email, tempPassword);
     }
 
     @Override
