@@ -1,4 +1,5 @@
 import { axiosInstance as api } from './api'
+import newsapi from '@/services/newsApi'
 
 const JSON_HEADER = {
   headers: {
@@ -10,7 +11,6 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
-
   getEmployees() {
     return api.get('/employees')
   }
@@ -29,7 +29,6 @@ class UserService {
   deleteEmployee(username) {
     return api.delete('/users/employee/' + username)
   }
-
   getRestaurants() {
     return api.get('restaurants')
   }
@@ -110,6 +109,18 @@ class UserService {
   }
   getMeasures() {
     return api.get('measures')
+  }
+
+  async getNews(newsType) {
+    return newsapi.get(`news/${newsType}`)
+  }
+
+  async getNewsWithFilters(newsType, queryString) {
+    let url = 'news?'
+    url += newsType ? `type=${newsType}&` : ''
+    url += queryString ? `q=${queryString}` : ''
+
+    return newsapi.get(url)
   }
 
   updateMeasure(measure) {

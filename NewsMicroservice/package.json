@@ -5,8 +5,16 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=dev nodemon -r dotenv/config server.js",
-    "test": "jest --setupFiles dotenv/config -i --testTimeout=10000 --forceExit",
+    "start_windows": "set NODE_ENV=dev&&node -r dotenv/config server.js",
+    "test": "jest --setupFiles dotenv/config -i --testTimeout=15000 --forceExit",
     "prod": "NODE_ENV=prod node -r dotenv/config server.js"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
   },
   "keywords": [],
   "author": "G2T4",
@@ -19,7 +27,8 @@
     "mongoose": "^6.0.11",
     "morgan": "^1.10.0",
     "newsapi": "^2.4.1",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "rss-parser": "^3.12.0"
   },
   "devDependencies": {
     "chai": "^4.3.4",

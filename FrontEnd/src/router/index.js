@@ -115,19 +115,21 @@ const routes = [
   {
     path: '/CovidNews',
     name: 'CovidNews',
-    component: () => import('@/views/news/CovidNews.vue'),
-    meta: { authorize: [] },
-  },
-  {
-    path: '/F&BGuidelines',
-    name: 'F&BGuidelines',
-    component: () => import('@/views/news/F&BGuidelines.vue'),
+    component: () => import('@/views/news/NewsDisplay.vue'),
+    props: { NEWSTYPE: 'General', header: 'General' },
     meta: { authorize: [] },
   },
   {
     path: '/F&BNews',
     name: 'F&BNews',
-    component: () => import('@/views/news/F&BNews.vue'),
+    component: () => import('@/views/news/NewsDisplay.vue'),
+    props: { NEWSTYPE: 'Restaurant', header: 'F&B Related' },
+    meta: { authorize: [] },
+  },
+  {
+    path: '/OfficialNews',
+    name: 'OfficialNews',
+    component: () => import('@/views/news/OfficialNews.vue'),
     meta: { authorize: [] },
   },
   {
