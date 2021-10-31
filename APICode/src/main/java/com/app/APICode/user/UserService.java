@@ -31,7 +31,7 @@ public interface UserService {
 
     UserDTO addUser(User user, Boolean isAdmin);
 
-    User updateUserByUsername(String username, UserDTO user);
+    UserDTO updateUserByUsername(String username, UserDTO user);
 
     User updatePasswordByEmail(String email, String password);
 
