@@ -29,7 +29,7 @@ const newsSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["Regular", "Restaurant"],
+      enum: ["Regular", "Restaurant", "Gov"],
       default: "Regular",
     },
   },

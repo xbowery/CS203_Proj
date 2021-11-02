@@ -3,6 +3,7 @@ package com.app.APICode.user;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
@@ -28,7 +29,7 @@ public interface UserService {
 
     User getUserByPasswordResetToken(String token);
 
-    User addUser(User user, Boolean isAdmin);
+    UserDTO addUser(User user, Boolean isAdmin);
 
     UserDTO updateUserByUsername(String username, UserDTO user);
 
@@ -42,5 +43,5 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void save(User user);
+    User save(User user);
 }

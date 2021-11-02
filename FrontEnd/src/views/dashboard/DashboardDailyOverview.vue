@@ -14,10 +14,12 @@
 
     <v-card-text>
       <!-- Chart -->
-      <vue-apex-charts :options="chartOptions" :series="chartData" height="210"></vue-apex-charts>
+      <vue-apex-charts ref="realtimeChart" :options="chartOptions" :series="chartData" height="210"></vue-apex-charts>
 
       <div class="d-flex align-center">
-        <h3 class="text-2xl font-weight-semibold me-4">30</h3>
+        <!-- <h3 class="text-2xl font-weight-semibold me-4">30</h3> -->
+        <h3 class="text-2xl font-weight-semibold me-4">{{ restaurant.currentCapacity }}</h3>
+        <!-- <h3 class="text-2xl font-weight-semibold me-4"> </h3> -->
         <span>individuals have visited your restaurant in the past hour</span>
       </div>
 
@@ -31,11 +33,34 @@ import VueApexCharts from 'vue-apexcharts'
 // eslint-disable-next-line object-curly-newline
 import { mdiDotsVertical, mdiTrendingUp, mdiCurrencyUsd } from '@mdi/js'
 import { getCurrentInstance } from '@vue/composition-api'
+import UserService from '@/services/user.service'
 
 export default {
   components: {
     VueApexCharts,
   },
+  props: {
+    username: String,
+    // chartData: Array,
+  },
+
+  data() {
+    return {
+      error: '',
+      items: [],
+
+      restaurant: {
+        name: '',
+        location: '',
+        cuisine: '',
+        description: '',
+        currentCapacity: '',
+        maxCapacity: '',
+        crowdLevel: [],
+      },
+    }
+  },
+
   setup() {
     const ins = getCurrentInstance()?.proxy
     const $vuetify = ins && ins.$vuetify ? ins.$vuetify : null
@@ -110,7 +135,9 @@ export default {
 
     const chartData = [
       {
-        data: [10, 10, 10, 25, 30, 0, 0, 0, 0],
+        // data: [10, 10, 10, 25, 30, 0, 0, 0, 0],
+        // data:[currentCapacity],
+        data: [],
       },
     ]
 
@@ -123,6 +150,56 @@ export default {
         mdiTrendingUp,
         mdiCurrencyUsd,
       },
+    }
+  },
+  methods: {
+    setDataChart() {
+      setInterval(() => {
+        this.chartData.push(this.restaurant.currentCapacity)
+        this.updateSeriesLine()
+      }, 3000)
+    },
+
+    updateSeriesLine() {
+      this.$refs.realtimeChart.updateSeries([{
+        data: this.chartData,
+      }], false, true);
+    },
+
+    // fetchData() {
+    //   let time = 24
+    //   const timeValue = setInterval(mounted => {
+    //     time = this.time - 1
+    //     if (time <= 0) {
+    //       clearInterval(timeValue)
+    //     }
+    //   }, 1000)
+    // },
+  },
+
+  async mounted() {
+    try {
+      // let time = 24
+      // const timeValue = setInterval(() => {
+      //   time = this.time - 1
+      //   if (time <= 0) {
+      //     clearInterval(timeValue)
+      //   }
+      // }, 3600000)
+
+      const res = await UserService.getRestaurant(this.username)
+      this.restaurant = res.data
+      console.log(this.restaurant.crowdLevel)
+      this.chartData = this.restaurant.crowdLevel.map(level => level.noOfCustomers)
+      this.updateSeriesLine()
+      console.log(this.chartData)
+      // this.chartData.push(this.restaurant.currentCapacity)
+      // this.insertSeries(this.chartData)
+      // this.setDataChart()
+
+      // console.log(this.restaurant)
+    } catch (error) {
+      console.error(error)
     }
   },
 }

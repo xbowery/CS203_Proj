@@ -61,11 +61,11 @@ export default {
     const kbContentData = [
       {
         character: require('@/assets/images/3d-characters/pose-f-3.png'),
-        category: 'F&B Guidelines',
+        category: 'Official News',
         characterSize: '139',
-        title: 'F&B Guidelines',
-        desc: 'Be informed of the latest news on F&B business guidelines and safety measures',
-        path: {name: 'F&BGuidelines'}
+        title: 'Official Gov Press Release',
+        desc: 'Be informed of the latest news on direct from the latest press releases from MOH',
+        path: { name: 'OfficialNews' },
       },
       {
         character: require('@/assets/images/3d-characters/pose-f-28.png'),
@@ -73,7 +73,7 @@ export default {
         characterSize: '188',
         title: 'F&B-related news',
         desc: 'Be informed of latest news in the F&B industry',
-        path: {name: 'F&BNews'}
+        path: { name: 'F&BNews' },
       },
       {
         character: require('@/assets/images/3d-characters/pose-m-34.png'),
@@ -81,29 +81,8 @@ export default {
         characterSize: '126',
         title: 'Covid-related news',
         desc: 'Be informed of the latest news on the pandemic and safety management measures',
-        path: {name: 'CovidNews'}
+        path: { name: 'CovidNews' },
       },
-      // {
-      //   character: require('@/assets/images/3d-characters/pose-f-39.png'),
-      //   category: 'email-marketing',
-      //   characterSize: '172',
-      //   title: 'Email Marketing ✉️',
-      //   desc: 'There is perhaps no better demonstration of the folly of human conceits.',
-      // },
-      // {
-      //   character: require('@/assets/images/3d-characters/pose-m-14.png'),
-      //   category: 'personalization',
-      //   characterSize: '163',
-      //   title: 'Personalization 🤩',
-      //   desc: 'It has been said that astronomy is a humbling and character experience.',
-      // },
-      // {
-      //   character: require('@/assets/images/3d-characters/pose-m-5.png'),
-      //   category: 'demand-generation',
-      //   characterSize: '156',
-      //   title: 'Demand Generation 🤟🏻',
-      //   desc: 'Competent means we will never take anything for granted.',
-      // },
     ]
 
     const filteredKB = computed(() => {

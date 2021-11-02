@@ -1,9 +1,9 @@
 package com.app.APICode.security.jwt;
 
 import static com.app.APICode.security.jwt.SecurityConstants.EXPIRATION_TIME;
+import static com.app.APICode.security.jwt.SecurityConstants.ISSUER;
 import static com.app.APICode.security.jwt.SecurityConstants.REFRESH_EXPIRATION_TIME;
 import static com.app.APICode.security.jwt.SecurityConstants.SECRET;
-import static com.app.APICode.security.jwt.SecurityConstants.ISSUER;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -14,9 +14,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JWTHelper {
     /**
      * Generates a JWT Access Token
@@ -24,7 +22,7 @@ public class JWTHelper {
      * @param user used to populate the JWT subject and claims
      * @return a string containing the JWT
      */
-    public String generateAccessToken(User user) {
+    public static String generateAccessToken(User user) {
         return JWT.create().withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).withIssuer(ISSUER)
                 .withClaim("roles",
@@ -39,7 +37,7 @@ public class JWTHelper {
      * @param user used to populate the JWT subject
      * @return a string containing the JWT
      */
-    public String generateRefreshToken(User user) {
+    public static String generateRefreshToken(User user) {
         return JWT.create().withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME)).withIssuer(ISSUER)
                 .withClaim("type", "refresh").sign(getSigningAlgorithm());
@@ -51,7 +49,7 @@ public class JWTHelper {
      * @param token String containing the JWT
      * @return a {@link DecodedJWT}
      */
-    public DecodedJWT decodeJwt(String token) {
+    public static DecodedJWT decodeJwt(String token) {
         return JWT.require(getSigningAlgorithm()).build().verify(token);
     }
 
@@ -60,7 +58,7 @@ public class JWTHelper {
      * 
      * @return a {@link Algorithm}
      */
-    public Algorithm getSigningAlgorithm() {
+    public static Algorithm getSigningAlgorithm() {
         return Algorithm.HMAC512(SECRET.getBytes());
     }
 }

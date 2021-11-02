@@ -16,47 +16,72 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.app.APICode.employee.Employee;
+import com.app.APICode.verificationtoken.VerificationToken;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier of the User.", example = "1", required = true, hidden = true)
     private Long id;
 
     @Email
     @Column(unique = true)
     @NotNull(message = "Email must not be null")
+    @Schema(description = "Email of the User.", example = "JohnDoe@abc.com", required = true)
     private String email;
 
     @NotNull(message = "Username must not be null")
     @Size(min = 5, max = 20, message = "Username must be between 5 and 20 characters")
+    @Schema(description = "Username of the User.", example = "JohnDoe", required = true)
     private String username;
 
     @NotNull(message = "First name must not be null")
+    @Schema(description = "First Name of the User.", example = "John", required = true)
     private String firstName;
 
+    @Schema(description = "Last Name of the User.", example = "Doe")
     private String lastName;
 
     @NotNull(message = "Password must not be null")
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Size(min = 8, max = 100, message = "Password must be at least 8 characters")
+    @Schema(description = "Password of the User.", required = true)
     private String password;
 
     @NotNull(message = "Vaccination status must not be null")
+    @Schema(description = "Vaccination Status of User.", required = true, hidden = true)
     private boolean isVaccinated = false;
 
     @NotNull(message = "Authorities must not be null")
+    @Schema(description = "Role of User.", required = true, hidden = true)
     private String authorities = UserRole.USER.role;
 
-    private boolean isEnabled = false;
+    @Schema(description = "If the user account is enabled.", required = true, hidden = true)
+    private boolean enabled = false;
+    
+    @Schema(description = "If the user account has expired.", required = true, hidden = true)
+    private boolean accountNonExpired = false;
+
+    @Schema(description = "If the user account is locked.", required = true, hidden = true)
+    private boolean accountNonLocked = false;
+
+    @Schema(description = "If the user credential has expired.", required = true, hidden = true)
+    private boolean credentialsNonExpired = false;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+    @Schema(description = "Employee details of User.")
     private Employee employee;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private VerificationToken vToken;
 
     public User() {
     }
@@ -98,11 +123,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 
-    public void setEnabled(final boolean isEnabled) {
-        this.isEnabled = isEnabled;
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId() {

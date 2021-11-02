@@ -1,20 +1,24 @@
 package com.app.APICode.measure;
 
-import java.util.Collections;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MeasureServiceImpl implements MeasureService{
+public class MeasureServiceImpl implements MeasureService {
     private MeasureRepository measures;
 
-    //for testing purposes
+    // for testing purposes
     public MeasureServiceImpl(MeasureRepository measures) {
         this.measures = measures;
-        measures.save(new Measure(new Date(), "restaurant", 50, true, false, null));
-    } 
+        // measures.save(new Measure("Restaurant", 2, true, false));
+        // measures.save(new Measure("Gym", 50, true, false));
+        // measures.save(new Measure("Events", 1000, true, true));
+        // measures.save(new Measure("Gathering", 2, true, true));
+    }
 
     @Override
     public List<Measure> listMeasures() {
@@ -22,43 +26,48 @@ public class MeasureServiceImpl implements MeasureService{
     }
 
     @Override
-    public Measure getLatestMeasure(){
-        return measures.findTopByOrderByCreationDateTimeDesc();
-    }
+    public Measure getMeasure(String measureType) {
+        Measure measure = measures.findByMeasureType(measureType).orElse(null);
+        
+        if (measure == null) 
+            throw new MeasureNotFoundException(measureType);
 
-    @Override
-    public Measure getMeasure(Date creationDateTime) {
-        return measures.findByCreationDateTime(creationDateTime).orElse(null);
+        return measure;
     }
 
     @Override
     public Measure addMeasure(Measure measure) {
-        List<Measure> sameMeasure = measures.findByCreationDateTime(measure.getCreationDateTime())
-                .map(Collections::singletonList).orElseGet(Collections::emptyList);
+        Measure duplicate = measures.findByMeasureType(measure.getMeasureType()).orElse(null);
 
-        if (sameMeasure.size() == 0) {
+        if (duplicate == null) 
             return measures.save(measure);
-        } else {
-            return null;
+        
+        throw new MeasureDuplicateException(measure.getMeasureType());
+    }
+
+    @Override
+    public Measure updateMeasure(Measure updatedMeasure) {
+        Measure measure = measures.findByMeasureType(updatedMeasure.getMeasureType()).orElse(null);
+
+        if (measure == null)
+            throw new MeasureNotFoundException(updatedMeasure.getMeasureType());
+
+        measure.setDateUpdated(LocalDate.now());
+        measure.setMeasureType(updatedMeasure.getMeasureType());
+        measure.setMaxCapacity(updatedMeasure.getMaxCapacity());
+        measure.setVaccinationStatus(updatedMeasure.isVaccinationStatus());
+        measure.setMaskStatus(updatedMeasure.isMaskStatus());
+        return measures.save(measure);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMeasure(String measureType) {
+        try {
+            measures.deleteByMeasureType(measureType);
+        } catch (EmptyResultDataAccessException e) {
+            throw new MeasureNotFoundException(measureType);
         }
-    }
-
-    @Override
-    public Measure updateMeasure(Date creationDateTime, Measure newMeasure) {
-        return measures.findByCreationDateTime(creationDateTime).map(measure -> {
-            measure.setCreationDateTime(newMeasure.getCreationDateTime());
-            measure.setBusinessType(newMeasure.getBusinessType());
-            measure.setMaxCapacity(newMeasure.getMaxCapacity());
-            measure.setVaccinationStatus(newMeasure.isVaccinationStatus());
-            measure.setMaskStatus(newMeasure.isMaskStatus());
-            measure.setDetails(newMeasure.getDetails());
-            return measures.save(measure);
-        }).orElse(null);
-    }
-
-    @Override
-    public void deleteMeasure(Date creationDateTime) {
-        measures.deleteByCreationDateTime(creationDateTime);
     }
 
 }

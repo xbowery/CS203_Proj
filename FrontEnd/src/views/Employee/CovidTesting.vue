@@ -64,8 +64,6 @@ export default {
 
   components: {
     StatisticsCardVertical,
-    // DashboardCongratulationJohn,
-    // DashboardWeeklyOverview,
     CovidTestingDatatable,
   },
 
@@ -80,7 +78,6 @@ export default {
       if (e != null) {
         this.latest_date = e.date
         this.latest_result = e.result
-        console.log('new latest')
       }
     },
   },

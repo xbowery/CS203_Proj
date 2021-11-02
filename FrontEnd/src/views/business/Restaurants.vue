@@ -29,7 +29,7 @@
               flat
               solo-inverted
               hide-details
-              :items="keys"
+              :items="sortKeys"
               :prepend-inner-icon="icons.mdiMagnify"
               label="Sort by"
             ></v-select>
@@ -56,7 +56,7 @@
                 justify="center"
               ></v-img>
               <v-card-title class="subheading font-weight-bold">
-                {{ item.restaurant.name }}
+                {{ item.name }}
               </v-card-title>
 
               <v-divider></v-divider>
@@ -65,7 +65,7 @@
                 <v-list-item v-for="(key, index) in keys" :key="index">
                   <v-list-item-content :class="{ 'blue--text': sortBy === key }"> {{ key.key }}: </v-list-item-content>
                   <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">
-                    {{ item[key.value] || item.restaurant[key.value] }}
+                    {{ item[key.value] }}
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
@@ -135,14 +135,13 @@ export default {
         { key: 'Location', value: 'location' },
         { key: 'Cuisine', value: 'cuisine' },
         { key: 'Description', value: 'description' },
-        { key: 'Crowd Level', value: 'latestCrowd' },
-        // 'Name', 'Location'
+        { key: 'Crowd Level', value: 'currentCrowdLevel' },
       ],
     }
   },
   async mounted() {
     try {
-      const res = await UserService.getCrowdLevels()
+      const res = await UserService.getRestaurants()
       console.log(res)
       this.items = res.data
     } catch (error) {
@@ -150,6 +149,9 @@ export default {
     }
   },
   computed: {
+    sortKeys() {
+      return this.keys.map(key => key.key)
+    },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage)
     },

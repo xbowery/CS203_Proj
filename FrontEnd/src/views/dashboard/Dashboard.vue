@@ -1,14 +1,14 @@
 <template>
   <v-row>
     <v-col cols="12" md="4" sm="6">
-      <dashboard-congratulation-john></dashboard-congratulation-john>
+      <dashboard-user :username="user.username"></dashboard-user>
     </v-col>
     <v-col cols="12" md="8" sm="6">
-      <crowd-level></crowd-level>
+      <crowd-level :username="user.username"></crowd-level>
     </v-col>
 
     <v-col cols="12" sm="6" md="8">
-      <dashboard-daily-overview></dashboard-daily-overview>
+      <dashboard-daily-overview :username="user.username"></dashboard-daily-overview>
     </v-col>
 
     <v-col cols="12" md="4">
@@ -58,7 +58,7 @@
     </v-col>
 
     <v-col cols="12">
-      <dashboard-datatable></dashboard-datatable>
+      <dashboard-datatable :username="user.username"></dashboard-datatable>
     </v-col>
   </v-row>
 </template>
@@ -69,18 +69,24 @@ import { mdiAccountGroup, mdiNeedle, mdiHospitalBoxOutline, mdiThumbUp } from '@
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 
 // demos
-import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
+import DashboardUser from './DashboardUser.vue'
 import CrowdLevel from './CrowdLevel.vue'
 import DashboardDailyOverview from './DashboardDailyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     StatisticsCardVertical,
-    DashboardCongratulationJohn,
+    DashboardUser,
     CrowdLevel,
     DashboardDailyOverview,
     DashboardDatatable,
+  },
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
   },
   setup() {
     /*providing statistics on status of employees */

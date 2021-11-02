@@ -7,6 +7,8 @@ import java.net.URI;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.templates.LoginDetails;
+import com.app.APICode.templates.TokenDetails;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,6 +46,7 @@ public class JwtIntegrationTest {
         String email = "admin@test.com";
         String password = "goodpassword";
         User user = new User(email, "admin", "admin1", null, encoder.encode(password), true, "ROLE_ADMIN");
+        user.setEnabled(true);
         user = userRepository.save(user);
     }
 
@@ -57,6 +60,7 @@ public class JwtIntegrationTest {
         URI uri = new URI(baseUrl + port + "/api/v1/login");
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uri,
                 new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+        System.out.println(result.getBody().getAccessToken());
         assertEquals(200, result.getStatusCode().value());
         assertEquals("admin", result.getBody().getUsername());
         assertNull(result.getBody().getMessage());

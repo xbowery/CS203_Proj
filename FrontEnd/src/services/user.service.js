@@ -1,26 +1,75 @@
-import api from './api'
+import { axiosInstance as api } from './api'
+import newsapi from '@/services/newsApi'
+
+const JSON_HEADER = {
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}
 
 class UserService {
-  async getUsers() {
+  getUsers() {
     return api.get('users')
   }
-  async getRestaurants() {
+  getEmployees() {
+    return api.get('/employees')
+  }
+  postEmployee(restaurantId, designation) {
+    var request = `/users/employee`
+    return api.post(request, {
+      restaurantId,
+      designation
+    } )
+  }
+  approveEmployee(username) {
+    return api.put('/users/employee', {
+      username,
+    })
+  }
+  deleteEmployee(username) {
+    return api.delete('/users/employee/' + username)
+  }
+  getRestaurants() {
     return api.get('restaurants')
   }
-  async getCrowdLevels(){
+  getRestaurant(username) {
+    const request = `restaurants/user/${username}`
+    return api.get(request)
+  }
+  getCrowdLevels() {
     return api.get('restaurants/crowdLevels')
   }
-  async getCtests(username) {
-    var request =  'employee/' + username + '/ctests'
+  getCrowdLevel(username) {
+    const request = `restaurants/${username}/crowdLevel`
     return api.get(request)
   }
-  async postCtest(username, ctest) {
-    var request =  'employee/' + username + '/ctests'
+  postCrowdLevel(id, crowdLevel) {
+    const request = `restaurants/${id}/crowdLevel`
+    return api.post(request, crowdLevel)
+  }
+  updateCrowdLevel(restaurantId, crowdLevelId, crowdLevel) {
+    const request = `/restaurants/${restaurantId}/crowdLevel/${crowdLevelId}`
+    return api.put(request, crowdLevel)
+  }
+  getCtests() {
+    const request = `employee/ctests`
+    return api.get(request)
+  }
+  postCtest(ctest) {
+    const request = `employee/ctests`
     return api.post(request, ctest)
   }
-  async getRegistrationConfirm(token) {
-    var request = 'registrationConfirm?token=' + token
+  getRegistrationConfirm(token) {
+    const request = `registrationConfirm?token=${token}`
     return api.get(request)
+  }
+  deleteCtest(ctestId) {
+    const request = `/employee/ctests/${ctestId}`
+    return api.delete(request)
+  }
+  updateCtest(ctestId, ctest) {
+    const request = `/employee/ctests/${ctestId}`
+    return api.put(request, ctest)
   }
   updateUser(user) {
     return api.put(
@@ -31,73 +80,57 @@ class UserService {
         email: user.email,
         authorities: user.authorities,
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
+      JSON_HEADER,
     )
   }
   deleteUser(user) {
-    return api.delete(
-      `users/${user.username}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    return api.delete(`users/${user.username}`, JSON_HEADER)
   }
   postRestaurant(restaurant) {
     return api.post(
       'restaurants',
       {
-        name: restaurant.name,
-        location: restaurant.location,
-        cuisine: restaurant.cuisine,
-        description: restaurant.description,
-        maxCapacity: restaurant.maxCapacity,
+        ...restaurant,
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
+      JSON_HEADER,
     )
   }
   updateRestaurant(restaurant) {
     return api.put(
-      `restaurants/${restaurant.name}/${restaurant.location}`,
+      `restaurants/${restaurant.id}`,
       {
-        name: restaurant.name,
-        location: restaurant.location,
-        cuisine: restaurant.cuisine,
-        description: restaurant.description,
-        maxCapacity: restaurant.maxCapacity,
+        ...restaurant,
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
+      JSON_HEADER,
     )
   }
-  deleteRestaurant(restaurant) {
-    return api.delete(
-      `restaurants/${restaurant.name}/${restaurant.location}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+  deleteRestaurant(id) {
+    return api.delete(`restaurants/${id}`)
   }
-  async getMeasures(){
+  getMeasures() {
     return api.get('measures')
   }
-  async getEmployees(username){
-    return api.get('employees/' + username)
 
+  async getNews(newsType) {
+    return newsapi.get(`news/${newsType}`)
+  }
+
+  async getNewsWithFilters(newsType, queryString) {
+    let url = 'news?'
+    url += newsType ? `type=${newsType}&` : ''
+    url += queryString ? `q=${queryString}` : ''
+
+    return newsapi.get(url)
+  }
+
+  updateMeasure(measure) {
+    return api.put(
+      'measures',
+      {
+        ...measure,
+      },
+      JSON_HEADER,
+    )
   }
 }
 

@@ -24,14 +24,22 @@ public class G2T4Application {
 
 		UserRepository users = ctx.getBean(UserRepository.class);
 		BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-
-		User user = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
+		//Admin 
+		User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
 				"ROLE_ADMIN");
+		admin.setEnabled(true);
+		System.out.println("[Add user]: " + users.save(admin).getUsername());
+		//User
+		User user = new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER");
 		user.setEnabled(true);
-		System.out.println("[Add user]: " + users.save(user).getUsername());
-		users.save(new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER"));
-		users.save(new User("user2@test.com", "user2", "User", "2", encoder.encode("testing12345"), false,"ROLE_BUSINESS"));
+		users.save(user);
+		
+		//Business owner 
+		User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+		business_owner.setEnabled(true);
+		users.save(business_owner);
 
+		//Restaurant
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		testRestaurant.setCurrentCapacity(0);
@@ -42,15 +50,17 @@ public class G2T4Application {
 		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
 		employee1.setEnabled(true);
 		users.save(employee1);
-		Employee employee11 = new Employee(employee1);
+		Employee employee11 = new Employee(employee1, "Employee");
 		employee11.setRestaurant(testRestaurant);
 		employee1.setEmployee(employee11);
+		employee11.setStatus("Pending");
 		users.save(employee1);
 
 		User employee2 = new User("business1@test.com", "business1", "business", "1", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
 		employee2.setEnabled(true);
 		users.save(employee2);
-		Employee employee22 = new Employee(employee2);
+
+		Employee employee22 = new Employee(employee2, "Owner");
 		employee22.setRestaurant(testRestaurant);
 		employee2.setEmployee(employee22);
 		users.save(employee2);
@@ -59,10 +69,6 @@ public class G2T4Application {
 		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 		Ctest ctest1 = new Ctest("ART", date, "Positive");
 		ctest1.setEmployee(employee1.getEmployee());
-
-		MeasureRepository measure = ctx.getBean(MeasureRepository.class);
-		Measure testMeasure = new Measure(new Date(), "gym", 50, true, false, null);
-		System.out.println("[Add measure]:" + measure.save(testMeasure).getCreationDateTime());
 
 		CrowdLevelRepository crowdLevel = ctx.getBean(CrowdLevelRepository.class);
 		CrowdLevel testCrowdLevel = new CrowdLevel(new Date(), "medium", 22, testRestaurant);

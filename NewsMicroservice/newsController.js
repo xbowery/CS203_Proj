@@ -18,20 +18,23 @@ const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
  */
 module.exports.getNews = async (req, res, next) => {
   try {
-    const searchLimit = 8;
+    const SEARCHLIMIT = 8;
     const latestGeneralNews = await fetchNewsFromDB(
       { type: "General" },
-      searchLimit
+      SEARCHLIMIT
     );
     const latestRestaurantNews = await fetchNewsFromDB(
       { type: "Restaurant" },
-      searchLimit
+      SEARCHLIMIT
     );
+
+    const latestGovNews = await fetchNewsFromDB({ type: "Gov" }, SEARCHLIMIT);
 
     const returnObj = {
       success: true,
       generalNews: latestGeneralNews,
       restaurantNews: latestRestaurantNews,
+      officialGovNews: latestGovNews,
     };
 
     return res.status(200).json(returnObj);
@@ -52,15 +55,20 @@ module.exports.getNews = async (req, res, next) => {
  * @return JSON object of the top 8 news of each category
  */
 module.exports.searchNews = async (req, res, next) => {
-  const searchStr = req.query.q;
-
+  const { q, type } = req.query;
   // Crafts an object that searches for that string in either the title or the content or both (case insensitive)
-  const queryObj = utils.craftQueryObj(searchStr);
+  let queryObj;
+
+  try {
+    queryObj = utils.craftQueryObj(q, type);
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
 
   // queryObj will be empty if user does not specify any query parameters
   try {
-    const limit = 5;
-    const news = await fetchNewsFromDB(queryObj, limit);
+    const LIMIT = 5;
+    const news = await fetchNewsFromDB(queryObj, LIMIT);
 
     const returnObj = {
       success: true,
@@ -74,10 +82,73 @@ module.exports.searchNews = async (req, res, next) => {
   }
 };
 
+/**
+ * An outward facing function to fetch news for a specific type of the 3 different allowed types
+ * Types: [General, Gov, Restuarant]
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+module.exports.getNewsWithType = async (req, res, next) => {
+  const { type } = req.params;
+  if (!utils.validateType(type)) {
+    const errorMsg =
+      "Please select one of the following types: 'General', 'Gov', 'Restaurant'";
+    return res.status(400).json({ success: false, error: errorMsg });
+  }
+
+  try {
+    const SEARCHLIMIT = 8;
+    const latestNews = await fetchNewsFromDB({ type }, SEARCHLIMIT);
+    res.status(200).json({ success: true, latestNews });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+/**
+ * Internal function to fetch news on demand to test the News API service
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns JSON response of the number of entries updated or inserted
+ */
 module.exports.devFetch = async (req, res, next) => {
-  const dbResp = await fetchNews();
-  const { nUpserted, nModified } = dbResp;
-  return res.status(200).json({ nUpserted, nModified });
+  try {
+    const dbResp = await fetchNews();
+    const { nUpserted, nModified } = dbResp;
+    return res.status(200).json({ nUpserted, nModified });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+/**
+ * Internal function to force the query and update of news from MOH using their RSS
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns number of entries inserted or updated
+ */
+module.exports.rssFetch = async (req, res, next) => {
+  try {
+    const { nUpserted, nModified } = await parseRssAndSaveToDB();
+
+    return res.status(200).json({ nUpserted, nModified });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+const parseRssAndSaveToDB = async () => {
+  const rssUpdateObj = await utils.parseRss();
+  return await bulkWriteToDB(rssUpdateObj);
 };
 
 /**
@@ -89,8 +160,8 @@ module.exports.devFetch = async (req, res, next) => {
 const fetchNewsFromDB = async (query, searchLimit) => {
   return await News.find(query)
     .lean()
-    .sort("-updatedAt")
-    .select("-_id -createdAt")
+    .sort("-createdAt -updatedAt")
+    .select("-_id")
     .limit(searchLimit)
     .exec();
 };
@@ -121,10 +192,7 @@ const fetchNews = async () => {
       ...craftedBulkWriteObjectRestaurant,
     ];
 
-    const dbResp = await News.bulkWrite(mergedBulkWriteArr);
-    const { nUpserted, nModified } = dbResp;
-
-    console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
+    const dbResp = bulkWriteToDB(mergedBulkWriteArr);
 
     return dbResp;
   } catch (err) {
@@ -136,12 +204,25 @@ const fetchNews = async () => {
  * Scheduled cron job that is ran every 60 mins to fetch the latest news
  * It will update the database which automatically checks if the entry exists
  * If the entry exists, it will update the entry. Else, it will add a new entry.
+ *
+ * The second cron is for RSS Feeds that will run once every day at midnight
  */
 if (process.env.NODE_ENV !== "test") {
   cron.schedule("0 * * * *", () => {
     fetchNews();
   });
+
+  cron.schedule("0 0 * * *", () => {
+    parseRssAndSaveToDB();
+  });
 }
+
+const bulkWriteToDB = async (bulkWriteObj) => {
+  const dbResp = await News.bulkWrite(bulkWriteObj);
+  const { nUpserted, nModified } = dbResp;
+  console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
+  return dbResp;
+};
 
 const fetchLatestNewsFromExternal = async () => {
   const restaurantTerms = ["Restaurant", "Food", "Dining"].join(" OR ");

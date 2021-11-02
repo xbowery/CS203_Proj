@@ -2,15 +2,32 @@ package com.app.APICode.user;
 
 import org.springframework.util.StringUtils;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class UserDTO {
 
+    @Schema(description = "Unique identifier of the User.", example = "1", required = true)
     private Long id;
+
+    @Schema(description = "Email of the User.", example = "JohnDoe@abc.com", required = true)
     private String email;
+
+    @Schema(description = "Username of the User.", example = "JohnDoe", required = true)
     private String username;
+
+    @Schema(description = "First Name of the User.", example = "John", required = true)
     private String firstName;
+
+    @Schema(description = "Last Name of the User.", example = "Doe")
     private String lastName;
+
+    @Schema(description = "Role of User.", required = true)
     private String role;
+
+    @Schema(description = "If the user account is enabled.", required = true)
     private boolean isEnabled;
+
+    @Schema(description = "Name of the business User work at.", required = true)
     private String company;
 
     /**
@@ -27,7 +44,7 @@ public class UserDTO {
         userDTO.firstName = user.getFirstName();
         userDTO.lastName = user.getLastName();
         userDTO.isEnabled = user.isEnabled();
-        if(user.getEmployee() != null){
+        if (user.getEmployee() != null) {
             userDTO.company = user.getEmployee().getRestaurant().getName();
         }
         userDTO.role = StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1];

@@ -30,19 +30,45 @@
     <v-list expand shaped class="vertical-nav-menu-items pr-5">
       <nav-menu-link title="Home" :to="{ name: 'home' }" :icon="icons.mdiHomeOutline"></nav-menu-link>
       <nav-menu-link title="Restaurants" :to="{ name: 'restaurants' }" :icon="icons.mdiFood"></nav-menu-link>
-      <nav-menu-link title="Dashboard" :to="{ name: 'Dashboard' }" :icon="icons.mdiDomain"></nav-menu-link>
-      <nav-menu-link title="Employees List" :to="{ name: 'Employees' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
       <nav-menu-link
+        v-if="isBusinessOwner"
+        title="Dashboard"
+        :to="{ name: 'Dashboard' }"
+        :icon="icons.mdiDomain"
+      ></nav-menu-link>
+      <nav-menu-link
+        v-if="isBusinessOwner"
+        title="Employees List"
+        :to="{ name: 'Employees' }"
+        :icon="icons.mdiAccountGroup"
+      ></nav-menu-link>
+      <nav-menu-link
+        v-if="isEmployee"
         title="Covid Testing"
         :to="{ name: 'CovidTesting' }"
         :icon="icons.mdiHospitalBoxOutline"
       ></nav-menu-link>
       <nav-menu-link title="News" :to="{ name: 'News' }" :icon="icons.mdiDomain"></nav-menu-link>
-      <nav-menu-link title="User List" :to="{ name: 'UserList' }" :icon="icons.mdiAccountGroup"></nav-menu-link>
-      <nav-menu-link title="RestaurantList" :to="{ name: 'RestaurantList' }" :icon="icons.mdiFood"></nav-menu-link>
-      
+      <nav-menu-link
+        v-if="isAdmin"
+        title="User List"
+        :to="{ name: 'UserList' }"
+        :icon="icons.mdiAccountGroup"
+      ></nav-menu-link>
+      <nav-menu-link
+        v-if="isAdmin"
+        title="RestaurantList"
+        :to="{ name: 'RestaurantList' }"
+        :icon="icons.mdiFood"
+      ></nav-menu-link>
+      <nav-menu-link
+        v-if="isAdmin"
+        title="MeasuresList"
+        :to="{ name: 'MeasuresList' }"
+        :icon="icons.mdiFood"
+      ></nav-menu-link>
     </v-list>
-    </v-navigation-drawer>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -65,8 +91,25 @@ import {
 // import NavMenuSectionTitle from './NavMenuSectionTitle.vue'
 // import NavMenuGroup from './NavMenuGroup.vue'
 import NavMenuLink from './NavMenuLink.vue'
-
+import TokenService from '@/services/token.service'
+import { Role } from '@/model/role'
 export default {
+  computed: {
+    isAdmin() {
+      const user = TokenService.getUser()
+      return user.role === Role.admin
+    },
+
+    isEmployee() {
+      const user = TokenService.getUser()
+      return user.role === Role.employee
+    },
+
+    isBusinessOwner() {
+      const user = TokenService.getUser()
+      return user.role === Role.business
+    },
+  },
   components: {
     // NavMenuSectionTitle,
     // NavMenuGroup,
