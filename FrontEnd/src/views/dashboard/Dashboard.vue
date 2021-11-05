@@ -25,33 +25,33 @@
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesQuarantine.change"
-            :color="employeesQuarantine.color"
-            :icon="employeesQuarantine.icon"
+            :change="employeesPending.change"
+            :color="employeesPending.color"
+            :icon="employeesPending.icon"
             :statistics="pending_count"
-            :stat-title="employeesQuarantine.statTitle"
-            :subtitle="employeesQuarantine.subtitle"
+            :stat-title="employeesPending.statTitle"
+            :subtitle="employeesPending.subtitle"
           ></statistics-card-vertical>
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesInfected.change"
-            :color="employeesInfected.color"
-            :icon="employeesInfected.icon"
+            :change="employeesPostive.change"
+            :color="employeesPostive.color"
+            :icon="employeesPostive.icon"
             :statistics="positive_count"
-            :stat-title="employeesInfected.statTitle"
-            :subtitle="employeesInfected.subtitle"
+            :stat-title="employeesPostive.statTitle"
+            :subtitle="employeesPostive.subtitle"
           ></statistics-card-vertical>
         </v-col>
 
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesRecovered.change"
-            :color="employeesRecovered.color"
-            :icon="employeesRecovered.icon"
+            :change="employeesNegative.change"
+            :color="employeesNegative.color"
+            :icon="employeesNegative.icon"
             :statistics="negative_count"
-            :stat-title="employeesRecovered.statTitle"
-            :subtitle="employeesRecovered.subtitle"
+            :stat-title="employeesNegative.statTitle"
+            :subtitle="employeesNegative.subtitle"
           ></statistics-card-vertical>
         </v-col>
       </v-row>
@@ -95,24 +95,23 @@ export default {
     return {
       items: [],
       employee_count: '',
-      pending_count: '',
-      positive_count: '',
-      negative_count: '',
+      pending_count: 0,
+      positive_count: 0,
+      negative_count: 0,
     }
   },
 
   async mounted() {
     try {
-      // const res = await UserService.getEmployees()
       console.log(this.user.username)
       const res = await UserService.getEmployeesCtests(this.user.username)
       this.items = res.data
       this.employee_count = this.items.length
 
       this.items.forEach(item => {
-        if (item.ctest.type == 'pending') this.pending_count += 1
-        else if (item.ctest.type == 'positive') this.positive_count += 1
-        else if (item.ctest.type == 'negative') this.negative_count += 1
+        if (item.result == 'Pending') this.pending_count += 1
+        else if (item.result == 'Positive') this.positive_count += 1
+        else if (item.result == 'Negative') this.negative_count += 1
       })
     } catch (error) {
       console.error(error)
@@ -134,41 +133,35 @@ export default {
       subtitle: 'in total',
     }
 
-    //number of employees on quarantine
-    const employeesQuarantine = {
+    //number of employees with pending test for COVID-19
+    const employeesPending = {
       statTitle: 'Num of employees',
       icon: mdiHospitalBoxOutline,
       color: 'secondary',
-      subtitle: 'on quarantine currently',
-      // statistics: '2',
-      // change: '+0.02%',
+      subtitle: 'with pending test(s)',
     }
 
-    //number of employees infected with COVID-19
-    const employeesInfected = {
+    //number of employees tested positive for COVID-19
+    const employeesPostive = {
       statTitle: 'Num of employees',
       icon: mdiNeedle,
       color: 'primary',
-      subtitle: 'infected currently',
-      // statistics: '0',
-      // change: '',
+      subtitle: 'tested positive',
     }
 
-    //number of employees recovered from COVID-19
-    const employeesRecovered = {
+    //number of employees tested negative for COVID-19
+    const employeesNegative = {
       statTitle: 'Num of employees',
       icon: mdiThumbUp,
       color: 'warning',
-      subtitle: 'recovered from Covid',
-      // statistics: '1',
-      // change: '',
+      subtitle: 'tested negative',
     }
 
     return {
       totalNumEmployees,
-      employeesQuarantine,
-      employeesInfected,
-      employeesRecovered,
+      employeesPending,
+      employeesPostive,
+      employeesNegative,
     }
   },
 }
