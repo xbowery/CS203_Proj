@@ -104,7 +104,8 @@ export default {
   async mounted() {
     try {
       // const res = await UserService.getEmployees()
-      const res = await UserService.getEmployeesCtests(this.username)
+      console.log(this.user.username)
+      const res = await UserService.getEmployeesCtests(this.user.username)
       this.items = res.data
       this.employee_count = this.items.length
 

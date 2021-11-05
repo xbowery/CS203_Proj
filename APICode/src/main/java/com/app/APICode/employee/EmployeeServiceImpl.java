@@ -95,9 +95,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee owner = getEmployeeByUsername(username);
         List<Employee> employees = owner.getRestaurant().getEmployees();
         for (Employee e : employees) {
-            allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
+            if(e.getCtests().size() > 0){
+                allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
+            }
         }
-
         return allCtests;
     }
 
