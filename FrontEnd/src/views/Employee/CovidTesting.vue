@@ -27,7 +27,7 @@
         :change="frequencyOfTest.change"
         :color="frequencyOfTest.color"
         :icon="frequencyOfTest.icon"
-        :statistics="frequencyOfTest.statistics"
+        :statistics="test_frequency"
         :stat-title="frequencyOfTest.statTitle"
         :subtitle="frequencyOfTest.subtitle"
       ></statistics-card-vertical>
@@ -38,7 +38,7 @@
         :change="daysToNextTest.change"
         :color="daysToNextTest.color"
         :icon="daysToNextTest.icon"
-        :statistics="daysToNextTest.statistics"
+        :statistics="days_remaining"
         :stat-title="daysToNextTest.statTitle"
         :subtitle="daysToNextTest.subtitle"
       ></statistics-card-vertical>
@@ -53,13 +53,15 @@
 import { mdiCalendarMonth, mdiClockOutline, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 import { mapGetters } from 'vuex'
-// demos
+import moment from 'moment'
 import CovidTestingDatatable from './CovidTestingDatatable.vue'
 
 export default {
   data: () => ({
     latest_date: '',
     latest_result: '',
+    test_frequency: 7,
+    days_remaining: 0,
   }),
 
   components: {
@@ -78,6 +80,12 @@ export default {
       if (e != null) {
         this.latest_date = e.date
         this.latest_result = e.result
+
+        let start = moment(e.date);
+        let end = moment(start, "YYYY-MM-DD").add(this.test_frequency, 'days')
+        let duration = moment.duration(end.diff(start))
+        let days = duration.asDays()
+        this.days_remaining = Math.round(days)
       }
     },
   },
@@ -89,7 +97,6 @@ export default {
       color: 'success',
     }
 
-    // vertical card options
     const latestResult = {
       statTitle: 'Latest Result',
       icon: mdiHelpCircleOutline,
@@ -100,14 +107,12 @@ export default {
       statTitle: 'Frequency of Test',
       icon: mdiClockOutline,
       color: 'warning',
-      statistics: 'Every 7 Days',
     }
 
     const daysToNextTest = {
       statTitle: 'Days To Next Test',
       icon: mdiClockOutline,
       color: 'warning',
-      statistics: '3',
     }
 
     return {
