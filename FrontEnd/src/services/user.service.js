@@ -132,6 +132,10 @@ class UserService {
       JSON_HEADER,
     )
   }
+  getEmployeesCtests(username){
+    const request = `/employee/${username}/ctests`
+    return api.get(request)
+  }
 }
 
 export default new UserService()

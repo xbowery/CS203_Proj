@@ -1,8 +1,10 @@
 package com.app.APICode.employee;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
@@ -84,6 +86,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         user.setEmployee(null);
         users.save(user);
         return employee;
+    }
+
+    @Override
+    public List<Ctest> getAllEmployeesCtest(String username) {
+        List<Ctest> allCtests = new ArrayList<Ctest>();
+
+        Employee owner = getEmployeeByUsername(username);
+        List<Employee> employees = owner.getRestaurant().getEmployees();
+        for (Employee e : employees) {
+            allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
+        }
+
+        return allCtests;
     }
 
 }

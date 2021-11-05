@@ -18,7 +18,7 @@
             :change="totalNumEmployees.change"
             :color="totalNumEmployees.color"
             :icon="totalNumEmployees.icon"
-            :statistics="totalNumEmployees.statistics"
+            :statistics="employee_count"
             :stat-title="totalNumEmployees.statTitle"
             :subtitle="totalNumEmployees.subtitle"
           ></statistics-card-vertical>
@@ -28,7 +28,7 @@
             :change="employeesQuarantine.change"
             :color="employeesQuarantine.color"
             :icon="employeesQuarantine.icon"
-            :statistics="employeesQuarantine.statistics"
+            :statistics="pending_count"
             :stat-title="employeesQuarantine.statTitle"
             :subtitle="employeesQuarantine.subtitle"
           ></statistics-card-vertical>
@@ -38,7 +38,7 @@
             :change="employeesInfected.change"
             :color="employeesInfected.color"
             :icon="employeesInfected.icon"
-            :statistics="employeesInfected.statistics"
+            :statistics="positive_count"
             :stat-title="employeesInfected.statTitle"
             :subtitle="employeesInfected.subtitle"
           ></statistics-card-vertical>
@@ -49,7 +49,7 @@
             :change="employeesRecovered.change"
             :color="employeesRecovered.color"
             :icon="employeesRecovered.icon"
-            :statistics="employeesRecovered.statistics"
+            :statistics="negative_count"
             :stat-title="employeesRecovered.statTitle"
             :subtitle="employeesRecovered.subtitle"
           ></statistics-card-vertical>
@@ -74,6 +74,7 @@ import CrowdLevel from './CrowdLevel.vue'
 import DashboardDailyOverview from './DashboardDailyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
 import { mapGetters } from 'vuex'
+import UserService from '@/services/user.service'
 
 export default {
   components: {
@@ -83,11 +84,44 @@ export default {
     DashboardDailyOverview,
     DashboardDatatable,
   },
+
   computed: {
     ...mapGetters({
       user: 'auth/user',
     }),
   },
+
+  data() {
+    return {
+      items: [],
+      employee_count: '',
+      pending_count: '',
+      positive_count: '',
+      negative_count: '',
+    }
+  },
+
+  async mounted() {
+    try {
+      // const res = await UserService.getEmployees()
+      const res = await UserService.getEmployeesCtests(this.username)
+      this.items = res.data
+      this.employee_count = this.items.length
+
+      this.items.forEach(item => {
+        if (item.ctest.type == 'pending') this.pending_count += 1
+        else if (item.ctest.type == 'positive') this.positive_count += 1
+        else if (item.ctest.type == 'negative') this.negative_count += 1
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  methods: {
+    set_numbers() {},
+  },
+
   setup() {
     /*providing statistics on status of employees */
 
@@ -97,8 +131,6 @@ export default {
       icon: mdiAccountGroup,
       color: 'success',
       subtitle: 'in total',
-      statistics: '100',
-      change: '+5%',
     }
 
     //number of employees on quarantine
@@ -107,8 +139,8 @@ export default {
       icon: mdiHospitalBoxOutline,
       color: 'secondary',
       subtitle: 'on quarantine currently',
-      statistics: '2',
-      change: '+0.02%',
+      // statistics: '2',
+      // change: '+0.02%',
     }
 
     //number of employees infected with COVID-19
@@ -117,8 +149,8 @@ export default {
       icon: mdiNeedle,
       color: 'primary',
       subtitle: 'infected currently',
-      statistics: '0',
-      change: '',
+      // statistics: '0',
+      // change: '',
     }
 
     //number of employees recovered from COVID-19
@@ -127,8 +159,8 @@ export default {
       icon: mdiThumbUp,
       color: 'warning',
       subtitle: 'recovered from Covid',
-      statistics: '1',
-      change: '',
+      // statistics: '1',
+      // change: '',
     }
 
     return {
