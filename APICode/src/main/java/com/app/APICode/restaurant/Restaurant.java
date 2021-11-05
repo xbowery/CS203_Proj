@@ -45,6 +45,8 @@ public class Restaurant {
 
     private String currentCrowdLevel;
 
+    private int testFrequency;
+
     @NotNull(message = "Max capacity should not be null")
     @Schema(description = "Seating capacity in Restaurant.", example = "100")
     private int maxCapacity;
@@ -70,6 +72,7 @@ public class Restaurant {
         this.maxCapacity = maxCapacity;
         crowdLevel = new ArrayList<>();
         this.currentCrowdLevel = "Low";
+        this.testFrequency = 7;
     }
 
     public String getName() {
@@ -137,6 +140,14 @@ public class Restaurant {
     }
     public String getcurrentCrowdLevel(){
         return this.currentCrowdLevel;
+    }
+
+    public int getTestFrequency(){
+        return this.testFrequency;
+    }
+
+    public void setTestFrequency(int testFrequency){
+        this.testFrequency = testFrequency;
     }
 
     // public CrowdLevel getCrowdLevel() {

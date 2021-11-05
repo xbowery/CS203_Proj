@@ -1,5 +1,6 @@
 package com.app.APICode.ctest;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface CtestService {
@@ -10,4 +11,6 @@ public interface CtestService {
     Ctest updateCtestByCtestIdAndUsername(String username, Long ctestId, Ctest newCtest);
 
     Ctest deleteCtestByCtestIdAndUsername(String username, Long ctestId);
+
+    Date getNextCtestByUsername(String username);
 }
