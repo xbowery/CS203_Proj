@@ -2,8 +2,7 @@ name: News CI
 
 on: 
   push:
-    paths:
-      - 'NewsMicroservice/**'
+    branches: [main]
   pull_request:
     types: [opened, reopened]
 
