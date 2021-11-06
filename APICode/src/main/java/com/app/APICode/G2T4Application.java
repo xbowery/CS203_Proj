@@ -73,6 +73,8 @@ public class G2T4Application {
 		CrowdLevelRepository crowdLevel = ctx.getBean(CrowdLevelRepository.class);
 		CrowdLevel testCrowdLevel = new CrowdLevel(new Date(), "medium", 22, testRestaurant);
 		crowdLevel.save(testCrowdLevel);
+
+		System.out.println(testRestaurant.getName() + " " + "id: " + testRestaurant.getId());
 	}
 
 }

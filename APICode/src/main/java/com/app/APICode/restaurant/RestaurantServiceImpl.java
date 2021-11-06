@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
+import com.app.APICode.user.User;
+import com.app.APICode.user.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -50,7 +52,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurantById(long id) {
-        Restaurant restaurant = restaurants.findById(id).orElse(null);  
+        Restaurant restaurant = restaurants.findById(id).orElse(null);
         if (restaurant == null)
             throw new RestaurantNotFoundException(id);
         return restaurant;
@@ -98,5 +100,20 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         return restaurant;
+    }
+
+    public User getRestaurantOwner(long id){
+        Restaurant restaurant = getRestaurantById(id);
+        List<Employee> employeeList = restaurant.getEmployees();
+        User owner = null;
+        for(Employee employee: employeeList){
+            if(employee.getUser().getAuthorities().toString().equals("[ROLE_BUSINESS]")){
+                owner = employee.getUser();
+            }
+        }
+        if(owner == null){
+            throw new RestrauntOwnerNotFoundException(id);
+        }
+        return owner;
     }
 }

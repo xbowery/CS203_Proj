@@ -107,6 +107,7 @@ public class CtestController {
     /**
      * Get the next Covid test date for the employee based on the restraunts test frequency
      *  and the employees latest covid test date 
+     * Username and not principal.getName() is used as we want business owners to be able to get this informaiton as well
      * "/employee/{username}/ctests/{ctestId}" 
      * If there is no user with the given "username" throw a UserNotFoundException 
      * If there is no employee with the user, throw a EmployeeNotFoundException 
@@ -119,8 +120,8 @@ public class CtestController {
         "COVID-19 Test" })
         @ApiResponses({
                 @ApiResponse(responseCode = "200", description = "Successful retrieved next covid test date", content = @Content) })
-        @GetMapping("/employee/ctests/next")
-        public Date getNextCtest(Principal principal) {
-                return ctests.getNextCtestByUsername(principal.getName());
+        @GetMapping("/employee/{username}/ctests/next")
+        public Date getNextCtest(@PathVariable(value = "username") String username) {
+                return ctests.getNextCtestByUsername(username);
         }
 }

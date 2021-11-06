@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.app.APICode.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 public class Notification {
@@ -29,7 +32,9 @@ public class Notification {
     private boolean isSeen = false;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId", nullable = false)
+    @JsonBackReference
+    @Schema(description = "User that this Notifications belongs to.", required = true)
     private User user;
 
     public Notification() {}
