@@ -163,9 +163,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO addUser(User user, Boolean isAdmin) {
-        User duplicate = users.findByUsername(user.getUsername()).orElse(null);
+        User duplicateUsername = users.findByUsername(user.getUsername()).orElse(null);
+        User duplicateEmail = users.findByEmail(user.getEmail()).orElse(null);
 
-        if (duplicate != null || getUserByEmail(user.getEmail()) != null) {
+        if (duplicateUsername != null || duplicateEmail != null) {
             throw new UserOrEmailExistsException("This email already exists. Please sign in instead.");
         }
 
@@ -205,24 +206,33 @@ public class UserServiceImpl implements UserService {
     public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
         User user = getUserByUsername(username);
 
-        // Check if email exists to prevent a unique index violation
-        if (!(getUserByEmail(newUserInfo.getEmail()).getUsername().equals(username))) {
-            throw new UserOrEmailExistsException("This email already exists.");
+        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN")) && !(username.equals(newUserInfo.getUsername()))) {
+            throw new UserForbiddenException("You are forbidden from processing this request.");
         }
-        user.setEmail(newUserInfo.getEmail());
-        user.setFirstName(newUserInfo.getFirstName());
-        user.setLastName(newUserInfo.getLastName());
 
-        // String email = newUserInfo.getEmail();
-        // String firstName = newUserInfo.getFirstName();
-        // String lastName = newUserInfo.getLastName();
+        // Check if email exists to prevent a unique index violation
+        User duplicateEmail = users.findByEmail(newUserInfo.getEmail()).orElse(null);
+        if (duplicateEmail != null) {
+            if (!(duplicateEmail).getUsername().equals(newUserInfo.getUsername())) {
+                throw new UserOrEmailExistsException("This email already exists.");
+            }
+        }
+        // user.setEmail(newUserInfo.getEmail());
+        // user.setFirstName(newUserInfo.getFirstName());
+        // user.setLastName(newUserInfo.getLastName());
+
+        String email = newUserInfo.getEmail();
+        String firstName = newUserInfo.getFirstName();
+        String lastName = newUserInfo.getLastName();
 
         // user.setPassword(encoder.encode(newUserInfo.getPassword()));
         // user.setUsername(newUserInfo.getUsername());
         // user.setIsVaccinated(newUserInfo.getIsVaccinated());
         // user.setAuthorities(newUserInfo.getAuthorities());
-        // users.setUserInfoByUsername(firstName, lastName, email, username);
-        return convertToUserDTO(users.save(user));
+        users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
+
+        User savedUser = getUserByUsername(newUserInfo.getUsername());
+        return convertToUserDTO(savedUser);
 
     }
 

@@ -194,7 +194,7 @@ public class UserIntegrationTest {
         "  \"password\": \"testing123\"\r\n" +
         "}";
 
-        Response updateResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
+        Response updateResponse = request.body(updateUserDetails).put(uriUsers);
 
         request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
@@ -227,12 +227,11 @@ public class UserIntegrationTest {
         "  \"password\": \"testing123\"\r\n" +
         "}";
 
-        Response updateUserResponse = request.body(updateUserDetails).put(uriUsers + "/" + savedUsername);
+        Response updateUserResponse = request.body(updateUserDetails).put(uriUsers);
 
         User updatedUser = users.findByUsername(savedUsername).orElse(null);
 
-        assertEquals(200, updateUserResponse.getStatusCode());
-        assertEquals("", updateUserResponse.getBody().asString());
+        assertEquals(403, updateUserResponse.getStatusCode());
         assertNotNull(updatedUser);
     }
 
@@ -272,7 +271,7 @@ public class UserIntegrationTest {
 
         User savedUser = users.findByUsername(savedUsername).orElse(null);
 
-        assertEquals(200, deleteUserResponse.getStatusCode());
+        assertEquals(403, deleteUserResponse.getStatusCode());
         assertNotNull(savedUser);
     }
 
@@ -294,9 +293,7 @@ public class UserIntegrationTest {
 
         Response registerUserResponse = request.body(newUserDetails).post(uriRegister);
 
-        assertEquals(201, registerUserResponse.getStatusCode());
-        assertEquals("Test", JsonPath.from(registerUserResponse.getBody().asString()).get("firstName"));
-        assertEquals("User", JsonPath.from(registerUserResponse.getBody().asString()).get("lastName"));
+        assertEquals(204, registerUserResponse.getStatusCode());
     }
 
     @Test
@@ -321,10 +318,8 @@ public class UserIntegrationTest {
 
         Response registerUser2Response = request.body(newUserDetails).post(uriRegister);
 
-        assertEquals(201, registerUser1Response.getStatusCode());
+        assertEquals(204, registerUser1Response.getStatusCode());
         assertEquals(409, registerUser2Response.getStatusCode());
-        assertEquals("Test", JsonPath.from(registerUser1Response.getBody().asString()).get("firstName"));
-        assertEquals("User", JsonPath.from(registerUser1Response.getBody().asString()).get("lastName"));
     }
 
     @Test
@@ -364,7 +359,7 @@ public class UserIntegrationTest {
 
         Response validTokenResponse = request.get(uriRegistrationConfirmation + "?token=" + vToken);
         
-        assertEquals(201, registerUserResponse.getStatusCode());
+        assertEquals(204, registerUserResponse.getStatusCode());
         assertNotNull(user);
         assertNotNull(vToken);
         assertEquals(200, validTokenResponse.getStatusCode());
