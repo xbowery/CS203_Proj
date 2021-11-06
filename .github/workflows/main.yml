@@ -1,18 +1,17 @@
-name: News-API CI
+name: Main CI
 
 on: [push, pull_request]
 
 jobs:
   news-api:
+    name: News API CI
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: NewsMicroservice
-    
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [14.x]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
