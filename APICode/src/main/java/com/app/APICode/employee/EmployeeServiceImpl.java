@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.app.APICode.ctest.Ctest;
+import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
@@ -18,6 +19,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private UserService users;
     private RestaurantService restaurants;
+    private NotificationService notifications;
 
     @Autowired
     public EmployeeServiceImpl(UserService users) {
@@ -28,6 +30,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     public void setRestaurants(RestaurantService restaurants) {
         this.restaurants = restaurants;
+    }
+    @Autowired
+    public void setNotifications(NotificationService notifications){
+        this.notifications = notifications;
     }
 
     public RestaurantService getRestaurants() {
@@ -60,6 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRestaurant(restaurant);
         employee.setStatus("Pending");
         user.setEmployee(employee);
+        notifications.addNewEmployeeApprovalNotification(username, businessId, designation);
 
         return users.save(user).getEmployee();
     }

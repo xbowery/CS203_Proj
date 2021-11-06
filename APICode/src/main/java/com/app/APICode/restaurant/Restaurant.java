@@ -43,8 +43,10 @@ public class Restaurant {
     @Schema(description = "Current number of people in Restaurant.", example = "50")
     private int currentCapacity;
 
+    @Schema(description = "Current crowd level of people in restraunt.", example = "Low")
     private String currentCrowdLevel;
 
+    @Schema(description = "Frequency of test required for restraunt employees", example = "7")
     private int testFrequency;
 
     @NotNull(message = "Max capacity should not be null")

@@ -66,7 +66,7 @@ export default {
   }),
 
   mounted() {
-    this.getNextDate()
+    this.getNextDate(this.user.username)
   },
 
   components: {
@@ -93,9 +93,9 @@ export default {
         this.days_remaining = Math.round(days)
       }
     },
-    async getNextDate() {
+    async getNextDate(username) {
       try {
-        const res = await UserService.getNextCtest()
+        const res = await UserService.getNextCtest(username)
         this.next_date = res.data
         this.daysToNextCtest = Math.round((new Date(this.next_date) - new Date()) / 86400000)
       } catch (error) {
