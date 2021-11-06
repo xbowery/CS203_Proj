@@ -31,6 +31,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void setRestaurants(RestaurantService restaurants) {
         this.restaurants = restaurants;
     }
+    @Autowired
+    public void setNotifications(NotificationService notifications) {
+        this.notifications = notifications;
+    }
 
     public RestaurantService getRestaurants() {
         return restaurants;
