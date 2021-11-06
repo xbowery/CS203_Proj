@@ -24,12 +24,14 @@
 
     <v-col cols="10" sm="3">
       <statistics-card-vertical
-        :change="frequencyOfTest.change"
-        :color="frequencyOfTest.color"
-        :icon="frequencyOfTest.icon"
-        :statistics="test_frequency"
-        :stat-title="frequencyOfTest.statTitle"
-        :subtitle="frequencyOfTest.subtitle"
+
+        :change="dateOfNextTest.change"
+        :color="dateOfNextTest.color"
+        :icon="dateOfNextTest.icon"
+        :statistics="next_date"
+        :stat-title="dateOfNextTest.statTitle"
+        :subtitle="dateOfNextTest.subtitle"
+
       ></statistics-card-vertical>
     </v-col>
 
@@ -38,7 +40,7 @@
         :change="daysToNextTest.change"
         :color="daysToNextTest.color"
         :icon="daysToNextTest.icon"
-        :statistics="days_remaining"
+        :statistics="daysToNextCtest"
         :stat-title="daysToNextTest.statTitle"
         :subtitle="daysToNextTest.subtitle"
       ></statistics-card-vertical>
@@ -55,14 +57,19 @@ import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardV
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import CovidTestingDatatable from './CovidTestingDatatable.vue'
+import UserService from '@/services/user.service'
 
 export default {
   data: () => ({
     latest_date: '',
     latest_result: '',
-    test_frequency: 7,
-    days_remaining: 0,
+    next_date: '',
+    daysToNextCtest: '',
   }),
+
+  mounted(){
+    this.getNextDate();
+  },
 
   components: {
     StatisticsCardVertical,
@@ -88,6 +95,16 @@ export default {
         this.days_remaining = Math.round(days)
       }
     },
+    async getNextDate(){
+      try{
+        const res = await UserService.getNextCtest()
+        this.next_date = res.data
+        this.daysToNextCtest = Math.round((new Date(this.next_date) -  new Date())/86400000)
+      } catch(error){
+        console.log(error)
+      }
+
+    }
   },
 
   setup() {
@@ -103,8 +120,8 @@ export default {
       color: 'primary',
     }
 
-    const frequencyOfTest = {
-      statTitle: 'Frequency of Test',
+    const dateOfNextTest = {
+      statTitle: 'Next Test Date',
       icon: mdiClockOutline,
       color: 'warning',
     }
@@ -118,7 +135,7 @@ export default {
     return {
       latestTestDate,
       latestResult,
-      frequencyOfTest,
+      dateOfNextTest,
       daysToNextTest,
     }
   },
