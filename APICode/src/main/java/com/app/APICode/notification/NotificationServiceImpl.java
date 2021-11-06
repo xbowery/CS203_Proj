@@ -1,24 +1,27 @@
 package com.app.APICode.notification;
 
+import java.util.List;
+
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
+import com.app.APICode.user.UserService;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private NotificationRepository notifications;
-    
     private RestaurantService restaurants;
-
     private EmployeeService employees;
+    private UserService users;
 
-    public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants, EmployeeService employees) {
+    public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants, EmployeeService employees, UserService users) {
         this.notifications = notifications;
         this.restaurants = restaurants;
         this.employees = employees;
+        this.users  = users;
     }
 
     @Override
@@ -39,6 +42,11 @@ public class NotificationServiceImpl implements NotificationService {
         return null;
     }
 
+    @Override
+    public List<Notification> getNotificationsByUsername(String username){
+        User user = users.getUserByUsername(username);
+        return user.getNotifications();
+    }
 
 
 }

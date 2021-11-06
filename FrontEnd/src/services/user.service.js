@@ -11,6 +11,9 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
+  getNotification(){
+    return api.get("/user/notificaitons")
+  }
   getEmployees() {
     return api.get('/employees')
   }

@@ -202,4 +202,8 @@ public class User implements UserDetails {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
+
+    public List<Notification> getNotifications(){
+        return this.notifications;
+    }
 }
