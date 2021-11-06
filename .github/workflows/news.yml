@@ -1,14 +1,21 @@
-name: News Microservice CI
+name: News CI
 
-on: [push, pull_request]
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
-  build:
+  news-api:
+    name: News API CI
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./NewsMicroservice
     strategy:
       matrix:
         node-version: [14.x]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -16,7 +23,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: 'NewsMicroservice/package-lock.json'
       - name: Install dependencies
-      - run: npm install
+        run: npm install
       - name: Runs all the best
-      - run: npm test
+        run: npm test

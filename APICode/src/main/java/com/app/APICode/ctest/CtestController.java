@@ -1,6 +1,7 @@
 package com.app.APICode.ctest;
 
 import java.security.Principal;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -102,4 +103,24 @@ public class CtestController {
     public Ctest deleteCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId) {
         return ctests.deleteCtestByCtestIdAndUsername(principal.getName(), ctestId);
     }
+
+    /**
+     * Get the next Covid test date for the employee based on the restraunts test frequency
+     *  and the employees latest covid test date 
+     * "/employee/{username}/ctests/{ctestId}" 
+     * If there is no user with the given "username" throw a UserNotFoundException 
+     * If there is no employee with the user, throw a EmployeeNotFoundException 
+     * If there is no Ctests with the given "id", throw a CtestNotFoundException
+     * if Ctests is empty it would return todays date
+     * 
+     * @param username username of employee
+     */
+    @Operation(summary = "Get Next Covid Test date", description = "Get the next covid testing date using the usernam eof the employee", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "COVID-19 Test" })
+        @ApiResponses({
+                @ApiResponse(responseCode = "200", description = "Successful retrieved next covid test date", content = @Content) })
+        @GetMapping("/employee/ctests/next")
+        public Date getNextCtest(Principal principal) {
+                return ctests.getNextCtestByUsername(principal.getName());
+        }
 }
