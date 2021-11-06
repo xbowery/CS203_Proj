@@ -1,6 +1,11 @@
-name: Main CI
+name: News CI
 
-on: [push, pull_request]
+on: 
+  push:
+    paths:
+      - 'NewsMicroservice/**'
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   news-api:
