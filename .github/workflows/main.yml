@@ -20,6 +20,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install dependencies
-      - run: npm install
+        run: npm install
       - name: Runs all the best
-      - run: npm test
+        run: npm test
