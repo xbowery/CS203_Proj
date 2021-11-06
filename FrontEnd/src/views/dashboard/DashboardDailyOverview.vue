@@ -161,9 +161,15 @@ export default {
     },
 
     updateSeriesLine() {
-      this.$refs.realtimeChart.updateSeries([{
-        data: this.chartData,
-      }], false, true);
+      this.$refs.realtimeChart.updateSeries(
+        [
+          {
+            data: this.chartData,
+          },
+        ],
+        false,
+        true,
+      )
     },
 
     // fetchData() {
