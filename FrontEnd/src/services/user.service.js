@@ -18,8 +18,8 @@ class UserService {
     var request = `/users/employee`
     return api.post(request, {
       restaurantId,
-      designation
-    } )
+      designation,
+    })
   }
   approveEmployee(username) {
     return api.put('/users/employee', {
@@ -71,7 +71,7 @@ class UserService {
     const request = `/employee/ctests/${ctestId}`
     return api.put(request, ctest)
   }
-  getNextCtest(){
+  getNextCtest() {
     const request = `employee/ctests/next`
     return api.get(request)
   }
@@ -136,7 +136,7 @@ class UserService {
       JSON_HEADER,
     )
   }
-  getEmployeesCtests(username){
+  getEmployeesCtests(username) {
     const request = `/employee/${username}/ctests`
     return api.get(request)
   }

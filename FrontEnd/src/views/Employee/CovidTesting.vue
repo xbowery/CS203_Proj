@@ -24,14 +24,12 @@
 
     <v-col cols="10" sm="3">
       <statistics-card-vertical
-
         :change="dateOfNextTest.change"
         :color="dateOfNextTest.color"
         :icon="dateOfNextTest.icon"
         :statistics="next_date"
         :stat-title="dateOfNextTest.statTitle"
         :subtitle="dateOfNextTest.subtitle"
-
       ></statistics-card-vertical>
     </v-col>
 
@@ -67,8 +65,8 @@ export default {
     daysToNextCtest: '',
   }),
 
-  mounted(){
-    this.getNextDate();
+  mounted() {
+    this.getNextDate()
   },
 
   components: {
@@ -88,23 +86,22 @@ export default {
         this.latest_date = e.date
         this.latest_result = e.result
 
-        let start = moment(e.date);
-        let end = moment(start, "YYYY-MM-DD").add(this.test_frequency, 'days')
+        let start = moment(e.date)
+        let end = moment(start, 'YYYY-MM-DD').add(this.test_frequency, 'days')
         let duration = moment.duration(end.diff(start))
         let days = duration.asDays()
         this.days_remaining = Math.round(days)
       }
     },
-    async getNextDate(){
-      try{
+    async getNextDate() {
+      try {
         const res = await UserService.getNextCtest()
         this.next_date = res.data
-        this.daysToNextCtest = Math.round((new Date(this.next_date) -  new Date())/86400000)
-      } catch(error){
+        this.daysToNextCtest = Math.round((new Date(this.next_date) - new Date()) / 86400000)
+      } catch (error) {
         console.log(error)
       }
-
-    }
+    },
   },
 
   setup() {
