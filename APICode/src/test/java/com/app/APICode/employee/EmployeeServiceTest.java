@@ -11,8 +11,14 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import com.app.APICode.ctest.CtestRepository;
+import com.app.APICode.notification.NotificationService;
+import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
+import com.app.APICode.restaurant.RestaurantService;
+import com.app.APICode.restaurant.RestaurantServiceImpl;
+import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.user.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,15 +29,62 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
     
-    // @Mock
-    // private EmployeeRepository employees;
 
     @Mock
-    private UserRepository users;
+    private UserService users;
 
     @Mock
-    private RestaurantRepository restaurants;
+    private RestaurantService restaurants;
 
     @Mock
-    private CtestRepository ctests;
+    private NotificationService notifications;
+
+    @InjectMocks
+    private EmployeeServiceImpl employeeService;
+
+    @Test
+    public void addEmployee_NewUsername_ReturnSavedEmployee() {
+        //Arrange
+        employeeService.setRestaurants(restaurants);
+        employeeService.setNotifications(notifications);
+
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        Restaurant restaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+
+        long businessId = restaurant.getId();
+
+        when(users.save(any(User.class))).thenReturn(user);
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
+        when(restaurants.getRestaurantById(any(Long.class))).thenReturn(restaurant);
+        when(notifications.addNewEmployeeApprovalNotification(any(String.class), any(Long.class), any(String.class))).thenReturn(null);
+        //Act
+        Employee savedEmployee = employeeService.addEmployeeToBusiness(user.getUsername(), "Manager", businessId);
+
+        //Assert
+        assertNotNull(savedEmployee);
+        verify(users).save(user);
+    }
+
+    @Test
+    public void addEmployee_InvalidRestaurantId_ReturnNull() {
+        //Arrange
+        employeeService.setRestaurants(restaurants);
+        employeeService.setNotifications(notifications);
+
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        long businessId = 10L;
+
+        when(users.save(any(User.class))).thenReturn(user);
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
+        when(restaurants.getRestaurantById(any(Long.class))).thenReturn(null);
+       
+        //Act
+        Employee savedEmployee = employeeService.addEmployeeToBusiness(user.getUsername(), "Manager", businessId);
+
+        //Assert
+        assertNull(savedEmployee);
+        verify(users).save(user);
+    }
+
+
 }
