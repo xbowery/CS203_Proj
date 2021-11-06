@@ -91,4 +91,11 @@ public class Employee {
     public void setStatus(String status){
         this.status = status;
     }
+
+    public List<Ctest> getCtests() {
+        return ctests;
+    }
+    public void setCtests(List<Ctest> ctests) {
+        this.ctests = ctests;
+    }
 }

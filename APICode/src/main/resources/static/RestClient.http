@@ -224,3 +224,6 @@ Content-Type: application/json
 GET http://localhost:8080/api/v1/employees/business1
 Content-Type: application/json
 Authorization: Bearer: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJidXNpbmVzczEiLCJyb2xlcyI6WyJST0xFX0JVU0lORVNTIl0sImlzcyI6IkNvdmlkIFN1aXNzZSIsImV4cCI6MTYzNDk5NTU3MiwidHlwZSI6ImFjY2VzcyJ9.DPf70z2TNZwQRCSQYlu80aLUTI5LopMrfmcGOCbnpJK7IrngnkG3J6N4aR_s8D5RhaYq8TScdN4N09KUW5mPMA
+
+###
+GET http://localhost:8080/api/v1/employee/business1/ctests

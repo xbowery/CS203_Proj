@@ -24,12 +24,14 @@
 
     <v-col cols="10" sm="3">
       <statistics-card-vertical
+
         :change="dateOfNextTest.change"
         :color="dateOfNextTest.color"
         :icon="dateOfNextTest.icon"
         :statistics="next_date"
         :stat-title="dateOfNextTest.statTitle"
         :subtitle="dateOfNextTest.subtitle"
+
       ></statistics-card-vertical>
     </v-col>
 
@@ -53,7 +55,7 @@
 import { mdiCalendarMonth, mdiClockOutline, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 import { mapGetters } from 'vuex'
-// demos
+import moment from 'moment'
 import CovidTestingDatatable from './CovidTestingDatatable.vue'
 import UserService from '@/services/user.service'
 
@@ -85,6 +87,12 @@ export default {
       if (e != null) {
         this.latest_date = e.date
         this.latest_result = e.result
+
+        let start = moment(e.date);
+        let end = moment(start, "YYYY-MM-DD").add(this.test_frequency, 'days')
+        let duration = moment.duration(end.diff(start))
+        let days = duration.asDays()
+        this.days_remaining = Math.round(days)
       }
     },
     async getNextDate(){
@@ -106,7 +114,6 @@ export default {
       color: 'success',
     }
 
-    // vertical card options
     const latestResult = {
       statTitle: 'Latest Result',
       icon: mdiHelpCircleOutline,

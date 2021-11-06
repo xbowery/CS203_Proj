@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.employee.message.RequestMessage;
 import com.app.APICode.employee.message.UsernameMessage;
 import com.app.APICode.user.User;
@@ -84,11 +85,13 @@ public class EmployeeController {
      */
     @Operation(summary = "Add User to Business", description = "Add a pending request for User to join Business", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Employee" })
-    @ApiResponses({ @ApiResponse(responseCode = "201", description = "Successful added request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful added request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/employee")
     public Employee postEmployee(Principal principal, @RequestBody RequestMessage message) {
-        return employeeService.addEmployeeToBusiness(principal.getName(), message.getDesignation(), message.getRestaurantId());
+        return employeeService.addEmployeeToBusiness(principal.getName(), message.getDesignation(),
+                message.getRestaurantId());
     }
 
     /**
@@ -99,8 +102,9 @@ public class EmployeeController {
      * @return employee with the given username
      */
     @Operation(summary = "Approve Employee request", description = "Update request status of Employee", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-        "Employee" })
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful approved request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful approved request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/users/employee")
     public Employee approveEmployee(@Valid @RequestBody UsernameMessage message) {
@@ -117,11 +121,28 @@ public class EmployeeController {
      * @return deleted employee
      */
     @Operation(summary = "Delete Employee information", description = "Delete Employee information by the Owner or the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-        "Employee" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted Employee data", content = @Content), })
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful deleted Employee data", content = @Content), })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/employee/{username}")
     public Employee deleteEmployee(@PathVariable(value = "username") String username) {
         return employeeService.deleteEmployee(username);
+    }
+
+    /**
+     * List latest ctests of employees in a particular business
+     * 
+     * @param principal name of the user logged in currently
+     * @return list of ctest of employees in a particular business
+     */
+    @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/employee/{username}/ctests")
+    public List<Ctest> getAllEmployeesCtest(@PathVariable String username) {
+        return employeeService.getAllEmployeesCtest(username);
     }
 }

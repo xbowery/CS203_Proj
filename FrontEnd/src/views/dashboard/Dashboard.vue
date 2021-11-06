@@ -18,40 +18,40 @@
             :change="totalNumEmployees.change"
             :color="totalNumEmployees.color"
             :icon="totalNumEmployees.icon"
-            :statistics="totalNumEmployees.statistics"
+            :statistics="employee_count"
             :stat-title="totalNumEmployees.statTitle"
             :subtitle="totalNumEmployees.subtitle"
           ></statistics-card-vertical>
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesQuarantine.change"
-            :color="employeesQuarantine.color"
-            :icon="employeesQuarantine.icon"
-            :statistics="employeesQuarantine.statistics"
-            :stat-title="employeesQuarantine.statTitle"
-            :subtitle="employeesQuarantine.subtitle"
+            :change="employeesPending.change"
+            :color="employeesPending.color"
+            :icon="employeesPending.icon"
+            :statistics="pending_count"
+            :stat-title="employeesPending.statTitle"
+            :subtitle="employeesPending.subtitle"
           ></statistics-card-vertical>
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesInfected.change"
-            :color="employeesInfected.color"
-            :icon="employeesInfected.icon"
-            :statistics="employeesInfected.statistics"
-            :stat-title="employeesInfected.statTitle"
-            :subtitle="employeesInfected.subtitle"
+            :change="employeesPostive.change"
+            :color="employeesPostive.color"
+            :icon="employeesPostive.icon"
+            :statistics="positive_count"
+            :stat-title="employeesPostive.statTitle"
+            :subtitle="employeesPostive.subtitle"
           ></statistics-card-vertical>
         </v-col>
 
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesRecovered.change"
-            :color="employeesRecovered.color"
-            :icon="employeesRecovered.icon"
-            :statistics="employeesRecovered.statistics"
-            :stat-title="employeesRecovered.statTitle"
-            :subtitle="employeesRecovered.subtitle"
+            :change="employeesNegative.change"
+            :color="employeesNegative.color"
+            :icon="employeesNegative.icon"
+            :statistics="negative_count"
+            :stat-title="employeesNegative.statTitle"
+            :subtitle="employeesNegative.subtitle"
           ></statistics-card-vertical>
         </v-col>
       </v-row>
@@ -74,6 +74,7 @@ import CrowdLevel from './CrowdLevel.vue'
 import DashboardDailyOverview from './DashboardDailyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
 import { mapGetters } from 'vuex'
+import UserService from '@/services/user.service'
 
 export default {
   components: {
@@ -83,11 +84,44 @@ export default {
     DashboardDailyOverview,
     DashboardDatatable,
   },
+
   computed: {
     ...mapGetters({
       user: 'auth/user',
     }),
   },
+
+  data() {
+    return {
+      items: [],
+      employee_count: '',
+      pending_count: 0,
+      positive_count: 0,
+      negative_count: 0,
+    }
+  },
+
+  async mounted() {
+    try {
+      console.log(this.user.username)
+      const res = await UserService.getEmployeesCtests(this.user.username)
+      this.items = res.data
+      this.employee_count = this.items.length
+
+      this.items.forEach(item => {
+        if (item.result == 'Pending') this.pending_count += 1
+        else if (item.result == 'Positive') this.positive_count += 1
+        else if (item.result == 'Negative') this.negative_count += 1
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  methods: {
+    set_numbers() {},
+  },
+
   setup() {
     /*providing statistics on status of employees */
 
@@ -97,45 +131,37 @@ export default {
       icon: mdiAccountGroup,
       color: 'success',
       subtitle: 'in total',
-      statistics: '100',
-      change: '+5%',
     }
 
-    //number of employees on quarantine
-    const employeesQuarantine = {
+    //number of employees with pending test for COVID-19
+    const employeesPending = {
       statTitle: 'Num of employees',
       icon: mdiHospitalBoxOutline,
       color: 'secondary',
-      subtitle: 'on quarantine currently',
-      statistics: '2',
-      change: '+0.02%',
+      subtitle: 'with pending test(s)',
     }
 
-    //number of employees infected with COVID-19
-    const employeesInfected = {
+    //number of employees tested positive for COVID-19
+    const employeesPostive = {
       statTitle: 'Num of employees',
       icon: mdiNeedle,
       color: 'primary',
-      subtitle: 'infected currently',
-      statistics: '0',
-      change: '',
+      subtitle: 'tested positive',
     }
 
-    //number of employees recovered from COVID-19
-    const employeesRecovered = {
+    //number of employees tested negative for COVID-19
+    const employeesNegative = {
       statTitle: 'Num of employees',
       icon: mdiThumbUp,
       color: 'warning',
-      subtitle: 'recovered from Covid',
-      statistics: '1',
-      change: '',
+      subtitle: 'tested negative',
     }
 
     return {
       totalNumEmployees,
-      employeesQuarantine,
-      employeesInfected,
-      employeesRecovered,
+      employeesPending,
+      employeesPostive,
+      employeesNegative,
     }
   },
 }
