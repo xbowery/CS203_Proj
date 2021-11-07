@@ -81,15 +81,37 @@ export default {
         gathering: 'https://cdn.pixabay.com/photo/2015/09/02/12/29/pedestrians-918471_1280.jpg',
         events: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
       },
+
+      next_date: '',
+      daysToNextCtest: '',
     }
   },
-  async mounted() {
-    try {
-      const res = await UserService.getMeasures()
-      this.items = res.data
-    } catch (error) {
-      console.error(error)
+  mounted() {
+    this.getMeasures()
+    if(this.user.role == "ROLE_EMPLOYEE"){
+      this.getNextDate(this.user.username)
     }
+  },
+  methods: {
+    async getMeasures(){
+      try {
+        const res = await UserService.getMeasures()
+        this.items = res.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getNextDate(username) {
+      try {
+        const res = await UserService.getNextCtest(username)
+        this.next_date = res.data
+        this.daysToNextCtest = Math.round((new Date(this.next_date) - new Date()) / 86400000)
+        console.log(this.next_date)
+        console.log(this.daysToNextCtest)
+      } catch (error) {
+        console.log(error)
+      }
+    },
   },
 }
 </script>

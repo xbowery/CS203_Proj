@@ -38,5 +38,21 @@ public class NotificationController {
     public List<Notification> getNotifcations(Principal principal) {
         return notificationService.getNotificationsByUsername(principal.getName());
     }
+    
+    /**
+     * Add a new notification with POST request to "/user/notifications"
+     * 
+     * @param username username of employee
+     * @return the newly added notification object
+     */
+    @Operation(summary = "Add new notification with upcomming ctest", description = "Add new Covid-19 Test result by credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "COVID-19 Test" })
+@ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Successful created new Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
+@ResponseStatus(HttpStatus.CREATED)
+@PostMapping("/employee/ctests")
+public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {
+    return ctests.saveCtestByUsername(principal.getName(), ctest);
+}
 
 }

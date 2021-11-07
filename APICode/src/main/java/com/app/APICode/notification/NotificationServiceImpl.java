@@ -1,7 +1,10 @@
 package com.app.APICode.notification;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+import com.app.APICode.ctest.CtestService;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
 import com.app.APICode.restaurant.RestaurantService;
@@ -16,12 +19,14 @@ public class NotificationServiceImpl implements NotificationService {
     private RestaurantService restaurants;
     private EmployeeService employees;
     private UserService users;
+    private CtestService ctests;
 
-    public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants, EmployeeService employees, UserService users) {
+    public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants, EmployeeService employees, UserService users, CtestService ctests) {
         this.notifications = notifications;
         this.restaurants = restaurants;
         this.employees = employees;
         this.users  = users;
+        this.ctests = ctests;
     }
 
     @Override
@@ -37,9 +42,30 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification upcomingCtestNotification(Long user_id) {
+    public Notification upcomingCtestNotification(String username) {
         // TODO Auto-generated method stu
-        return null;
+        /*
+            First we have to get the ctest information
+            getNextCtestByUsername
+            then we run getNotificationsByUsername to get the list
+            we run through the list see if there has been any notifications created today
+            if yes then we just return 
+            if no then we have to create a new notification with todays date and number of days left
+
+        */
+        User user = users.getUserByUsername(username);
+        Date nextCtestDate = ctests.getNextCtestByUsername(username);
+        LocalDate today = LocalDate.now();
+        List<Notification> userNotis = getNotificationsByUsername(username);
+        for(Notification current: userNotis){
+            if(current.getDate().equals(today)){
+                return null;
+            }
+        }
+        String notificationText = "You need to complete a Covid Test by: "+ nextCtestDate;
+        Notification newNotification = new Notification(notificationText, user);
+        System.out.println("New notification succesfully created");
+        return notifications.save(newNotification);
     }
 
     @Override
