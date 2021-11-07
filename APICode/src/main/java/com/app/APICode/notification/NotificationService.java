@@ -9,7 +9,7 @@ public interface NotificationService {
 
     List<Notification> getNotificationsByUsername(String username);
 
-    void markAllNotificationsRead(String username);
+    List<Notification> markAllNotificationsRead(String username);
 
     void markSingleNotificationRead(String username, Long id);
 }

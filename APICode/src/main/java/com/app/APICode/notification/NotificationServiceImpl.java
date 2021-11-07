@@ -37,8 +37,9 @@ public class NotificationServiceImpl implements NotificationService {
     public Notification addNewEmployeeApprovalNotification(String username, Long restaurantId, String designation) {
         Employee pendingEmployee = employees.getEmployeeByUsername(username);
         User owner = restaurants.getRestaurantOwner(restaurantId);
-        String notificationText = "You have a pending employee request from " + pendingEmployee.getUser().getFirstName()
-                + " " + pendingEmployee.getUser().getLastName() + ". Please review it under your Employee List.";
+        String notificationText = String.format(
+                "You have a pending employee request from %s %s. Please review it under your Employee List.",
+                pendingEmployee.getUser().getFirstName(), pendingEmployee.getUser().getLastName());
 
         Notification newNotification = new Notification(notificationText, owner);
         System.out.println("New notification succesfully created");
@@ -85,9 +86,10 @@ public class NotificationServiceImpl implements NotificationService {
      * @param username the username of the user
      */
     @Override
-    public void markAllNotificationsRead(String username) {
+    public List<Notification> markAllNotificationsRead(String username) {
         User user = users.getUserByUsername(username);
         notifications.updateAllNotificationToRead(user.getId());
+        return user.getNotifications();
     }
 
     /**

@@ -3,10 +3,15 @@ package com.app.APICode.notification;
 import java.security.Principal;
 import java.util.List;
 
+import javax.xml.bind.PrintConversionEvent;
+
 import com.app.APICode.ctest.Ctest;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +47,33 @@ public class NotificationController {
     @GetMapping("/user/notifications")
     public List<Notification> getNotifications(Principal principal) {
         return notificationService.getNotificationsByUsername(principal.getName());
+    }
+
+    /**
+     * Functionality to mark all of a user's notifications as read in bulk. It will
+     * then return the new list of notifications with all the status being updated
+     * 
+     * @param principal
+     */
+    @Operation(summary = "Update all notification status to read", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Notification" })
+    @ApiResponse(responseCode = "200", description = "Successful update all notifications to indicate as 'read'", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Notification.class))))
+    @PutMapping("/user/notifications/all")
+    public List<Notification> readAllNotifications(Principal principal) {
+        return notificationService.markAllNotificationsRead(principal.getName());
+    }
+
+    /**
+     * Functionality to mark a single notification as read.
+     * 
+     * @param principal
+     */
+    @Operation(summary = "Update all notification status to read", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Notification" })
+    @ApiResponse(responseCode = "200", description = "Successful update a single notification to indicate as 'read'")
+    @PutMapping("/user/notifications/{notificationId}")
+    public void readSingleNotification(Principal principal, @PathVariable(value = "notificationId") Long id) {
+        notificationService.markSingleNotificationRead(principal.getName(), id);
     }
 
     /**
