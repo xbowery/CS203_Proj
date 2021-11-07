@@ -78,4 +78,27 @@ public class NotificationServiceImpl implements NotificationService {
         return user.getNotifications();
     }
 
+    /**
+     * Function which will change all of the notification of a user to a state of
+     * read: true
+     * 
+     * @param username the username of the user
+     */
+    @Override
+    public void markAllNotificationsRead(String username) {
+
+    }
+
+    /**
+     * Function which will only mark a single notification as read, using the
+     * notification ID. It will also ensure the notification belongs to the user.
+     * 
+     * @param username username of user
+     * @param id       notification ID
+     */
+    @Override
+    public void markSingleNotificationRead(String username, Long id) {
+
+    }
+
 }

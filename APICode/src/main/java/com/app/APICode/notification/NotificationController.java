@@ -40,7 +40,7 @@ public class NotificationController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Notification.class)))), })
     @GetMapping("/user/notifications")
-    public List<Notification> getNotifcations(Principal principal) {
+    public List<Notification> getNotifications(Principal principal) {
         return notificationService.getNotificationsByUsername(principal.getName());
     }
 
@@ -56,8 +56,10 @@ public class NotificationController {
     // "COVID-19 Test" })
     // @ApiResponses({
     // @ApiResponse(responseCode = "201", description = "Successful created new
-    // Covid-19 Test result", content = @Content(mediaType = "application/json",
-    // schema = @Schema(implementation = Ctest.class))), })
+    // Covid-19 Test result", content = @Content(mediaType =
+    // "application/json",schema=@Schema(implementation=Ctest.class))),
+    // })
+
     // @ResponseStatus(HttpStatus.CREATED)
     // @PostMapping("/employee/ctests")
     // public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {

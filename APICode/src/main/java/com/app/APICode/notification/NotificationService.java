@@ -8,4 +8,8 @@ public interface NotificationService {
     Notification upcomingCtestNotification(String username);
 
     List<Notification> getNotificationsByUsername(String username);
+
+    void markAllNotificationsRead(String username);
+
+    void markSingleNotificationRead(String username, Long id);
 }
