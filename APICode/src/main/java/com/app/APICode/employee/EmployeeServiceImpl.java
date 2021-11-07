@@ -59,6 +59,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public Employee getEmployeeDetailsByUsername(String requesterUsername, String employeeUsername) {
+        User businessOwner = users.getUserByUsername(requesterUsername);
+        
+        User user = users.getUserByUsername(employeeUsername);
+
+        Employee employee = user.getEmployee();
+
+        if (employee == null) {
+            throw new EmployeeNotFoundException(employeeUsername);
+        }
+
+        
+        if (!(businessOwner.getEmployee().getRestaurant().equals(user.getEmployee().getRestaurant()))) {
+            throw new EmployeeNotAllowedException("You are unauthorised to perform this action.");
+        }
+
+        return employee;
+    }
+
+    @Override
     public Employee addEmployeeToBusiness(String username, String designation, long businessId) {
         User user = users.getUserByUsername(username);
         Restaurant restaurant = restaurants.getRestaurantById(businessId);

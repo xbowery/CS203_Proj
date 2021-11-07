@@ -8,6 +8,7 @@ import com.app.APICode.user.UserDTO;
 public interface EmployeeService {
     List<UserDTO> getAllEmployeesByBusinessOwner(String username);
     Employee getEmployeeByUsername(String username);
+    Employee getEmployeeDetailsByUsername(String requesterUsername, String employeeUsername);
     Employee addEmployeeToBusiness(String username, String designation, long businessId);
     Employee approveEmployee(String username);
     Employee deleteEmployee(String username);

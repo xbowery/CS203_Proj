@@ -138,7 +138,7 @@ public class EmployeeIntegrationTest {
 
     @Test
     public void getEmployees_Success() throws Exception{
-        User user = new User("pendingemployee@test.com", "user5", "User", "five", "testing23456", false, "ROLE_USER");
+        User user = new User("pendingemployee1@test.com", "user5", "User", "five", encoder.encode("testing23456"), false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
         Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
         employee.setRestaurant(testRestaurant);
@@ -159,4 +159,29 @@ public class EmployeeIntegrationTest {
         .statusCode(200)
         .body("size()", equalTo(2));
     }
+
+    @Test
+    public void getEmployee_ValidUsername_Success() throws Exception {
+        User user1 = new User("pendingemployee2@test.com", "user6", "User", "six", encoder.encode("testing23456"), false, "ROLE_USER");
+        Employee employee = new Employee(user1, "HR Manager");
+        Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
+        employee.setRestaurant(testRestaurant);
+        user1.setEmployee(employee);
+        user1.setAuthorities("ROLE_EMPLOYEE");
+
+        users.save(user1);
+
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user1.getUsername());
+
+        given().headers(
+            "Authorization",
+            "Bearer " + tokenGeneratedBusinessOwner,
+            "Content-Type", "application/json"
+        ).when()
+        .get(uri)
+        .then()
+        .statusCode(200)
+        .body("designation", equalTo("HR Manager"));
+    }
+
 }

@@ -67,9 +67,9 @@ public class EmployeeController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/users/employee")
-    public Employee getEmployee(Principal principal) {
-        return employeeService.getEmployeeByUsername(principal.getName());
+    @GetMapping("/users/employee/{username}")
+    public Employee getEmployee(Principal principal, @PathVariable String username) {
+        return employeeService.getEmployeeDetailsByUsername(principal.getName(), username);
     }
 
     /**
@@ -79,7 +79,7 @@ public class EmployeeController {
      * 
      * 
      * @param username    username of employee
-     * @param restrauntId id of the restraunt the employee wants to apply to
+     * @param restaurantId id of the restaurant the employee wants to apply to
      * @param designation Designation of the employee
      * @return the newly added employee
      */
@@ -113,7 +113,7 @@ public class EmployeeController {
 
     /**
      * Get user by username set its authorities to "ROLE_USER" get the employee set
-     * the employee restraunt to null set the user employee to null
+     * the employee restaurant to null set the user employee to null
      * 
      * return the deleted user
      * 
