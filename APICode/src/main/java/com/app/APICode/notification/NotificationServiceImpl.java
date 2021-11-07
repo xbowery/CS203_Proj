@@ -86,7 +86,8 @@ public class NotificationServiceImpl implements NotificationService {
      */
     @Override
     public void markAllNotificationsRead(String username) {
-
+        User user = users.getUserByUsername(username);
+        notifications.updateAllNotificationToRead(user.getId());
     }
 
     /**
@@ -98,7 +99,11 @@ public class NotificationServiceImpl implements NotificationService {
      */
     @Override
     public void markSingleNotificationRead(String username, Long id) {
-
+        User user = users.getUserByUsername(username);
+        notifications.findByIdAndUser(id, user.getId()).map(notifs -> {
+            notifs.setSeen(true);
+            return notifications.save(notifs);
+        }).orElseThrow(() -> new NotificationNotFoundException());
     }
 
 }
