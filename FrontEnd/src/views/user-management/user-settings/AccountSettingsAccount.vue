@@ -25,34 +25,34 @@
       <v-form class="multi-col-validation mt-6">
         <v-row>
           <v-col md="6" cols="12">
-            <v-text-field v-model="accountDataLocale.username" label="Username" dense outlined></v-text-field>
+            <v-text-field v-model="user.username" label="Username" dense outlined></v-text-field>
           </v-col>
 
           <v-col md="6" cols="12">
-            <v-text-field v-model="accountDataLocale.firstname" label="First Name" dense outlined></v-text-field>
+            <v-text-field v-model="user.firstName" label="First Name" dense outlined></v-text-field>
           </v-col>
 
           <v-col md="6" cols="12">
-            <v-text-field v-model="accountDataLocale.lastname" label="Last Name" dense outlined></v-text-field>
+            <v-text-field v-model="user.lastName" label="Last Name" dense outlined></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="accountDataLocale.email" label="E-mail" dense outlined></v-text-field>
+            <v-text-field v-model="user.email" label="E-mail" dense outlined></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="accountDataLocale.phone" outlined dense label="Phone Number"></v-text-field>
+            <v-text-field v-model="user.phone" outlined dense label="Phone Number"></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="accountDataLocale.role" dense label="Role" outlined></v-text-field>
+            <v-text-field v-model="user.role" dense label="Role" outlined></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6">
             <v-text-field v-model="accountDataLocale.company" dense outlined label="Company"></v-text-field>
           </v-col>
 
-          <!-- alert -->
+          <!-- alert
           <v-col cols="12">
             <v-alert color="warning" text class="mb-0">
               <div class="d-flex align-start">
@@ -68,7 +68,7 @@
                 </div>
               </div>
             </v-alert>
-          </v-col>
+          </v-col> -->
 
           <v-col cols="12">
             <v-btn color="primary" class="me-3 mt-4"> Save changes </v-btn>
@@ -83,6 +83,8 @@
 <script>
 import { mdiAlertOutline, mdiCloudUploadOutline } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import UserService from '@/services/user.service'
+import TokenService from '@/services/token.service'
 
 export default {
   props: {
@@ -91,14 +93,22 @@ export default {
       default: () => {},
     },
   },
+  async beforeMount(){
+     const username = TokenService.getUser().username
+      console.log(username)
+      const res = await UserService.getUserDetails(username)
+      this.user = res.data
+      console.log(res.data)
+  },
   setup(props) {
     const accountDataLocale = ref(JSON.parse(JSON.stringify(props.accountData)))
-
+    
     const resetForm = () => {
       accountDataLocale.value = JSON.parse(JSON.stringify(props.accountData))
     }
-
+    const user = ""
     return {
+      user,
       accountDataLocale,
       resetForm,
       icons: {

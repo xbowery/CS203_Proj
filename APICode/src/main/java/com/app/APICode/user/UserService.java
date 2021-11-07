@@ -11,6 +11,8 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
+    UserDTO getUserDetailsByUsername(String requesterUsername, String username);
+
     User getUserByEmail(String email);
 
     User getUserByVerificationToken(String verificationToken);
