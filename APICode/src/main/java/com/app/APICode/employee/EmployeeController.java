@@ -141,7 +141,7 @@ public class EmployeeController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/employee/{username}/ctests")
+    @GetMapping("/users/employee/{username}/ctests")
     public List<Ctest> getAllEmployeesCtest(@PathVariable String username) {
         return employeeService.getAllEmployeesCtest(username);
     }

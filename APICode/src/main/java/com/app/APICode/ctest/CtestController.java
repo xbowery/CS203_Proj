@@ -44,7 +44,7 @@ public class CtestController {
             "COVID-19 Test" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))) })
-    @GetMapping("/employee/ctests")
+    @GetMapping("/users/employee/ctests")
     public List<Ctest> getAllTestsByEmployee(Principal principal) {
         return ctests.getAllCtestsByUsername(principal.getName());
     }
@@ -61,7 +61,7 @@ public class CtestController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successful created new Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/employee/ctests")
+    @PostMapping("/users/employee/ctests")
     public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {
         return ctests.saveCtestByUsername(principal.getName(), ctest);
     }
@@ -79,7 +79,7 @@ public class CtestController {
             "COVID-19 Test" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful updated  Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
-    @PutMapping("/employee/ctests/{ctestId}")
+    @PutMapping("/users/employee/ctests/{ctestId}")
     public Ctest updateCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId,
             @RequestBody Ctest newCtest) {
         return ctests.updateCtestByCtestIdAndUsername(principal.getName(), ctestId, newCtest);
@@ -99,7 +99,7 @@ public class CtestController {
             "COVID-19 Test" })
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Successful deleted Covid-19 Test result", content = @Content) })
-    @DeleteMapping("/employee/ctests/{ctestId}")
+    @DeleteMapping("/users/employee/ctests/{ctestId}")
     public Ctest deleteCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId) {
         return ctests.deleteCtestByCtestIdAndUsername(principal.getName(), ctestId);
     }
@@ -119,7 +119,7 @@ public class CtestController {
         "COVID-19 Test" })
         @ApiResponses({
                 @ApiResponse(responseCode = "200", description = "Successful retrieved next covid test date", content = @Content) })
-        @GetMapping("/employee/ctests/next")
+        @GetMapping("/users/employee/ctests/next")
         public Date getNextCtest(Principal principal) {
                 return ctests.getNextCtestByUsername(principal.getName());
         }

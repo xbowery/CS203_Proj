@@ -137,7 +137,7 @@ class UserService {
     )
   }
   getEmployeesCtests(username) {
-    const request = `/employee/${username}/ctests`
+    const request = `/users/employee/${username}/ctests`
     return api.get(request)
   }
 }
