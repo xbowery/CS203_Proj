@@ -51,7 +51,7 @@ public class MeasureServiceImpl implements MeasureService {
 
         if (measure == null)
             throw new MeasureNotFoundException(updatedMeasure.getMeasureType());
-
+            
         measure.setDateUpdated(LocalDate.now());
         measure.setMeasureType(updatedMeasure.getMeasureType());
         measure.setMaxCapacity(updatedMeasure.getMaxCapacity());

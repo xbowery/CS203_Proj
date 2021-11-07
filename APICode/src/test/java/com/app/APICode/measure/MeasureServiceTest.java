@@ -1,5 +1,6 @@
 package com.app.APICode.measure;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,7 +80,7 @@ public class MeasureServiceTest {
         Measure measure1 = measure;
         measure1.setMaskStatus(true);
 
-        when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.of(measure));
+        when(measures.findByMeasureType(measure1.getMeasureType())).thenReturn(Optional.of(measure1));
         when(measures.save(any(Measure.class))).thenReturn(measure1);
    
         // Act
@@ -87,7 +88,28 @@ public class MeasureServiceTest {
 
         // Assert
         assertNotNull(updatedMeasure);
+        assertEquals(true,measure.isMaskStatus());
+
         verify(measures).findByMeasureType(measure.getMeasureType());
         verify(measures).save(measure);
     }
+
+    // @Test
+    // void updateExistingMeasure_NotFound_ReturnNull() {
+    //     // Arrange
+    //     Measure measure2 = new Measure("gym",50,true,false);
+    //     Measure measure3 = measure2;
+    //     measure3.setMeasureType(null);
+    //     when(measures.findByMeasureType(measure3.getMeasureType())).thenReturn(Optional.of(measure3));
+    //     when(measures.save(any(Measure.class))).thenReturn(measure2);
+
+    //     //Act
+    //     Measure updatedMeasure = measureService.updateMeasure(measure3);
+
+    //     //Assert
+    //     assertNull(updatedMeasure);
+    //     verify(measures).findByMeasureType(measure2.getMeasureType());
+    //     verify(measures).save(measure2);
+
+    // }
 }
