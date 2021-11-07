@@ -95,7 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRestaurant(null);
         user.setEmployee(null);
         users.save(user);
-        return employee;
+        return user.getEmployee(); //return null once employee is deleted
     }
 
     @Override

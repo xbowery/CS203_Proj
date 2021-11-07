@@ -86,5 +86,24 @@ public class EmployeeServiceTest {
         verify(users).save(user);
     }
 
+    @Test
+    public void deleteEmployee_validUsername_ReturnNull() {
+        //Arrange
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        Employee employee = new Employee(user,"HR Manager");
+        user.setEmployee(employee);
+        user.setAuthorities("ROLE_EMPLOYEE");
+
+        when(users.save(any(User.class))).thenReturn(user);
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
+
+        //Act
+        Employee deletedEmployee = employeeService.deleteEmployee(user.getUsername());
+        
+        //Assert
+        assertNull(deletedEmployee);
+        verify(users).save(user);
+    }
+
 
 }
