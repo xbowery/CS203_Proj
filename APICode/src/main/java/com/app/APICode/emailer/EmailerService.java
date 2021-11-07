@@ -72,15 +72,15 @@ public class EmailerService {
 
     private String getSubjectMessage(Map<String, Object> variables) {
         if ((Boolean) variables.get("isRegisterConfirmation") != false) {
-            return "COVID Suisse Account Registration Confirmation Link";
+            return "Swisshack Account Registration Confirmation Link";
         } else if ((Boolean) variables.get("isDeleted") != false) {
-            return "COVID Suisse Account Deletion Confirmation";
+            return "Swisshack Account Deletion Confirmation";
         } else if ((Boolean) variables.get("requestPasswordChange") != false) {
-            return "COVID Suisse Account Request for Password Reset";
+            return "Swisshack Account Request for Password Reset";
         } else if ((Boolean) variables.get("isUsernameChange") != false) {
-            return "COVID Suisse Account Username Update";
+            return "Swisshack Account Username Update";
         } else if ((Boolean) variables.get("isPasswordChange") != false) {
-            return "COVID Suisse Account Password Reset";
+            return "Swisshack Account Password Reset";
         }
         return "";
     }

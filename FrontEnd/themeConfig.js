@@ -2,8 +2,8 @@ import { mdiCheckboxBlankCircleOutline } from '@mdi/js'
 
 const themeConfig = {
   app: {
-    name: 'Covid Suisse',
-    logo: require('@/assets/images/logos/logo.svg'),
+    name: 'Swisshack',
+    logo: require('@/assets/images/logos/logo.png'),
     isDark: false,
     isRtl: false,
     contentLayoutNav: 'vertical', // vertical, horizontal

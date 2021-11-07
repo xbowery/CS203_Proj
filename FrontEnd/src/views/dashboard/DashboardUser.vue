@@ -3,7 +3,7 @@
     <v-row class="ma-0 pa-0">
       <v-col cols="8">
         <v-card-title class="text-no-wrap pt-1 ps-2"> Good Morning, {{ user.username }} 🥳 </v-card-title>
-        <v-card-subtitle class="text-no-wrap ps-2"> Covid Suisse Business Dashboard </v-card-subtitle>
+        <v-card-subtitle class="text-no-wrap ps-2"> Swisshack Business Dashboard </v-card-subtitle>
         <v-card-text class="d-flex align-center mt-2 pb-2 ps-2">
           <div>
             <p class="text-xl font-weight-semibold primary--text mb-2">{{ time() }}</p>
