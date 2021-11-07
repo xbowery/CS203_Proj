@@ -2,6 +2,10 @@
   <v-card>
     <v-item-group>
       <v-container>
+        <v-row justify="end" align="left">
+          <v-btn depressed color="normal" large @click="reset()">Reset</v-btn>
+        </v-row>
+
         <v-row justify="center" align="center">
           <v-col v-for="n in 1" :key="n" cols="8" md="4">
             <!-- <h2>Capacity: {{ current }}/{{ maxCapacity }}</h2> -->
@@ -86,6 +90,11 @@ export default {
   },
 
   methods: {
+    reset(){
+      this.items.length = 0
+      this.updatedCrowd.noOfCustomers = 0
+    },
+
     increment(count) {
       if (
         this.updatedCrowd.noOfCustomers + count >= 0 &&

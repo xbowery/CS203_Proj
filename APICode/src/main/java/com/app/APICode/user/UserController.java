@@ -67,8 +67,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
-    public User getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public UserDTO getUser(Principal principal, @PathVariable String username) {
+       return userService.getUserDetailsByUsername(principal.getName(), username);
     }
 
     /**

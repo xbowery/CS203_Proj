@@ -69,6 +69,21 @@ public class UserServiceImpl implements UserService {
         return UserDTO.convertToUserDTO(user);
     }
 
+    @Override 
+    public UserDTO getUserDetailsByUsername(String requesterUsername, String username) {
+        User requester = users.findByUsername(requesterUsername).orElse(null);
+
+        if (!(requesterUsername.equals(username)) && !((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1]).equals("ADMIN"))) {
+            throw new UserForbiddenException("You are forbidden from processing this request.");
+        }
+
+        User user = users.findByUsername(username).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException(username);
+        }
+        return convertToUserDTO(user);
+    }
+
     @Override
     public User getUserByUsername(String username) {
         User user = users.findByUsername(username).orElse(null);

@@ -11,6 +11,10 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
+  getUserDetails(username) {
+    const request = `/users/${username}`
+    return api.get(request)
+  }
   getNotification(){
     return api.get("/user/notificaitons")
   }
