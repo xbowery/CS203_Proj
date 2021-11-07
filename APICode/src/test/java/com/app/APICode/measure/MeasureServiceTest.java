@@ -72,22 +72,22 @@ public class MeasureServiceTest {
         verify(measures, never()).save(measure);
     }
 
-    // @Test
-    // void updateExistingMeasure_ReturnUpdatedMeasure() {
-    //     // Arrange
-    //     Measure measure = new Measure("gym", 50, true, false);
+    @Test
+    void updateExistingMeasure_ReturnUpdatedMeasure() {
+        // Arrange
+        Measure measure = new Measure("gym", 50, true, false);
+        Measure measure1 = measure;
+        measure1.setMaskStatus(true);
 
-    //     when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.of(measure));
-        
-    //     Measure measure1 = measure;
-    //     measure1.setMaskStatus(true);
+        when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.of(measure));
+        when(measures.save(any(Measure.class))).thenReturn(measure1);
+   
+        // Act
+        Measure updatedMeasure = measureService.updateMeasure(measure1);
 
-    //     // Act
-    //     Measure updatedMeasure = measureService.updateMeasure(measure1);
-
-    //     // Assert
-    //     assertNotNull(updatedMeasure);
-    //     verify(measures).findByMeasureType(measure.getMeasureType());
-    //     verify(measures).save(measure);
-    // }
+        // Assert
+        assertNotNull(updatedMeasure);
+        verify(measures).findByMeasureType(measure.getMeasureType());
+        verify(measures).save(measure);
+    }
 }
