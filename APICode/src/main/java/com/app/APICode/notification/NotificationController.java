@@ -3,7 +3,12 @@ package com.app.APICode.notification;
 import java.security.Principal;
 import java.util.List;
 
+import com.app.APICode.ctest.Ctest;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,25 +39,29 @@ public class NotificationController {
             "Notification" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Notification.class)))), })
-    @GetMapping("/user/notificaitons")
+    @GetMapping("/user/notifications")
     public List<Notification> getNotifcations(Principal principal) {
         return notificationService.getNotificationsByUsername(principal.getName());
     }
-    
+
     /**
      * Add a new notification with POST request to "/user/notifications"
      * 
      * @param username username of employee
      * @return the newly added notification object
      */
-    @Operation(summary = "Add new notification with upcomming ctest", description = "Add new Covid-19 Test result by credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-        "COVID-19 Test" })
-@ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Successful created new Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
-@ResponseStatus(HttpStatus.CREATED)
-@PostMapping("/employee/ctests")
-public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {
-    return ctests.saveCtestByUsername(principal.getName(), ctest);
-}
+    // @Operation(summary = "Add new notification with upcomming ctest", description
+    // = "Add new Covid-19 Test result by credentials", security =
+    // @SecurityRequirement(name = "bearerAuth"), tags = {
+    // "COVID-19 Test" })
+    // @ApiResponses({
+    // @ApiResponse(responseCode = "201", description = "Successful created new
+    // Covid-19 Test result", content = @Content(mediaType = "application/json",
+    // schema = @Schema(implementation = Ctest.class))), })
+    // @ResponseStatus(HttpStatus.CREATED)
+    // @PostMapping("/employee/ctests")
+    // public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {
+    // return ctests.saveCtestByUsername(principal.getName(), ctest);
+    // }
 
 }
