@@ -70,7 +70,7 @@ public class User implements UserDetails {
 
     @Schema(description = "If the user account is enabled.", required = true, hidden = true)
     private boolean enabled = false;
-    
+
     @Schema(description = "If the user account has expired.", required = true, hidden = true)
     private boolean accountNonExpired = false;
 
@@ -203,7 +203,11 @@ public class User implements UserDetails {
         this.employee = employee;
     }
 
-    public List<Notification> getNotifications(){
-        return this.notifications;
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void addNotification(Notification notification) {
+        notifications.add(notification);
     }
 }

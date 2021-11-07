@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification addNewEmployeeApprovalNotification(String username, Long restaurantId, String designation) {
+    public Notification addNewEmployeeApprovalNotification(String username, Long restaurantId) {
         Employee pendingEmployee = employees.getEmployeeByUsername(username);
         User owner = restaurants.getRestaurantOwner(restaurantId);
         String notificationText = String.format(
@@ -100,9 +100,10 @@ public class NotificationServiceImpl implements NotificationService {
      * @param id       notification ID
      */
     @Override
-    public void markSingleNotificationRead(String username, Long id) {
+    public Notification markSingleNotificationRead(String username, Long notifId) {
         User user = users.getUserByUsername(username);
-        notifications.findByIdAndUser(id, user.getId()).map(notifs -> {
+        System.out.println(user.getId());
+        return notifications.findByIdAndUser(notifId, user.getId()).map(notifs -> {
             notifs.setSeen(true);
             return notifications.save(notifs);
         }).orElseThrow(() -> new NotificationNotFoundException());

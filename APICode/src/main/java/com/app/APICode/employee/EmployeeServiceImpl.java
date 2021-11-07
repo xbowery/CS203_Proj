@@ -31,8 +31,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void setRestaurants(RestaurantService restaurants) {
         this.restaurants = restaurants;
     }
+
     @Autowired
-    public void setNotifications(NotificationService notifications){
+    public void setNotifications(NotificationService notifications) {
         this.notifications = notifications;
     }
 
@@ -66,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRestaurant(restaurant);
         employee.setStatus("Pending");
         user.setEmployee(employee);
-        notifications.addNewEmployeeApprovalNotification(username, businessId, designation);
+        notifications.addNewEmployeeApprovalNotification(username, businessId);
 
         return users.save(user).getEmployee();
     }
@@ -102,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee owner = getEmployeeByUsername(username);
         List<Employee> employees = owner.getRestaurant().getEmployees();
         for (Employee e : employees) {
-            if(e.getCtests().size() > 0){
+            if (e.getCtests().size() > 0) {
                 allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
             }
         }

@@ -37,7 +37,8 @@ public class Notification {
     @Schema(description = "User that this Notifications belongs to.", required = true)
     private User user;
 
-    public Notification() {}
+    public Notification() {
+    }
 
     public Notification(String text, User user) {
         this.datetime = LocalDate.now();
@@ -51,7 +52,7 @@ public class Notification {
     }
 
     public void setDate(LocalDate datetime) {
-        this.datetime= datetime;
+        this.datetime = datetime;
     }
 
     public String getText() {
@@ -63,11 +64,11 @@ public class Notification {
     }
 
     // public URL getLink() {
-    //     return link;
+    // return link;
     // }
 
     // public void setLink(URL link) {
-    //     this.link = link;
+    // this.link = link;
     // }
 
     public boolean isSeen() {
@@ -84,6 +85,10 @@ public class Notification {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Long getId() {
+        return id;
     }
 
 }

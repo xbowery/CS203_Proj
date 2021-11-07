@@ -3,7 +3,7 @@ package com.app.APICode.notification;
 import java.util.List;
 
 public interface NotificationService {
-    Notification addNewEmployeeApprovalNotification(String username, Long restaurantId, String designation);
+    Notification addNewEmployeeApprovalNotification(String username, Long restaurantId);
 
     Notification upcomingCtestNotification(String username);
 
@@ -11,5 +11,5 @@ public interface NotificationService {
 
     List<Notification> markAllNotificationsRead(String username);
 
-    void markSingleNotificationRead(String username, Long id);
+    Notification markSingleNotificationRead(String username, Long id);
 }
