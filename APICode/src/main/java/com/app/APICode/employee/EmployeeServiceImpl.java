@@ -9,6 +9,7 @@ import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
+import com.app.APICode.user.UserDTO;
 import com.app.APICode.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<User> getAllEmployeesByBusinessOwner(String username) {
+    public List<UserDTO> getAllEmployeesByBusinessOwner(String username) {
         Employee owner = getEmployeeByUsername(username);
-        return owner.getRestaurant().getEmployees().stream().map(employee -> employee.getUser())
+        return owner.getRestaurant().getEmployees().stream().map(employee -> UserDTO.convertToUserDTO(employee.getUser()))
                 .collect(Collectors.toList());
     }
 
