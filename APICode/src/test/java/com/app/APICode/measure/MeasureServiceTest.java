@@ -3,6 +3,7 @@ package com.app.APICode.measure;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
@@ -88,28 +89,27 @@ public class MeasureServiceTest {
 
         // Assert
         assertNotNull(updatedMeasure);
-        assertEquals(true,measure.isMaskStatus());
+        // assertEquals(true,measure.isMaskStatus());
 
         verify(measures).findByMeasureType(measure.getMeasureType());
         verify(measures).save(measure);
     }
 
-    // @Test
-    // void updateExistingMeasure_NotFound_ReturnNull() {
-    //     // Arrange
-    //     Measure measure2 = new Measure("gym",50,true,false);
-    //     Measure measure3 = measure2;
-    //     measure3.setMeasureType(null);
-    //     when(measures.findByMeasureType(measure3.getMeasureType())).thenReturn(Optional.of(measure3));
-    //     when(measures.save(any(Measure.class))).thenReturn(measure2);
+    @Test
+    void updateExistingMeasure_NotFound_ReturnNull() {
+        // Arrange
+        Measure measure = new Measure(null, 40, true, true);
+        when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.empty());
 
-    //     //Act
-    //     Measure updatedMeasure = measureService.updateMeasure(measure3);
+        //Act
 
-    //     //Assert
-    //     assertNull(updatedMeasure);
-    //     verify(measures).findByMeasureType(measure2.getMeasureType());
-    //     verify(measures).save(measure2);
+        MeasureNotFoundException notFoundException = assertThrows(MeasureNotFoundException.class, () -> {
+            measureService.updateMeasure(measure);
+        });
 
-    // }
+        //Assert
+        assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measure.getMeasureType());
+        
+        verify(measures).findByMeasureType(measure.getMeasureType());
+    }
 }

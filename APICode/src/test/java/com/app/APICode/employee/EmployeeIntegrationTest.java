@@ -60,6 +60,8 @@ public class EmployeeIntegrationTest {
 
     private String tokenGeneratedAdmin;
 
+    private String tokenGeneratedEmployee;
+
     private String tokenGeneratedUser;
 
     private String tokenGeneratedBusinessOwner;
@@ -91,6 +93,15 @@ public class EmployeeIntegrationTest {
 		Long id = restaurants.save(testRestaurant).getId();
         testRestaurantID = id;
 
+        User user = new User("pendingemployee1@test.com", "user5", "User", "five", encoder.encode("testing23456"), false, "ROLE_USER");
+        user.setEnabled(true);
+        Employee employee = new Employee(user, "HR Manager");
+        employee.setRestaurant(testRestaurant);
+        user.setEmployee(employee);
+        user.setAuthorities("ROLE_EMPLOYEE");
+
+        users.save(user);
+
         User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
         businessOwner.setEnabled(true);
         Employee owner = new Employee(businessOwner, "Business Owner");
@@ -107,6 +118,16 @@ public class EmployeeIntegrationTest {
                 new LoginDetails("admin", "goodpassword"), TokenDetails.class);
 
         tokenGeneratedAdmin = result.getBody().getAccessToken();
+    }
+
+    @BeforeEach
+    void getEmployeeRequestToken() throws URISyntaxException {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("user5", "testing23456"), TokenDetails.class);
+
+        tokenGeneratedEmployee = result.getBody().getAccessToken();
     }
 
     @BeforeEach
@@ -138,15 +159,6 @@ public class EmployeeIntegrationTest {
 
     @Test
     public void getEmployees_Success() throws Exception{
-        User user = new User("pendingemployee1@test.com", "user5", "User", "five", encoder.encode("testing23456"), false, "ROLE_USER");
-        Employee employee = new Employee(user, "HR Manager");
-        Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
-        employee.setRestaurant(testRestaurant);
-        user.setEmployee(employee);
-        user.setAuthorities("ROLE_EMPLOYEE");
-
-        users.save(user);
-
         URI uri = new URI(baseUrl + port + "/api/v1/employees");
 
         given().headers(
@@ -183,5 +195,32 @@ public class EmployeeIntegrationTest {
         .statusCode(200)
         .body("designation", equalTo("HR Manager"));
     }
+
+    @Test
+    public void addEmployee_NewUsername_ReturnSavedEmployee() throws Exception {
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee");
+
+        User user2 = new User("pendingemployee3@test.com", "user7", "User", "seven", encoder.encode("testing23456"), false, "ROLE_USER");
+        user2.setEnabled(true);
+        users.save(user2);
+
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("user7", "testing23456"), TokenDetails.class);
+
+        String tokenGeneratedNewEmployee = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+        String requestMessage = "{\r\n" +
+        "  \"restaurantId\": " + testRestaurantID + ",\r\n" +
+        "  \"designation\": \"Finance Head\"\r\n" +
+        "}";
+        request.header("Authorization", "Bearer " + tokenGeneratedNewEmployee).header("Content-Type", "application/json");
+        Response addEmployeeResponse = request.body(requestMessage).post(uri);
+        assertEquals(201, addEmployeeResponse.getStatusCode());
+        assertEquals("Finance Head", JsonPath.from(addEmployeeResponse.getBody().asString()).get("designation"));
+    }
+    
 
 }
