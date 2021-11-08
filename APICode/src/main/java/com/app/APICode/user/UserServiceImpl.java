@@ -136,6 +136,21 @@ public class UserServiceImpl implements UserService {
         final Calendar cal = Calendar.getInstance();
         if ((vToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             VerificationToken newVToken = generateNewVerificationToken(token);
+
+            Map<String, Object> dataModel = emailerService.getDataModel();
+            dataModel.put("isResendConfirmation", true);
+            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + newVToken);
+
+            // try {
+            // emailerService.sendMessage(user.getEmail(), dataModel);
+            // } catch (MessagingException e) {
+            // System.out.println("Error occurred while trying to send an email to: " +
+            // user.getEmail());
+            // } catch (IOException e) {
+            // System.out.println("Error occurred while trying to send an email to: " +
+            // user.getEmail());
+            // }
+            
             return TOKEN_EXPIRED;
         }
         user.setEnabled(true);
@@ -202,8 +217,7 @@ public class UserServiceImpl implements UserService {
         // }
 
         User savedUser = users.save(user);
-        VerificationToken vToken = new VerificationToken(token, user);
-        vTokens.save(vToken);
+        createVerificationTokenForUser(savedUser, token);
 
         return convertToUserDTO(savedUser);
     }

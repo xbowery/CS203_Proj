@@ -35,12 +35,15 @@ public class EmailerServiceImpl implements EmailerService {
         Context context = new Context();
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("isRegisterConfirmation", variables.get("isRegisterConfirmation"));
+        model.put("isResendConfirmation", variables.get("isResendConfirmation"));
         model.put("isDeleted", variables.get("isDeleted"));
         model.put("requestPasswordChange", variables.get("requestPasswordChange"));
         model.put("isUsernameChange", variables.get("isUsernameChange"));
         model.put("isPasswordChange", variables.get("isPasswordChange"));
 
         if ((Boolean)variables.get("isRegisterConfirmation")) {
+            model.put("token", variables.get("token"));
+        } else if ((Boolean)variables.get("isResendConfirmation")) {
             model.put("token", variables.get("token"));
         } else if ((Boolean)variables.get("requestPasswordChange")) {
             model.put("password", variables.get("password"));
@@ -62,6 +65,7 @@ public class EmailerServiceImpl implements EmailerService {
     public Map<String, Object> getDataModel() {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("isRegisterConfirmation", false);
+        dataModel.put("isResendConfirmation", false);
         dataModel.put("isDeleted", false);
         dataModel.put("requestPasswordChange", false);
         dataModel.put("isUsernameChange", false);
@@ -73,6 +77,8 @@ public class EmailerServiceImpl implements EmailerService {
     private String getSubjectMessage(Map<String, Object> variables) {
         if ((Boolean) variables.get("isRegisterConfirmation") != false) {
             return "COVID Suisse Account Registration Confirmation Link";
+        } else if ((Boolean) variables.get("isResendConfirmation") != false) {
+            return "COVID Suisse Account Resend Registration Confirmation Link";
         } else if ((Boolean) variables.get("isDeleted") != false) {
             return "COVID Suisse Account Deletion Confirmation";
         } else if ((Boolean) variables.get("requestPasswordChange") != false) {
