@@ -11,6 +11,13 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
+  getUserDetails(username) {
+    const request = `/users/${username}`
+    return api.get(request)
+  }
+  getNotification(){
+    return api.get("/user/notificaitons")
+  }
   getEmployees() {
     return api.get('/employees')
   }
@@ -71,8 +78,8 @@ class UserService {
     const request = `/employee/ctests/${ctestId}`
     return api.put(request, ctest)
   }
-  getNextCtest() {
-    const request = `employee/ctests/next`
+  getNextCtest(username) {
+    const request = `/employee/${username}/ctests/next`
     return api.get(request)
   }
   updateUser(user) {

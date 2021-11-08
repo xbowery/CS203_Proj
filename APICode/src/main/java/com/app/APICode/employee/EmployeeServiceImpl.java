@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.app.APICode.ctest.Ctest;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
+import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
@@ -83,16 +84,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         User user = users.getUserByUsername(username);
         Restaurant restaurant = restaurants.getRestaurantById(businessId);
 
-        if (restaurant != null) {
-            Employee employee = new Employee(user, designation);
-            employee.setRestaurant(restaurant);
-            employee.setStatus("Pending");
-            user.setEmployee(employee);
-            notifications.addNewEmployeeApprovalNotification(username, businessId, designation);
+        if (restaurant == null) {
+            throw new RestaurantNotFoundException(businessId);
         }
-        return users.save(user).getEmployee();
 
-        
+        Employee employee = new Employee(user, designation);
+        employee.setRestaurant(restaurant);
+        employee.setStatus("Pending");
+        user.setEmployee(employee);
+        notifications.addNewEmployeeApprovalNotification(username, businessId, designation);
+
+        return users.save(user).getEmployee();
     }
 
     @Override
@@ -108,7 +110,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee deleteEmployee(String username) {
+    public void deleteEmployee(String username) {
         User user = users.getUserByUsername(username);
         //check if user is an employee
         if (user.getEmployee() == null) {
@@ -119,7 +121,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRestaurant(null);
         user.setEmployee(null);
         users.save(user);
-        return user.getEmployee(); //return null once employee is deleted
     }
 
     @Override

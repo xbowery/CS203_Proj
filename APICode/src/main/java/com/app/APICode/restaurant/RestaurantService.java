@@ -2,6 +2,8 @@ package com.app.APICode.restaurant;
 
 import java.util.List;
 
+import com.app.APICode.user.User;
+
 public interface RestaurantService {
 
     List<RestaurantDTO> listRestaurants();
@@ -10,4 +12,5 @@ public interface RestaurantService {
     Restaurant addRestaurant(Restaurant restaurant);
     Restaurant updateRestaurant(long id, Restaurant restaurant);
     void removeById(long id);
+    User getRestaurantOwner(long id);
 }

@@ -1,7 +1,9 @@
 package com.app.APICode.user;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.Email;
@@ -16,7 +19,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.app.APICode.employee.Employee;
+import com.app.APICode.notification.Notification;
 import com.app.APICode.verificationtoken.VerificationToken;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -83,6 +88,11 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private VerificationToken vToken;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @Schema(description = "List of Notifications. ")
+    private List<Notification> notifications;
+
     public User() {
     }
 
@@ -95,6 +105,7 @@ public class User implements UserDetails {
         this.password = password;
         this.isVaccinated = isVaccinated;
         this.authorities = authorities;
+        this.notifications = new ArrayList<>();
     }
 
     @Override
@@ -190,5 +201,9 @@ public class User implements UserDetails {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public List<Notification> getNotifications(){
+        return this.notifications;
     }
 }

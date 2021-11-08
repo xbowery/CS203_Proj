@@ -52,42 +52,63 @@ export default {
   data: () => ({
     items: [],
     processedItems: [],
+    currentDate:'10',
   }),
   props: {
     username: String,
   },
 
-  async mounted() {
-    try {
-      const res = await UserService.getEmployees(this.username)
-      this.items = res.data
-      this.items.forEach(user => {
-        if (user.employee.ctests.length > 0) {
-          var latestDate = user.employee.ctests[0].date
-          var latestResult = user.employee.ctests[0].result
-          user.employee.ctests.forEach(ctest => {
-            if (latestDate < ctest.date) {
-              latestDate = ctest.date
-              latestResult = ctest.result
-            }
-          })
-        }
-
-        var dict = {
-          id: user.id,
-          full_name: user.firstName + ' ' + user.lastName,
-          isVaccinated: user.isVaccinated,
-          latestCtestDate: latestDate,
-          latestCtestResult: latestResult,
-        }
-        this.processedItems.push(dict)
-      })
-      console.log(this.processedItems)
-      console.log(this.items)
-    } catch (error) {
-      console.error(error)
-    }
+  mounted() {
+    this.getTableData()
   },
+
+  methods:{
+    async getTableData(){
+      try {
+        const res = await UserService.getEmployees(this.username)
+        this.items = res.data
+        this.items.forEach(async (user) => {
+          if (user.employee.ctests.length > 0) {
+            var latestDate = user.employee.ctests[0].date
+            var latestResult = user.employee.ctests[0].result
+            user.employee.ctests.forEach(ctest => {
+              if (latestDate < ctest.date) {
+                latestDate = ctest.date
+                latestResult = ctest.result
+              }
+            })
+          }
+          // var curDate = ''
+          // this.getNextDate(user.username).then(function(result){
+          //   curDate = result
+          // })
+          var dict = {
+            id: user.id,
+            full_name: user.firstName + ' ' + user.lastName,
+            isVaccinated: user.isVaccinated,
+            latestCtestDate: latestDate,
+            latestCtestResult: latestResult,
+            next_covid_date: await this.getNextDate(user.username),
+          }
+          this.processedItems.push(dict)
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async getNextDate(username) {
+      try {
+        const res = await UserService.getNextCtest(username)
+        console.log(res.data)
+        return res.data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    
+  },
+
   setup() {
     const statusColor = {
       /* eslint-disable key-spacing */

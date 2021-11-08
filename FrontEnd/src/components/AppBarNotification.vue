@@ -20,7 +20,7 @@
           <v-list-item class="d-flex" link>
             <div class="d-flex align-center justify-space-between flex-grow-1">
               <span class="font-weight-semibold">Notifications</span>
-              <v-chip class="v-chip-light-bg primary--text font-weight-semibold" small> 8 New </v-chip>
+              <v-chip class="v-chip-light-bg primary--text font-weight-semibold" small>{{notificationCount}} New Notifications</v-chip>
             </div>
           </v-list-item>
           <v-divider></v-divider>
@@ -29,7 +29,7 @@
           <template v-for="(notification, index) in notifications">
             <v-list-item :key="notification.title" link @click="messages--">
               <!-- Avatar -->
-              <v-list-item-avatar
+              <!-- <v-list-item-avatar
                 :class="[
                   { 'v-avatar-light-bg primary--text justify-center': notification.user && !notification.user.avatar },
                 ]"
@@ -40,22 +40,22 @@
                   getInitialName(notification.user.name)
                 }}</span>
                 <v-img v-else :src="notification.service.icon"></v-img>
-              </v-list-item-avatar>
+              </v-list-item-avatar> -->
 
               <!-- Content -->
-              <v-list-item-content class="d-block">
+              <!-- <v-list-item-content class="d-block">
                 <v-list-item-title class="text-sm font-weight-semibold">
-                  {{ notification.title }}
+                  {{ notification.date }}
                 </v-list-item-title>
                 <v-list-item-subtitle class="text-sm">
-                  {{ notification.subtitle }}
+                  {{ notification.text }}
                 </v-list-item-subtitle>
-              </v-list-item-content>
+              </v-list-item-content> -->
 
               <!-- Item Action/Time -->
-              <v-list-item-action>
+              <!-- <v-list-item-action>
                 <span class="text--secondary text-xs">{{ notification.time }}</span>
-              </v-list-item-action>
+              </v-list-item-action> -->
             </v-list-item>
             <v-divider :key="index"></v-divider>
           </template>
@@ -71,15 +71,46 @@
 <script>
 import { mdiBellOutline } from '@mdi/js'
 import { getInitialName } from '@/utils'
+import UserService from '@/services/user.service'
+import { mapGetters } from 'vuex'
 
 // 3rd Party
 //import { PerfectScrollbar } from '@/plugins/vue2-perfect-scrollbar'
 
 export default {
+  data: () => ({
+      notifications: [],
+      notificationCount: 0,
+  }),
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
+  },
+
+  mounted(){
+    this.getNotification(this.user.username)
+  },
+
+  methods:{
+    async getNotification(username) {
+      try {
+        const res = await UserService.getNotification(username)
+        this.notifications = res.data
+        this.notificationCount = this.notifications.length
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  },
+
   components: {
     // 3rd Party
     //PerfectScrollbar,
   },
+
+
   setup() {
     const messages = 0
     const notifications = [
