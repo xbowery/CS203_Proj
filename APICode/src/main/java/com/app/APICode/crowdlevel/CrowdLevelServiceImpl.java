@@ -9,7 +9,7 @@ import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserNotFoundException;
-import com.app.APICode.user.UserRepository;
+import com.app.APICode.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,13 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
 
     private RestaurantService restaurantService;
 
-    private UserRepository users;
+    private UserService userService;
 
     @Autowired
-    public CrowdLevelServiceImpl(CrowdLevelRepository crowdlevels, RestaurantService restaurantService, UserRepository users) {
+    public CrowdLevelServiceImpl(CrowdLevelRepository crowdlevels, RestaurantService restaurantService, UserService userService) {
         this.crowdlevels = crowdlevels;
         this.restaurantService = restaurantService;
-        this.users = users;
+        this.userService = userService;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
 
     @Override
     public List<CrowdLevel> listCrowdLevelByEmployee(String username) {
-        User user = users.findByUsername(username).orElse(null);
+        User user = userService.getUserByUsername(username);
 
         if (user == null) {
             throw new UserNotFoundException(username);
