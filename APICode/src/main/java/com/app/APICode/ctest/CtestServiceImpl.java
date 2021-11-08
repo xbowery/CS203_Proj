@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
-import com.app.APICode.restaurant.Restaurant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,9 +72,9 @@ public class CtestServiceImpl implements CtestService {
         }else {
             return new java.sql.Date(Calendar.getInstance().getTime().getTime());
         }
-        Calendar c = Calendar.getInstance();
-        c.setTime(latestTest);
-        c.add(Calendar.DATE, testFrequency);
-        return  new Date(c.getTimeInMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(latestTest);
+        calendar.add(Calendar.DATE, testFrequency);
+        return  new Date(calendar.getTimeInMillis());
     }
 }
