@@ -1,5 +1,6 @@
 package com.app.APICode.notification;
 
+import java.sql.Date;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -26,7 +27,8 @@ public class NotificationServiceImpl implements NotificationService {
     private UserService users;
     private CtestService ctests;
 
-    private static final int CTEST_NUM_ELAPSED_DAYS = 4;
+    private static final int CTEST_NUM_ELAPSED_DAYS = 3;
+    private final long DAY_IN_MS = 1000 * 60 * 60 * 24;
 
     @Autowired
     public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants,
@@ -79,10 +81,10 @@ public class NotificationServiceImpl implements NotificationService {
      * @return
      */
     public boolean checkAndGenerateNotifications(User user) {
-        Instant nextCtestDate = ctests.getNextCtestByUsername(user.getUsername()).toInstant();
-        Instant notificationDateThreshold = ZonedDateTime.now().minusDays(CTEST_NUM_ELAPSED_DAYS).toInstant();
+        Date nextCtestDate = ctests.getNextCtestByUsername(user.getUsername());
+        Date notificationDateThreshold = new Date(System.currentTimeMillis() + CTEST_NUM_ELAPSED_DAYS * DAY_IN_MS);
 
-        if (notificationDateThreshold.isAfter(nextCtestDate)) {
+        if (notificationDateThreshold.compareTo(nextCtestDate) >= 0) {
             String notificationText = "You need to complete a Covid Test by: " + nextCtestDate;
             Notification newNotification = new Notification(notificationText, user);
             notifications.save(newNotification);

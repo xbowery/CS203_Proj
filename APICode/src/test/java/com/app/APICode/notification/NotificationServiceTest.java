@@ -7,11 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -28,6 +33,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import groovy.transform.ToString;
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationServiceTest {
@@ -48,6 +55,8 @@ public class NotificationServiceTest {
 
     @InjectMocks
     private NotificationServiceImpl notificationService;
+
+    private final long DAY_IN_MS = 1000 * 60 * 60 * 24;
 
     /**
      * Test and mock the instance when a new employee request will be logged to the
@@ -224,5 +233,106 @@ public class NotificationServiceTest {
         assertEquals(filteredNotifications.get(0).getText(), mockNotificationUnRead.getText());
         assertFalse(filteredNotifications.get(0).isSeen());
 
+    }
+
+    /**
+     * We will mock a fake testing date that is supposedly in 3 days.
+     */
+    @Test
+    void checkAndGenerateNotification_PassedThreshold_ReturnsTrue() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        Date expiredDate = new Date(System.currentTimeMillis() + (3 * DAY_IN_MS));
+
+        when(ctests.getNextCtestByUsername(anyString())).thenReturn(expiredDate);
+        when(notifications.save(any(Notification.class))).thenReturn(null);
+
+        boolean isNotificationCreated = notificationService.checkAndGenerateNotifications(user);
+
+        assertTrue(isNotificationCreated);
+        verify(ctests).getNextCtestByUsername(user.getUsername());
+        verify(notifications).save(any(Notification.class));
+    }
+
+    /**
+     * We will mock a fake testing date that is supposedly in 4 days. This is
+     * achived by minusing off the next testing date by
+     */
+    @Test
+    void checkAndGenerateNotification_BeforeThreshold_ReturnsFalse() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        Date expiredDate = new Date(System.currentTimeMillis() + (4 * DAY_IN_MS));
+
+        when(ctests.getNextCtestByUsername(anyString())).thenReturn(expiredDate);
+
+        boolean isNotificationCreated = notificationService.checkAndGenerateNotifications(user);
+
+        assertFalse(isNotificationCreated);
+        verify(ctests).getNextCtestByUsername(user.getUsername());
+        verify(notifications, never()).save(any(Notification.class));
+
+    }
+
+    /**
+     * Mock 2 users who have their tests due. The expected result will be 2.
+     */
+    @Test
+    void generateCtestNotification_RunsNormally_ReturnsInt() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        User user2 = new User("user2@test.com", "user2", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user2.setEnabled(true);
+
+        List<User> usersList = new ArrayList<>();
+        usersList.add(user);
+        usersList.add(user2);
+
+        NotificationService spiedService = spy(notificationService);
+
+        when(users.getAllUsers()).thenReturn(usersList);
+        doReturn(true).when(spiedService).checkAndGenerateNotifications(any(User.class));
+
+        int numNotificationsCreated = spiedService.generateCtestNotification();
+
+        assertEquals(numNotificationsCreated, 2);
+
+        verify(users).getAllUsers();
+        verify(spiedService).checkAndGenerateNotifications(user);
+        verify(spiedService).checkAndGenerateNotifications(user2);
+    }
+
+    /**
+     * Mock 2 users of which only one have their tests due. The expected result will
+     * be 1.
+     */
+    @Test
+    void generateAnotherCtestNotification_RunsNormally_ReturnsInt() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        User user2 = new User("user2@test.com", "user2", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user2.setEnabled(true);
+
+        List<User> usersList = new ArrayList<>();
+        usersList.add(user);
+        usersList.add(user2);
+
+        NotificationService spiedService = spy(notificationService);
+
+        when(users.getAllUsers()).thenReturn(usersList);
+        doReturn(true).when(spiedService).checkAndGenerateNotifications(user);
+        doReturn(false).when(spiedService).checkAndGenerateNotifications(user2);
+
+        int numNotificationsCreated = spiedService.generateCtestNotification();
+
+        assertEquals(numNotificationsCreated, 1);
+
+        verify(users).getAllUsers();
+        verify(spiedService).checkAndGenerateNotifications(user);
+        verify(spiedService).checkAndGenerateNotifications(user2);
     }
 }
