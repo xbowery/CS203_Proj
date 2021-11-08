@@ -8,12 +8,10 @@
 
         <v-row justify="center" align="center">
           <v-col v-for="n in 1" :key="n" cols="8" md="4">
-            <!-- <h2>Capacity: {{ current }}/{{ maxCapacity }}</h2> -->
             <h2>Capacity: {{ updatedCrowd.noOfCustomers }}/{{ restaurant.maxCapacity }}</h2>
           </v-col>
 
           <v-col v-for="n in 1" :key="n" cols="9" md="5">
-            <!-- <h2>Crowd level: {{ crowdLvl }}</h2> -->
             <h2>Crowd level: {{ updatedCrowd.latestCrowd }}</h2>
           </v-col>
         </v-row>
