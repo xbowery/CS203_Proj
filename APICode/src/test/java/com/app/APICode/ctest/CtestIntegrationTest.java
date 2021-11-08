@@ -176,6 +176,7 @@ public class CtestIntegrationTest {
 
         List<String> expectedResult = new ArrayList<>();
         expectedResult.add("ART");
+        expectedResult.add("ART");
 
         assertEquals(200, ctestListResponse.getStatusCode());
         assertEquals(expectedResult, JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
@@ -209,8 +210,6 @@ public class CtestIntegrationTest {
         "}";
 
         Response ctestListResponse = request.body(newCtestDetails).post(uriCtest);
-
-        ctestListResponse.prettyPrint();
 
         assertEquals(201, ctestListResponse.getStatusCode());
         assertEquals("ART", JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
