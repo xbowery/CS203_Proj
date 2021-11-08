@@ -221,6 +221,66 @@ public class EmployeeIntegrationTest {
         assertEquals(201, addEmployeeResponse.getStatusCode());
         assertEquals("Finance Head", JsonPath.from(addEmployeeResponse.getBody().asString()).get("designation"));
     }
+
+    @Test
+    public void addEmployee_InvalidRestaurantID_ReturnNull() throws Exception {
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee");
+
+        User user2 = new User("pendingemployee4@test.com", "user8", "User", "eight", encoder.encode("testing23456"), false, "ROLE_USER");
+        user2.setEnabled(true);
+        users.save(user2);
+
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("user8", "testing23456"), TokenDetails.class);
+
+        String tokenGeneratedNewEmployee = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+        String requestMessage = "{\r\n" +
+        "  \"restaurantId\": " + 0 + ",\r\n" +
+        "  \"designation\": \"Finance Head\"\r\n" +
+        "}";
+        request.header("Authorization", "Bearer " + tokenGeneratedNewEmployee).header("Content-Type", "application/json");
+        Response addEmployeeResponse = request.body(requestMessage).post(uri);
+
+        assertEquals(404, addEmployeeResponse.getStatusCode());
+    }
+
+    @Test 
+    void deleteEmployee_validUsername_ReturnNull() throws Exception {
+
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/user5");
+
+        RequestSpecification request = RestAssured.given();
     
+        request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
+        Response addEmployeeResponse = request.delete(uri);
+
+        addEmployeeResponse.prettyPrint();
+
+        assertEquals(204, addEmployeeResponse.getStatusCode());
+    }
+
+    @Test
+    void deleteEmployee_InvalidUsername_ReturnNull() throws Exception {
+        User user2 = new User("pendingemployee5@test.com", "user9", "User", "nine", encoder.encode("testing23456"), false, "ROLE_USER");
+        user2.setEnabled(true);
+        users.save(user2);
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user2.getUsername());
+
+        RequestSpecification request = RestAssured.given();
+    
+        request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
+        Response addEmployeeResponse = request.delete(uri);
+
+        addEmployeeResponse.prettyPrint();
+
+        assertEquals(404, addEmployeeResponse.getStatusCode());
+    }
+
+
+
 
 }

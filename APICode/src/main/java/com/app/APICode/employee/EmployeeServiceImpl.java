@@ -110,7 +110,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee deleteEmployee(String username) {
         User user = users.getUserByUsername(username);
-
+        //check if user is an employee
+        if (user.getEmployee() == null) {
+            throw new EmployeeNotFoundException(username);
+        }
         user.setAuthorities("ROLE_USER");
         Employee employee = user.getEmployee();
         employee.setRestaurant(null);
