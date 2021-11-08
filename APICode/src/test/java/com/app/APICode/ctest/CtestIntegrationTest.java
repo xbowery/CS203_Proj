@@ -61,6 +61,8 @@ public class CtestIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String tokenGeneratedAdmin;
+
     private String tokenGeneratedEmployee1;
 
     private String tokenGeneratedEmployee2;
@@ -68,6 +70,10 @@ public class CtestIntegrationTest {
     private String tokenGeneratedEmployee3;
 
     private String tokenGeneratedUser;
+
+    private String tokenGeneratedBusinessOwner;
+
+    private Long testRestaurantID;
 
     private Long ctestID;
 
@@ -83,12 +89,17 @@ public class CtestIntegrationTest {
 
     @BeforeAll
     void setupDB() {
+        User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN");
+        admin.setEnabled(true);
+        users.save(admin);
+
         User normalUser = new User("testinguser@test.com", "testuser", "test", "user", encoder.encode("testpassword"), true, "ROLE_USER");
         normalUser.setEnabled(true);
         users.save(normalUser);
 
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
         testRestaurant.setCurrentCapacity(0);
+		testRestaurantID = restaurants.save(testRestaurant).getId();
 
         User normalEmployee = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
         normalEmployee.setEnabled(true);
@@ -125,6 +136,23 @@ public class CtestIntegrationTest {
         Ctest newCtest2 = new Ctest("ART", new Date(System.currentTimeMillis()), "Negative");
         newCtest2.setEmployee(employee2);
         ctestID = ctests.save(newCtest).getId();
+
+        User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+        businessOwner.setEnabled(true);
+        Employee owner = new Employee(businessOwner, "Business Owner");
+        owner.setRestaurant(testRestaurant);
+        businessOwner.setEmployee(owner);
+        users.save(businessOwner);
+    }
+
+    @BeforeEach
+    void getAdminRequestToken() throws URISyntaxException {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+
+        tokenGeneratedAdmin = result.getBody().getAccessToken();
     }
 
     @BeforeEach
@@ -165,6 +193,16 @@ public class CtestIntegrationTest {
                 new LoginDetails("testuser", "testpassword"), TokenDetails.class);
 
         tokenGeneratedUser = result.getBody().getAccessToken();
+    }
+
+    @BeforeEach
+    void getBusinessOwnerRequestToken() throws URISyntaxException {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("BusinessOne", "testing12345"), TokenDetails.class);
+
+        tokenGeneratedBusinessOwner = result.getBody().getAccessToken();
     }
     
 	@AfterAll
