@@ -6,6 +6,7 @@ import java.net.URI;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.employee.Employee;
 import com.app.APICode.templates.LoginDetails;
 import com.app.APICode.templates.TokenDetails;
 
@@ -69,16 +70,24 @@ public class RestaurantIntegrationTest {
         admin.setEnabled(true);
         users.save(admin);
 
+        Restaurant testRestaurant = new Restaurant("Ya Kun", "SMU SOE", "Western", "Serving good bread", 5);
+        testRestaurant.setCurrentCapacity(0);
+		restaurants.save(testRestaurant);
+
         User normalUser = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
         normalUser.setEnabled(true);
+        Employee normalEmployee = new Employee(normalUser, "Worker");
+        normalEmployee.setRestaurant(testRestaurant);
+        normalUser.setEmployee(normalEmployee);
+        normalUser.setAuthorities("ROLE_EMPLOYEE");
         users.save(normalUser);
     }
     
 	@AfterAll
 	void tearDown(){
 		// clear the database after each test
-		restaurants.deleteAll();
 		users.deleteAll();
+        restaurants.deleteAll();
 	}
 
     @Test
@@ -90,7 +99,7 @@ public class RestaurantIntegrationTest {
         given().get(uri).
         then().
             statusCode(200).
-            body("size()", equalTo(6));
+            body("size()", equalTo(7));
     }
 
     @Test
@@ -105,6 +114,25 @@ public class RestaurantIntegrationTest {
 			body("name", equalTo("Subway"), "location", equalTo("SMU SCIS"), "cuisine", equalTo("Western"));
 		
 	}
+
+    @Test
+    public void getRestaurant_ValidEmployee_Success() throws Exception {
+        URI uri = new URI(baseUrl + port + "/api/v1/restaurants/user/test1");
+
+        given().get(uri).
+        then().
+            statusCode(200).
+            body("name", equalTo("Ya Kun"), "location", equalTo("SMU SOE"), "cuisine", equalTo("Western"));
+    }
+
+    @Test
+    public void getRestaurant_InvalidEmployee_Failure() throws Exception {
+        URI uri = new URI(baseUrl + port + "/api/v1/restaurants/user/admin");
+
+        given().get(uri).
+        then().
+            statusCode(404);
+    }
 
     @Test
     public void addRestaurant_AdminUser_Success() throws Exception {
