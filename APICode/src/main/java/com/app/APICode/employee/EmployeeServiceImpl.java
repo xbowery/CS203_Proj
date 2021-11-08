@@ -84,7 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee deleteEmployee(String username) {
+    public void deleteEmployee(String username) {
         User user = users.getUserByUsername(username);
 
         user.setAuthorities("ROLE_USER");
@@ -92,7 +92,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRestaurant(null);
         user.setEmployee(null);
         users.save(user);
-        return employee;
     }
 
     @Override
