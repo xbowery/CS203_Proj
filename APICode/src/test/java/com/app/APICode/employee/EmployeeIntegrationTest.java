@@ -169,7 +169,7 @@ public class EmployeeIntegrationTest {
         .get(uri)
         .then()
         .statusCode(200)
-        .body("size()", equalTo(2));
+        .body("size()", equalTo(1));
     }
 
     @Test
@@ -258,8 +258,6 @@ public class EmployeeIntegrationTest {
         request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
         Response addEmployeeResponse = request.delete(uri);
 
-        addEmployeeResponse.prettyPrint();
-
         assertEquals(204, addEmployeeResponse.getStatusCode());
     }
 
@@ -274,8 +272,6 @@ public class EmployeeIntegrationTest {
     
         request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
         Response addEmployeeResponse = request.delete(uri);
-
-        addEmployeeResponse.prettyPrint();
 
         assertEquals(404, addEmployeeResponse.getStatusCode());
     }
