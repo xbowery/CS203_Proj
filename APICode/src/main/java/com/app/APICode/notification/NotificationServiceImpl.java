@@ -1,8 +1,9 @@
 package com.app.APICode.notification;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.app.APICode.ctest.CtestService;
@@ -14,6 +15,7 @@ import com.app.APICode.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +25,8 @@ public class NotificationServiceImpl implements NotificationService {
     private EmployeeService employees;
     private UserService users;
     private CtestService ctests;
+
+    private static final int CTEST_NUM_ELAPSED_DAYS = 4;
 
     @Autowired
     public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants,
@@ -46,22 +50,46 @@ public class NotificationServiceImpl implements NotificationService {
         return notifications.save(newNotification);
     }
 
+    /**
+     * Cron task to automatically check for employees and users who need to do their
+     * tests When the number of days <= 3, a new notification will be created at
+     * midnight. The days and cron schedule is customisable from the properties file
+     * 
+     * @return int number of notifications generated
+     */
     @Override
-    public Notification upcomingCtestNotification(String username) {
-        User user = users.getUserByUsername(username);
-        Date nextCtestDate = ctests.getNextCtestByUsername(username);
-        LocalDateTime today = LocalDateTime.now();
-        List<Notification> userNotis = getNotificationsByUsername(username);
-        for (Notification current : userNotis) {
-            if (current.getDate().equals(today)) {
-                return null;
+    @Scheduled(cron = "${notification.cron.ctest}")
+    public int generateCtestNotification() {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        users.getAllUsers().parallelStream().forEach(u -> {
+            if (checkAndGenerateNotifications(u)) {
+                atomicInteger.getAndIncrement();
             }
+        });
+
+        return atomicInteger.get();
+    }
+
+    /**
+     * Check if the last test done is more than the predefined limit for
+     * notifications. Returns true if yes and a notification is created. Else,
+     * returns false.
+     * 
+     * @param user
+     * @return
+     */
+    public boolean checkAndGenerateNotifications(User user) {
+        Instant nextCtestDate = ctests.getNextCtestByUsername(user.getUsername()).toInstant();
+        Instant notificationDateThreshold = ZonedDateTime.now().minusDays(CTEST_NUM_ELAPSED_DAYS).toInstant();
+
+        if (notificationDateThreshold.isAfter(nextCtestDate)) {
+            String notificationText = "You need to complete a Covid Test by: " + nextCtestDate;
+            Notification newNotification = new Notification(notificationText, user);
+            notifications.save(newNotification);
+            return true;
         }
-        String notificationText = "You need to complete a Covid Test by: " + nextCtestDate;
-        Notification newNotification = new Notification(notificationText, user);
-        System.out.println("New notification succesfully created");
-        return notifications.save(newNotification);
-        // return null;
+
+        return false;
     }
 
     /**

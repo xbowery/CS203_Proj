@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllUsers() {
+        return users.findAll();
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         User user = users.findByUsername(username).orElse(null);
         if (user == null) {
@@ -206,7 +211,8 @@ public class UserServiceImpl implements UserService {
     public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
         User user = getUserByUsername(username);
 
-        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN")) && !(username.equals(newUserInfo.getUsername()))) {
+        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN"))
+                && !(username.equals(newUserInfo.getUsername()))) {
             throw new UserForbiddenException("You are forbidden from processing this request.");
         }
 
@@ -270,7 +276,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String username) {
         User user = getUserByUsername(username);
-        
+
         try {
             final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
             if (verificationToken != null) {
