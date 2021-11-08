@@ -33,11 +33,6 @@ public class G2T4Application {
 		User user = new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER");
 		user.setEnabled(true);
 		users.save(user);
-		
-		//Business owner 
-		User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
-		business_owner.setEnabled(true);
-		users.save(business_owner);
 
 		//Restaurant
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
@@ -46,14 +41,23 @@ public class G2T4Application {
 		// testRestaurant.setCrowdLevel();
 		testRestaurant = restaurants.save(testRestaurant);
 		System.out.println("[Add restaurant]:" + testRestaurant.getName());
+		
+		//Business owner 
+		User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+		business_owner.setEnabled(true);
+		Employee owner = new Employee(business_owner, "Owner");
+		owner.setRestaurant(testRestaurant);	
+		owner.setStatus("Approved");
+		business_owner.setEmployee(owner);
+		users.save(business_owner);
 
+		// Employee
 		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"), false,"ROLE_EMPLOYEE");
 		employee1.setEnabled(true);
-		users.save(employee1);
-		Employee employee11 = new Employee(employee1, "Employee");
-		employee11.setRestaurant(testRestaurant);
-		employee1.setEmployee(employee11);
-		employee11.setStatus("Pending");
+		Employee employee = new Employee(employee1, "Employee");
+		employee.setRestaurant(testRestaurant);
+		employee.setStatus("Pending");
+		employee1.setEmployee(employee);
 		users.save(employee1);
 
 		User employee2 = new User("business1@test.com", "business1", "business", "1", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
