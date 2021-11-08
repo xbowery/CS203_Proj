@@ -18,8 +18,12 @@ public class CtestServiceImpl implements CtestService {
     private EmployeeService employees;
 
     @Autowired
-    public CtestServiceImpl(CtestRepository ctests, EmployeeService employees) {
+    public CtestServiceImpl(CtestRepository ctests) {
         this.ctests = ctests;
+    }
+
+    @Autowired
+    public void setEmployees(EmployeeService employees) {
         this.employees = employees;
     }
 

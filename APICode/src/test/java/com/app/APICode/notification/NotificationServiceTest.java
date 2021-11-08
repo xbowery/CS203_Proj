@@ -123,7 +123,7 @@ public class NotificationServiceTest {
         assertTrue(allNotifications.get(0).isSeen());
 
         verify(users).getUserByUsername(user.getUsername());
-        verify(notifications).updateAllNotificationToRead(user.getId());
+        verify(notifications).updateAllNotificationToRead(user);
     }
 
     @Test
@@ -141,7 +141,7 @@ public class NotificationServiceTest {
         ReflectionTestUtils.setField(user, "id", id);
         ReflectionTestUtils.setField(mockNotification, "id", id);
 
-        when(notifications.findByIdAndUser(anyLong(), anyLong())).thenReturn(Optional.of(mockNotification));
+        when(notifications.findByIdAndUser(anyLong(), any(User.class))).thenReturn(Optional.of(mockNotification));
         when(notifications.save(any(Notification.class))).thenReturn(mockNotification);
 
         mockNotification.setSeen(true);
@@ -153,7 +153,7 @@ public class NotificationServiceTest {
         assertTrue(updatedNotification.isSeen());
 
         verify(users).getUserByUsername(user.getUsername());
-        verify(notifications).findByIdAndUser(mockNotification.getId(), user.getId());
+        verify(notifications).findByIdAndUser(mockNotification.getId(), user);
         verify(notifications).save(mockNotification);
 
     }
@@ -173,7 +173,7 @@ public class NotificationServiceTest {
         ReflectionTestUtils.setField(user, "id", id);
         ReflectionTestUtils.setField(mockNotification, "id", id);
 
-        when(notifications.findByIdAndUser(anyLong(), anyLong())).thenReturn(Optional.empty());
+        when(notifications.findByIdAndUser(anyLong(), any(User.class))).thenReturn(Optional.empty());
 
         mockNotification.setSeen(true);
 
@@ -184,7 +184,7 @@ public class NotificationServiceTest {
         assertEquals(notFoundException.getMessage(), "Could not find notification.");
 
         verify(users).getUserByUsername(user.getUsername());
-        verify(notifications).findByIdAndUser(mockNotification.getId(), user.getId());
+        verify(notifications).findByIdAndUser(mockNotification.getId(), user);
         verify(notifications, never()).save(mockNotification);
 
     }

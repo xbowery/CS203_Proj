@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import com.app.APICode.ctest.CtestService;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
@@ -13,7 +15,6 @@ import com.app.APICode.user.User;
 import com.app.APICode.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +31,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants,
-            EmployeeService employees, UserService users, @Lazy CtestService ctests) {
+            UserService users, EmployeeService employees, CtestService ctests) {
         this.notifications = notifications;
         this.restaurants = restaurants;
         this.employees = employees;
         this.users = users;
         this.ctests = ctests;
+
     }
 
     @Override
@@ -118,10 +120,11 @@ public class NotificationServiceImpl implements NotificationService {
      * 
      * @param username the username of the user
      */
+    @Transactional
     @Override
     public List<Notification> markAllNotificationsRead(String username) {
         User user = users.getUserByUsername(username);
-        notifications.updateAllNotificationToRead(user.getId());
+        notifications.updateAllNotificationToRead(user);
         return user.getNotifications();
     }
 
@@ -135,7 +138,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Notification markSingleNotificationRead(String username, Long notifId) {
         User user = users.getUserByUsername(username);
-        return notifications.findByIdAndUser(notifId, user.getId()).map(notifs -> {
+        return notifications.findByIdAndUser(notifId, user).map(notifs -> {
             notifs.setSeen(true);
             return notifications.save(notifs);
         }).orElseThrow(() -> new NotificationNotFoundException());

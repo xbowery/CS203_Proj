@@ -64,8 +64,9 @@ public class NotificationController {
             "Notification" })
     @ApiResponse(responseCode = "200", description = "Successful update a single notification to indicate as 'read'")
     @PutMapping("/notifications/{notificationId}")
-    public void readSingleNotification(Principal principal, @PathVariable(value = "notificationId") Long id) {
-        notificationService.markSingleNotificationRead(principal.getName(), id);
+    public void readSingleNotification(Principal principal,
+            @PathVariable(value = "notificationId") Long notificationId) {
+        notificationService.markSingleNotificationRead(principal.getName(), notificationId);
     }
 
 }
