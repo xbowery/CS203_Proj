@@ -1,6 +1,5 @@
 package com.app.APICode.notification;
 
-import java.net.URL;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;

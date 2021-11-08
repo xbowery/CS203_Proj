@@ -47,10 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/users/*").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/user/notifications").hasAnyRole("ADMIN", "USER", "BUSINESS", "EMPLOYEE")
-                // .antMatchers(HttpMethod.GET, "/user/notifications", "/user/notifications/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/notifications/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
-                .antMatchers(HttpMethod.PUT, "/user/notifications/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.GET, "/notifications").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.PUT, "/notifications/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
 
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 

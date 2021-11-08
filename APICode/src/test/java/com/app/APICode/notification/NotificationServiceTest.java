@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -33,8 +32,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import groovy.transform.ToString;
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationServiceTest {
@@ -256,8 +253,8 @@ public class NotificationServiceTest {
     }
 
     /**
-     * We will mock a fake testing date that is supposedly in 4 days. This is
-     * achived by minusing off the next testing date by
+     * We will mock a fake testing date that is supposedly in 4 days. This will
+     * return false.
      */
     @Test
     void checkAndGenerateNotification_BeforeThreshold_ReturnsFalse() {
