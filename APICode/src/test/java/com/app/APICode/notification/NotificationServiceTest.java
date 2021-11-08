@@ -1,6 +1,7 @@
 package com.app.APICode.notification;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import com.app.APICode.restaurant.RestaurantService;
@@ -178,6 +180,49 @@ public class NotificationServiceTest {
         verify(users).getUserByUsername(user.getUsername());
         verify(notifications).findByIdAndUser(mockNotification.getId(), user.getId());
         verify(notifications, never()).save(mockNotification);
+
+    }
+
+    /**
+     * Ensure that once all notifications are read, the user should not see them
+     * again.
+     */
+    @Test
+    void getAllUserNotification_AllRead_ReturnsEmptyList() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        Notification mockNotification = new Notification("New notification", user);
+        mockNotification.setSeen(true);
+
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
+
+        List<Notification> allNotifications = notificationService.getNotificationsByUsername(user.getUsername());
+
+        assertEquals(allNotifications.size(), 0);
+
+        verify(users).getUserByUsername(user.getUsername());
+    }
+
+    @Test
+    void filterUnreadNotifications_MixOfReadAndUnread_ReturnsListOfUnread() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        Notification mockNotificationRead = new Notification("Read notification", user);
+        mockNotificationRead.setSeen(true);
+
+        Notification mockNotificationUnRead = new Notification("Unread notification", user);
+
+        List<Notification> allNotifications = new ArrayList<>();
+        allNotifications.add(mockNotificationRead);
+        allNotifications.add(mockNotificationUnRead);
+
+        List<Notification> filteredNotifications = notificationService.filterUnreadNotifications(allNotifications);
+
+        assertEquals(filteredNotifications.size(), 1);
+        assertEquals(filteredNotifications.get(0).getText(), mockNotificationUnRead.getText());
+        assertFalse(filteredNotifications.get(0).isSeen());
 
     }
 }

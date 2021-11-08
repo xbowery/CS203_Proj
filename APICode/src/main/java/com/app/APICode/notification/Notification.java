@@ -1,7 +1,7 @@
 package com.app.APICode.notification;
 
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +20,7 @@ public class Notification {
     private @Id @GeneratedValue Long id;
 
     @NotNull(message = "datetime cannot be null")
-    private LocalDate datetime;
+    private LocalDateTime datetime;
 
     @NotNull(message = "text cannot be null")
     private String text;
@@ -41,17 +41,17 @@ public class Notification {
     }
 
     public Notification(String text, User user) {
-        this.datetime = LocalDate.now();
         // this.link = link;
         this.text = text;
         this.user = user;
+        datetime = LocalDateTime.now();
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return datetime;
     }
 
-    public void setDate(LocalDate datetime) {
+    public void setDate(LocalDateTime datetime) {
         this.datetime = datetime;
     }
 

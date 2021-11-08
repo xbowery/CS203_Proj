@@ -1,8 +1,9 @@
 package com.app.APICode.notification;
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.app.APICode.ctest.CtestService;
 import com.app.APICode.employee.Employee;
@@ -42,24 +43,14 @@ public class NotificationServiceImpl implements NotificationService {
                 pendingEmployee.getUser().getFirstName(), pendingEmployee.getUser().getLastName());
 
         Notification newNotification = new Notification(notificationText, owner);
-        System.out.println("New notification succesfully created");
         return notifications.save(newNotification);
     }
 
     @Override
     public Notification upcomingCtestNotification(String username) {
-        // TODO Auto-generated method stu
-        /*
-         * First we have to get the ctest information getNextCtestByUsername then we run
-         * getNotificationsByUsername to get the list we run through the list see if
-         * there has been any notifications created today if yes then we just return if
-         * no then we have to create a new notification with todays date and number of
-         * days left
-         * 
-         */
         User user = users.getUserByUsername(username);
         Date nextCtestDate = ctests.getNextCtestByUsername(username);
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         List<Notification> userNotis = getNotificationsByUsername(username);
         for (Notification current : userNotis) {
             if (current.getDate().equals(today)) {
@@ -73,10 +64,24 @@ public class NotificationServiceImpl implements NotificationService {
         // return null;
     }
 
+    /**
+     * This function will fetch all the notification of a user and filter them to
+     * only display the ones which are not read yet
+     */
     @Override
     public List<Notification> getNotificationsByUsername(String username) {
         User user = users.getUserByUsername(username);
-        return user.getNotifications();
+        return filterUnreadNotifications(user.getNotifications());
+    }
+
+    /**
+     * Internal function to filter the notifications to only return unread ones
+     * 
+     * @param notificationsList
+     * @return List<Notification>
+     */
+    public List<Notification> filterUnreadNotifications(List<Notification> notifications) {
+        return notifications.stream().filter(n -> !n.isSeen()).collect(Collectors.toList());
     }
 
     /**
@@ -102,7 +107,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Notification markSingleNotificationRead(String username, Long notifId) {
         User user = users.getUserByUsername(username);
-        System.out.println(user.getId());
         return notifications.findByIdAndUser(notifId, user.getId()).map(notifs -> {
             notifs.setSeen(true);
             return notifications.save(notifs);
