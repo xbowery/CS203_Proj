@@ -100,6 +100,7 @@ public class CtestController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Successful deleted Covid-19 Test result", content = @Content) })
     @DeleteMapping("/users/employee/ctests/{ctestId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Ctest deleteCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId) {
         return ctests.deleteCtestByCtestIdAndUsername(principal.getName(), ctestId);
     }

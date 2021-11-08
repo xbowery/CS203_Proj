@@ -71,6 +71,8 @@ public class CtestIntegrationTest {
 
     private Long testRestaurantID;
 
+    private Long ctestID;
+
     @BeforeAll
     public static void initClass() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -93,8 +95,7 @@ public class CtestIntegrationTest {
 
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
         testRestaurant.setCurrentCapacity(0);
-		Long id = restaurants.save(testRestaurant).getId();
-        testRestaurantID = id;
+		testRestaurantID = restaurants.save(testRestaurant).getId();
 
         User normalEmployee = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
         normalEmployee.setEnabled(true);
@@ -104,9 +105,9 @@ public class CtestIntegrationTest {
         normalEmployee.setAuthorities("ROLE_EMPLOYEE");
         users.save(normalEmployee);
 
-        Ctest newCtest = new Ctest("ART", new Date(2021-1900, 11, 8), "Negative");
+        Ctest newCtest = new Ctest("ART", new Date(System.currentTimeMillis()), "Negative");
         newCtest.setEmployee(employee);
-        ctests.save(newCtest);
+        ctestID = ctests.save(newCtest).getId();
 
         User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
         businessOwner.setEnabled(true);
@@ -213,5 +214,122 @@ public class CtestIntegrationTest {
 
         assertEquals(201, ctestListResponse.getStatusCode());
         assertEquals("ART", JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
+    }
+
+    @Test
+    void postNewCtest_NormalUser_Forbidden() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        String newCtestDetails = "{\r\n" +
+        "  \"type\": \"ART\",\r\n" +
+        "  \"date\": \"2021-11-09\",\r\n" +
+        "  \"result\": \"Negative\"\r\n" +
+        "}";
+
+        Response ctestListResponse = request.body(newCtestDetails).post(uriCtest);
+
+        assertEquals(403, ctestListResponse.getStatusCode());
+    }
+
+    @Test
+    void updateValidCtest_Employee_Success() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/" + ctestID);
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee).header("Content-Type", "application/json");
+
+        String updatedCtestDetails = "{\r\n" +
+        "  \"type\": \"ART\",\r\n" +
+        "  \"date\": \"2021-11-09\",\r\n" +
+        "  \"result\": \"Positive\"\r\n" +
+        "}";
+
+        Response ctestListResponse = request.body(updatedCtestDetails).put(uriCtest);
+
+        assertEquals(200, ctestListResponse.getStatusCode());
+        assertEquals("ART", JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
+        assertEquals("Positive", JsonPath.from(ctestListResponse.getBody().asString()).get("result"));
+    }
+
+    @Test
+    void updateInvalidCtest_Employee_Failure() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/0");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee).header("Content-Type", "application/json");
+
+        String updatedCtestDetails = "{\r\n" +
+        "  \"type\": \"ART\",\r\n" +
+        "  \"date\": \"2021-11-09\",\r\n" +
+        "  \"result\": \"Positive\"\r\n" +
+        "}";
+
+        Response ctestListResponse = request.body(updatedCtestDetails).put(uriCtest);
+
+        assertEquals(404, ctestListResponse.getStatusCode());
+    }
+
+    @Test
+    void updateInvalidCtest_NormalUser_Foribdden() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/" + ctestID);
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        String updatedCtestDetails = "{\r\n" +
+        "  \"type\": \"ART\",\r\n" +
+        "  \"date\": \"2021-11-09\",\r\n" +
+        "  \"result\": \"Positive\"\r\n" +
+        "}";
+
+        Response ctestListResponse = request.body(updatedCtestDetails).put(uriCtest);
+
+        assertEquals(403, ctestListResponse.getStatusCode());
+    }
+
+    @Test
+    void deleteValidCtest_Employee_Success() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/" + ctestID);
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.delete(uriCtest);
+
+        assertEquals(204, ctestListResponse.getStatusCode());
+    }
+
+    @Test
+    void deleteInvalidCtest_Employee_Failure() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/0");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.delete(uriCtest);
+
+        assertEquals(404, ctestListResponse.getStatusCode());
+    }
+
+    @Test
+    void deleteCtest_NormalUser_Forbidden() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/" + ctestID);
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.delete(uriCtest);
+
+        assertEquals(403, ctestListResponse.getStatusCode());
     }
 }
