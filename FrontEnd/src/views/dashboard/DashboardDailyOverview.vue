@@ -7,7 +7,7 @@
 
     <v-card-text class="d-flex justify-center">
       <!-- Chart -->
-      <apexchart type="pie" width="380" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="pie" width="500" height="400" :options="chartOptions" :series="series"></apexchart>
 
       <!-- <div class="d-flex align-center">
         <h3 class="text-2xl font-weight-semibold me-4">{{ items.length }}</h3>

@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="match-height">
     <v-col cols="12" md="4" sm="6">
       <dashboard-user :username="user.username"></dashboard-user>
     </v-col>
@@ -15,7 +15,6 @@
       <v-row class="match-height">
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="totalNumEmployees.change"
             :color="totalNumEmployees.color"
             :icon="totalNumEmployees.icon"
             :statistics="employee_count"
@@ -25,7 +24,6 @@
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesPending.change"
             :color="employeesPending.color"
             :icon="employeesPending.icon"
             :statistics="pending_count"
@@ -46,7 +44,6 @@
 
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesNegative.change"
             :color="employeesNegative.color"
             :icon="employeesNegative.icon"
             :statistics="negative_count"
@@ -116,10 +113,6 @@ export default {
     } catch (error) {
       console.error(error)
     }
-  },
-
-  methods: {
-    set_numbers() {},
   },
 
   setup() {
