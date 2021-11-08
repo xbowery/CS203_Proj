@@ -83,10 +83,6 @@ public class CtestIntegrationTest {
 
     @BeforeAll
     void setupDB() {
-        User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true, "ROLE_ADMIN");
-        admin.setEnabled(true);
-        users.save(admin);
-
         User normalUser = new User("testinguser@test.com", "testuser", "test", "user", encoder.encode("testpassword"), true, "ROLE_USER");
         normalUser.setEnabled(true);
         users.save(normalUser);
@@ -129,13 +125,6 @@ public class CtestIntegrationTest {
         Ctest newCtest2 = new Ctest("ART", new Date(System.currentTimeMillis()), "Negative");
         newCtest2.setEmployee(employee2);
         ctestID = ctests.save(newCtest).getId();
-
-        User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
-        businessOwner.setEnabled(true);
-        Employee owner = new Employee(businessOwner, "Business Owner");
-        owner.setRestaurant(testRestaurant);
-        businessOwner.setEmployee(owner);
-        users.save(businessOwner);
     }
 
     @BeforeEach
