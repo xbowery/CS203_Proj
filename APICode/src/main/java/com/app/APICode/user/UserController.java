@@ -67,8 +67,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
-    public User getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public User getUser(Principal principal, @PathVariable String username) {
+        return userService.getUserVerifiedByUsername(principal.getName(), username);
     }
 
     /**
@@ -129,6 +129,7 @@ public class UserController {
      */
     @Operation(summary = "Reset Password", description = "Resets user's password by their email", tags = { "User" })
     @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
         String email = "";
@@ -136,10 +137,6 @@ public class UserController {
             email = payload.get("email");
         } catch (Exception e) {
             throw new RuntimeException("Invalid request");
-        }
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException(email);
         }
         userService.createTempPassword(email);
     }

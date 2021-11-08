@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.app.APICode.templates.LoginDetails;
 import com.app.APICode.templates.TokenDetails;
@@ -32,6 +34,7 @@ import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import static io.restassured.config.RedirectConfig.redirectConfig;
+import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -77,6 +80,10 @@ public class UserIntegrationTest {
         User normalUser = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
         normalUser.setEnabled(true);
         users.save(normalUser);
+
+        User testUser = new User("testinguser@test.com", "testuser1", "test", "user", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        users.save(testUser);
     }
 
     @BeforeEach
@@ -116,6 +123,7 @@ public class UserIntegrationTest {
         Response userListResponse = request.get(uriUsers);
 
         assertEquals(200, userListResponse.getStatusCode());
+        request.then().body("size()", equalTo(6));
     }
 
     @Test
@@ -127,6 +135,60 @@ public class UserIntegrationTest {
         request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUsers);
+
+        assertEquals(403, userListResponse.getStatusCode());
+    }
+
+    @Test
+    public void getSpecificExistingUser_AdminUser_Success() throws Exception {
+        URI uriUser = new URI(baseUrl + port + "/api/v1/users/testuser1");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        Response userListResponse = request.get(uriUser);
+
+        assertEquals(200, userListResponse.getStatusCode());
+        assertEquals("testuser1", JsonPath.from(userListResponse.getBody().asString()).get("username"));
+    }
+
+    @Test
+    public void getSpecificNonExistentUser_AdminUser_Failure() throws Exception {
+        URI uriUser = new URI(baseUrl + port + "/api/v1/users/nosuchuser");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        Response userListResponse = request.get(uriUser);
+
+        assertEquals(404, userListResponse.getStatusCode());
+    }
+
+    @Test
+    public void getOwnself_NormalUser_Success() throws Exception {
+        URI uriUser = new URI(baseUrl + port + "/api/v1/users/test1");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response userListResponse = request.get(uriUser);
+
+        assertEquals(200, userListResponse.getStatusCode());
+        assertEquals("test1", JsonPath.from(userListResponse.getBody().asString()).get("username"));
+    }
+
+    @Test
+    public void getOtherUser_NormalUser_Failure() throws Exception {
+        URI uriUser = new URI(baseUrl + port + "/api/v1/users/testuser1");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response userListResponse = request.get(uriUser);
 
         assertEquals(403, userListResponse.getStatusCode());
     }
@@ -364,5 +426,37 @@ public class UserIntegrationTest {
         assertNotNull(vToken);
         assertEquals(200, validTokenResponse.getStatusCode());
         assertEquals("valid", validTokenResponse.getBody().asString());
+    }
+
+    @Test
+    public void resetPassword_ValidEmail_Success() throws Exception {
+        URI uriResetPassword = new URI(baseUrl + port + "/api/v1/forgotPassword");
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("email", "testinguser@test.com");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Content-Type", "application/json");
+
+        Response forgotPasswordResponse = request.body(payload).post(uriResetPassword);
+
+        assertEquals(204, forgotPasswordResponse.getStatusCode());
+    }
+
+    @Test
+    public void resetPassword_InvalidEmail_Success() throws Exception {
+        URI uriResetPassword = new URI(baseUrl + port + "/api/v1/forgotPassword");
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("email", "nosuchuser@test.com");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Content-Type", "application/json");
+
+        Response forgotPasswordResponse = request.body(payload).post(uriResetPassword);
+
+        assertEquals(204, forgotPasswordResponse.getStatusCode());
     }
 }

@@ -3,7 +3,6 @@ package com.app.APICode.user;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
@@ -11,9 +10,9 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
-    User getUserByEmail(String email);
+    User getUserVerifiedByUsername(String requesterName, String username);
 
-    User getUserByVerificationToken(String verificationToken);
+    User getUserByEmail(String email);
 
     VerificationToken getVerificationToken(String VerificationToken);
 
