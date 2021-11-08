@@ -8,11 +8,11 @@
       </v-avatar>
       <v-spacer></v-spacer>
 
-      <v-btn small icon class="me-n3 mt-n1">
+      <!-- <v-btn small icon class="me-n3 mt-n1">
         <v-icon>
           {{ mdiDotsVertical }}
         </v-icon>
-      </v-btn>
+      </v-btn> -->
     </v-card-title>
 
     <v-card-text class="text-no-wrap text--primary mt-3">
