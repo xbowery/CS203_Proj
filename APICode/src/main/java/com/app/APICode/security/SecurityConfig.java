@@ -43,10 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().headers().disable().httpBasic().disable().authorizeRequests()
 
                 .antMatchers(HttpMethod.GET, "/users", "users/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
                 .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.PUT, "/users", "/users/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.PUT, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
                 .antMatchers(HttpMethod.DELETE, "/users/*").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
                 .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/users/employee").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.POST, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
 
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 

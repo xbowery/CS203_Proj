@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.app.APICode.employee.Employee;
 import com.app.APICode.restaurant.Restaurant;
@@ -53,9 +56,14 @@ public class CtestIntegrationTest {
     private RestaurantRepository restaurants;
 
     @Autowired
+    private CtestRepository ctests;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     private String tokenGeneratedAdmin;
+
+    private String tokenGeneratedEmployee;
 
     private String tokenGeneratedUser;
 
@@ -79,7 +87,7 @@ public class CtestIntegrationTest {
         admin.setEnabled(true);
         users.save(admin);
 
-        User normalUser = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
+        User normalUser = new User("testinguser@test.com", "testuser", "test", "user", encoder.encode("testpassword"), true, "ROLE_USER");
         normalUser.setEnabled(true);
         users.save(normalUser);
 
@@ -87,6 +95,18 @@ public class CtestIntegrationTest {
         testRestaurant.setCurrentCapacity(0);
 		Long id = restaurants.save(testRestaurant).getId();
         testRestaurantID = id;
+
+        User normalEmployee = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
+        normalEmployee.setEnabled(true);
+        Employee employee = new Employee(normalEmployee, "Employee");
+        employee.setRestaurant(testRestaurant);
+        normalEmployee.setEmployee(employee);
+        normalEmployee.setAuthorities("ROLE_EMPLOYEE");
+        users.save(normalEmployee);
+
+        Ctest newCtest = new Ctest("ART", new Date(2021-1900, 11, 8), "Negative");
+        newCtest.setEmployee(employee);
+        ctests.save(newCtest);
 
         User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
         businessOwner.setEnabled(true);
@@ -107,11 +127,21 @@ public class CtestIntegrationTest {
     }
 
     @BeforeEach
-    void getUserRequestToken() throws URISyntaxException {
+    void getEmployeeRequestToken() throws URISyntaxException {
         URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
                 new LoginDetails("test1", "password123"), TokenDetails.class);
+
+        tokenGeneratedEmployee = result.getBody().getAccessToken();
+    }
+
+    @BeforeEach
+    void getUserRequestToken() throws URISyntaxException {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("testuser", "testpassword"), TokenDetails.class);
 
         tokenGeneratedUser = result.getBody().getAccessToken();
     }
@@ -129,7 +159,60 @@ public class CtestIntegrationTest {
 	@AfterAll
 	void tearDown(){
 		// clear the database after each test
+        ctests.deleteAll();
 		users.deleteAll();
         restaurants.deleteAll();
 	}
+
+    @Test
+    void getAllCtest_Employee_Success() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.get(uriCtest);
+
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add("ART");
+
+        assertEquals(200, ctestListResponse.getStatusCode());
+        assertEquals(expectedResult, JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
+    }
+
+    @Test
+    void getAllCtest_NormalUser_Forbidden() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.get(uriCtest);
+
+        assertEquals(403, ctestListResponse.getStatusCode());
+    }
+
+    @Test
+    void postNewCtest_Employee_Success() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee).header("Content-Type", "application/json");
+
+        String newCtestDetails = "{\r\n" +
+        "  \"type\": \"ART\",\r\n" +
+        "  \"date\": \"2021-11-09\",\r\n" +
+        "  \"result\": \"Negative\"\r\n" +
+        "}";
+
+        Response ctestListResponse = request.body(newCtestDetails).post(uriCtest);
+
+        ctestListResponse.prettyPrint();
+
+        assertEquals(201, ctestListResponse.getStatusCode());
+        assertEquals("ART", JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
+    }
 }
