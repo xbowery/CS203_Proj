@@ -1,7 +1,9 @@
 package com.app.APICode.employee;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import com.app.APICode.ctest.CtestRepository;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
+import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.restaurant.RestaurantServiceImpl;
@@ -74,16 +77,17 @@ public class EmployeeServiceTest {
         User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
         long businessId = 10L;
 
-        when(users.save(any(User.class))).thenReturn(user);
         when(users.getUserByUsername(any(String.class))).thenReturn(user);
         when(restaurants.getRestaurantById(any(Long.class))).thenReturn(null);
        
         //Act
-        Employee savedEmployee = employeeService.addEmployeeToBusiness(user.getUsername(), "Manager", businessId);
+        RestaurantNotFoundException notFoundException = assertThrows(RestaurantNotFoundException.class, () -> {
+            employeeService.addEmployeeToBusiness(user.getUsername(), "Manager", businessId);
+        });
 
         //Assert
-        assertNull(savedEmployee);
-        verify(users).save(user);
+        assertEquals(notFoundException.getMessage(), "Could not find restaurant with ID: 10");
+        verify(users).getUserByUsername(user.getUsername());
     }
 
     @Test
@@ -98,7 +102,8 @@ public class EmployeeServiceTest {
         when(users.getUserByUsername(any(String.class))).thenReturn(user);
 
         //Act
-        Employee deletedEmployee = employeeService.deleteEmployee(user.getUsername());
+        employeeService.deleteEmployee(user.getUsername());
+        Employee deletedEmployee = user.getEmployee();
         
         //Assert
         assertNull(deletedEmployee);

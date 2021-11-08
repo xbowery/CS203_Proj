@@ -94,22 +94,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserVerifiedByUsername(String requesterName, String username) {
-
-        User requester = getUserByUsername(requesterName);
-
-        if (!((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1]).equals("ADMIN")) && !(username.equals(requester.getUsername()))) {
-            throw new UserForbiddenException("You are forbidden from processing this request.");
-        }
-
-        User user = users.findByUsername(username).orElse(null);
-        if (user == null) {
-            throw new UserNotFoundException(username);
-        }
-        return user;
-    }
-
-    @Override
     public User getUserByEmail(String email) {
         User user = users.findByEmail(email).orElse(null);
         if (user == null) {
@@ -151,7 +135,7 @@ public class UserServiceImpl implements UserService {
         final User user = vToken.getUser();
         final Calendar cal = Calendar.getInstance();
         if ((vToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            vTokens.delete(vToken);
+            VerificationToken newVToken = generateNewVerificationToken(token);
             return TOKEN_EXPIRED;
         }
         user.setEnabled(true);
