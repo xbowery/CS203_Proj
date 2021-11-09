@@ -12,6 +12,6 @@ public class RestaurantNotFoundException extends RuntimeException {
         super("Could not find restaurant with ID: " + id);
     }
     public RestaurantNotFoundException(String username) {
-        super("Could not find restaurant with username: " + username);
+        super("Could not find restaurant associated with username: " + username);
     }
 }
