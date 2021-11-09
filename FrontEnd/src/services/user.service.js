@@ -148,7 +148,7 @@ class UserService {
     const request = `/employee/${username}/ctests`
     return api.get(request)
   }
-
+  
   changePassword(changePasswordMessage) {
     return post('/users/password', changePasswordMessage)
   }
