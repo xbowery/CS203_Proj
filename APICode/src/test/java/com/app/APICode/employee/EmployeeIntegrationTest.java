@@ -4,9 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.templates.LoginDetails;
@@ -68,6 +71,8 @@ public class EmployeeIntegrationTest {
 
     private Long testRestaurantID;
 
+    private Long testRestaurant2ID;
+
     @BeforeAll
     public static void initClass() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -92,6 +97,11 @@ public class EmployeeIntegrationTest {
         testRestaurant.setCurrentCapacity(0);
 		Long id = restaurants.save(testRestaurant).getId();
         testRestaurantID = id;
+
+        Restaurant testRestaurant2 = new Restaurant("McDonald's","PlazaSingapura","Western", "Fast Food Chain", 50);
+        testRestaurant2.setCurrentCapacity(0);
+		Long id2 = restaurants.save(testRestaurant2).getId();
+        testRestaurant2ID = id2;
 
         User user = new User("pendingemployee1@test.com", "user5", "User", "five", encoder.encode("testing23456"), false, "ROLE_USER");
         user.setEnabled(true);
@@ -197,6 +207,45 @@ public class EmployeeIntegrationTest {
     }
 
     @Test
+    public void getEmployee_InvalidUsername_Failure() throws Exception {
+        User user1 = new User("user11@test.com", "user11", "User", "eleven", encoder.encode("testing23456"), false, "ROLE_USER");
+        users.save(user1);
+
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user1.getUsername());
+
+        given().headers(
+            "Authorization",
+            "Bearer " + tokenGeneratedBusinessOwner,
+            "Content-Type", "application/json"
+        ).when()
+        .get(uri)
+        .then()
+        .statusCode(404);
+    }
+
+    @Test 
+    public void getEmployee_InvalidRestaurant_Failure() throws Exception {
+        User user1 = new User("pendingemployee10@test.com", "user12", "User", "twelve", encoder.encode("testing23456"), false, "ROLE_USER");
+        Employee employee = new Employee(user1, "HR Manager");
+        Restaurant testRestaurant2 = restaurants.findById(testRestaurant2ID).orElse(null);
+        employee.setRestaurant(testRestaurant2);
+        user1.setEmployee(employee);
+        user1.setAuthorities("ROLE_EMPLOYEE");
+
+        users.save(user1);
+
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user1.getUsername());
+
+        given().headers(
+            "Authorization",
+            "Bearer " + tokenGeneratedBusinessOwner,
+            "Content-Type", "application/json"
+        ).when()
+        .get(uri)
+        .then()
+        .statusCode(401);
+    }
+    @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() throws Exception {
         URI uri = new URI(baseUrl + port + "/api/v1/users/employee");
 
@@ -248,6 +297,29 @@ public class EmployeeIntegrationTest {
         assertEquals(404, addEmployeeResponse.getStatusCode());
     }
 
+    @Test
+    void approveEmployee_validUsername_ReturnSuccess() throws Exception{
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee");
+        User user2 = new User("pendingemployee6@test.com", "user10", "User", "ten", encoder.encode("testing23456"), false, "ROLE_USER");
+        Employee employee = new Employee(user2,"HR Manager");
+        Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
+        employee.setRestaurant(testRestaurant);
+        employee.setStatus("Pending");
+        user2.setEmployee(employee);
+
+        user2.setEnabled(true);
+        users.save(user2);
+
+        RequestSpecification request = RestAssured.given();
+        String requestMessage = "{\r\n" +
+        "  \"username\": \"user10\"\r\n" +
+        "}";
+        request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
+        Response updateEmployeeResponse = request.body(requestMessage).put(uri);
+        assertEquals(200, updateEmployeeResponse.getStatusCode());
+        assertEquals("Active", JsonPath.from(updateEmployeeResponse.getBody().asString()).get("status"));
+    }
+
     @Test 
     void deleteEmployee_validUsername_ReturnNull() throws Exception {
 
@@ -274,6 +346,33 @@ public class EmployeeIntegrationTest {
         Response addEmployeeResponse = request.delete(uri);
 
         assertEquals(404, addEmployeeResponse.getStatusCode());
+    }
+
+    @Test
+    void getCtests_ValidBusinessOwner_ReturnSuccess() throws Exception {
+        User user1 = new User("pendingemployee11@test.com", "user13", "User", "thirteen", encoder.encode("testing23456"), false, "ROLE_USER");
+        Employee employee = new Employee(user1, "HR Manager");
+        Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
+        employee.setRestaurant(testRestaurant);
+
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        Ctest ctest = new Ctest("PCR",date,"Negative");
+        ctest.setEmployee(employee);
+        List<Ctest> allctests = new ArrayList<Ctest>();
+        allctests.add(ctest);
+        
+        employee.setCtests(allctests);
+        user1.setEmployee(employee);
+        user1.setAuthorities("ROLE_EMPLOYEE");
+        users.save(user1);
+
+        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/BusinessOne/ctests");
+        RequestSpecification request = RestAssured.given();
+    
+        request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
+        Response getEmployeeResponse = request.get(uri);
+
+        assertEquals(200, getEmployeeResponse.getStatusCode());
     }
 
 
