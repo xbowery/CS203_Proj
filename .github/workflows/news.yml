@@ -6,25 +6,55 @@ on:
   pull_request:
     types: [opened, reopened]
 
+defaults:
+  run:
+    working-directory: ./NewsMicroservice
+
+env:
+  AZURE_WEBAPP_NAME: swisshack-newsapi
 jobs:
-  news-api:
+  build:
     name: News API CI
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./NewsMicroservice
     strategy:
       matrix:
         node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: 'NewsMicroservice/package-lock.json'
+
       - name: Install dependencies
         run: npm install
-      - name: Runs all the best
+
+      - name: Runs all the test
         run: npm test
+
+  deploy:
+    name: Deploy to Azure Web Services
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }} 
+
+      # - name: Deploy to Azure Web App for Container
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: ${{ env.AZURE_WEBAPP_NAME }}
+      #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      #     images: ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }}
