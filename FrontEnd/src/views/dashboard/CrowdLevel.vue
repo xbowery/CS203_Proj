@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card height="250">
     <v-item-group>
       <v-container>
         <v-row justify="center" align="center" v-if="renderComponent">

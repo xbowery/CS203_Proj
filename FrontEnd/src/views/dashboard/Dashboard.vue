@@ -68,7 +68,7 @@ import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardV
 // demos
 import DashboardUser from './DashboardUser.vue'
 import CrowdLevel from './CrowdLevel.vue'
-import DashboardDailyOverview from './DashboardDailyOverview.vue'
+import DashboardDailyOverview from './DashboardOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
 import { mapGetters } from 'vuex'
 import UserService from '@/services/user.service'
