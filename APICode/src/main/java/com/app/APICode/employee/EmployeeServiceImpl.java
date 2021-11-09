@@ -100,10 +100,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee approveEmployee(String username) {
         User user = users.getUserByUsername(username);
-        Employee employee = user.getEmployee();
-
         user.setAuthorities("ROLE_EMPLOYEE");
 
+        Employee employee = user.getEmployee();
         employee.setStatus("Active");
 
         users.save(user);
