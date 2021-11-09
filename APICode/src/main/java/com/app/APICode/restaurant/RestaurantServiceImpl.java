@@ -78,6 +78,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setCuisine(updatedRestaurant.getCuisine());
         restaurant.setDescription(updatedRestaurant.getDescription());
         restaurant.setMaxCapacity(updatedRestaurant.getMaxCapacity());
+        restaurant.setCurrentCapacity(updatedRestaurant.getCurrentCapacity());
+        restaurant.setcurrentCrowdLevel(updatedRestaurant.getcurrentCrowdLevel());
         return restaurants.save(restaurant);
     }
 
