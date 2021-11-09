@@ -86,7 +86,6 @@ public class G2T4Application {
 		notifications.save(new Notification(
 				"You have a pending employee request from John Doe. Please review it under your Employee List.",
 				admin));
-
 	}
 
 }

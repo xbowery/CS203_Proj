@@ -14,7 +14,7 @@
       </v-badge>
     </template>
 
-    <v-card class="app-bar-notification-content-container">
+    <v-card class="app-bar-notification-content-container" max-width="450">
       <v-list class="py-0">
         <!-- Header -->
         <v-list-item class="d-flex" link>
@@ -27,13 +27,35 @@
         </v-list-item>
         <v-divider></v-divider>
 
-        <!-- Notifications -->
-        <template v-for="(notification, index) in notifications">
+        <!-- Error template -->
+        <template v-if="error">
+          <v-list-item>
+            <v-list-item-content class="d-block">
+              <v-list-item-title class="text-sm font-weight-semibold"> Error! </v-list-item-title>
+              <v-list-item-subtitle class="text-sm show-full">
+                An error occurred. Please try again.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+
+        <!-- No more notification template -->
+        <template v-else-if="messages == 0">
+          <v-list-item>
+            <v-list-item-content class="d-block">
+              <v-list-item-title class="text-sm font-weight-semibold"> All caught up! </v-list-item-title>
+              <v-list-item-subtitle class="text-sm show-full"> No notifications left. </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+
+        <!-- Standard Notifications -->
+        <template v-for="(notification, index) in notifications" v-else>
           <v-list-item :key="notification.id" link @click="markSingleNotificationRead(notification.id)">
             <!-- Content -->
             <v-list-item-content class="d-block">
               <v-list-item-title class="text-sm font-weight-semibold"> Important! </v-list-item-title>
-              <v-list-item-subtitle class="text-sm">
+              <v-list-item-subtitle class="text-sm show-full">
                 {{ notification.text }}
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -45,10 +67,12 @@
           </v-list-item>
           <v-divider :key="index"></v-divider>
         </template>
+
+        <!-- Button for other functions -->
         <v-list-item key="read-all-btn" class="read-all-btn-list-item">
           <v-btn v-if="messages !== 0" block color="primary" @click="markAllRead()"> Read All Notifications </v-btn>
 
-          <v-btn v-else block color="info" @click="refreshNotifications()"> All caught up! Refresh. </v-btn>
+          <v-btn v-else block color="info" @click="refreshNotifications()"> Click to Refresh </v-btn>
         </v-list-item>
       </v-list>
     </v-card>
@@ -64,6 +88,7 @@ export default {
   setup() {
     const messages = ref(0)
     const notifications = ref([])
+    const error = ref(false)
 
     const getNotification = async () => {
       try {
@@ -73,7 +98,9 @@ export default {
 
         notifications.value = rawData
         messages.value = notifications.value.length
+        error.value = false
       } catch (err) {
+        error.value = true
         console.error(err)
       }
     }
@@ -102,16 +129,27 @@ export default {
       })
     }
 
-    const markAllRead = () => {
-      messages.value = 0
-      notifications.value = []
-      UserService.readAllNotification()
+    const markAllRead = async () => {
+      try {
+        await UserService.readAllNotification()
+        messages.value = 0
+        notifications.value = []
+        error.value = false
+      } catch (err) {
+        console.error(err)
+        error.value = true
+      }
     }
 
-    const markSingleNotificationRead = notificationId => {
-      UserService.readNotification(notificationId)
-      messages.value--
-      notifications.value = notifications.value.filter(notification => notification.id !== notificationId)
+    const markSingleNotificationRead = async notificationId => {
+      try {
+        await UserService.readNotification(notificationId)
+        messages.value--
+        notifications.value = notifications.value.filter(notification => notification.id !== notificationId)
+        error.value = false
+      } catch (err) {
+        error.value = true
+      }
     }
 
     const refreshNotifications = () => {
@@ -121,6 +159,7 @@ export default {
     return {
       messages,
       notifications,
+      error,
       getNotification,
       markAllRead,
       markSingleNotificationRead,
@@ -154,5 +193,9 @@ export default {
     left: 50% !important;
     transform: translateX(-50%);
   }
+}
+
+.show-full {
+  white-space: normal;
 }
 </style>
