@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerService;
+import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.utility.RandomPassword;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     private PasswordResetTokenRepository pTokens;
 
-    EmailerService emailerService;
+    EmailerServiceImpl emailerService;
 
     RandomPassword randomPasswordGenerator;
 
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
-            PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
+            PasswordResetTokenRepository pTokens, EmailerServiceImpl emailerService, RandomPassword randomPasswordGenerator,
             BCryptPasswordEncoder encoder) {
         this.users = users;
         this.vTokens = vTokens;
