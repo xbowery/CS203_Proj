@@ -17,7 +17,7 @@
           <statistics-card-vertical
             :color="totalNumEmployees.color"
             :icon="totalNumEmployees.icon"
-            :statistics="employee_count"
+            :statistics="employee_count.toString(10)"
             :stat-title="totalNumEmployees.statTitle"
             :subtitle="totalNumEmployees.subtitle"
           ></statistics-card-vertical>
@@ -26,7 +26,7 @@
           <statistics-card-vertical
             :color="employeesPending.color"
             :icon="employeesPending.icon"
-            :statistics="pending_count"
+            :statistics="pending_count.toString(10)"
             :stat-title="employeesPending.statTitle"
             :subtitle="employeesPending.subtitle"
           ></statistics-card-vertical>
@@ -36,7 +36,7 @@
             :change="employeesPostive.change"
             :color="employeesPostive.color"
             :icon="employeesPostive.icon"
-            :statistics="positive_count"
+            :statistics="positive_count.toString(10)"
             :stat-title="employeesPostive.statTitle"
             :subtitle="employeesPostive.subtitle"
           ></statistics-card-vertical>
@@ -46,7 +46,7 @@
           <statistics-card-vertical
             :color="employeesNegative.color"
             :icon="employeesNegative.icon"
-            :statistics="negative_count"
+            :statistics="negative_count.toString(10)"
             :stat-title="employeesNegative.statTitle"
             :subtitle="employeesNegative.subtitle"
           ></statistics-card-vertical>
@@ -91,10 +91,10 @@ export default {
   data() {
     return {
       items: [],
-      employee_count: '',
-      pending_count: '',
-      positive_count: '',
-      negative_count: '',
+      employee_count: 0,
+      pending_count: 0,
+      positive_count: 0,
+      negative_count: 0,
     }
   },
 

@@ -66,7 +66,7 @@ public class CtestServiceImpl implements CtestService {
         if(!ctestList.isEmpty()){
             latestTest = ctestList.get(0).getDate();
             for(Ctest ctest: getAllCtestsByUsername(username)){
-                if(ctest.getDate().compareTo(latestTest) == 0){
+                if(ctest.getDate().compareTo(latestTest) > 0){
                     latestTest = ctest.getDate();
                 }
             }

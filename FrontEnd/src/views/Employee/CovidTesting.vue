@@ -97,7 +97,7 @@ export default {
       try {
         const res = await UserService.getNextCtest(username)
         this.next_date = res.data
-        this.daysToNextCtest = Math.round((new Date(this.next_date) - new Date()) / 86400000)
+        this.daysToNextCtest = Math.round((new Date(this.next_date) - new Date()) / 86400000).toString(10)
       } catch (error) {
         console.log(error)
       }

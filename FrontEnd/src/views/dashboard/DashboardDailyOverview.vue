@@ -40,14 +40,15 @@ export default {
     return {
       items: [],
       pending_count: 0,
-      incomplete_count: 0,
+      negative_count: 0,
+      positive_count:0,
       series: [],
       chartOptions: {
         chart: {
           width: 380,
           type: 'pie',
         },
-        labels: ['Pending', 'Incomplete'],
+        labels: ['Pending', 'Negative', 'Positive'],
         responsive: [
           {
             breakpoint: 480,
@@ -69,13 +70,14 @@ export default {
     try {
       const res = await UserService.getEmployeesCtests(this.user.username)
       this.items = res.data
-
+      console.log(this.items)
       this.items.forEach(item => {
         if (item.result == 'Pending') this.pending_count += 1
-        else this.incomplete_count += 1
+        else if (item.result == 'Negative') this.negative_count +=1
+        else this.positive_count += 1
       })
 
-      this.series.push(this.pending_count, this.incomplete_count)
+      this.series.push(this.pending_count, this.negative_count, this.positive_count)
     } catch (error) {
       console.error(error)
     }
