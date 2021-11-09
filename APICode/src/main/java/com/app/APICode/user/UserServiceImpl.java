@@ -206,15 +206,15 @@ public class UserServiceImpl implements UserService {
         dataModel.put("isRegisterConfirmation", true);
         dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + token);
 
-        // try {
-        // emailerService.sendMessage(user.getEmail(), dataModel);
-        // } catch (MessagingException e) {
-        // System.out.println("Error occurred while trying to send an email to: " +
-        // user.getEmail());
-        // } catch (IOException e) {
-        // System.out.println("Error occurred while trying to send an email to: " +
-        // user.getEmail());
-        // }
+        try {
+        emailerService.sendMessage(user.getEmail(), dataModel);
+        } catch (MessagingException e) {
+        System.out.println("Error occurred while trying to send an email to: " +
+        user.getEmail());
+        } catch (IOException e) {
+        System.out.println("Error occurred while trying to send an email to: " +
+        user.getEmail());
+        }
 
         User savedUser = users.save(user);
         createVerificationTokenForUser(savedUser, token);
