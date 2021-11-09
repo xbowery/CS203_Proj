@@ -61,7 +61,6 @@ export default {
               }
             })
           }
-
           var dict = {
             id: user.id,
             full_name: user.firstName + ' ' + user.lastName,
@@ -80,7 +79,6 @@ export default {
     async getNextDate(username) {
       try {
         const res = await UserService.getNextCtest(username)
-        console.log(res.data)
         return res.data
       } catch (error) {
         console.log(error)

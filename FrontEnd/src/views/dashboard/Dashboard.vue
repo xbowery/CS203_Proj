@@ -92,9 +92,9 @@ export default {
     return {
       items: [],
       employee_count: '',
-      pending_count: 0,
-      positive_count: 0,
-      negative_count: 0,
+      pending_count: '',
+      positive_count: '',
+      negative_count: '',
     }
   },
 
@@ -103,7 +103,7 @@ export default {
       console.log(this.user.username)
       const res = await UserService.getEmployeesCtests(this.user.username)
       this.items = res.data
-      this.employee_count = this.items.length
+      this.employee_count = this.items.length.toString(10)
 
       this.items.forEach(item => {
         if (item.result == 'Pending') this.pending_count += 1
