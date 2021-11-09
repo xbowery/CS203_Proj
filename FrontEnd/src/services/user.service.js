@@ -11,8 +11,14 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
-  getNotification(){
-    return api.get("/user/notificaitons")
+  getNotification() {
+    return api.get('/notifications')
+  }
+  readNotification(id) {
+    return api.put(`/notifications/${id}`)
+  }
+  readAllNotification() {
+    return api.put(`/notifications/all`)
   }
   getEmployees() {
     return api.get('/employees')
