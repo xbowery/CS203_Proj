@@ -14,6 +14,7 @@ import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
+import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
@@ -302,6 +303,21 @@ public class UserServiceImpl implements UserService {
         } catch (EmptyResultDataAccessException e) {
             throw new UserNotFoundException(username);
         }
+    }
 
+    @Override
+    public void changePasswordByUsername(String username, ChangePasswordMessage message) {
+        if(!message.getNewPassword().equals(message.getCfmPassword())) {
+            throw new InvalidChangePasswordException("New Password and Confirm Password");
+        }
+
+        User user = getUserByUsername(username);
+        if(!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidChangePasswordException("Current Password");
+        }
+
+        String encodedPassword = encoder.encode(message.getNewPassword());
+        user.setPassword(encodedPassword);
+        users.save(user);
     }
 }

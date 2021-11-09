@@ -2,6 +2,7 @@ package com.app.APICode.user;
 
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
+import com.app.APICode.user.message.ChangePasswordMessage;
 
 import java.util.List;
 
@@ -14,10 +15,11 @@ public interface UserService {
     List<UserDTO> listUsers();
 
     /**
-     * Gets the User details by the specified "username".
-     * If the principal does not match the specified "username", throw a {@link UserForbiddenException}
+     * Gets the User details by the specified "username". If the principal does not
+     * match the specified "username", throw a {@link UserForbiddenException}
+     * 
      * @param requesterUsername the username for verification
-     * @param username a String containing the username to be retrieved
+     * @param username          a String containing the username to be retrieved
      * @return
      */
     UserDTO getUserDetailsByUsername(String requesterUsername, String username);
@@ -154,4 +156,17 @@ public interface UserService {
      * @return the new/updated User object
      */
     User save(User user);
+
+    /**
+     * Updates the password of the user specified by "username" with password
+     * details specfied in "message". If password in User object does not match with
+     * the current password specified in message, throw a
+     * InvalidChangePasswordException. If the new password and confirm new password
+     * does not match, throw a InvalidChangePasswordException.
+     * 
+     * @param username a string containing the username of the User
+     * @param message  a ChangePasswordMessage object containing the current
+     *                 password, new password and confirm new password
+     */
+    void changePasswordByUsername(String username, ChangePasswordMessage message);
 }

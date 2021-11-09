@@ -7,6 +7,7 @@ const News = require("../newsSchema");
 chai.use(chaiHttp);
 
 const URI = "/api/v1";
+const NEWS_LIMIT = 8;
 
 // Waits 1.5 seconds for everything to initialise
 beforeAll((done) => {
@@ -147,7 +148,8 @@ test("RetrieveRSSFeed_ReturnsSuccess", function (done) {
     });
 });
 
-// Test the endpoint again after fetching RSS news
+// Test the endpoint again after fetching RSS news. If it fetch fewer than the limit,
+// we expect it to return everything. Else, return the NEWS_LIMIT.
 test("RetrieveAllNews_ReturnsEightOfEachType", function (done) {
   chai
     .request(server)
@@ -156,9 +158,11 @@ test("RetrieveAllNews_ReturnsEightOfEachType", function (done) {
       assert.equal(res.status, 200);
 
       const { generalNews, restaurantNews, officialGovNews } = res.body;
-      assert.equal(generalNews.length, 8);
-      assert.equal(restaurantNews.length, 8);
-      assert.equal(officialGovNews.length, numOfficialInserted);
+      const numGovExpected =
+        numOfficialInserted < NEWS_LIMIT ? numOfficialInserted : NEWS_LIMIT;
+      assert.equal(generalNews.length, NEWS_LIMIT);
+      assert.equal(restaurantNews.length, NEWS_LIMIT);
+      assert.equal(officialGovNews.length, numGovExpected);
       done();
     });
 });
