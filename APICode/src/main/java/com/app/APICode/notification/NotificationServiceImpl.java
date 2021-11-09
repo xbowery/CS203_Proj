@@ -30,14 +30,17 @@ public class NotificationServiceImpl implements NotificationService {
     private final long DAY_IN_MS = 1000 * 60 * 60 * 24;
 
     @Autowired
-    public NotificationServiceImpl(NotificationRepository notifications, RestaurantService restaurants,
-            UserService users, EmployeeService employees, CtestService ctests) {
+    public NotificationServiceImpl(NotificationRepository notifications, CtestService ctests, EmployeeService employees,
+            RestaurantService restaurants) {
         this.notifications = notifications;
         this.restaurants = restaurants;
         this.employees = employees;
-        this.users = users;
         this.ctests = ctests;
+    }
 
+    @Autowired
+    public void setUserService(UserService users) {
+        this.users = users;
     }
 
     @Override
@@ -48,8 +51,7 @@ public class NotificationServiceImpl implements NotificationService {
                 "You have a pending employee request from %s %s. Please review it under your Employee List.",
                 pendingEmployee.getUser().getFirstName(), pendingEmployee.getUser().getLastName());
 
-        Notification newNotification = new Notification(notificationText, owner);
-        return notifications.save(newNotification);
+        return addNewNotification(notificationText, owner);
     }
 
     /**
@@ -80,18 +82,31 @@ public class NotificationServiceImpl implements NotificationService {
      * @param user
      * @return
      */
+    @Override
     public boolean checkAndGenerateNotifications(User user) {
         Date nextCtestDate = ctests.getNextCtestByUsername(user.getUsername());
         Date notificationDateThreshold = new Date(System.currentTimeMillis() + CTEST_NUM_ELAPSED_DAYS * DAY_IN_MS);
 
         if (notificationDateThreshold.compareTo(nextCtestDate) >= 0) {
             String notificationText = "You need to complete a Covid Test by: " + nextCtestDate;
-            Notification newNotification = new Notification(notificationText, user);
-            notifications.save(newNotification);
+            addNewNotification(notificationText, user);
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Saves a new notification with the given string for the given user.
+     * 
+     * @param notificationText notification details
+     * @param user             the user to save as
+     * @return Notification the notification saved
+     */
+    @Override
+    public Notification addNewNotification(String notificationText, User user) {
+        Notification newNotification = new Notification(notificationText, user);
+        return notifications.save(newNotification);
     }
 
     /**

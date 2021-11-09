@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerService;
+import com.app.APICode.notification.NotificationService;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.utility.RandomPassword;
@@ -32,6 +33,8 @@ public class UserServiceImpl implements UserService {
 
     private PasswordResetTokenRepository pTokens;
 
+    private NotificationService notificationService;
+
     EmailerService emailerService;
 
     RandomPassword randomPasswordGenerator;
@@ -45,13 +48,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
             PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
-            BCryptPasswordEncoder encoder) {
+            BCryptPasswordEncoder encoder, NotificationService notificationService) {
         this.users = users;
         this.vTokens = vTokens;
         this.pTokens = pTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -122,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Add logic to validate verification token by calculating the expiry date of
-     * token
+     * token.
      */
     @Override
     public String validateVerificationToken(String token) {
@@ -139,6 +143,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setEnabled(true);
         users.save(user);
+
         return TOKEN_VALID;
     }
 
@@ -160,7 +165,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Add logic to avoid adding users with the same email or username Return null
-     * if there exists a user with the same email or username
+     * if there exists a user with the same email or username. Then create a
+     * notification.
      * 
      * @param user    a User object
      * @param isAdmin boolean value to determine if user is admin or not
@@ -203,6 +209,9 @@ public class UserServiceImpl implements UserService {
         User savedUser = users.save(user);
         VerificationToken vToken = new VerificationToken(token, user);
         vTokens.save(vToken);
+
+        String notificationText = String.format("Welcome to Swisshack, %s!", savedUser.getUsername());
+        notificationService.addNewNotification(notificationText, savedUser);
 
         return convertToUserDTO(savedUser);
     }

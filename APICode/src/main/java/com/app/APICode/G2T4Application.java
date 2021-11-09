@@ -31,6 +31,7 @@ public class G2T4Application {
 				"ROLE_ADMIN");
 		admin.setEnabled(true);
 		System.out.println("[Add user]: " + users.save(admin).getUsername());
+
 		// User
 		User user = new User("user@test.com", "user1", "User", "one", encoder.encode("testing123"), false, "ROLE_USER");
 		user.setEnabled(true);
@@ -81,11 +82,12 @@ public class G2T4Application {
 		System.out.println(testRestaurant.getName() + " " + "id: " + testRestaurant.getId());
 
 		NotificationRepository notifications = ctx.getBean(NotificationRepository.class);
-		notifications.save(new Notification("Welcome to Swisshack!", admin));
+		notifications.save(new Notification("Welcome to Swisshack, admin!", admin));
 		notifications.save(new Notification("Remember to do your next COVID-19 test which is due in 3 days!", admin));
 		notifications.save(new Notification(
 				"You have a pending employee request from John Doe. Please review it under your Employee List.",
 				admin));
+
 	}
 
 }

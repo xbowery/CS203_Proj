@@ -19,4 +19,6 @@ public interface NotificationService {
 
     List<Notification> filterUnreadNotifications(List<Notification> notifications);
 
+    Notification addNewNotification(String notificationText, User user);
+
 }

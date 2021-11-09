@@ -21,9 +21,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private RestaurantService restaurants;
     private NotificationService notifications;
 
-    @Autowired
-    public EmployeeServiceImpl(UserService users) {
-        this.users = users;
+    public EmployeeServiceImpl() {
     }
 
     // To break circular dependency
@@ -35,6 +33,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     public void setNotifications(NotificationService notifications) {
         this.notifications = notifications;
+    }
+
+    @Autowired
+    public void setUsers(UserService users) {
+        this.users = users;
     }
 
     public RestaurantService getRestaurants() {
