@@ -67,20 +67,26 @@ public class NotificationServiceTest {
 
         Employee employee = new Employee(employeeUser, "Employee");
         Long id = 1L;
-        Notification mockNotification = new Notification("New notification!", employeeUser);
+
+        String notificationText = String.format(
+                "You have a pending employee request from %s %s. Please review it under your Employee List.",
+                employee.getUser().getFirstName(), employee.getUser().getLastName());
+
+        Notification mockNotification = new Notification(notificationText, employeeUser);
+        NotificationService spiedService = spy(notificationService);
 
         when(employees.getEmployeeByUsername(any(String.class))).thenReturn(employee);
         when(restaurants.getRestaurantOwner(anyLong())).thenReturn(employeeUser);
-        when(notifications.save(any(Notification.class))).thenReturn(mockNotification);
+        doReturn(mockNotification).when(spiedService).addNewNotification(anyString(), any(User.class));
 
-        Notification newNotification = notificationService
-                .addNewEmployeeApprovalNotification(employee.getUser().getUsername(), id);
+        Notification newNotification = spiedService.addNewEmployeeApprovalNotification(employee.getUser().getUsername(),
+                id);
 
         assertNotNull(newNotification);
 
         verify(employees).getEmployeeByUsername(employee.getUser().getUsername());
         verify(restaurants).getRestaurantOwner(id);
-        verify(notifications).save(any(Notification.class));
+        verify(spiedService).addNewNotification(notificationText, employeeUser);
     }
 
     /**
@@ -241,15 +247,16 @@ public class NotificationServiceTest {
         user.setEnabled(true);
 
         Date expiredDate = new Date(System.currentTimeMillis() + (3 * DAY_IN_MS));
+        NotificationService spiedService = spy(notificationService);
 
         when(ctests.getNextCtestByUsername(anyString())).thenReturn(expiredDate);
-        when(notifications.save(any(Notification.class))).thenReturn(null);
+        doReturn(null).when(spiedService).addNewNotification(anyString(), any(User.class));
 
-        boolean isNotificationCreated = notificationService.checkAndGenerateNotifications(user);
+        boolean isNotificationCreated = spiedService.checkAndGenerateNotifications(user);
 
         assertTrue(isNotificationCreated);
         verify(ctests).getNextCtestByUsername(user.getUsername());
-        verify(notifications).save(any(Notification.class));
+        verify(spiedService).addNewNotification(anyString(), any(User.class));
     }
 
     /**
@@ -262,14 +269,15 @@ public class NotificationServiceTest {
         user.setEnabled(true);
 
         Date expiredDate = new Date(System.currentTimeMillis() + (4 * DAY_IN_MS));
+        NotificationService spiedService = spy(notificationService);
 
         when(ctests.getNextCtestByUsername(anyString())).thenReturn(expiredDate);
 
-        boolean isNotificationCreated = notificationService.checkAndGenerateNotifications(user);
+        boolean isNotificationCreated = spiedService.checkAndGenerateNotifications(user);
 
         assertFalse(isNotificationCreated);
         verify(ctests).getNextCtestByUsername(user.getUsername());
-        verify(notifications, never()).save(any(Notification.class));
+        verify(spiedService, never()).addNewNotification(anyString(), any(User.class));
 
     }
 
@@ -331,5 +339,28 @@ public class NotificationServiceTest {
         verify(users).getAllUsers();
         verify(spiedService).checkAndGenerateNotifications(user);
         verify(spiedService).checkAndGenerateNotifications(user2);
+    }
+
+    /**
+     * Testing the internal function to create notifications
+     */
+    @Test
+    void addNewNotification_RunsNormally_ReturnsNotification() {
+        User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
+        user.setEnabled(true);
+
+        String text = "Mock Notification";
+
+        Notification mockNotification = new Notification(text, user);
+        when(notifications.save(any(Notification.class))).thenReturn(mockNotification);
+
+        Notification notification = notificationService.addNewNotification(text, user);
+
+        assertNotNull(notification);
+        assertEquals(notification.getText(), text);
+        assertEquals(notification.getUser().getUsername(), user.getUsername());
+
+        verify(notifications).save(any(Notification.class));
+
     }
 }

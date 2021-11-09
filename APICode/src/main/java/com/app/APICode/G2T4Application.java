@@ -14,6 +14,7 @@ import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
 import com.app.APICode.notification.Notification;
 import com.app.APICode.notification.NotificationRepository;
+import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.user.*;
@@ -81,13 +82,11 @@ public class G2T4Application {
 
 		System.out.println(testRestaurant.getName() + " " + "id: " + testRestaurant.getId());
 
-		NotificationRepository notifications = ctx.getBean(NotificationRepository.class);
-		notifications.save(new Notification("Welcome to Swisshack, admin!", admin));
-		notifications.save(new Notification("Remember to do your next COVID-19 test which is due in 3 days!", admin));
-		notifications.save(new Notification(
-				"You have a pending employee request from John Doe. Please review it under your Employee List.",
-				admin));
-
+		NotificationService notifications = ctx.getBean(NotificationService.class);
+		notifications.addNewNotification("Welcome to Swisshack, admin!", admin);
+		notifications.addNewNotification("Remember to do your next COVID-19 test which is due in 3 days!", admin);
+		notifications.addNewNotification(
+				"You have a pending employee request from John Doe. Please review it under your Employee List.", admin);
 	}
 
 }

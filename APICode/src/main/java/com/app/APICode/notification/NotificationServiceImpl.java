@@ -29,18 +29,32 @@ public class NotificationServiceImpl implements NotificationService {
     private static final int CTEST_NUM_ELAPSED_DAYS = 3;
     private final long DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-    @Autowired
-    public NotificationServiceImpl(NotificationRepository notifications, CtestService ctests, EmployeeService employees,
-            RestaurantService restaurants) {
-        this.notifications = notifications;
-        this.restaurants = restaurants;
-        this.employees = employees;
-        this.ctests = ctests;
+    public NotificationServiceImpl() {
     }
 
     @Autowired
-    public void setUserService(UserService users) {
+    public void setNotifications(NotificationRepository notifications) {
+        this.notifications = notifications;
+    }
+
+    @Autowired
+    public void setRestaurants(RestaurantService restaurants) {
+        this.restaurants = restaurants;
+    }
+
+    @Autowired
+    public void setEmployees(EmployeeService employees) {
+        this.employees = employees;
+    }
+
+    @Autowired
+    public void setUsers(UserService users) {
         this.users = users;
+    }
+
+    @Autowired
+    public void setCtests(CtestService ctests) {
+        this.ctests = ctests;
     }
 
     @Override
