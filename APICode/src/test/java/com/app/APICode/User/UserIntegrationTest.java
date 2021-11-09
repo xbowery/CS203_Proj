@@ -59,7 +59,7 @@ public class UserIntegrationTest {
 
     private String tokenGeneratedAdmin;
 
-    private String tokenGeneratedUser;
+    private String tokenGeneratedDummyUser;
 
     @BeforeAll
     public static void initClass() {
@@ -103,7 +103,7 @@ public class UserIntegrationTest {
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
                 new LoginDetails("test1", "password123"), TokenDetails.class);
 
-        tokenGeneratedUser = result.getBody().getAccessToken();
+        tokenGeneratedDummyUser = result.getBody().getAccessToken();
     }
 
     @AfterAll
@@ -123,7 +123,7 @@ public class UserIntegrationTest {
         Response userListResponse = request.get(uriUsers);
 
         assertEquals(200, userListResponse.getStatusCode());
-        request.then().body("size()", equalTo(6));
+        request.then().body("size()", equalTo(8));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUsers);
 
@@ -172,7 +172,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUser);
 
@@ -186,7 +186,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUser);
 
@@ -221,7 +221,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
 
         String addUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -279,7 +279,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
 
         String updateUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -294,6 +294,85 @@ public class UserIntegrationTest {
         User updatedUser = users.findByUsername(savedUsername).orElse(null);
 
         assertEquals(403, updateUserResponse.getStatusCode());
+        assertNotNull(updatedUser);
+    }
+
+    @Test
+    public void updateOwnselfPassword_NormalUser_Success() throws Exception {
+        URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
+
+        User testUser = new User("newlytested@test.com", "newlyuser", "newly", "user", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        User savedUser = users.save(testUser);
+        String savedUsername = savedUser.getUsername();
+
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("newlyuser", "password123"), TokenDetails.class);
+
+        tokenGeneratedDummyUser = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        String updateUserDetails = "{\r\n" +
+        "  \"email\": \"newlytested@test.com\",\r\n" +
+        "  \"username\": \"newlyuser\",\r\n" +
+        "  \"firstName\": \"newly\",\r\n" +
+        "  \"lastName\": \"user\",\r\n" +
+        "  \"password\": \"testing12345\"\r\n" +
+        "}";
+
+        Response updateResponse = request.body(updateUserDetails).put(uriUsers);
+
+        User updatedUser = users.findByUsername(savedUsername).orElse(null);
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        Response updateUserResponse = request.get(uriUsers + "/" + savedUsername);
+
+        assertEquals(200, updateResponse.getStatusCode());
+        assertEquals(200, updateUserResponse.getStatusCode());
+        assertNotNull(updatedUser);
+        assertEquals("newly", JsonPath.from(updateUserResponse.getBody().asString()).get("firstName"));
+        assertEquals("user", JsonPath.from(updateUserResponse.getBody().asString()).get("lastName"));
+    }
+
+    @Test
+    public void updateExistingEmail_NormalUser_Failure() throws Exception {
+        URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
+
+        User testUser = new User("newlytested1@test.com", "newlyuser1", "newly", "user1", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        User savedUser = users.save(testUser);
+        String savedUsername = savedUser.getUsername();
+
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("newlyuser1", "password123"), TokenDetails.class);
+
+        tokenGeneratedDummyUser = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        String updateUserDetails = "{\r\n" +
+        "  \"email\": \"admin@test.com\",\r\n" +
+        "  \"username\": \"newlyuser1\",\r\n" +
+        "  \"firstName\": \"newly\",\r\n" +
+        "  \"lastName\": \"user\",\r\n" +
+        "  \"password\": \"testing12345\"\r\n" +
+        "}";
+
+        Response updateResponse = request.body(updateUserDetails).put(uriUsers);
+
+        User updatedUser = users.findByUsername(savedUsername).orElse(null);
+
+        assertEquals(409, updateResponse.getStatusCode());
         assertNotNull(updatedUser);
     }
 
@@ -327,7 +406,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
 
         Response deleteUserResponse = request.delete(uriUsers + "/" + savedUsername);
 

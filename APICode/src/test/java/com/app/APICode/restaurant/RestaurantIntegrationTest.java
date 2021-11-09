@@ -12,6 +12,7 @@ import com.app.APICode.templates.TokenDetails;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -54,6 +55,12 @@ public class RestaurantIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String tokenGeneratedAdmin;
+
+    private String tokenGeneratedBusinessOwner;
+
+    private String tokenGeneratedUser;
+
     @BeforeAll
     public static void initClass() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -74,6 +81,13 @@ public class RestaurantIntegrationTest {
         testRestaurant.setCurrentCapacity(0);
 		restaurants.save(testRestaurant);
 
+        User businessOwner = new User("business@test.com", "businessOne", "business", "One", encoder.encode("password123"), true, "ROLE_BUSINESS");
+        businessOwner.setEnabled(true);
+        Employee owner = new Employee(businessOwner, "Worker");
+        owner.setRestaurant(testRestaurant);
+        businessOwner.setEmployee(owner);
+        users.save(businessOwner);
+
         User normalUser = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
         normalUser.setEnabled(true);
         Employee normalEmployee = new Employee(normalUser, "Worker");
@@ -81,6 +95,36 @@ public class RestaurantIntegrationTest {
         normalUser.setEmployee(normalEmployee);
         normalUser.setAuthorities("ROLE_EMPLOYEE");
         users.save(normalUser);
+    }
+
+    @BeforeEach
+    void getAdminRequestToken() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
+
+        tokenGeneratedAdmin = result.getBody().getAccessToken();
+    }
+
+    @BeforeEach
+    void getBusinessOwnerRequestToken() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("businessOne", "password123"), TokenDetails.class);
+
+        tokenGeneratedBusinessOwner = result.getBody().getAccessToken();
+    }
+
+    @BeforeEach
+    void getUserRequestToken() throws Exception {
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("test1", "password123"), TokenDetails.class);
+
+        tokenGeneratedUser = result.getBody().getAccessToken();
     }
     
 	@AfterAll
@@ -93,7 +137,7 @@ public class RestaurantIntegrationTest {
     @Test
     public void getRestaurants_Success() throws Exception {
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
-        restaurants.save(testRestaurant).getId();
+        restaurants.save(testRestaurant);
         URI uri = new URI(baseUrl + port + "/api/v1/restaurants");
 
         given().get(uri).
@@ -116,37 +160,55 @@ public class RestaurantIntegrationTest {
 	}
 
     @Test
-    public void getRestaurant_ValidEmployee_Success() throws Exception {
+    public void getRestaurantValidEmployee_BusinessOwner_Success() throws Exception {
         URI uri = new URI(baseUrl + port + "/api/v1/restaurants/user/test1");
 
-        given().get(uri).
+        given().headers(
+            "Authorization",
+            "Bearer " + tokenGeneratedBusinessOwner,
+            "Content-Type", "application/json"
+        ).when().
+        get(uri).
         then().
             statusCode(200).
             body("name", equalTo("Ya Kun"), "location", equalTo("SMU SOE"), "cuisine", equalTo("Western"));
     }
 
     @Test
+    public void getRestaurantValidEmployee_NormalUser_Success() throws Exception {
+        URI uri = new URI(baseUrl + port + "/api/v1/restaurants/user/test1");
+
+        given().headers(
+            "Authorization",
+            "Bearer " + tokenGeneratedUser,
+            "Content-Type", "application/json"
+        ).when().
+        get(uri).
+        then().
+            statusCode(403);
+    }
+
+    @Test
     public void getRestaurant_InvalidEmployee_Failure() throws Exception {
         URI uri = new URI(baseUrl + port + "/api/v1/restaurants/user/admin");
 
-        given().get(uri).
+        given().headers(
+            "Authorization",
+            "Bearer " + tokenGeneratedBusinessOwner,
+            "Content-Type", "application/json"
+        ).when().
+        get(uri).
         then().
             statusCode(404);
     }
 
     @Test
     public void addRestaurant_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer " + tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         String addRestaurantDetails = "{\r\n" +
         "  \"name\": \"Subway\",\r\n" +
@@ -164,17 +226,11 @@ public class RestaurantIntegrationTest {
 
     @Test
     public void addRestaurant_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
-        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer "+ tokenGeneratedUser).header("Content-Type", "application/json");
 
         String addRestaurantDetails = "{\r\n" +
         "  \"name\": \"Subway\",\r\n" +
@@ -191,20 +247,14 @@ public class RestaurantIntegrationTest {
 
     @Test
     public void updateRestaurant_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
         Long id = restaurants.save(testRestaurant).getId();
 
-        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer "+ tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         String updateRestaurantDetails = "{\r\n" +
         "  \"name\": \"Koufu\",\r\n" +
@@ -222,20 +272,14 @@ public class RestaurantIntegrationTest {
 
     @Test
     public void updateRestaurant_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
         Long id = restaurants.save(testRestaurant).getId();
 
-        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer "+ tokenGeneratedUser).header("Content-Type", "application/json");
 
         String updateRestaurantDetails = "{\r\n" +
         "  \"name\": \"Koufu\",\r\n" +
@@ -252,20 +296,14 @@ public class RestaurantIntegrationTest {
 
     @Test
     public void deleteRestaurant_AdminUser_Success() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
         Restaurant testRestaurant = new Restaurant("Bricklanes", "SMU", "Western", "Bar", 40);
         Long id = restaurants.save(testRestaurant).getId();
 
-        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer "+ tokenGeneratedAdmin).header("Content-Type", "application/json");
 
         Response deleteRestaurantResponse = request.delete(uriRestaurant + "/" + id);
 
@@ -282,15 +320,10 @@ public class RestaurantIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        String tokenGenerated = result.getBody().getAccessToken();
-
         Restaurant testRestaurant = new Restaurant("Koufu", "SMU", "All", "Restaurant Food Chain", 100);
         Long id = restaurants.save(testRestaurant).getId();
 
-        request.header("Authorization", "Bearer "+ tokenGenerated).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer "+ tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response deleteRestaurantResponse = request.delete(uriRestaurant + "/" + id);
 

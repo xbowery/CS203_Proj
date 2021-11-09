@@ -31,7 +31,7 @@ public class CrowdLevelController {
      * List the latest crowd levels by datetime and restaurant in the system
      * @return list of latest crowd levels
      */
-    @GetMapping("restaurants/crowdLevels")
+    @GetMapping("/restaurants/crowdLevels")
     public List<CrowdLevel> getCrowdLevels(){
         return crowdLevelService.listAllCrowdLevels();
     }
