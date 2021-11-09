@@ -1,4 +1,4 @@
-import { axiosInstance as api } from './api'
+import { axiosInstance as api, post } from './api'
 import newsapi from '@/services/newsApi'
 
 const JSON_HEADER = {
@@ -143,9 +143,14 @@ class UserService {
       JSON_HEADER,
     )
   }
+
   getEmployeesCtests() {
     const request = `/users/employee/allctests`
     return api.get(request)
+  }
+
+  changePassword(changePasswordMessage) {
+    return post('/users/password', changePasswordMessage)
   }
 }
 
