@@ -1,20 +1,12 @@
 <template>
   <v-card height = "405">
     <v-card-title class="align-start">
-      <span>Daily Overview of Employees' COVID-19 tests</span>
+      <span>Overview of Employees' COVID-19 tests</span>
       <v-spacer></v-spacer>
     </v-card-title>
 
     <v-card-text class="d-flex justify-center">
-      <!-- Chart -->
       <apexchart type="pie" width="500" height="400" :options="chartOptions" :series="series"></apexchart>
-
-      <!-- <div class="d-flex align-center">
-        <h3 class="text-2xl font-weight-semibold me-4">{{ items.length }}</h3>
-        <span>individuals have visited your restaurant in the past hour</span>
-      </div> -->
-
-      <!-- <v-btn block color="primary" class="mt-6" outlined> Details </v-btn> -->
     </v-card-text>
   </v-card>
 </template>
