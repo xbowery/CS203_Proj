@@ -91,6 +91,29 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    public void approveEmployee_validUsername_ReturnEmployeeRole() {
+        //Arrange
+        Restaurant restaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        Employee employee = new Employee(user,"HR Manager");
+        employee.setRestaurant(restaurant);
+        employee.setStatus("Pending");
+        user.setEmployee(employee);
+
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
+        when(users.save(any(User.class))).thenReturn(user);
+
+        //Act
+        Employee approvedEmployee = employeeService.approveEmployee(user.getUsername());
+        
+        //Assert
+        assertNotNull(approvedEmployee);
+        assertEquals("Active",approvedEmployee.getStatus());
+
+
+    }
+
+    @Test
     public void deleteEmployee_validUsername_ReturnNull() {
         //Arrange
         User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
