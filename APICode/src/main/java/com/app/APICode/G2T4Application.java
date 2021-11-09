@@ -81,7 +81,12 @@ public class G2T4Application {
 		System.out.println(testRestaurant.getName() + " " + "id: " + testRestaurant.getId());
 
 		NotificationRepository notifications = ctx.getBean(NotificationRepository.class);
+		notifications.save(new Notification("Welcome to Swisshack!", admin));
 		notifications.save(new Notification("Remember to do your next COVID-19 test which is due in 3 days!", admin));
+		notifications.save(new Notification(
+				"You have a pending employee request from John Doe. Please review it under your Employee List.",
+				admin));
+
 	}
 
 }

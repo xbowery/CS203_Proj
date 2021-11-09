@@ -29,7 +29,7 @@
 
         <!-- Notifications -->
         <template v-for="(notification, index) in notifications">
-          <v-list-item :key="notification.id" link @click="messages--">
+          <v-list-item :key="notification.id" link @click="markSingleNotificationRead(notification.id)">
             <!-- Content -->
             <v-list-item-content class="d-block">
               <v-list-item-title class="text-sm font-weight-semibold"> Important! </v-list-item-title>
@@ -46,7 +46,9 @@
           <v-divider :key="index"></v-divider>
         </template>
         <v-list-item key="read-all-btn" class="read-all-btn-list-item">
-          <v-btn block color="primary" @click="messages++"> Read All Notifications </v-btn>
+          <v-btn v-if="messages !== 0" block color="primary" @click="markAllRead()"> Read All Notifications </v-btn>
+
+          <v-btn v-else block color="info" @click="refreshNotifications()"> All caught up! Refresh. </v-btn>
         </v-list-item>
       </v-list>
     </v-card>
@@ -55,7 +57,6 @@
 
 <script>
 import { mdiBellOutline } from '@mdi/js'
-import { getInitialName } from '@/utils'
 import UserService from '@/services/user.service'
 import { ref, onMounted } from '@vue/composition-api'
 
@@ -101,11 +102,29 @@ export default {
       })
     }
 
+    const markAllRead = () => {
+      messages.value = 0
+      notifications.value = []
+      UserService.readAllNotification()
+    }
+
+    const markSingleNotificationRead = notificationId => {
+      UserService.readNotification(notificationId)
+      messages.value--
+      notifications.value = notifications.value.filter(notification => notification.id !== notificationId)
+    }
+
+    const refreshNotifications = () => {
+      getNotification()
+    }
+
     return {
       messages,
       notifications,
-      getInitialName,
       getNotification,
+      markAllRead,
+      markSingleNotificationRead,
+      refreshNotifications,
       icons: {
         mdiBellOutline,
       },
