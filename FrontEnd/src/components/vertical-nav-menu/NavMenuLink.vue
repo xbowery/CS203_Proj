@@ -35,7 +35,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~vuetify/src/styles/styles.sass';
 
 .alternate-icon-small {
   font-size: 14px;
