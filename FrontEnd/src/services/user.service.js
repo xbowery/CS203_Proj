@@ -59,11 +59,11 @@ class UserService {
     return api.put(request, crowdLevel)
   }
   getCtests() {
-    const request = `employee/ctests`
+    const request = `/users/employee/ctests`
     return api.get(request)
   }
   postCtest(ctest) {
-    const request = `employee/ctests`
+    const request = `/users/employee/ctests`
     return api.post(request, ctest)
   }
   getRegistrationConfirm(token) {
@@ -71,15 +71,15 @@ class UserService {
     return api.get(request)
   }
   deleteCtest(ctestId) {
-    const request = `/employee/ctests/${ctestId}`
+    const request = `/users/employee/ctests/${ctestId}`
     return api.delete(request)
   }
   updateCtest(ctestId, ctest) {
-    const request = `/employee/ctests/${ctestId}`
+    const request = `/users/employee/ctests/${ctestId}`
     return api.put(request, ctest)
   }
   getNextCtest(username) {
-    const request = `/employee/${username}/ctests/next`
+    const request = `/users/employee/${username}/ctests/next`
     return api.get(request)
   }
   updateUser(user) {
@@ -143,9 +143,9 @@ class UserService {
       JSON_HEADER,
     )
   }
-  
-  getEmployeesCtests(username) {
-    const request = `/employee/${username}/ctests`
+
+  getEmployeesCtests() {
+    const request = `/users/employee/allctests`
     return api.get(request)
   }
   
