@@ -18,9 +18,13 @@
           <v-list dense>
             <v-list-item v-for="(header, index) in headers" :key="index">
               <v-list-item-content> {{ header.text }}: </v-list-item-content>
-              <v-list-item-content class="align-end">
+              <!-- <v-list-item-content class="align-end">
                 {{ item[header.value] }}
-              </v-list-item-content>
+              </v-list-item-content> -->
+              <v-list-item-content v-if="typeof item[header.value] == 'number'">
+                {{ item[header.value] }}</v-list-item-content>
+              <v-list-item-content class="align-end" v-if="item[header.value] == true"> Yes </v-list-item-content>
+              <v-list-item-content class="align-end" v-if="item[header.value] == false"> No </v-list-item-content>
             </v-list-item>
           </v-list>
 
@@ -53,14 +57,14 @@
                     </validation-provider>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <validation-provider name="Vaccinated?" rules="required" v-slot="{ errors }">
+                    <validation-provider name="Vaccination Required?" rules="required" v-slot="{ errors }">
                       <v-select
                         :items="dropdown"
                         item-text="text"
                         item-value="value"
                         v-model="editedItem.vaccinationStatus"
                         :error-messages="errors[0]"
-                        label="Vaccinated?"
+                        label="Vaccination Required?"
                         required
                       ></v-select>
                     </validation-provider>
@@ -113,7 +117,7 @@ export default {
     isAddNewUserSidebarActive: '',
     headers: [
       { text: 'Max capacity', value: 'maxCapacity' },
-      { text: 'Vaccinated?', value: 'vaccinationStatus' },
+      { text: 'Vaccination required?', value: 'vaccinationStatus' },
       { text: 'Mask required?', value: 'maskStatus' },
     ],
     items: [],

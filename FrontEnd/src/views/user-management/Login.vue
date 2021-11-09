@@ -6,7 +6,7 @@
         <v-card-title class="d-flex align-center justify-center py-7">
           <router-link to="/" class="d-flex align-center">
             <v-img
-              :src="require('@/assets/images/logos/logo.svg')"
+              :src="require('@/assets/images/logos/logo.png')"
               max-height="30px"
               max-width="30px"
               alt="logo"
@@ -14,13 +14,13 @@
               class="me-3"
             ></v-img>
 
-            <h2 class="text-2xl font-weight-semibold">Covid Suisse</h2>
+            <h2 class="text-2xl font-weight-semibold">Swisshack</h2>
           </router-link>
         </v-card-title>
 
         <!-- title -->
         <v-card-text>
-          <p class="text-2xl font-weight-semibold text--primary mb-2">Welcome to Covid Suisse!</p>
+          <p class="text-2xl font-weight-semibold text--primary mb-2">Welcome to Swisshack!</p>
           <p class="mb-2">Sign-in to experience the new normal!</p>
         </v-card-text>
 

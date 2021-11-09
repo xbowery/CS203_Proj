@@ -50,7 +50,7 @@ export default {
       try {
         const res = await UserService.getEmployees(this.username)
         this.items = res.data
-        this.items.forEach(user => {
+        this.items.forEach(async (user) => {
           if (user.employee.ctests.length > 0) {
             var latestDate = user.employee.ctests[0].date
             var latestResult = user.employee.ctests[0].result
@@ -68,7 +68,7 @@ export default {
             isVaccinated: user.isVaccinated,
             latestCtestDate: latestDate,
             latestCtestResult: latestResult,
-            next_covid_date: this.getNextDate(user.username),
+            next_covid_date: await this.getNextDate(user.username),
           }
           this.processedItems.push(dict)
         })
@@ -80,6 +80,7 @@ export default {
     async getNextDate(username) {
       try {
         const res = await UserService.getNextCtest(username)
+        console.log(res.data)
         return res.data
       } catch (error) {
         console.log(error)

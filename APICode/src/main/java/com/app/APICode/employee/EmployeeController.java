@@ -126,8 +126,8 @@ public class EmployeeController {
             @ApiResponse(responseCode = "204", description = "Successful deleted Employee data", content = @Content), })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/employee/{username}")
-    public Employee deleteEmployee(@PathVariable(value = "username") String username) {
-        return employeeService.deleteEmployee(username);
+    public void deleteEmployee(@PathVariable(value = "username") String username) {
+        employeeService.deleteEmployee(username);
     }
 
     /**
