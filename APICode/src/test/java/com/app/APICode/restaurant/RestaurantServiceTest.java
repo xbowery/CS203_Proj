@@ -1,5 +1,6 @@
 package com.app.APICode.restaurant;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -44,4 +45,21 @@ public class RestaurantServiceTest {
     }
 
     // TODO: Add more tests
+    @Test
+    void addRestaurant_SameID_ReturnNull() {
+        // Arrange
+        Restaurant restaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+        Restaurant restaurant2 = restaurant;
+
+        when(restaurants.findByNameAndLocation(any(String.class), any(String.class))).thenReturn(Optional.of(restaurant));
+        
+        // Act
+        RestaurantDuplicateException duplicateException = assertThrows(RestaurantDuplicateException.class, () -> {
+            restaurantService.addRestaurant(restaurant2);
+        });
+
+        // Assert
+        assertEquals(duplicateException.getMessage(), "This restaurant " + restaurant2.getName() + " exists at this location: " + restaurant2.getLocation());
+        verify(restaurants).findByNameAndLocation(restaurant.getName(), restaurant.getLocation());
+    }
 }

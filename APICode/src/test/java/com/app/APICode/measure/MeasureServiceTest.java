@@ -56,20 +56,16 @@ public class MeasureServiceTest {
     void addExistingMeasure_ReturnNull() {
         // Arrange
         Measure measure = new Measure("gym", 50, true, false);
-        
+        Measure measure2 = measure;
         when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.of(measure));
 
         // Act
-        Measure savedMeasure = null;
-        
-        try {
-            savedMeasure = measureService.addMeasure(measure);
-        } catch (MeasureDuplicateException e) {
-            
-        }
+        MeasureDuplicateException duplicateException = assertThrows(MeasureDuplicateException.class, () -> {
+            measureService.addMeasure(measure2);
+        });
 
         // Assert
-        assertNull(savedMeasure);
+        assertEquals(duplicateException.getMessage(), "This measure " + measure2.getMeasureType() + " already exists. Update measure instead.");
         verify(measures).findByMeasureType(measure.getMeasureType());
         verify(measures, never()).save(measure);
     }
