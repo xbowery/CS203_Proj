@@ -172,7 +172,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("users/password")
+    @PostMapping("/users/password")
     public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
         userService.changePasswordByUsername(principal.getName(), message);
     }

@@ -243,7 +243,7 @@ public class EmployeeIntegrationTest {
         ).when()
         .get(uri)
         .then()
-        .statusCode(401);
+        .statusCode(403);
     }
     @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() throws Exception {

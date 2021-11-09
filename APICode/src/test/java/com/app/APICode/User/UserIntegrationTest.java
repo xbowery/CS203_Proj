@@ -59,7 +59,7 @@ public class UserIntegrationTest {
 
     private String tokenGeneratedAdmin;
 
-    private String tokenGeneratedDummyUser;
+    private String tokenGeneratedUser;
 
     @BeforeAll
     public static void initClass() {
@@ -103,7 +103,7 @@ public class UserIntegrationTest {
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
                 new LoginDetails("test1", "password123"), TokenDetails.class);
 
-        tokenGeneratedDummyUser = result.getBody().getAccessToken();
+        tokenGeneratedUser = result.getBody().getAccessToken();
     }
 
     @AfterAll
@@ -123,7 +123,7 @@ public class UserIntegrationTest {
         Response userListResponse = request.get(uriUsers);
 
         assertEquals(200, userListResponse.getStatusCode());
-        request.then().body("size()", equalTo(8));
+        request.then().body("size()", equalTo(12));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUsers);
 
@@ -172,7 +172,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUser);
 
@@ -186,7 +186,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response userListResponse = request.get(uriUser);
 
@@ -221,7 +221,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         String addUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -279,7 +279,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         String updateUserDetails = "{\r\n" +
         "  \"email\": \"newuser@test.com\",\r\n" +
@@ -311,7 +311,7 @@ public class UserIntegrationTest {
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
                 new LoginDetails("newlyuser", "password123"), TokenDetails.class);
 
-        tokenGeneratedDummyUser = result.getBody().getAccessToken();
+        String tokenGeneratedDummyUser = result.getBody().getAccessToken();
 
         RequestSpecification request = RestAssured.given();
 
@@ -354,7 +354,7 @@ public class UserIntegrationTest {
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
                 new LoginDetails("newlyuser1", "password123"), TokenDetails.class);
 
-        tokenGeneratedDummyUser = result.getBody().getAccessToken();
+        String tokenGeneratedDummyUser = result.getBody().getAccessToken();
 
         RequestSpecification request = RestAssured.given();
 
@@ -406,7 +406,7 @@ public class UserIntegrationTest {
 
         RequestSpecification request = RestAssured.given();
 
-        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+        request.header("Authorization", "Bearer " + tokenGeneratedUser).header("Content-Type", "application/json");
 
         Response deleteUserResponse = request.delete(uriUsers + "/" + savedUsername);
 
@@ -537,5 +537,125 @@ public class UserIntegrationTest {
         Response forgotPasswordResponse = request.body(payload).post(uriResetPassword);
 
         assertEquals(204, forgotPasswordResponse.getStatusCode());
+    }
+
+    @Test
+    public void changePasswordNewPassword_MatchingConfirmation_Success() throws Exception {
+        URI uriChangePassword = new URI(baseUrl + port + "/api/v1/users/password");
+        
+        User testUser = new User("testuser7@test.com", "testuser7", "test", "user7", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        users.save(testUser);
+        
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("testuser7", "password123"), TokenDetails.class);
+
+        String tokenGeneratedDummyUser = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        String updateUserPasswordDetails = "{\r\n" +
+        "  \"currentPassword\": \"password123\",\r\n" +
+        "  \"newPassword\": \"password1234\",\r\n" +
+        "  \"cfmPassword\": \"password1234\"\r\n" +
+        "}";
+
+        Response changePasswordResponse = request.body(updateUserPasswordDetails).post(uriChangePassword);
+
+        assertEquals(204, changePasswordResponse.getStatusCode());
+    }
+
+    @Test
+    public void changePasswordNewPassword_NotMatchingConfirmation_Failure() throws Exception {
+        URI uriChangePassword = new URI(baseUrl + port + "/api/v1/users/password");
+        
+        User testUser = new User("testuser8@test.com", "testuser8", "test", "user8", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        users.save(testUser);
+        
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("testuser8", "password123"), TokenDetails.class);
+
+        String tokenGeneratedDummyUser = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        String updateUserPasswordDetails = "{\r\n" +
+        "  \"currentPassword\": \"password123\",\r\n" +
+        "  \"newPassword\": \"password1234\",\r\n" +
+        "  \"cfmPassword\": \"password12345\"\r\n" +
+        "}";
+
+        Response changePasswordResponse = request.body(updateUserPasswordDetails).post(uriChangePassword);
+
+        assertEquals(400, changePasswordResponse.getStatusCode());
+    }
+
+    @Test
+    public void changePassword_WrongExistingPassword_Failure() throws Exception {
+        URI uriChangePassword = new URI(baseUrl + port + "/api/v1/users/password");
+        
+        User testUser = new User("testuser9@test.com", "testuser9", "test", "user9", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        users.save(testUser);
+        
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("testuser9", "password123"), TokenDetails.class);
+
+        String tokenGeneratedDummyUser = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        String updateUserPasswordDetails = "{\r\n" +
+        "  \"currentPassword\": \"password1234\",\r\n" +
+        "  \"newPassword\": \"password12345\",\r\n" +
+        "  \"cfmPassword\": \"password12345\"\r\n" +
+        "}";
+
+        Response changePasswordResponse = request.body(updateUserPasswordDetails).post(uriChangePassword);
+
+        assertEquals(400, changePasswordResponse.getStatusCode());
+    }
+
+    @Test
+    public void changePassword_MatchingExistingPassword_Failure() throws Exception {
+        URI uriChangePassword = new URI(baseUrl + port + "/api/v1/users/password");
+        
+        User testUser = new User("testuser10@test.com", "testuser10", "test", "user10", encoder.encode("password123"), true, "ROLE_USER");
+        testUser.setEnabled(true);
+        users.save(testUser);
+        
+        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
+        
+        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
+                new LoginDetails("testuser10", "password123"), TokenDetails.class);
+
+        String tokenGeneratedDummyUser = result.getBody().getAccessToken();
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedDummyUser).header("Content-Type", "application/json");
+
+        String updateUserPasswordDetails = "{\r\n" +
+        "  \"currentPassword\": \"password123\",\r\n" +
+        "  \"newPassword\": \"password123\",\r\n" +
+        "  \"cfmPassword\": \"password123\"\r\n" +
+        "}";
+
+        Response changePasswordResponse = request.body(updateUserPasswordDetails).post(uriChangePassword);
+
+        assertEquals(400, changePasswordResponse.getStatusCode());
     }
 }

@@ -308,12 +308,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePasswordByUsername(String username, ChangePasswordMessage message) {
         if(!message.getNewPassword().equals(message.getCfmPassword())) {
-            throw new InvalidChangePasswordException("New Password and Confirm Password");
+            throw new InvalidChangePasswordException("New Password and Confirm Password does not match.");
         }
 
         User user = getUserByUsername(username);
         if(!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidChangePasswordException("Current Password");
+            throw new InvalidChangePasswordException("Current Password does not match.");
+        }
+
+        if(message.getCurrentPassword().equals(message.getCfmPassword())) {
+            throw new InvalidChangePasswordException("Please change to a new password instead.");
         }
 
         String encodedPassword = encoder.encode(message.getNewPassword());

@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/users/*").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/users/employee").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.POST, "/users/employee", "/users/password").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
                 .antMatchers(HttpMethod.POST, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
 
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
