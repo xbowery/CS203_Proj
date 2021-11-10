@@ -8,11 +8,13 @@ import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
+import com.app.APICode.user.UserForbiddenException;
 import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class CrowdLevelServiceImpl implements CrowdLevelService {
@@ -31,7 +33,17 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
     }
 
     @Override
-    public List<CrowdLevel> listAllCrowdLevels() {
+    public List<CrowdLevel> listAllCrowdLevels(String username) {
+        User user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            throw new UserNotFoundException(username);
+        }
+
+        if (!(StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("BUSINESS")) {
+            throw new UserForbiddenException("You are forbidden from processing this request.");
+        }
+
         return crowdlevels.findAll();
     }
 
@@ -43,19 +55,17 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
             throw new UserNotFoundException(username);
         }
 
-        Employee employee = user.getEmployee();
-
-        if(employee == null){
-            throw new EmployeeNotFoundException(username);
+        if (!(StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("BUSINESS")) {
+            throw new UserForbiddenException("You are forbidden from processing this request.");
         }
 
-        Restaurant restaurant = employee.getRestaurant();
+        Restaurant restaurant = user.getEmployee().getRestaurant();
 
         if(restaurant == null){
             throw new RestaurantNotFoundException(username); 
         }
 
-        List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(restaurant);
+        List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(user.getEmployee().getRestaurant());
         if(crowdLevel == null){
             throw new CrowdLevelNotFoundException(restaurant.getName());
         }

@@ -3,7 +3,7 @@ package com.app.APICode.crowdlevel;
 import java.util.List;
 
 public interface CrowdLevelService {
-    List<CrowdLevel> listAllCrowdLevels();
+    List<CrowdLevel> listAllCrowdLevels(String username);
 
     List<CrowdLevel> listCrowdLevelByEmployee(String username);
 

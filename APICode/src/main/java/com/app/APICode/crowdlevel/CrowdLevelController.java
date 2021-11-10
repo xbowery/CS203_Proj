@@ -1,5 +1,6 @@
 package com.app.APICode.crowdlevel;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +33,8 @@ public class CrowdLevelController {
      * @return list of latest crowd levels
      */
     @GetMapping("/restaurants/crowdLevels")
-    public List<CrowdLevel> getCrowdLevels(){
-        return crowdLevelService.listAllCrowdLevels();
+    public List<CrowdLevel> getCrowdLevels(Principal principal){
+        return crowdLevelService.listAllCrowdLevels(principal.getName());
     }
 
     /**
