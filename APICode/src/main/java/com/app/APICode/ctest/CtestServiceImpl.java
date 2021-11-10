@@ -68,10 +68,10 @@ public class CtestServiceImpl implements CtestService {
         int testFrequency = employee.getRestaurant().getTestFrequency();
         Date latestTest = null;
 
-        List<Ctest> ctestList = getAllCtestsByUsername(username);
+        List <Ctest> ctestList = employee.getCtests();
         if(!ctestList.isEmpty()){
             latestTest = ctestList.get(0).getDate();
-            for(Ctest ctest: getAllCtestsByUsername(username)){
+            for(Ctest ctest: ctestList){
                 if(ctest.getDate().compareTo(latestTest) == 0){
                     latestTest = ctest.getDate();
                 }
