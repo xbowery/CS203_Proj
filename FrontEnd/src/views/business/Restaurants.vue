@@ -51,7 +51,7 @@
             <v-card>
               <v-img
                 class="misc-tree"
-                src="@/assets/images/misc/restaurant.jpg"
+                :src="getImgUrl(item)"
                 align="center"
                 justify="center"
               ></v-img>
@@ -172,9 +172,7 @@ export default {
       this.itemsPerPage = number
     },
     getImgUrl(item){
-      console.log(item.imageUrl)
-      this.imageString = item.imageUrl
-      return require(`@/assets/images/misc/` + item.imageUrl)
+      return require(`@/assets/images/misc/${item.imageUrl}`)
     }
   },
 }
