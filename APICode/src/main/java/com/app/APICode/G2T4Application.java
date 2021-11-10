@@ -56,13 +56,13 @@ public class G2T4Application {
 		System.out.println("[Add restaurant]:" + testRestaurant.getName());
 		
 		//Business owner 
-		User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
-		business_owner.setEnabled(true);
-		Employee owner = new Employee(business_owner, "Owner");
+		User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+		businessOwner.setEnabled(true);
+		Employee owner = new Employee(businessOwner, "Owner");
 		owner.setRestaurant(testRestaurant);	
 		owner.setStatus("Approved");
-		business_owner.setEmployee(owner);
-		users.save(business_owner);
+		businessOwner.setEmployee(owner);
+		users.save(businessOwner);
 
 		// Employee
 		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"),
