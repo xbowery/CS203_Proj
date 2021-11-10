@@ -40,10 +40,10 @@ public class G2T4Application {
 		users.save(user);
 
 		// Business owner
-		User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One",
-				encoder.encode("testing12345"), false, "ROLE_BUSINESS");
-		business_owner.setEnabled(true);
-		users.save(business_owner);
+		// User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One",
+		// 		encoder.encode("testing12345"), false, "ROLE_BUSINESS");
+		// business_owner.setEnabled(true);
+		// users.save(business_owner);
 
 
 		// Restaurant
