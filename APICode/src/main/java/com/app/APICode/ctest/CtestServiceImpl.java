@@ -18,12 +18,8 @@ public class CtestServiceImpl implements CtestService {
     private EmployeeService employees;
 
     @Autowired
-    public CtestServiceImpl(CtestRepository ctests) {
+    public CtestServiceImpl(CtestRepository ctests, EmployeeService employees) {
         this.ctests = ctests;
-    }
-
-    @Autowired
-    public void setEmployees(EmployeeService employees) {
         this.employees = employees;
     }
 
@@ -61,25 +57,25 @@ public class CtestServiceImpl implements CtestService {
     }
 
     @Override
-    public Date getNextCtestByUsername(String username) {
+    public Date getNextCtestByUsername(String username){
         Employee employee = employees.getEmployeeByUsername(username);
         int testFrequency = employee.getRestaurant().getTestFrequency();
         Date latestTest = null;
 
         List<Ctest> ctestList = getAllCtestsByUsername(username);
-        if (!ctestList.isEmpty()) {
+        if(!ctestList.isEmpty()){
             latestTest = ctestList.get(0).getDate();
-            for (Ctest ctest : getAllCtestsByUsername(username)) {
-                if (ctest.getDate().compareTo(latestTest) == 0) {
+            for(Ctest ctest: getAllCtestsByUsername(username)){
+                if(ctest.getDate().compareTo(latestTest) == 0){
                     latestTest = ctest.getDate();
                 }
             }
-        } else {
+        }else {
             return new java.sql.Date(Calendar.getInstance().getTime().getTime());
         }
         Calendar c = Calendar.getInstance();
         c.setTime(latestTest);
         c.add(Calendar.DATE, testFrequency);
-        return new Date(c.getTimeInMillis());
+        return  new Date(c.getTimeInMillis());
     }
 }
