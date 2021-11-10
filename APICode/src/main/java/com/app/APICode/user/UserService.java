@@ -35,12 +35,11 @@ public interface UserService {
 
     /**
      * Gets the User associated with the given "email" If no User found, throw a
-     * {@link UserNotFoundException}
+     * {@link EmailNotFoundException}
      * 
      * @param email a String containing the email
-     * @return an User object
      */
-    User getUserByEmail(String email);
+    void getUserByEmail(String email);
 
     /**
      * Gets the VerificationToken object specified by the given "verificationToken"
