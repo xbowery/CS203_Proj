@@ -116,37 +116,35 @@ public class EmployeeServiceTest {
 
     }
 
-    // @Test
-    // void getEmployeeDetails_BusinessOwnerRequester_ReturnEmployee() {
-    // //Arrange
-    // Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western",
-    // "Fast food chain", 50);
+    @Test
+    void getEmployeeDetails_BusinessOwnerRequester_ReturnEmployee() {
+        // Arrange
+        Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
 
-    // User user = new User("pendingemployee2@test.com", "user6", "User", "six", "",
-    // false, "ROLE_USER");
-    // Employee owner = new Employee(user,"Business Owner");
-    // owner.setRestaurant(testRestaurant);
-    // user.setEmployee(owner);
-    // user.setAuthorities("ROLE_BUSINESS");
+        User user = new User("pendingemployee2@test.com", "user6", "User", "six", "", false, "ROLE_USER");
+        Employee owner = new Employee(user, "Business Owner");
+        owner.setRestaurant(testRestaurant);
+        user.setEmployee(owner);
+        user.setAuthorities("ROLE_BUSINESS");
 
-    // User user1 = new User("pendingemployee2@test.com", "user6", "User", "six",
-    // "testing23456", false, "ROLE_USER");
-    // Employee employee = new Employee(user1, "HR Manager");
-    // employee.setRestaurant(testRestaurant);
-    // user1.setEmployee(employee);
-    // user1.setAuthorities("ROLE_EMPLOYEE");
+        User user1 = new User("pendingemployee2@test.com", "user7", "User", "six", "testing23456", false, "ROLE_USER");
+        Employee employee = new Employee(user1, "HR Manager");
+        employee.setRestaurant(testRestaurant);
+        user1.setEmployee(employee);
+        user1.setAuthorities("ROLE_EMPLOYEE");
 
-    // when(users.getUserByUsername(any(String.class))).thenReturn(new User());
-    // //Act
-    // Employee savedEmployee =
-    // employeeService.getEmployeeDetailsByUsername(user.getUsername(),
-    // user1.getUsername());
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
 
-    // //Assert
-    // assertNotNull(savedEmployee);
-    // verify(users).getUserByUsername(user.getUsername());
+        // Act
+        Employee savedEmployee = employeeService.getEmployeeDetailsByUsername(user.getUsername(), user1.getUsername());
 
-    // }
+        // Assert
+        assertNotNull(savedEmployee);
+        verify(users).getUserByUsername(user.getUsername());
+        verify(users).getUserByUsername(user1.getUsername());
+
+    }
+
     @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() {
         // Arrange

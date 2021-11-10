@@ -250,9 +250,8 @@ public class UserServiceImpl implements UserService {
         // user.setUsername(newUserInfo.getUsername());
         // user.setIsVaccinated(newUserInfo.getIsVaccinated());
         // user.setAuthorities(newUserInfo.getAuthorities());
-        users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
+        User savedUser =  users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
 
-        User savedUser = getUserByUsername(newUserInfo.getUsername());
         return convertToUserDTO(savedUser);
 
     }

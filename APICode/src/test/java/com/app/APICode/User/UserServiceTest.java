@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -26,6 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -83,22 +85,23 @@ public class UserServiceTest {
         verify(users, never()).save(user);
     }
 
-    // @Test
-    // void updateUser_NewEmail_ReturnUpdatedUser() {
-    //     // Arrange
-    //     User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
-    //     User user2 = new User("updated@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+    @Test
+    void updateUser_NewEmail_ReturnUpdatedUser() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        User user2 = user;
+        user2.setEmail("usertest@test.com");
+        ReflectionTestUtils.setField(user2, "id", 1L);
+        
+        when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(users.setUserInfoByUsername(anyString(), anyString(), anyString(), anyString())).thenReturn(user2);
+        // Act
 
-    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-    //     when(encoder.encode(any(String.class))).thenReturn(user.getPassword());
-    //     when(users.save(any(User.class))).thenReturn(user2);
+        UserDTO updatedUser = userService.updateUserByUsername("user1", UserDTO.convertToUserDTO(user2));
 
-    //     // Act
-    //     // User updatedUser = userService.updateUserByUsername(user.getUsername(), UserDTO.convertToUserDTO(user2));
-
-    //     // Assert
-    //     assertNotNull(updatedUser);
-    //     verify(users, atMost(2)).findByUsername(user.getUsername());
-    //     verify(users).save(user);
-    // }
+        // Assert
+        assertNotNull(updatedUser);
+        verify(users).findByUsername(user.getUsername());
+        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(), user2.getUsername());
+    }
 }
