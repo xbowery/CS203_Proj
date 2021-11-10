@@ -7,6 +7,7 @@ public class RestaurantDTO {
         private String description;
         private int maxCapacity;
         private String crowdLevel;
+        private String imageUrl;
 
     /**
      * Reduce information contained in the Restaurant class for transmission
@@ -22,6 +23,7 @@ public class RestaurantDTO {
         restaurantDTO.description = restaurant.getDescription();
         restaurantDTO.maxCapacity = restaurant.getMaxCapacity();
         restaurantDTO.crowdLevel = restaurant.getcurrentCrowdLevel();
+        restaurantDTO.imageUrl = restaurant.getImageUrl();
         return restaurantDTO;
     }
 
@@ -60,5 +62,13 @@ public class RestaurantDTO {
     }
     public void setcurrentCrowdLevel(String crowdLevel) {
         this.crowdLevel = crowdLevel;
+    }
+
+    public String getImageUrl(){
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
     }
 }

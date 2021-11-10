@@ -10,6 +10,7 @@ import java.util.Date;
 import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.crowdlevel.CrowdLevelRepository;
 import com.app.APICode.ctest.Ctest;
+import com.app.APICode.ctest.CtestServiceImpl;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
 import com.app.APICode.restaurant.Restaurant;
@@ -38,6 +39,7 @@ public class G2T4Application {
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		testRestaurant.setCurrentCapacity(0);
+		testRestaurant.setImageUrl("/assets/images/misc/subway.jpg");
 		// testRestaurant.setCrowdLevel();
 		testRestaurant = restaurants.save(testRestaurant);
 		System.out.println("[Add restaurant]:" + testRestaurant.getName());
