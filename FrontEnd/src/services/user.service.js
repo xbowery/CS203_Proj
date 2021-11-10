@@ -11,12 +11,17 @@ class UserService {
   getUsers() {
     return api.get('users')
   }
+  getNotification() {
+    return api.get('/notifications')
+  }
+  readNotification(id) {
+    return api.put(`/notifications/${id}`)
+  }
+  readAllNotification() {
+    return api.put(`/notifications/all`)
   getUserDetails(username) {
     const request = `/users/${username}`
     return api.get(request)
-  }
-  getNotification(){
-    return api.get("/user/notificaitons")
   }
   getEmployees() {
     return api.get('/employees')

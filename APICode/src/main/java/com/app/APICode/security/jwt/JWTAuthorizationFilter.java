@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {

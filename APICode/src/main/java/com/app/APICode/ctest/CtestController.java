@@ -26,11 +26,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "COVID-19 Test", description = "COVID-19 Test API")
 public class CtestController {
-    private CtestService ctests;
+        private CtestService ctests;
 
-    public CtestController(CtestService ctests) {
-        this.ctests = ctests;
-    }
+        public CtestController(CtestService ctests) {
+                this.ctests = ctests;
+        }
 
     /**
      * Search for employee with the given username If there is no user with the

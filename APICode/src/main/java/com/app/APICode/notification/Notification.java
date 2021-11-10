@@ -1,7 +1,6 @@
 package com.app.APICode.notification;
 
-import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +19,7 @@ public class Notification {
     private @Id @GeneratedValue Long id;
 
     @NotNull(message = "datetime cannot be null")
-    private LocalDate datetime;
+    private LocalDateTime datetime;
 
     @NotNull(message = "text cannot be null")
     private String text;
@@ -37,21 +36,22 @@ public class Notification {
     @Schema(description = "User that this Notifications belongs to.", required = true)
     private User user;
 
-    public Notification() {}
+    public Notification() {
+    }
 
     public Notification(String text, User user) {
-        this.datetime = LocalDate.now();
         // this.link = link;
         this.text = text;
         this.user = user;
+        datetime = LocalDateTime.now();
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return datetime;
     }
 
-    public void setDate(LocalDate datetime) {
-        this.datetime= datetime;
+    public void setDate(LocalDateTime datetime) {
+        this.datetime = datetime;
     }
 
     public String getText() {
@@ -63,11 +63,11 @@ public class Notification {
     }
 
     // public URL getLink() {
-    //     return link;
+    // return link;
     // }
 
     // public void setLink(URL link) {
-    //     this.link = link;
+    // this.link = link;
     // }
 
     public boolean isSeen() {
@@ -84,6 +84,10 @@ public class Notification {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Long getId() {
+        return id;
     }
 
 }

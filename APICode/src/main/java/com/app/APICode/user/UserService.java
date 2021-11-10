@@ -14,6 +14,8 @@ public interface UserService {
      */
     List<UserDTO> listUsers();
 
+    List<User> getAllUsers();
+
     /**
      * Gets the User details by the specified "username". If the principal does not
      * match the specified "username", throw a {@link UserForbiddenException}
