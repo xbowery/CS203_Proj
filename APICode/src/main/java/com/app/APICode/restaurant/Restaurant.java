@@ -137,6 +137,10 @@ public class Restaurant {
         return this.employees;
     }
 
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
     public void setcurrentCrowdLevel(String currentCrowdLevel){
         this.currentCrowdLevel = currentCrowdLevel;
     }
