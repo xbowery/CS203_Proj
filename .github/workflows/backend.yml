@@ -7,6 +7,12 @@ on:
   pull_request:
     types: [opened, reopened]
 
+env:
+  AZURE_WEBAPP_NAME: swisshack
+  AZURE_MYSQL_DB_HOST: ${{ secrets.MYSQL_URL }}
+  AZURE_MYSQL_DB_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+  AZURE_MYSQL_DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  
 jobs:
   backend:
     name: Backend CI

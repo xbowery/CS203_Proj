@@ -2,9 +2,8 @@ name: News API deployment
 
 on: 
   push:
-    branches: [main]
-  pull_request:
-    types: [opened, reopened]
+    release:
+      types: [published]
 
 defaults:
   run:

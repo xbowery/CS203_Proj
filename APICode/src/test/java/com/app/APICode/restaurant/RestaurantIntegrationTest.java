@@ -3,6 +3,7 @@ package com.app.APICode.restaurant;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
+import java.util.List;
 
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
@@ -10,6 +11,7 @@ import com.app.APICode.templates.LoginDetails;
 import com.app.APICode.templates.TokenDetails;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import io.restassured.RestAssured;
 import io.restassured.config.JsonConfig;
@@ -34,6 +37,7 @@ import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class RestaurantIntegrationTest {
     
     @LocalServerPort
@@ -76,21 +80,25 @@ public class RestaurantIntegrationTest {
     
 	@AfterAll
 	void tearDown(){
-		// clear the database after each test
-		restaurants.deleteAll();
+		// clear the database after all test
 		users.deleteAll();
 	}
+
+    @AfterEach
+    void clearDB() {
+		restaurants.deleteAll();
+    }
 
     @Test
     public void getRestaurants_Success() throws Exception {
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
         restaurants.save(testRestaurant).getId();
         URI uri = new URI(baseUrl + port + "/api/v1/restaurants");
-
+        
         given().get(uri).
         then().
             statusCode(200).
-            body("size()", equalTo(6));
+            body("size()", equalTo(1));
     }
 
     @Test
