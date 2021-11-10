@@ -146,6 +146,39 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    void getEmployeeDetails_InvalidBusinessOwner_ReturnException() {
+        // Arrange
+        Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+        Restaurant restaurant = new Restaurant("McDonalds","Raffles City","Western","Fast food chain",50);
+        User user = new User("pendingemployee2@test.com", "user6", "User", "six", "", false, "ROLE_USER");
+        Employee owner = new Employee(user, "Business Owner");
+        owner.setRestaurant(restaurant);
+        user.setEmployee(owner);
+        user.setAuthorities("ROLE_BUSINESS");
+
+        User user1 = new User("pendingemployee2@test.com", "user7", "User", "six", "testing23456", false, "ROLE_USER");
+        Employee employee = new Employee(user1, "HR Manager");
+        employee.setRestaurant(testRestaurant);
+        user1.setEmployee(employee);
+        user1.setAuthorities("ROLE_EMPLOYEE");
+
+        when(users.getUserByUsername(user.getUsername())).thenReturn(user);
+        when(users.getUserByUsername(user1.getUsername())).thenReturn(user1);
+
+        // Act
+        EmployeeNotAllowedException notAllowedException = assertThrows(EmployeeNotAllowedException.class, () -> {
+            employeeService.getEmployeeDetailsByUsername(user.getUsername(), user1.getUsername());
+
+        });
+
+        // Assert
+        assertEquals(notAllowedException.getMessage(),
+        "You are unauthorised to perform this action.");
+        verify(users).getUserByUsername(user.getUsername());
+        verify(users).getUserByUsername(user1.getUsername());
+
+    }
+    @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() {
         // Arrange
         employeeService.setRestaurants(restaurants);
