@@ -1,5 +1,6 @@
 package com.app.APICode.User;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,15 +73,12 @@ public class UserServiceTest {
         when(users.findByUsername(any(String.class))).thenReturn(Optional.of(user));
 
         // Act
-        UserDTO savedUser = null;
-        try {
-            savedUser = userService.addUser(user, true);
-        } catch (UserOrEmailExistsException e) {
-
-        }
+        UserOrEmailExistsException existsException = assertThrows(UserOrEmailExistsException.class, () -> {
+            userService.addUser(user, true);
+        });
 
         // Assert
-        assertNull(savedUser);
+        assertEquals(existsException.getMessage(), "This email already exists. Please sign in instead.");
         verify(users).findByUsername(user.getUsername());
         verify(users, never()).save(user);
     }
@@ -94,6 +92,7 @@ public class UserServiceTest {
         ReflectionTestUtils.setField(user2, "id", 1L);
         
         when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+
         // Act
 
         userService.updateUserByUsername("user1", UserDTO.convertToUserDTO(user2));
@@ -102,4 +101,45 @@ public class UserServiceTest {
         verify(users).findByUsername(user.getUsername());
         verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(), user2.getUsername());
     }
+
+    // @Test
+    // void updateUser_ExistingEmail_ReturnException() {
+    //     // Arrange
+    //     User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+    //     User user2 = new User("user2@test.com", "user2", "User", "one", "", false, "ROLE_USER");
+    //     ReflectionTestUtils.setField(user2, "id", 1L);
+
+    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+    //     when(users.findByUsername(user2.getUsername())).thenReturn(Optional.of(user2));
+
+    //     // Act
+    //     user2.setEmail("user@test.com");
+    //     UserOrEmailExistsException existsException = assertThrows(UserOrEmailExistsException.class, () -> {
+    //         userService.updateUserByUsername(user2.getUsername(), UserDTO.convertToUserDTO(user2));
+    //     });
+
+    //     assertEquals(existsException.getMessage(), "This email already exists.");
+    //     verify(users).findByUsername(user.getUsername());
+    //     verify(users).findByUsername(user2.getUsername());
+    // }
+
+    // @Test
+    // void getUser_ValidUser_ReturnUser() {
+
+    // }
+
+    // @Test
+    // void getUser_InvalidUser_ReturnNull() {
+
+    // }
+
+    // @Test
+    // void deleteUser_ValidUser_ReturnNull() {
+
+    // }
+    
+    // @Test
+    // void deleteUser_InvalidUser_ReturnError() {
+
+    // }
 }
