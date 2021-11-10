@@ -1,6 +1,6 @@
 <template>
   <section id="knowledge-base">
-    <!-- seach banner  -->
+    <!-- search banner  -->
     <v-card flat class="knowledge-base-bg d-flex align-center justify-center text-center mb-7">
       <v-card-text>
         <p class="kb-title text-2xl font-weight-semibold primary--text mb-2">Hello, how can we help?</p>
