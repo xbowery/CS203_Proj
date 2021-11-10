@@ -10,6 +10,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.app.APICode.ctest.CtestRepository;
@@ -20,6 +22,7 @@ import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.restaurant.RestaurantServiceImpl;
 import com.app.APICode.user.User;
+import com.app.APICode.user.UserDTO;
 import com.app.APICode.user.UserRepository;
 import com.app.APICode.user.UserService;
 
@@ -45,6 +48,98 @@ public class EmployeeServiceTest {
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
+    // @Test
+    // void getEmployees_ValidBusinessOwnerUsername_ReturnEmployees() {
+    //     employeeService.setRestaurants(restaurants);
+    //     User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+    //     Restaurant restaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+    //     Employee employee = new Employee(user,"Business Owner");
+    //     employee.setRestaurant(restaurant);
+    //     user.setEmployee(employee);
+    //     user.setAuthorities("ROLE_BUSINESS");
+
+    //     User user2 = new User("pendingemployee2@test.com", "user6", "User", "six", "", false, "ROLE_USER");
+    //     Employee employee2 = new Employee(user2,"HR Manager");
+    //     employee2.setRestaurant(restaurant);
+    //     user2.setEmployee(employee2);
+    //     user2.setAuthorities("ROLE_EMPLOYEE");
+
+    //     List<Employee> employeelist = new ArrayList<>();
+    //     employeelist.add(employee);
+    //     employeelist.add(employee2);
+    //     restaurant.setEmployees(employeelist);
+
+    //     when(employeeService.getEmployeeByUsername(any(String.class))).thenReturn(employee);
+    //     //Act
+    //     List<UserDTO> employeeListByOwner = employeeService.getAllEmployeesByBusinessOwner(user.getUsername());
+        
+    //     //Assert
+    //     assertNotNull(employeeListByOwner);
+    //     assertEquals(1,employeeListByOwner.size());
+    //     verify(employeeService).getEmployeeByUsername(user.getUsername());
+    // }
+
+    @Test 
+    void getEmployee_ValidUsername_ReturnEmployee() {
+        //Arrange
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        Employee employee = new Employee(user,"HR Manager");
+        user.setEmployee(employee);
+
+        when(users.getUserByUsername(user.getUsername())).thenReturn(user);
+
+        //Act
+        Employee savedEmployee = employeeService.getEmployeeByUsername(user.getUsername());
+
+        //Assert
+        assertNotNull(savedEmployee);
+        verify(users).getUserByUsername(user.getUsername());
+    }
+
+    @Test 
+    void getEmployee_InvalidUsername_ReturnException() {
+        //Arrange
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        
+        when(users.getUserByUsername(user.getUsername())).thenReturn(user);
+
+        //Act
+        EmployeeNotFoundException notFoundException = assertThrows(EmployeeNotFoundException.class, () -> {
+            employeeService.getEmployeeByUsername(user.getUsername());
+        });
+       
+        //Assert
+        assertEquals(notFoundException.getMessage(),"Could not find Employee with user Username: " + user.getUsername());
+        verify(users).getUserByUsername(user.getUsername());
+
+    }
+
+    // @Test
+    // void getEmployeeDetails_BusinessOwnerRequester_ReturnEmployee() {
+    //     //Arrange
+    //     Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+        
+    //     User user = new User("pendingemployee2@test.com", "user6", "User", "six", "", false, "ROLE_USER");
+    //     Employee owner = new Employee(user,"Business Owner");
+    //     owner.setRestaurant(testRestaurant);
+    //     user.setEmployee(owner);
+    //     user.setAuthorities("ROLE_BUSINESS");
+        
+    //     User user1 = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
+    //     Employee employee = new Employee(user1, "HR Manager");
+    //     employee.setRestaurant(testRestaurant);
+    //     user1.setEmployee(employee);
+    //     user1.setAuthorities("ROLE_EMPLOYEE");
+
+    //     when(users.getUserByUsername(any(String.class))).thenReturn(new User());
+    //     //Act
+    //     Employee savedEmployee = employeeService.getEmployeeDetailsByUsername(user.getUsername(), user1.getUsername());
+        
+    //     //Assert
+    //     assertNotNull(savedEmployee);
+    //     verify(users).getUserByUsername(user.getUsername());
+
+    // }
     @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() {
         //Arrange
@@ -114,7 +209,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void deleteEmployee_validUsername_ReturnNull() {
+    public void deleteEmployee_ValidUsername_ReturnNull() {
         //Arrange
         User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
         Employee employee = new Employee(user,"HR Manager");
@@ -131,6 +226,22 @@ public class EmployeeServiceTest {
         //Assert
         assertNull(deletedEmployee);
         verify(users).save(user);
+    }
+
+    @Test
+    public void deleteEmployee_InvalidUsername_ReturnException() {
+        //Arrange
+        User user = new User("pendingemployee@test.com", "user5", "User", "five", "", false, "ROLE_USER");
+        when(users.getUserByUsername(any(String.class))).thenReturn(user);
+
+        //Act
+        EmployeeNotFoundException notFoundException = assertThrows(EmployeeNotFoundException.class, () -> {
+            employeeService.deleteEmployee(user.getUsername());
+        });
+       
+        //Assert
+        assertEquals(notFoundException.getMessage(),"Could not find Employee with user Username: " + user.getUsername());
+        verify(users).getUserByUsername(user.getUsername());
     }
 
 }
