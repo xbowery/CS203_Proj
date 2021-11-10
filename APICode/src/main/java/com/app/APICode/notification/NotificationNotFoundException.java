@@ -1,13 +1,11 @@
 package com.app.APICode.notification;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.time.LocalDateTime;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class NotificationNotFoundException extends RuntimeException {
+public class NotificationNotFoundException extends RuntimeException{
     private static final long serialVersionUID = 1L;
 
-    public NotificationNotFoundException() {
-        super("Could not find notification.");
+    public NotificationNotFoundException(LocalDateTime datetime){
+        super("Could not find notification on: " + datetime);
     }
 }

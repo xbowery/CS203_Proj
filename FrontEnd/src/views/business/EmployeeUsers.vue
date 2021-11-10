@@ -2,34 +2,34 @@
   <v-row>
     <v-col cols="10" sm="4">
       <statistics-card-vertical
-        :change="totalUsers.change"
-        :color="totalUsers.color"
-        :icon="totalUsers.icon"
-        :statistics="total_users"
-        :stat-title="totalUsers.statTitle"
-        :subtitle="totalUsers.subtitle"
+        :change="totalProfit.change"
+        :color="totalProfit.color"
+        :icon="totalProfit.icon"
+        :statistics="totalProfit.statistics"
+        :stat-title="totalProfit.statTitle"
+        :subtitle="totalProfit.subtitle"
       ></statistics-card-vertical>
     </v-col>
 
     <v-col cols="12" sm="4">
       <statistics-card-vertical
-        :change="activeUsers.change"
-        :color="activeUsers.color"
-        :icon="activeUsers.icon"
-        :statistics="active_users"
-        :stat-title="activeUsers.statTitle"
-        :subtitle="activeUsers.subtitle"
+        :change="newProject.change"
+        :color="newProject.color"
+        :icon="newProject.icon"
+        :statistics="newProject.statistics"
+        :stat-title="newProject.statTitle"
+        :subtitle="newProject.subtitle"
       ></statistics-card-vertical>
     </v-col>
 
     <v-col cols="12" sm="4">
       <statistics-card-vertical
-        :change="pendingUsers.change"
-        :color="pendingUsers.color"
-        :icon="pendingUsers.icon"
-        :statistics="pending_users"
-        :stat-title="pendingUsers.statTitle"
-        :subtitle="pendingUsers.subtitle"
+        :change="salesQueries.change"
+        :color="salesQueries.color"
+        :icon="salesQueries.icon"
+        :statistics="salesQueries.statistics"
+        :stat-title="salesQueries.statTitle"
+        :subtitle="salesQueries.subtitle"
       ></statistics-card-vertical>
     </v-col>
 
@@ -39,23 +39,14 @@
   </v-row>
 </template>
 <script>
-
+// eslint-disable-next-line object-curly-newline
 import { mdiPoll, mdiLabelVariantOutline, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 import { mapGetters } from 'vuex'
-import UserService from '@/services/user.service'
+// demos
 import EmployeeDatatable from './EmployeeDatatable.vue'
 
 export default {
-  data() {
-    return {
-      items: [],
-      total_users: 0,
-      active_users: 0,
-      pending_users: 0,
-    }
-  },
-
   components: {
     StatisticsCardVertical,
     EmployeeDatatable,
@@ -66,47 +57,33 @@ export default {
       user: 'auth/user',
     }),
   },
-
-  async mounted() {
-    try {
-      const res = await UserService.getEmployees(this.username)
-      this.items = res.data
-      this.total_users = this.items.length
-
-      this.items.forEach(item => {
-        if (item.employee.status == 'Pending') this.pending_users += 1
-        // else if (item.employee.status == 'Active') this.active_users += 1
-      })
-
-      this.active_users = this.total_users - this.pending_users
-    } catch (error) {
-      console.log(error)
-    }
-  },
-
   setup() {
-    const totalUsers = {
+    const totalProfit = {
       statTitle: 'Total Users',
       icon: mdiPoll,
       color: 'success',
+      statistics: '100',
     }
 
-    const activeUsers = {
+    // vertical card options
+    const newProject = {
       statTitle: 'Active Users',
       icon: mdiLabelVariantOutline,
       color: 'primary',
+      statistics: '90',
     }
 
-    const pendingUsers = {
+    const salesQueries = {
       statTitle: 'Pending Users',
       icon: mdiHelpCircleOutline,
       color: 'warning',
+      statistics: '10',
     }
 
     return {
-      totalUsers,
-      activeUsers,
-      pendingUsers,
+      totalProfit,
+      newProject,
+      salesQueries,
     }
   },
 }

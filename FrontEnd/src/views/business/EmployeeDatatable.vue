@@ -81,7 +81,13 @@ export default {
   },
 
   async mounted() {
-    this.getEmployees()
+    try {
+      const res = await UserService.getEmployees(this.username)
+      this.items = res.data
+      console.log(this.items)
+    } catch (error) {
+      console.error(error)
+    }
   },
 
   methods: {

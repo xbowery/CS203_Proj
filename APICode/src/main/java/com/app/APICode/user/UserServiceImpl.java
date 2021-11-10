@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerService;
-import com.app.APICode.notification.NotificationService;
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.utility.RandomPassword;
@@ -33,8 +32,6 @@ public class UserServiceImpl implements UserService {
 
     private PasswordResetTokenRepository pTokens;
 
-    private NotificationService notificationService;
-
     EmailerService emailerService;
 
     RandomPassword randomPasswordGenerator;
@@ -48,14 +45,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
             PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
-            BCryptPasswordEncoder encoder, NotificationService notificationService) {
+            BCryptPasswordEncoder encoder) {
         this.users = users;
         this.vTokens = vTokens;
         this.pTokens = pTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
-        this.notificationService = notificationService;
     }
 
     @Override
@@ -71,11 +67,6 @@ public class UserServiceImpl implements UserService {
 
     private UserDTO convertToUserDTO(User user) {
         return UserDTO.convertToUserDTO(user);
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return users.findAll();
     }
 
     @Override
@@ -126,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Add logic to validate verification token by calculating the expiry date of
-     * token.
+     * token
      */
     @Override
     public String validateVerificationToken(String token) {
@@ -143,7 +134,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setEnabled(true);
         users.save(user);
-
         return TOKEN_VALID;
     }
 
@@ -165,8 +155,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Add logic to avoid adding users with the same email or username Return null
-     * if there exists a user with the same email or username. Then create a
-     * notification.
+     * if there exists a user with the same email or username
      * 
      * @param user    a User object
      * @param isAdmin boolean value to determine if user is admin or not
@@ -210,9 +199,6 @@ public class UserServiceImpl implements UserService {
         VerificationToken vToken = new VerificationToken(token, user);
         vTokens.save(vToken);
 
-        String notificationText = String.format("Welcome to Swisshack, %s!", savedUser.getUsername());
-        notificationService.addNewNotification(notificationText, savedUser);
-
         return convertToUserDTO(savedUser);
     }
 
@@ -220,8 +206,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
         User user = getUserByUsername(username);
 
-        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN"))
-                && !(username.equals(newUserInfo.getUsername()))) {
+        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN")) && !(username.equals(newUserInfo.getUsername()))) {
             throw new UserForbiddenException("You are forbidden from processing this request.");
         }
 
@@ -285,7 +270,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String username) {
         User user = getUserByUsername(username);
-
+        
         try {
             final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
             if (verificationToken != null) {

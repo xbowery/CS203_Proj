@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -13,8 +12,6 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import com.app.APICode.emailer.EmailerService;
-import com.app.APICode.notification.Notification;
-import com.app.APICode.notification.NotificationService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
 import com.app.APICode.user.UserOrEmailExistsException;
@@ -44,9 +41,6 @@ public class UserServiceTest {
     @Mock
     private VerificationTokenRepository vTokens;
 
-    @Mock
-    private NotificationService notificationService;
-
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -54,23 +48,17 @@ public class UserServiceTest {
     void addUser_NewUsername_ReturnSavedUser() {
         // Arrange
         User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
-        String text = String.format("Welcome to Swisshack, %s!", user.getUsername());
-        Notification mockNotification = new Notification(text, user);
 
         when(users.findByUsername(any(String.class))).thenReturn(Optional.empty());
         when(users.save(any(User.class))).thenReturn(user);
-
-        when(notificationService.addNewNotification(anyString(), any(User.class))).thenReturn(mockNotification);
 
         // Act
         UserDTO savedUser = userService.addUser(user, true);
 
         // Assert
         assertNotNull(savedUser);
-
         verify(users).findByUsername(user.getUsername());
         verify(users).save(user);
-        verify(notificationService).addNewNotification(mockNotification.getText(), user);
     }
 
     @Test
@@ -96,23 +84,20 @@ public class UserServiceTest {
 
     // @Test
     // void updateUser_NewEmail_ReturnUpdatedUser() {
-    // // Arrange
-    // User user = new User("user@test.com", "user1", "User", "one", "", false,
-    // "ROLE_USER");
-    // User user2 = new User("updated@test.com", "user1", "User", "one", "", false,
-    // "ROLE_USER");
+    //     // Arrange
+    //     User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+    //     User user2 = new User("updated@test.com", "user1", "User", "one", "", false, "ROLE_USER");
 
-    // when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-    // when(encoder.encode(any(String.class))).thenReturn(user.getPassword());
-    // when(users.save(any(User.class))).thenReturn(user2);
+    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+    //     when(encoder.encode(any(String.class))).thenReturn(user.getPassword());
+    //     when(users.save(any(User.class))).thenReturn(user2);
 
-    // // Act
-    // // User updatedUser = userService.updateUserByUsername(user.getUsername(),
-    // UserDTO.convertToUserDTO(user2));
+    //     // Act
+    //     // User updatedUser = userService.updateUserByUsername(user.getUsername(), UserDTO.convertToUserDTO(user2));
 
-    // // Assert
-    // assertNotNull(updatedUser);
-    // verify(users, atMost(2)).findByUsername(user.getUsername());
-    // verify(users).save(user);
+    //     // Assert
+    //     assertNotNull(updatedUser);
+    //     verify(users, atMost(2)).findByUsername(user.getUsername());
+    //     verify(users).save(user);
     // }
 }
