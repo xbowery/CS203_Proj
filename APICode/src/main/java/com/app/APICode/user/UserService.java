@@ -119,7 +119,7 @@ public interface UserService {
      * @param user     a UserDTO object containning the new info to be updated
      * @return an updated UserDTO
      */
-    UserDTO updateUserByUsername(String username, UserDTO user);
+    void updateUserByUsername(String username, UserDTO user);
 
     /**
      * Updates the User password with the given "email". If no User is found, throw

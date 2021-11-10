@@ -94,13 +94,11 @@ public class UserServiceTest {
         ReflectionTestUtils.setField(user2, "id", 1L);
         
         when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        when(users.setUserInfoByUsername(anyString(), anyString(), anyString(), anyString())).thenReturn(user2);
         // Act
 
-        UserDTO updatedUser = userService.updateUserByUsername("user1", UserDTO.convertToUserDTO(user2));
+        userService.updateUserByUsername("user1", UserDTO.convertToUserDTO(user2));
 
         // Assert
-        assertNotNull(updatedUser);
         verify(users).findByUsername(user.getUsername());
         verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(), user2.getUsername());
     }

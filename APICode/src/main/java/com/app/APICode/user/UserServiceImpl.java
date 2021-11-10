@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
+    public void updateUserByUsername(String username, UserDTO newUserInfo) {
         User user = getUserByUsername(username);
 
         if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN")) && !(username.equals(newUserInfo.getUsername()))) {
@@ -250,10 +250,7 @@ public class UserServiceImpl implements UserService {
         // user.setUsername(newUserInfo.getUsername());
         // user.setIsVaccinated(newUserInfo.getIsVaccinated());
         // user.setAuthorities(newUserInfo.getAuthorities());
-        User savedUser =  users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
-
-        return convertToUserDTO(savedUser);
-
+        users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
     }
 
     @Override

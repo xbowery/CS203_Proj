@@ -101,11 +101,12 @@ public class UserController {
     @Operation(summary = "Update user information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
+            @ApiResponse(responseCode = "204", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
     @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/users")
-    public UserDTO updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
-        return userService.updateUserByUsername(principal.getName(), newUserInfo);
+    public void updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
+        userService.updateUserByUsername(principal.getName(), newUserInfo);
     }
 
     /**

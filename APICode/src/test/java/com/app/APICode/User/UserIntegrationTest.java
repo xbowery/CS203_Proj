@@ -264,7 +264,7 @@ public class UserIntegrationTest {
 
         Response updateUserResponse = request.get(uriUsers + "/" + savedUsername);
 
-        assertEquals(200, updateResponse.getStatusCode());
+        assertEquals(204, updateResponse.getStatusCode());
         assertEquals(200, updateUserResponse.getStatusCode());
         assertEquals("New", JsonPath.from(updateUserResponse.getBody().asString()).get("firstName"));
         assertEquals("User", JsonPath.from(updateUserResponse.getBody().asString()).get("lastName"));
@@ -335,7 +335,7 @@ public class UserIntegrationTest {
 
         Response updateUserResponse = request.get(uriUsers + "/" + savedUsername);
 
-        assertEquals(200, updateResponse.getStatusCode());
+        assertEquals(204, updateResponse.getStatusCode());
         assertEquals(200, updateUserResponse.getStatusCode());
         assertNotNull(updatedUser);
         assertEquals("newly", JsonPath.from(updateUserResponse.getBody().asString()).get("firstName"));
