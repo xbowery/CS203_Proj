@@ -138,7 +138,7 @@ public class RestaurantIntegrationTest {
 
     @Test
     public void getRestaurants_Success() throws Exception {
-        Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
+        Restaurant testRestaurant = new Restaurant("Starbucks", "SMU SCIS", "Beverages", "Nice coffee", 50);
         restaurants.save(testRestaurant);
         URI uri = new URI(baseUrl + port + "/api/v1/restaurants");
 
@@ -150,14 +150,14 @@ public class RestaurantIntegrationTest {
 
     @Test
 	public void getRestaurant_ValidID_Success() throws Exception {
-		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
+		Restaurant testRestaurant = new Restaurant("Canteen Bistro", "SMU SCIS", "Western", "Quick Meal", 50);
         Long id = restaurants.save(testRestaurant).getId();
 		URI uri = new URI(baseUrl + port + "/api/v1/restaurants/" + id);
 
 		given().get(uri).
 		then().
 			statusCode(200).
-			body("name", equalTo("Subway"), "location", equalTo("SMU SCIS"), "cuisine", equalTo("Western"));
+			body("name", equalTo("Canteen Bistro"), "location", equalTo("SMU SCIS"), "cuisine", equalTo("Western"));
 		
 	}
 
