@@ -34,7 +34,6 @@ export default {
 </script>
 
 <style lang="scss">
-// @import '~vuetify/src/styles/styles.sass';
 
 .app-navigation-menu {
   .v-list-item {
@@ -66,30 +65,4 @@ export default {
     }
   }
 }
-
-// .vertical-nav-menu-group {
-//   &.v-list-group--active > .v-list-group__header > .v-list-group__header__append-icon .v-icon {
-//     transform: none;
-//   }
-
-//   & > .v-list-group__header > .v-list-group__header__append-icon .v-icon {
-//     transform: rotate(-90deg);
-//   }
-
-//   & & .v-list-group__items .v-list-item__icon {
-//     visibility: hidden;
-//   }
-// }
-
-// @include theme(vertical-nav-menu-group) using ($material) {
-//   &.vertical-nav-menu-group-active > .v-list-group__header {
-//     background-color: rgba(map-deep-get($material, 'text', 'primary'), map-deep-get($material, 'states', 'selected'));
-//   }
-// }
-
-// .alternate-icon-small {
-//   font-size: 14px;
-//   height: 14px;
-//   width: 14px;
-// }
 </style>

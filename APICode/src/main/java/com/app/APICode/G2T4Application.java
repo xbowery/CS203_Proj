@@ -10,6 +10,7 @@ import java.util.Date;
 import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.crowdlevel.CrowdLevelRepository;
 import com.app.APICode.ctest.Ctest;
+import com.app.APICode.ctest.CtestServiceImpl;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
 import com.app.APICode.notification.Notification;
@@ -44,22 +45,33 @@ public class G2T4Application {
 		business_owner.setEnabled(true);
 		users.save(business_owner);
 
+
 		// Restaurant
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);
 		testRestaurant.setCurrentCapacity(0);
+		testRestaurant.setImageUrl("subway.jpeg");
 		// testRestaurant.setCrowdLevel();
 		testRestaurant = restaurants.save(testRestaurant);
 		System.out.println("[Add restaurant]:" + testRestaurant.getName());
+		
+		//Business owner 
+		User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
+		businessOwner.setEnabled(true);
+		Employee owner = new Employee(businessOwner, "Owner");
+		owner.setRestaurant(testRestaurant);	
+		owner.setStatus("Approved");
+		businessOwner.setEmployee(owner);
+		users.save(businessOwner);
 
+		// Employee
 		User employee1 = new User("employee5@test.com", "employee1", "employee", "1", encoder.encode("testing12345"),
 				false, "ROLE_EMPLOYEE");
 		employee1.setEnabled(true);
-		users.save(employee1);
-		Employee employee11 = new Employee(employee1, "Employee");
-		employee11.setRestaurant(testRestaurant);
-		employee1.setEmployee(employee11);
-		employee11.setStatus("Pending");
+		Employee employee = new Employee(employee1, "Employee");
+		employee.setRestaurant(testRestaurant);
+		employee.setStatus("Pending");
+		employee1.setEmployee(employee);
 		users.save(employee1);
 
 		User employee2 = new User("business1@test.com", "business1", "business", "1", encoder.encode("testing12345"),

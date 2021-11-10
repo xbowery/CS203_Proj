@@ -51,19 +51,19 @@
       <nav-menu-link title="News" :to="{ name: 'News' }" :icon="icons.mdiDomain"></nav-menu-link>
       <nav-menu-link
         v-if="isAdmin"
-        title="User List"
+        title="Users List"
         :to="{ name: 'UserList' }"
         :icon="icons.mdiAccountGroup"
       ></nav-menu-link>
       <nav-menu-link
         v-if="isAdmin"
-        title="RestaurantList"
+        title="Restaurants List"
         :to="{ name: 'RestaurantList' }"
         :icon="icons.mdiFood"
       ></nav-menu-link>
       <nav-menu-link
         v-if="isAdmin"
-        title="MeasuresList"
+        title="Measures List"
         :to="{ name: 'MeasuresList' }"
         :icon="icons.mdiFood"
       ></nav-menu-link>
@@ -88,8 +88,7 @@ import {
   mdiAccountGroup,
   mdiHospitalBoxOutline,
 } from '@mdi/js'
-// import NavMenuSectionTitle from './NavMenuSectionTitle.vue'
-// import NavMenuGroup from './NavMenuGroup.vue'
+
 import NavMenuLink from './NavMenuLink.vue'
 import TokenService from '@/services/token.service'
 import { Role } from '@/model/role'
@@ -111,8 +110,6 @@ export default {
     },
   },
   components: {
-    // NavMenuSectionTitle,
-    // NavMenuGroup,
     NavMenuLink,
   },
   props: {

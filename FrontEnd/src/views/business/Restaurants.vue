@@ -51,7 +51,7 @@
             <v-card>
               <v-img
                 class="misc-tree"
-                src="@/assets/images/misc/restaurant.jpg"
+                :src="getImgUrl(item)"
                 align="center"
                 justify="center"
               ></v-img>
@@ -113,11 +113,12 @@
 <script>
 import UserService from '@/services/user.service'
 import { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown } from '@mdi/js'
-
+// import imgPath from '@/assets/image/misc'
 export default {
   setup() {
     return {
       icons: { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown },
+      // imgPath
     }
   },
   data() {
@@ -137,6 +138,7 @@ export default {
         { key: 'Description', value: 'description' },
         { key: 'Crowd Level', value: 'currentCrowdLevel' },
       ],
+      imageString: '',
     }
   },
   async mounted() {
@@ -169,6 +171,9 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number
     },
+    getImgUrl(item){
+      return require(`@/assets/images/misc/${item.imageUrl}`)
+    }
   },
 }
 </script>

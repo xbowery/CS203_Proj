@@ -63,6 +63,9 @@ public class Restaurant {
     @JsonManagedReference
     private List<CrowdLevel> crowdLevel;
 
+    @Schema(description = "String containing the url to the cover image of the restaurant")
+    private String imageURL;
+
     public Restaurant() {
     }
 
@@ -150,6 +153,13 @@ public class Restaurant {
 
     public void setTestFrequency(int testFrequency){
         this.testFrequency = testFrequency;
+    }
+
+    public String getImageUrl(){
+        return this.imageURL;
+    }
+    public void setImageUrl(String imageURl){
+        this.imageURL = imageURl;
     }
 
     // public CrowdLevel getCrowdLevel() {
