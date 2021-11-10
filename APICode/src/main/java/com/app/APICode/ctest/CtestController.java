@@ -26,11 +26,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "COVID-19 Test", description = "COVID-19 Test API")
 public class CtestController {
-    private CtestService ctests;
+        private CtestService ctests;
 
-    public CtestController(CtestService ctests) {
-        this.ctests = ctests;
-    }
+        public CtestController(CtestService ctests) {
+                this.ctests = ctests;
+        }
 
     /**
      * Search for employee with the given username If there is no user with the
@@ -44,7 +44,7 @@ public class CtestController {
             "COVID-19 Test" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))) })
-    @GetMapping("/employee/ctests")
+    @GetMapping("/users/employee/ctests")
     public List<Ctest> getAllTestsByEmployee(Principal principal) {
         return ctests.getAllCtestsByUsername(principal.getName());
     }
@@ -61,7 +61,7 @@ public class CtestController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Successful created new Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/employee/ctests")
+    @PostMapping("/users/employee/ctests")
     public Ctest addCtest(Principal principal, @RequestBody Ctest ctest) {
         return ctests.saveCtestByUsername(principal.getName(), ctest);
     }
@@ -79,7 +79,7 @@ public class CtestController {
             "COVID-19 Test" })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful updated  Covid-19 Test result", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Ctest.class))), })
-    @PutMapping("/employee/ctests/{ctestId}")
+    @PutMapping("/users/employee/ctests/{ctestId}")
     public Ctest updateCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId,
             @RequestBody Ctest newCtest) {
         return ctests.updateCtestByCtestIdAndUsername(principal.getName(), ctestId, newCtest);
@@ -99,7 +99,8 @@ public class CtestController {
             "COVID-19 Test" })
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Successful deleted Covid-19 Test result", content = @Content) })
-    @DeleteMapping("/employee/ctests/{ctestId}")
+    @DeleteMapping("/users/employee/ctests/{ctestId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Ctest deleteCtest(Principal principal, @PathVariable(value = "ctestId") Long ctestId) {
         return ctests.deleteCtestByCtestIdAndUsername(principal.getName(), ctestId);
     }
@@ -120,8 +121,24 @@ public class CtestController {
         "COVID-19 Test" })
         @ApiResponses({
                 @ApiResponse(responseCode = "200", description = "Successful retrieved next covid test date", content = @Content) })
-        @GetMapping("/employee/{username}/ctests/next")
+        @GetMapping("/users/employee/{username}/ctests/next")
         public Date getNextCtest(@PathVariable(value = "username") String username) {
                 return ctests.getNextCtestByUsername(username);
+        }
+
+     /**
+     * List latest ctests of employees in a particular business
+     * 
+     * @param principal name of the user logged in currently
+     * @return list of ctest of employees in a particular business
+     */
+    @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Employee" })
+        @ApiResponses({
+                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))), })
+        @ResponseStatus(HttpStatus.OK)
+        @GetMapping("/users/employee/allctests")
+        public List<Ctest> getAllEmployeesCtest(Principal principal) {
+                return ctests.getAllEmployeesCtest(principal.getName());
         }
 }

@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,7 +43,6 @@ import org.slf4j.LoggerFactory;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
@@ -60,7 +60,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(req, res);
 
-        } catch (Exception e) {
+        } catch (JWTVerificationException e) {
             logger.info(e.getMessage());
 
             res.setContentType(APPLICATION_JSON_VALUE);

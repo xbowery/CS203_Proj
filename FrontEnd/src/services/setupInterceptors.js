@@ -1,5 +1,6 @@
 import { axiosInstance } from './api'
 import TokenService from './token.service'
+import EventBus from '@/common/EventBus'
 
 const setup = store => {
   axiosInstance.interceptors.request.use(
@@ -38,6 +39,7 @@ const setup = store => {
 
             return axiosInstance(originalConfig)
           } catch (_error) {
+            EventBus.dispatch('logout')
             return Promise.reject(_error)
           }
         }
