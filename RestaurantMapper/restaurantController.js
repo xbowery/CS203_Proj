@@ -1,6 +1,12 @@
+"use strict";
+
 const Restaurant = require("./restaurantSchema");
 const Case = require("./caseSchema");
 const cron = require("node-cron");
+const axios = require("axios").default;
+
+const Util = require("./util.js");
+const util = new Util();
 
 /**
  * Loads the main webpage to render the restaurants in a nice looking map using OneMap API
@@ -23,13 +29,34 @@ module.exports.loadWebpage = async (req, res, next) => {
  * @param {*} next
  */
 module.exports.insertRestaurant = async (req, res, next) => {
-  res.json("Hello?");
+  await getCovidData();
+  res.json({ Success: true });
 };
 
 /**
  * Retrieve the covid-19 heatmap data from the Singapore official API.
  */
-const getCovidData = async () => {};
+const getCovidData = async () => {
+  try {
+    const res = await axios.get(process.env.COVID_API);
+    const calcAggOutput = JSON.parse(res.data.split("=")[1].slice(0, -1));
+    await updateDBCovidFigures(calcAggOutput.sz.aggregatedObj);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+/**
+ * To iterate through the object and update the database accordingly.
+ *
+ * @param {*} figures
+ */
+const updateDBCovidFigures = async (figures) => {
+  const dbResp = await Case.bulkWrite(util.craftBulkWriteObject(figures));
+  const { nUpserted, nModified } = dbResp;
+  console.log(`Num upserted: ${nUpserted}. Num modified: ${nModified}`);
+  return dbResp;
+};
 
 /**
  * CRON process to perform the fetching of official data twice every day. This query is done twice a day
