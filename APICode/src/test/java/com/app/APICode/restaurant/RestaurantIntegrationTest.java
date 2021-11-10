@@ -316,8 +316,20 @@ public class RestaurantIntegrationTest {
     }
 
     @Test
+    public void deleteInvalidRestaurant_AdminUser_Failure() throws Exception {
+        URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer "+ tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        Response deleteRestaurantResponse = request.delete(uriRestaurant + "/" + 0);
+
+        assertEquals(404, deleteRestaurantResponse.getStatusCode());
+    }
+
+    @Test
     public void deleteRestaurant_NormalUser_Failure() throws Exception {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         URI uriRestaurant = new URI(baseUrl + port + "/api/v1/restaurants");
 
         RequestSpecification request = RestAssured.given();

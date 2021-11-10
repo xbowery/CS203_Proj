@@ -63,11 +63,11 @@ public class MeasureServiceImpl implements MeasureService {
     @Override
     @Transactional
     public void deleteMeasure(String measureType) {
-        try {
+        if (measures.existsByMeasureType(measureType)) {
             measures.deleteByMeasureType(measureType);
-        } catch (EmptyResultDataAccessException e) {
-            throw new MeasureNotFoundException(measureType);
+            return;
         }
+        throw new MeasureNotFoundException(measureType);
     }
 
 }

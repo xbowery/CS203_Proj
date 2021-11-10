@@ -71,14 +71,8 @@ public class EmailerServiceImpl implements EmailerService {
             return "COVID Suisse Account Registration Confirmation Link";
         } else if ((Boolean) variables.get("isResendConfirmation") != false) {
             return "COVID Suisse Account Resend Registration Confirmation Link";
-        } else if ((Boolean) variables.get("isDeleted") != false) {
-            return "COVID Suisse Account Deletion Confirmation";
         } else if ((Boolean) variables.get("requestPasswordChange") != false) {
             return "COVID Suisse Account Request for Password Reset";
-        } else if ((Boolean) variables.get("isUsernameChange") != false) {
-            return "COVID Suisse Account Username Update";
-        } else if ((Boolean) variables.get("isPasswordChange") != false) {
-            return "COVID Suisse Account Password Reset";
         }
         return "";
     }

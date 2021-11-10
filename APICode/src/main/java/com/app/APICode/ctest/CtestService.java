@@ -10,7 +10,7 @@ public interface CtestService {
 
     Ctest updateCtestByCtestIdAndUsername(String username, Long ctestId, Ctest newCtest);
 
-    Ctest deleteCtestByCtestIdAndUsername(String username, Long ctestId);
+    void deleteCtestByCtestIdAndUsername(String username, Long ctestId);
 
     Date getNextCtestByUsername(String username);
 }

@@ -9,6 +9,7 @@ import com.app.APICode.employee.EmployeeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CtestServiceImpl implements CtestService {
@@ -47,12 +48,18 @@ public class CtestServiceImpl implements CtestService {
     }
 
     @Override
-    public Ctest deleteCtestByCtestIdAndUsername(String username, Long ctestId) {
+    @Transactional
+    public void deleteCtestByCtestIdAndUsername(String username, Long ctestId) {
         Employee employee = employees.getEmployeeByUsername(username);
-        return ctests.findByIdAndEmployeeId(ctestId, employee.getId()).map(ctest -> {
-            ctests.delete(ctest);
-            return ctest;
-        }).orElseThrow(() -> new CtestNotFoundException(ctestId));
+
+        Long employeeId = employee.getId();
+        
+        if (ctests.existsByIdAndEmployeeId(ctestId, employeeId)) {
+            ctests.deleteById(ctestId);
+            return;
+        }
+
+        throw new CtestNotFoundException(ctestId);
     }
 
     @Override

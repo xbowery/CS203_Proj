@@ -36,10 +36,6 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
     public List<CrowdLevel> listCrowdLevelByEmployee(String username) {
         User user = userService.getUserByUsername(username);
 
-        if (!(StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("BUSINESS")) {
-            throw new UserForbiddenException("You are forbidden from processing this request.");
-        }
-
         Restaurant restaurant = user.getEmployee().getRestaurant();
 
         List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(user.getEmployee().getRestaurant());
@@ -55,13 +51,6 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
 
         Restaurant restaurant = restaurantService.getRestaurantByUsername(username);
         Long restaurantID = restaurant.getId();
-
-        User requester = userService.getUserByUsername(username);
-        User businessOwner = restaurantService.getRestaurantOwner(restaurantID);
-
-        if (!(requester.equals(businessOwner))) {
-            throw new UserForbiddenException("You are forbidden from processing this request");
-        }
 
         crowdLevel.setRestaurant(restaurant);
         crowdLevel.setLatestCrowd();
