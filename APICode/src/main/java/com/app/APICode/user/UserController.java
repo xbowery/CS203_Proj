@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.app.APICode.user.message.ChangePasswordMessage;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,8 +69,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
-    public User getUser(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public UserDTO getUser(Principal principal, @PathVariable String username) {
+       return userService.getUserDetailsByUsername(principal.getName(), username);
     }
 
     /**
@@ -170,5 +172,11 @@ public class UserController {
     @GetMapping("/registrationConfirm")
     public String confirmRegistration(@RequestParam("token") final String token) {
         return userService.validateVerificationToken(token);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("users/password")
+    public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
+        userService.changePasswordByUsername(principal.getName(), message);
     }
 }

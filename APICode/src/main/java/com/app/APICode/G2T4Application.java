@@ -76,8 +76,9 @@ public class G2T4Application {
 		Ctest ctest1 = new Ctest("ART", date, "Positive");
 		ctest1.setEmployee(employee1.getEmployee());
 
+		//CrowdLevel
 		CrowdLevelRepository crowdLevel = ctx.getBean(CrowdLevelRepository.class);
-		CrowdLevel testCrowdLevel = new CrowdLevel(new Date(), "medium", 22, testRestaurant);
+		CrowdLevel testCrowdLevel = new CrowdLevel(new Date(), "Low", 0, testRestaurant);
 		crowdLevel.save(testCrowdLevel);
 
 		System.out.println(testRestaurant.getName() + " " + "id: " + testRestaurant.getId());
@@ -87,6 +88,17 @@ public class G2T4Application {
 		notifications.addNewNotification("Remember to do your next COVID-19 test which is due in 3 days!", admin);
 		notifications.addNewNotification(
 				"You have a pending employee request from John Doe. Please review it under your Employee List.", admin);
+		
+    //Measures
+		MeasureRepository measures = ctx.getBean(MeasureRepository.class);
+		Measure testMeasureRestaurant = new Measure("Restaurant", 2, true, false);
+		measures.save(testMeasureRestaurant);
+		Measure testMeasureGym = new Measure("Gym", 50, true, false);
+		measures.save(testMeasureGym);
+		Measure testMeasureEvents = new Measure("Events", 1000, true, true);
+		measures.save(testMeasureEvents);
+		Measure testMeasureGathering = new Measure("Gathering", 2, true, true);
+		measures.save(testMeasureGathering);
 	}
 
 }

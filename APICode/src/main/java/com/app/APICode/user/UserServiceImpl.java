@@ -10,10 +10,12 @@ import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
-import com.app.APICode.emailer.EmailerService;
+import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.notification.NotificationService;
+
 import com.app.APICode.passwordresettoken.PasswordResetToken;
 import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
+import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
@@ -34,8 +36,9 @@ public class UserServiceImpl implements UserService {
     private PasswordResetTokenRepository pTokens;
 
     private NotificationService notificationService;
+  
+    EmailerServiceImpl emailerService;
 
-    EmailerService emailerService;
 
     RandomPassword randomPasswordGenerator;
 
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
-            PasswordResetTokenRepository pTokens, EmailerService emailerService, RandomPassword randomPasswordGenerator,
+            PasswordResetTokenRepository pTokens, EmailerServiceImpl emailerService, RandomPassword randomPasswordGenerator,
             BCryptPasswordEncoder encoder, NotificationService notificationService) {
         this.users = users;
         this.vTokens = vTokens;
@@ -71,6 +74,21 @@ public class UserServiceImpl implements UserService {
 
     private UserDTO convertToUserDTO(User user) {
         return UserDTO.convertToUserDTO(user);
+    }
+
+    @Override 
+    public UserDTO getUserDetailsByUsername(String requesterUsername, String username) {
+        User requester = users.findByUsername(requesterUsername).orElse(null);
+
+        if (!(requesterUsername.equals(username)) && !((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1]).equals("ADMIN"))) {
+            throw new UserForbiddenException("You are forbidden from processing this request.");
+        }
+
+        User user = users.findByUsername(username).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException(username);
+        }
+        return convertToUserDTO(user);
     }
 
     @Override
@@ -296,16 +314,21 @@ public class UserServiceImpl implements UserService {
         } catch (EmptyResultDataAccessException e) {
             throw new UserNotFoundException(username);
         }
-
     }
 
     @Override
-    public Long getUserIdByUsername(String username) {
-        return users.findIdByUsername(username);
-    }
+    public void changePasswordByUsername(String username, ChangePasswordMessage message) {
+        if(!message.getNewPassword().equals(message.getCfmPassword())) {
+            throw new InvalidChangePasswordException("New Password and Confirm Password");
+        }
 
-    @Override
-    public User getUserById(Long id) {
-        return users.getById(id);
+        User user = getUserByUsername(username);
+        if(!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidChangePasswordException("Current Password");
+        }
+
+        String encodedPassword = encoder.encode(message.getNewPassword());
+        user.setPassword(encodedPassword);
+        users.save(user);
     }
 }

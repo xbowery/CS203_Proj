@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee deleteEmployee(String username) {
+    public void deleteEmployee(String username) {
         User user = users.getUserByUsername(username);
 
         user.setAuthorities("ROLE_USER");
@@ -96,21 +96,5 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRestaurant(null);
         user.setEmployee(null);
         users.save(user);
-        return employee;
     }
-
-    @Override
-    public List<Ctest> getAllEmployeesCtest(String username) {
-        List<Ctest> allCtests = new ArrayList<Ctest>();
-
-        Employee owner = getEmployeeByUsername(username);
-        List<Employee> employees = owner.getRestaurant().getEmployees();
-        for (Employee e : employees) {
-            if (e.getCtests().size() > 0) {
-                allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
-            }
-        }
-        return allCtests;
-    }
-
 }

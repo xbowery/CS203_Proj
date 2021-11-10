@@ -5,15 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.app.APICode.employee.Employee;
-import com.app.APICode.employee.EmployeeNotFoundException;
-import com.app.APICode.restaurant.Restaurant;
-import com.app.APICode.restaurant.RestaurantNotFoundException;
-import com.app.APICode.restaurant.RestaurantRepository;
-import com.app.APICode.user.User;
-import com.app.APICode.user.UserNotFoundException;
-import com.app.APICode.user.UserRepository;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +20,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "Crowd Level", description = "Crowd Level API")
 public class CrowdLevelController {
-    private CrowdLevelRepository crowdlevels;
-    private RestaurantRepository restaurants;
-    private UserRepository users;
+    private CrowdLevelService crowdLevelService;
 
-    public CrowdLevelController(CrowdLevelRepository crowdlevels, RestaurantRepository restaurants, UserRepository users) {
-        this.crowdlevels = crowdlevels;
-        this.restaurants = restaurants;
-        this.users = users;
+    @Autowired
+    public CrowdLevelController(CrowdLevelService crowdLevelService) {
+        this.crowdLevelService = crowdLevelService;
     }
 
         /**
@@ -44,7 +33,7 @@ public class CrowdLevelController {
      */
     @GetMapping("restaurants/crowdLevels")
     public List<CrowdLevel> getCrowdLevels(){
-        return crowdlevels.findAll();
+        return crowdLevelService.listAllCrowdLevels();
     }
 
     /**
@@ -55,27 +44,7 @@ public class CrowdLevelController {
      */
     @GetMapping("/restaurants/{username}/crowdLevel")
     public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable (value = "username") String username) {
-
-        Optional<User> user = users.findByUsername(username);
-        if(!user.isPresent()){
-            throw new UserNotFoundException(username);
-        }
-        
-        Employee employee = user.get().getEmployee();
-        if(employee == null){
-            throw new EmployeeNotFoundException(username);
-        }
-
-        Restaurant restaurant = employee.getRestaurant();
-        if(restaurant == null){
-            throw new RestaurantNotFoundException(username); 
-        }
-
-        List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(restaurant);
-        if(crowdLevel == null){
-            throw new CrowdLevelNotFoundException(restaurant.getName());
-        }
-        return crowdlevels.findByRestaurant(restaurant);
+        return crowdLevelService.listCrowdLevelByEmployee(username);
     }
 
     /**
@@ -87,14 +56,7 @@ public class CrowdLevelController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/restaurants/{id}/crowdLevel")
     public CrowdLevel addCrowdLevel(@PathVariable Long id, @Valid @RequestBody CrowdLevel crowdLevel) {
-        return restaurants.findById(id).map(restaurant -> {
-            crowdLevel.setRestaurant(restaurant);
-            crowdLevel.setLatestCrowd();
-
-            restaurant.setCurrentCapacity(crowdLevel.getNoOfCustomers());
-            restaurant.setcurrentCrowdLevel(crowdLevel.getLatestCrowd());
-            return crowdlevels.save(crowdLevel);
-        }).orElse(null);
+        return crowdLevelService.addCrowdLevel(id, crowdLevel);
     }
 
     /**
@@ -107,11 +69,7 @@ public class CrowdLevelController {
     @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelId}")
     public CrowdLevel updateCrowdLevel(@PathVariable Long id,
     @PathVariable Long crowdLevelId, @RequestBody CrowdLevel newCrowdLevel){
-        return crowdlevels.findById(crowdLevelId) .map(crowdLevel -> {
-            crowdLevel.setNoOfCustomers(newCrowdLevel.getNoOfCustomers());
-            crowdLevel.setLatestCrowd();
-            return crowdlevels.save(crowdLevel);
-        }).orElseThrow(() -> new CrowdLevelNotFoundException(crowdLevelId));
+        return crowdLevelService.updateCrowdLevel(id, crowdLevelId, newCrowdLevel);
     }
 
 }

@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import com.app.APICode.emailer.EmailerService;
+import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.notification.Notification;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.user.User;
@@ -39,7 +40,7 @@ public class UserServiceTest {
     private BCryptPasswordEncoder encoder;
 
     @Mock
-    private EmailerService emailerService;
+    private EmailerServiceImpl emailerService;
 
     @Mock
     private VerificationTokenRepository vTokens;

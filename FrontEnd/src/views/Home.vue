@@ -45,9 +45,13 @@
           <v-list dense>
             <v-list-item v-for="(header, index) in headers" :key="index">
               <v-list-item-content> {{ header.text }}: </v-list-item-content>
-              <v-list-item-content class="align-end">
-                {{ item[header.value] }}
-              </v-list-item-content>
+              <!-- <v-list-item-content class="align-end">
+                {{ item[header.value]}}
+              </v-list-item-content> -->
+              <v-list-item-content v-if="typeof item[header.value] == 'number'">
+                {{ item[header.value] }}</v-list-item-content>
+              <v-list-item-content class="align-end" v-if="item[header.value] == true"> Yes </v-list-item-content>
+              <v-list-item-content class="align-end" v-if="item[header.value] == false"> No </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
@@ -67,12 +71,13 @@ export default {
       user: 'auth/user',
     }),
   },
+
   data() {
     return {
       items: [],
       headers: [
         { text: 'Max capacity', value: 'maxCapacity' },
-        { text: 'Vaccinated?', value: 'vaccinationStatus' },
+        { text: 'Vaccination required?', value: 'vaccinationStatus' },
         { text: 'Mask required?', value: 'maskStatus' },
       ],
       images: {
