@@ -1,9 +1,8 @@
 name: News API deployment
 
-on: 
-  push:
-    release:
-      types: [published]
+on:
+  release:
+    types: [published]
 
 defaults:
   run:
