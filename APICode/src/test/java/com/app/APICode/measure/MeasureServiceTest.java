@@ -2,23 +2,15 @@ package com.app.APICode.measure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
 import java.util.Optional;
 
-import com.app.APICode.measure.Measure;
-import com.app.APICode.measure.MeasureRepository;
-import com.app.APICode.measure.MeasureServiceImpl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +26,38 @@ public class MeasureServiceTest {
 
     @InjectMocks
     private MeasureServiceImpl measureService;
+
+    @Test
+    void getMeasure_ValidMeasureType_ReturnMeasure() {
+        // Arrange
+        Measure measure = new Measure("gym", 50, true, false);
+        when(measures.findByMeasureType(measure.getMeasureType())).thenReturn(Optional.of(measure));
+
+        //Act
+        Measure returnedMeasure = measureService.getMeasure(measure.getMeasureType());
+
+        //Assert
+        assertNotNull(returnedMeasure);
+        verify(measures).findByMeasureType(measure.getMeasureType());
+    }
+
+    @Test
+    void getMeasure_InvalidMeasureType_ReturnException() {
+        //Arrange
+        String measureType = "clinics";
+        when(measures.findByMeasureType(measureType)).thenReturn(Optional.empty());
+
+        //Act
+        MeasureNotFoundException notFoundException = assertThrows(MeasureNotFoundException.class, () -> {
+            measureService.getMeasure(measureType);
+        });
+
+        //Assert
+        assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measureType);
+        
+        verify(measures).findByMeasureType(measureType);
+
+    }
 
     @Test
     void addNewMeasure_ReturnSavedMeasure() {
@@ -107,5 +131,35 @@ public class MeasureServiceTest {
         assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measure.getMeasureType());
         
         verify(measures).findByMeasureType(measure.getMeasureType());
+    }
+
+    @Test
+    void deleteMeasure_validMeasureType_ReturnNull() {
+        //Arrange
+        Measure measure = new Measure("gym", 50, true, false);
+        String measureType = measure.getMeasureType();
+        when(measures.existsByMeasureType(measureType)).thenReturn(true);
+        //Act
+        measureService.deleteMeasure(measureType);
+
+        //Assert
+        verify(measures).deleteByMeasureType(measureType);
+
+    }
+
+    @Test
+    void deleteMeasure_InvalidMeasureType_ReturnException() {
+        //Arrange
+        String measureType = "clinics";
+
+        //Act
+        MeasureNotFoundException notFoundException = assertThrows(MeasureNotFoundException.class, () -> {
+            measureService.deleteMeasure(measureType);
+        });
+
+        //Assert
+        assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measureType);
+        
+
     }
 }
