@@ -103,7 +103,7 @@ public class CtestIntegrationTest {
         testRestaurant.setCurrentCapacity(0);
 		testRestaurantID = restaurants.save(testRestaurant).getId();
 
-        User normalEmployee = new User("test1@test.com", "test1", "test1", null, encoder.encode("password123"), true, "ROLE_USER");
+        User normalEmployee = new User("newemployee@test.com", "newemployee", "new", "employee", encoder.encode("password123"), true, "ROLE_USER");
         normalEmployee.setEnabled(true);
         Employee employee = new Employee(normalEmployee, "Employee");
         employee.setRestaurant(testRestaurant);
@@ -162,7 +162,7 @@ public class CtestIntegrationTest {
         URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
         
         ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
+                new LoginDetails("newemployee", "password123"), TokenDetails.class);
 
         tokenGeneratedEmployee1 = result.getBody().getAccessToken();
     }

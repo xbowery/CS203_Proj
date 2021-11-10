@@ -33,27 +33,8 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
     }
 
     @Override
-    public List<CrowdLevel> listAllCrowdLevels(String username) {
-        User user = userService.getUserByUsername(username);
-
-        if (user == null) {
-            throw new UserNotFoundException(username);
-        }
-
-        if (!(StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("BUSINESS")) {
-            throw new UserForbiddenException("You are forbidden from processing this request.");
-        }
-
-        return crowdlevels.findAll();
-    }
-
-    @Override
     public List<CrowdLevel> listCrowdLevelByEmployee(String username) {
         User user = userService.getUserByUsername(username);
-
-        if (user == null) {
-            throw new UserNotFoundException(username);
-        }
 
         if (!(StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("BUSINESS")) {
             throw new UserForbiddenException("You are forbidden from processing this request.");
@@ -61,12 +42,8 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
 
         Restaurant restaurant = user.getEmployee().getRestaurant();
 
-        if(restaurant == null){
-            throw new RestaurantNotFoundException(username); 
-        }
-
         List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(user.getEmployee().getRestaurant());
-        if(crowdLevel == null){
+        if(crowdLevel.size() == 0){
             throw new CrowdLevelNotFoundException(restaurant.getName());
         }
 
@@ -74,11 +51,16 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
     }
 
     @Override
-    public CrowdLevel addCrowdLevel(Long restaurantID, CrowdLevel crowdLevel) {
-        Restaurant restaurant = restaurantService.getRestaurantById(restaurantID);
+    public CrowdLevel addCrowdLevel(String username, CrowdLevel crowdLevel) {
 
-        if (restaurant == null) {
-            throw new RestaurantNotFoundException(restaurantID); 
+        Restaurant restaurant = restaurantService.getRestaurantByUsername(username);
+        Long restaurantID = restaurant.getId();
+
+        User requester = userService.getUserByUsername(username);
+        User businessOwner = restaurantService.getRestaurantOwner(restaurantID);
+
+        if (!(requester.equals(businessOwner))) {
+            throw new UserForbiddenException("You are forbidden from processing this request");
         }
 
         crowdLevel.setRestaurant(restaurant);
@@ -89,28 +71,4 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
         restaurantService.updateRestaurant(restaurantID, restaurant);
         return crowdlevels.save(crowdLevel);
     }
-
-    @Override
-    public CrowdLevel updateCrowdLevel(Long restaurantID, Long crowdLevelId, CrowdLevel newCrowdLevel) {
-        Restaurant restaurant = restaurantService.getRestaurantById(restaurantID);
-
-        if (restaurant == null) {
-            throw new RestaurantNotFoundException(restaurantID);
-        }
-
-        CrowdLevel crowdLevel = crowdlevels.findById(crowdLevelId).orElse(null);
-
-        if (crowdLevel == null) {
-            throw new CrowdLevelNotFoundException(crowdLevelId);
-        }
-
-        restaurant.setCurrentCapacity(newCrowdLevel.getNoOfCustomers());
-        restaurant.setcurrentCrowdLevel(newCrowdLevel.getLatestCrowd());
-        restaurantService.updateRestaurant(restaurantID, restaurant);
-
-        crowdLevel.setNoOfCustomers(newCrowdLevel.getNoOfCustomers());
-        crowdLevel.setLatestCrowd();
-        return crowdlevels.save(crowdLevel);
-    }
-
 }

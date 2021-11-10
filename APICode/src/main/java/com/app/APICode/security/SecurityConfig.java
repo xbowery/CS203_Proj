@@ -57,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 
+                .antMatchers(HttpMethod.GET, "/restaurants/crowdLevel").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.GET, "/restaurants", "/restaurants/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/restaurants/user/*").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.PUT, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")

@@ -152,6 +152,7 @@
 				<configuration>
 					<excludes>
 						<exclude>com/app/APICode/G2T4Application.class</exclude>
+						<exclude>com/app/APICode/exception/*</exclude>
 					</excludes>
 				 </configuration>
 				<executions>

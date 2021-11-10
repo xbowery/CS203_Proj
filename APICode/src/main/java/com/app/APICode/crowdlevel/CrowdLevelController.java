@@ -28,24 +28,15 @@ public class CrowdLevelController {
         this.crowdLevelService = crowdLevelService;
     }
 
-        /**
-     * List the latest crowd levels by datetime and restaurant in the system
-     * @return list of latest crowd levels
-     */
-    @GetMapping("/restaurants/crowdLevels")
-    public List<CrowdLevel> getCrowdLevels(Principal principal){
-        return crowdLevelService.listAllCrowdLevels(principal.getName());
-    }
-
     /**
      * Search for the crowd level of a restaurant with the given restaurant id
      * 
      * @param id restaurant id
      * @return crowd level of restaurant
      */
-    @GetMapping("/restaurants/{username}/crowdLevel")
-    public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable (value = "username") String username) {
-        return crowdLevelService.listCrowdLevelByEmployee(username);
+    @GetMapping("/restaurants/crowdLevel")
+    public List<CrowdLevel> getCrowdLevelByRestaurant(Principal principal) {
+        return crowdLevelService.listCrowdLevelByEmployee(principal.getName());
     }
 
     /**
@@ -55,24 +46,10 @@ public class CrowdLevelController {
      * @return the newly added CrowdLevel object
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/restaurants/{id}/crowdLevel")
-    public CrowdLevel addCrowdLevel(@PathVariable Long id, @Valid @RequestBody CrowdLevel crowdLevel) {
-        return crowdLevelService.addCrowdLevel(id, crowdLevel);
+    @PostMapping("/restaurants/crowdLevel")
+    public CrowdLevel addCrowdLevel(Principal principal, @Valid @RequestBody CrowdLevel crowdLevel) {
+        return crowdLevelService.addCrowdLevel(principal.getName(), crowdLevel);
     }
-
-    /**
-     * Update crowd level
-     * If there is no crowd level with the given datetime, throw CrowdLevelNotFoundException
-     * @param crowdLevelDateTime the datetime of the measure
-     * @param newCrowdLevel a CrowdLevel object containing the new crowd level to be updated
-     * @return the updated CrowdLevel object
-     */
-    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelId}")
-    public CrowdLevel updateCrowdLevel(@PathVariable Long id,
-    @PathVariable Long crowdLevelId, @RequestBody CrowdLevel newCrowdLevel){
-        return crowdLevelService.updateCrowdLevel(id, crowdLevelId, newCrowdLevel);
-    }
-
 }
 
 

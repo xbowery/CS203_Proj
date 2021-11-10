@@ -36,10 +36,7 @@ public class EmailerServiceImpl implements EmailerService {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("isRegisterConfirmation", variables.get("isRegisterConfirmation"));
         model.put("isResendConfirmation", variables.get("isResendConfirmation"));
-        model.put("isDeleted", variables.get("isDeleted"));
         model.put("requestPasswordChange", variables.get("requestPasswordChange"));
-        model.put("isUsernameChange", variables.get("isUsernameChange"));
-        model.put("isPasswordChange", variables.get("isPasswordChange"));
 
         if ((Boolean)variables.get("isRegisterConfirmation")) {
             model.put("token", variables.get("token"));
@@ -47,8 +44,6 @@ public class EmailerServiceImpl implements EmailerService {
             model.put("token", variables.get("token"));
         } else if ((Boolean)variables.get("requestPasswordChange")) {
             model.put("password", variables.get("password"));
-        } else if ((Boolean)variables.get("isUsernameChange")) {
-            model.put("username", variables.get("username"));
         }
 
         context.setVariables(model);
@@ -66,10 +61,7 @@ public class EmailerServiceImpl implements EmailerService {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.put("isRegisterConfirmation", false);
         dataModel.put("isResendConfirmation", false);
-        dataModel.put("isDeleted", false);
         dataModel.put("requestPasswordChange", false);
-        dataModel.put("isUsernameChange", false);
-        dataModel.put("isPasswordChange", false);
 
         return dataModel;
     }
