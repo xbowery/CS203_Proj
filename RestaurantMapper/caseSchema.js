@@ -4,11 +4,10 @@ const mongoose = require("mongoose");
 
 const caseSchema = new mongoose.Schema(
   {
-    name: {
+    region: {
       type: String,
       required: true,
     },
-    location: 
     numCase: Number,
   },
   {
@@ -16,11 +15,5 @@ const caseSchema = new mongoose.Schema(
     minimize: false,
   }
 );
-
-const polygonSchema = new mongoose.Schema({
-  
-})
-
-
 
 module.exports = mongoose.model("Case", caseSchema);

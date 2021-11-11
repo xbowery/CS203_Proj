@@ -5,7 +5,8 @@ const Case = require("./caseSchema");
 const cron = require("node-cron");
 const axios = require("axios").default;
 
-const Util = require("./util.js");
+const mapper = require("./utils/mapper.js");
+const Util = require("./utils/util.js");
 const util = new Util();
 
 const TOKEN = process.env.ONEMAP_APIKEY;
@@ -34,14 +35,57 @@ module.exports.loadWebpage = async (req, res, next) => {
 module.exports.insertRestaurant = async (req, res, next) => {
   try {
     const { name, location: loc, description } = req.body;
-    const latLong = await getLatLong(loc);
-    const region = await getRegion(latLong);
-    const _id = await Case.findOne({ region }, "_id").exec();
-    res.json(_id);
+    const { LATITUDE: lat, LONGITUDE: long } = await getLatLong(loc);
+    const region = mapper.getSubzoneAtPoint([long, lat]).properties.name;
+
+    try {
+      const _id = await Case.findOne({ region }, "_id").exec();
+
+      if (!_id) {
+        return res.status(404).json({ error: "Restaurant location not found" });
+      }
+
+      const restaurant = {
+        name,
+        description,
+        loc,
+        region: _id,
+        location: {
+          type: "Point",
+          coordinates: [long, lat],
+        },
+      };
+
+      const restaurantObj = await insertRestaurantIntoDB(restaurant);
+      res.status(200).json({ success: true, restaurant: restaurantObj });
+    } catch (err) {
+      console.error(err);
+    }
   } catch (err) {
     console.error(err);
     next(err);
   }
+};
+
+/**
+ * Insert the restaurant into the DB
+ */
+const insertRestaurantIntoDB = async (restaurant) => {
+  const { name, loc, region } = restaurant;
+  return await Restaurant.findOneAndUpdate(
+    {
+      name,
+      loc,
+      region,
+    },
+    {
+      restaurant,
+    },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
 };
 
 /**
@@ -63,19 +107,6 @@ const getLatLong = async (loc) => {
     }
 
     return results[0];
-  } catch (err) {
-    console.error(err);
-    throw new Error(err);
-  }
-};
-
-const getRegion = async (latLong) => {
-  try {
-    const { LATITUDE: lat, LONGITUDE: long } = latLong;
-    const res = await axios.get(
-      `${ONEMAP_URI}/privateapi/popapi/getPlanningarea?token=${TOKEN}&lat=${lat}&lng=${long}`
-    );
-    return res.data[0].pln_area_n;
   } catch (err) {
     console.error(err);
     throw new Error(err);

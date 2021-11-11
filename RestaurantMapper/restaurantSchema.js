@@ -25,6 +25,10 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    loc: {
+      type: String,
+      required: true,
+    },
     region: [
       {
         type: Schema.Types.ObjectId,
