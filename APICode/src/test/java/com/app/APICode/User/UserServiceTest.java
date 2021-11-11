@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.emailer.EmailerServiceImpl;
+import com.app.APICode.user.EmailNotFoundException;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
 import com.app.APICode.user.UserNotFoundException;
