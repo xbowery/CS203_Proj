@@ -326,7 +326,7 @@ public class CtestIntegrationTest {
     }
 
     @Test
-    void updateInvalidCtest_NormalUser_Foribdden() throws URISyntaxException {
+    void updateInvalidCtest_NormalUser_Forbidden() throws URISyntaxException {
         URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/" + ctestID);
 
         RequestSpecification request = RestAssured.given();
