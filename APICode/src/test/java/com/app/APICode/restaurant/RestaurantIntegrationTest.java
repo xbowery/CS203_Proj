@@ -133,7 +133,6 @@ public class RestaurantIntegrationTest {
 	void tearDown(){
 		// clear the database after each test
 		users.deleteAll();
-        restaurants.deleteAll();
 	}
 
     @Test

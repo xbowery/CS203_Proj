@@ -5,14 +5,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
-import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,23 +27,33 @@ public class UserServiceImpl implements UserService {
   
     EmailerServiceImpl emailerService;
 
-
     RandomPassword randomPasswordGenerator;
 
     BCryptPasswordEncoder encoder;
 
-    public static final String TOKEN_INVALID = "invalidToken";
-    public static final String TOKEN_EXPIRED = "expired";
-    public static final String TOKEN_VALID = "valid";
+    @Autowired
+    public void setUsers(UserRepository users) {
+        this.users = users;
+    }
 
     @Autowired
-    public UserServiceImpl(UserRepository users, EmailerServiceImpl emailerService,
-            RandomPassword randomPasswordGenerator, BCryptPasswordEncoder encoder, NotificationService notificationService) {
-        this.users = users;
-        this.emailerService = emailerService;
-        this.randomPasswordGenerator = randomPasswordGenerator;
-        this.encoder = encoder;
+    public void setNotificationService(NotificationService notificationService) {
         this.notificationService = notificationService;
+    }
+
+    @Autowired
+    public void setEmailerService(EmailerServiceImpl emailerService) {
+        this.emailerService = emailerService;
+    }
+
+    @Autowired
+    public void setRandomPasswordGenerator(RandomPassword randomPasswordGenerator) {
+        this.randomPasswordGenerator = randomPasswordGenerator;
+    }
+
+    @Autowired
+    public void setEncoder(BCryptPasswordEncoder encoder) {
+        this.encoder = encoder;
     }
 
     @Override
