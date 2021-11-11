@@ -30,6 +30,9 @@ public class UserDTO {
     @Schema(description = "Name of the business User work at.", required = true)
     private String company;
 
+    @Schema(description = "Vaccination Status of User.", required = true, hidden = true)
+    private boolean isVaccinated ;
+
     /**
      * Reduce information contained in the User class for transmission
      * 
@@ -44,6 +47,7 @@ public class UserDTO {
         userDTO.firstName = user.getFirstName();
         userDTO.lastName = user.getLastName();
         userDTO.isEnabled = user.isEnabled();
+        userDTO.isVaccinated = user.getIsVaccinated();
         if (user.getEmployee() != null) {
             userDTO.company = user.getEmployee().getRestaurant().getName();
         }
@@ -113,5 +117,13 @@ public class UserDTO {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public boolean getIsVaccinated(){
+        return this.isVaccinated;
+    }
+
+    public void setIsVaccinated(boolean isVaccinated){
+        this.isVaccinated = isVaccinated;
     }
 }

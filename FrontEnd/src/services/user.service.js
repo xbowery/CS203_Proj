@@ -90,12 +90,14 @@ class UserService {
   }
   updateUser(user) {
     return api.put(
-      `/users/${user.username}`,
+      `/users`,
       {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        authorities: user.authorities,
+        role: user.role,
+        username: user.username,
+        isVaccinated: user.isVaccinated,
       },
       JSON_HEADER,
     )

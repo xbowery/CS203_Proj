@@ -25,7 +25,10 @@
       <v-form class="multi-col-validation mt-6">
         <v-row>
           <v-col md="6" cols="12">
-            <v-text-field v-model="user.username" label="Username" dense outlined></v-text-field>
+            <v-text-field v-model="user.username" :disabled=true label="Username" dense outlined></v-text-field>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="user.email" :disabled=true label="E-mail" dense outlined></v-text-field>
           </v-col>
 
           <v-col md="6" cols="12">
@@ -37,20 +40,13 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="user.email" label="E-mail" dense outlined></v-text-field>
+            <v-text-field v-model="user.role" :disabled=true dense label="Role" outlined></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="user.phone" outlined dense label="Phone Number"></v-text-field>
+            <v-select :items="dropdown_vaccinated" v-model="user.isVaccinated" dense outlined label="Vaccinated?"></v-select>
           </v-col>
 
-          <v-col cols="12" md="6">
-            <v-text-field v-model="user.role" dense label="Role" outlined></v-text-field>
-          </v-col>
-
-          <v-col cols="12" md="6">
-            <v-text-field v-model="accountDataLocale.company" dense outlined label="Company"></v-text-field>
-          </v-col>
 
           <!-- alert
           <v-col cols="12">
@@ -71,7 +67,7 @@
           </v-col> -->
 
           <v-col cols="12">
-            <v-btn color="primary" class="me-3 mt-4"> Save changes </v-btn>
+            <v-btn color="primary" class="me-3 mt-4" @click="updateUser()"> Save changes </v-btn>
             <v-btn color="secondary" outlined class="mt-4" type="reset" @click.prevent="resetForm"> Cancel </v-btn>
           </v-col>
         </v-row>
@@ -87,6 +83,10 @@ import UserService from '@/services/user.service'
 import TokenService from '@/services/token.service'
 
 export default {
+  data: () => ({
+    dropdown_vaccinated: [{text: true}, { text: false}],
+  }),
+
   props: {
     accountData: {
       type: Object,
@@ -95,10 +95,18 @@ export default {
   },
   async beforeMount(){
      const username = TokenService.getUser().username
-      console.log(username)
       const res = await UserService.getUserDetails(username)
       this.user = res.data
-      console.log(res.data)
+  },
+  methods:{
+    async updateUser(){
+      try {
+        const res = await UserService.updateUser(this.user)
+        console.log(res.data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
   },
   setup(props) {
     const accountDataLocale = ref(JSON.parse(JSON.stringify(props.accountData)))
