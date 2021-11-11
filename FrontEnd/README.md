@@ -1,4 +1,4 @@
-# covid-suisse
+# swisshack
 
 ## Project Requirements
 
