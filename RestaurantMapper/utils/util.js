@@ -33,6 +33,43 @@ function Util() {
       };
     });
   };
+
+  /**
+   * Utility to create a feature collection. This is best supported by leaflet js
+   * Ref: https://datatracker.ietf.org/doc/html/rfc7946#section-3.3
+   *
+   * @param {*} restaurant
+   * @returns
+   */
+  this.createFeatureCollection = (restaurants) => {
+    const featuresArr = this.createFeatures(restaurants);
+
+    return {
+      type: "FeatureCollection",
+      features: featuresArr,
+    };
+  };
+
+  /**
+   * Utility to create an array of features.
+   * Ref: https://datatracker.ietf.org/doc/html/rfc7946#section-3.2
+   * @param {*} restaurant
+   */
+  this.createFeatures = (restaurants) => {
+    return restaurants.map((restaurant) => {
+      const { location: geometry, loc, name, region, description } = restaurant;
+      return {
+        type: "Feature",
+        properties: {
+          name,
+          loc,
+          description,
+          caseNo: region.numCase,
+        },
+        geometry,
+      };
+    });
+  };
 }
 
 module.exports = Util;

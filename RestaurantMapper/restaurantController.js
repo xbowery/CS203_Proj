@@ -26,6 +26,9 @@ module.exports.loadWebpage = async (req, res, next) => {
 
 module.exports.getRestaurants = async (req, res, next) => {
   try {
+    const allRestaurants = await Restaurant.find().populate("region");
+    const featureCollection = util.createFeatureCollection(allRestaurants);
+    res.json(featureCollection);
   } catch (err) {
     console.error(err);
     next(err);
