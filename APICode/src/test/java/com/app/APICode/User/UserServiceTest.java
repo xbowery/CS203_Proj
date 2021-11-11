@@ -130,8 +130,7 @@ public class UserServiceTest {
 
         // Assert
         verify(users).findByUsername(user.getUsername());
-        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(),
-                user2.getUsername());
+        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getIsVaccinated(), user.getUsername());
     }
 
     @Test
