@@ -70,7 +70,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
     public UserDTO getUser(Principal principal, @PathVariable String username) {
-       return userService.getUserDetailsByUsername(principal.getName(), username);
+        return userService.getUserDetailsByUsername(principal.getName(), username);
     }
 
     /**
@@ -132,7 +132,8 @@ public class UserController {
      * @param payload the request parameter
      */
     @Operation(summary = "Reset Password", description = "Resets user's password by their email", tags = { "User" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
@@ -160,17 +161,6 @@ public class UserController {
     public void register(@Valid @RequestBody User newUser) {
         Boolean isAdmin = false;
         userService.addUser(newUser, isAdmin);
-    }
-
-    /**
-     * Function to call to confirm a user's registration
-     * 
-     * @param token
-     * @return
-     */
-    @GetMapping("/registrationConfirm")
-    public String confirmRegistration(@RequestParam("token") final String token) {
-        return userService.validateVerificationToken(token);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

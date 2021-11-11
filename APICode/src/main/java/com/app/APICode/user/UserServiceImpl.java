@@ -1,16 +1,10 @@
 package com.app.APICode.user;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.mail.MessagingException;
-
-import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
@@ -18,7 +12,6 @@ import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +21,6 @@ import org.springframework.util.StringUtils;
 public class UserServiceImpl implements UserService {
 
     private UserRepository users;
-
-    private VerificationTokenRepository vTokens;
 
     EmailerServiceImpl emailerService;
 
@@ -42,11 +33,9 @@ public class UserServiceImpl implements UserService {
     public static final String TOKEN_VALID = "valid";
 
     @Autowired
-    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
-            EmailerServiceImpl emailerService, RandomPassword randomPasswordGenerator,
-            BCryptPasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository users, EmailerServiceImpl emailerService,
+            RandomPassword randomPasswordGenerator, BCryptPasswordEncoder encoder) {
         this.users = users;
-        this.vTokens = vTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
@@ -67,11 +56,13 @@ public class UserServiceImpl implements UserService {
         return UserDTO.convertToUserDTO(user);
     }
 
-    @Override 
+    @Override
     public UserDTO getUserDetailsByUsername(String requesterUsername, String username) {
         User requester = users.findByUsername(requesterUsername).orElse(null);
 
-        if (!(requesterUsername.equals(username)) && !((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1]).equals("ADMIN"))) {
+        if (!(requesterUsername.equals(username))
+                && !((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1])
+                        .equals("ADMIN"))) {
             throw new UserForbiddenException("You are forbidden from processing this request.");
         }
 
@@ -98,61 +89,6 @@ public class UserServiceImpl implements UserService {
             throw new EmailNotFoundException(email);
         }
         return user;
-    }
-
-    @Override
-    public VerificationToken getVerificationToken(final String VerificationToken) {
-        return vTokens.findByToken(VerificationToken).orElse(null);
-    }
-
-    @Override
-    public VerificationToken createVerificationTokenForUser(final User user, final String token) {
-        final VerificationToken myToken = new VerificationToken(token, user);
-        return vTokens.save(myToken);
-    }
-
-    @Override
-    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
-        VerificationToken vToken = vTokens.findByToken(existingVerificationToken).orElse(null);
-        vToken.updateToken(UUID.randomUUID().toString());
-        return vTokens.save(vToken);
-    }
-
-    /**
-     * Add logic to validate verification token by calculating the expiry date of
-     * token
-     */
-    @Override
-    public String validateVerificationToken(String token) {
-        final VerificationToken vToken = getVerificationToken(token);
-        if (vToken == null) {
-            return TOKEN_INVALID;
-        }
-
-        final User user = vToken.getUser();
-        final Calendar cal = Calendar.getInstance();
-        if ((vToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            VerificationToken newVToken = generateNewVerificationToken(token);
-
-            Map<String, Object> dataModel = emailerService.getDataModel();
-            dataModel.put("isResendConfirmation", true);
-            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + newVToken);
-
-            // try {
-            // emailerService.sendMessage(user.getEmail(), dataModel);
-            // } catch (MessagingException e) {
-            // System.out.println("Error occurred while trying to send an email to: " +
-            // user.getEmail());
-            // } catch (IOException e) {
-            // System.out.println("Error occurred while trying to send an email to: " +
-            // user.getEmail());
-            // }
-            
-            return TOKEN_EXPIRED;
-        }
-        user.setEnabled(true);
-        users.save(user);
-        return TOKEN_VALID;
     }
 
     /**
@@ -197,8 +133,9 @@ public class UserServiceImpl implements UserService {
         // user.getEmail());
         // }
 
+        final VerificationToken vToken = new VerificationToken(token, user);
+        user.setvToken(vToken);
         User savedUser = users.save(user);
-        createVerificationTokenForUser(savedUser, token);
 
         return convertToUserDTO(savedUser);
     }
@@ -207,7 +144,8 @@ public class UserServiceImpl implements UserService {
     public void updateUserByUsername(String username, UserDTO newUserInfo) {
         User user = getUserByUsername(username);
 
-        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN")) && !(username.equals(newUserInfo.getUsername()))) {
+        if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN"))
+                && !(username.equals(newUserInfo.getUsername()))) {
             throw new UserForbiddenException("You are forbidden from processing this request.");
         }
 
@@ -248,7 +186,6 @@ public class UserServiceImpl implements UserService {
         } catch (EmailNotFoundException e) {
             throw new NoContentResponse();
         }
-        
 
         String tempPassword = randomPasswordGenerator.generatePassayPassword();
         Map<String, Object> dataModel = emailerService.getDataModel();
@@ -270,12 +207,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(String username) {
-        if(users.existsByUsername(username)) {
-            User user = users.findByUsername(username).orElse(null);
-            final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
-            if (verificationToken != null) {
-                vTokens.delete(verificationToken);
-            }
+        if (users.existsByUsername(username)) {
             users.deleteByUsername(username);
             return;
         }
@@ -284,16 +216,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePasswordByUsername(String username, ChangePasswordMessage message) {
-        if(!message.getNewPassword().equals(message.getCfmPassword())) {
+        if (!message.getNewPassword().equals(message.getCfmPassword())) {
             throw new InvalidChangePasswordException("New Password and Confirm Password does not match.");
         }
 
         User user = getUserByUsername(username);
-        if(!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
+        if (!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
             throw new InvalidChangePasswordException("Current Password does not match.");
         }
 
-        if(message.getCurrentPassword().equals(message.getCfmPassword())) {
+        if (message.getCurrentPassword().equals(message.getCfmPassword())) {
             throw new InvalidChangePasswordException("Please change to a new password instead.");
         }
 
