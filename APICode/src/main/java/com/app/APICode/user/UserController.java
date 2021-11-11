@@ -70,7 +70,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
     public UserDTO getUser(Principal principal, @PathVariable String username) {
-       return userService.getUserDetailsByUsername(principal.getName(), username);
+        return userService.getUserDetailsByUsername(principal.getName(), username);
     }
 
     /**
@@ -130,7 +130,8 @@ public class UserController {
      * @param payload the request parameter
      */
     @Operation(summary = "Reset Password", description = "Resets user's password by their email", tags = { "User" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
         String email = "";
@@ -167,13 +168,24 @@ public class UserController {
      * Function to call to confirm a user's registration
      * 
      * @param token
-     * @return
+     * @return registration confirmation
      */
+    @Operation(summary = "Get user's registration", description = "Get registration confirmation of User", security = @SecurityRequirement(name = "bearerAuth"), tags = {"User" })
+    @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Successful retrieval of registration confirmation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/registrationConfirm")
     public String confirmRegistration(@RequestParam("token") final String token) {
         return userService.validateVerificationToken(token);
     }
 
+    /**
+     * Retrieve the user information by username and 
+     * change the password of the user
+     * 
+     * @return user with updated password
+     */
+    @Operation(summary = "Change User password", tags = { "User" })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful change password") })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("users/password")
     public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
