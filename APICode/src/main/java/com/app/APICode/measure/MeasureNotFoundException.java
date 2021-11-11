@@ -8,6 +8,6 @@ public class MeasureNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public MeasureNotFoundException(String measureType) {
-        super("Could not find measure on: " + measureType);
+        super("Could not find measure with measure type: " + measureType);
     }
 }
