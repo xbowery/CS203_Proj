@@ -3,6 +3,7 @@ name: Vue Deployment
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build_and_deploy:

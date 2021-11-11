@@ -3,6 +3,7 @@ name: APICode deployment
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   AZURE_WEBAPP_NAME: swisshack

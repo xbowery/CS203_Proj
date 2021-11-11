@@ -3,6 +3,7 @@ name: News API deployment
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 defaults:
   run:

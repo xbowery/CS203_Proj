@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
             name = "SMU CS203 G2T4"
         )
     ),
-    servers = @Server(url = "http://localhost:8080/api/v1")
+    servers = @Server(url = "https://swisshack.azurewebsites.net/api/v1")
 )
 @SecurityScheme(
     name = "bearerAuth",
