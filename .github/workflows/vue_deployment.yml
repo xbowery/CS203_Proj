@@ -1,12 +1,8 @@
 name: Vue Deployment
+
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, reopened]
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
   build_and_deploy:
