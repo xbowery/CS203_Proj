@@ -171,7 +171,7 @@ public class UserController {
     /**
      * Function to call to confirm a user's registration
      * 
-     * @param token
+     * @param token registration token
      * @return registration confirmation
      */
     @Operation(summary = "Get user's registration", description = "Get registration confirmation of User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
@@ -186,6 +186,7 @@ public class UserController {
     /**
      * Retrieve the user information by username and change the password of the user
      * 
+     * @param message message displayed to user upon password change
      * @return user with updated password
      */
     @Operation(summary = "Change User password", tags = { "User" })

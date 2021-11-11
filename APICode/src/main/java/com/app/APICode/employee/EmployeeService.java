@@ -2,7 +2,6 @@ package com.app.APICode.employee;
 
 import java.util.List;
 
-import com.app.APICode.ctest.Ctest;
 import com.app.APICode.user.User;
 
 public interface EmployeeService {
