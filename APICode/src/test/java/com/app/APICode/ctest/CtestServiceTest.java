@@ -3,6 +3,7 @@ package com.app.APICode.ctest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -238,6 +239,32 @@ public class CtestServiceTest {
 
     }
 
-  
+    @Test
+    void getEmployeeCtest_ValidEmployee_ReturnList() {
+        ctestService.setEmployees(employees);
 
+        //Arrange
+        User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
+        Restaurant restaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
+        restaurant.setTestFrequency(7);
+        Employee employee = new Employee(user, "HR Manager");
+        employee.setRestaurant(restaurant);
+
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        Ctest ctest = new Ctest("PCR",date,"Negative");
+        ctest.setEmployee(employee);
+        List<Ctest> allctests = new ArrayList<Ctest>();
+        allctests.add(ctest);
+        employee.setCtests(allctests);
+        user.setEmployee(employee);
+        user.setAuthorities("ROLE_EMPLOYEE");
+
+        when(employees.getEmployeeByUsername(any(String.class))).thenReturn(employee);
+
+        // Act
+        List<Ctest> employeeCtest = ctestService.getAllCtestsByUsername(user.getUsername());
+
+        // Arrange
+        assertNotNull(employeeCtest);
+    }
 }

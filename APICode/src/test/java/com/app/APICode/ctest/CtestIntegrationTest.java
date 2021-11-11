@@ -444,4 +444,38 @@ public class CtestIntegrationTest {
 
         assertEquals(403, ctestListResponse.getStatusCode());
     }
+
+    @Test
+    void getAllEmployeeCtest_ValidBusinessOwner_ReturnList() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/allctests");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.get(uriCtest);
+
+        List<String> typeList = new ArrayList<>();
+        typeList.add("ART");
+
+        List<String> resultList = new ArrayList<>();
+        resultList.add("Negative");
+
+        assertEquals(200, ctestListResponse.getStatusCode());
+        assertEquals(typeList, JsonPath.from(ctestListResponse.getBody().asString()).get("type"));
+        assertEquals(resultList, JsonPath.from(ctestListResponse.getBody().asString()).get("result"));
+    }
+
+    @Test
+    void getAllEmployeeCtest_InvalidBusinessOwner_ReturnException() throws URISyntaxException {
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/allctests");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedEmployee1).header("Content-Type", "application/json");
+
+        Response ctestListResponse = request.get(uriCtest);
+
+        assertEquals(403, ctestListResponse.getStatusCode());
+    }
 }
