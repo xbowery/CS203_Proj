@@ -11,6 +11,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Date;
 import java.util.Optional;
 
 import com.app.APICode.emailer.EmailerService;
@@ -233,22 +234,20 @@ public class UserServiceTest {
         verify(users).findByEmail(email);
     }
 
-    // @Test
-    // void getToken_ValidVerificationToken_ReturnToken() {
-    //     // Arrange
-    //     User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
-    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+    @Test
+    void getToken_ValidVerificationToken_ReturnToken() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
+        VerificationToken vToken = new VerificationToken("validToken", user);
+        when(vTokens.findByToken(vToken.getToken())).thenReturn(Optional.of(vToken));
 
-    //     // Act
-    //     String token = "validToken";
-    //     VerificationToken vTokenSaved = userService.createVerificationTokenForUser(user, token);
-    //     VerificationToken vToken = userService.getVerificationToken(token);
+        // Act
+        VerificationToken vTokenObtained = userService.getVerificationToken(vToken.getToken());
 
-    //     // Assert
-    //     assertNotNull(vToken);
-    //     verify(users).findByUsername(user.getUsername());
-    //     verify(vTokens).save(vToken);
-    // }
+        // Assert
+        assertNotNull(vTokenObtained);
+        verify(vTokens).findByToken(vToken.getToken());
+    }
 
     @Test
     void getToken_InvalidVerificationToken_ReturnNull() {
@@ -262,5 +261,52 @@ public class UserServiceTest {
         // Assert
         assertNull(vToken);
         verify(vTokens, never()).save(vToken);
+    }
+
+    @Test
+    void validateVerificationToken_ValidToken_ReturnValid() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
+        VerificationToken vToken = new VerificationToken("validToken", user);
+        when(vTokens.findByToken(vToken.getToken())).thenReturn(Optional.of(vToken));
+
+        // Act
+        String result = userService.validateVerificationToken(vToken.getToken());
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("valid", result);
+        verify(vTokens).findByToken(vToken.getToken());
+    }
+
+    // @Test
+    // void validateVerificationToken_ExpiredToken_ReturnExpired() {
+    //     // Arrange
+    //     User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
+    //     VerificationToken vToken = new VerificationToken("expiredToken", user);
+    //     vToken.setExpiryDate(new Date(System.currentTimeMillis()));
+    //     when(vTokens.save(any(VerificationToken.class))).thenReturn(vToken);
+
+    //     // Act
+    //     String result = userService.validateVerificationToken(vToken.getToken());
+
+    //     // Assert
+    //     assertNotNull(result);
+    //     assertEquals("expired", result);
+    //     verify(vTokens).save(vToken);
+    // }
+
+    @Test
+    void validateVerificationToken_InvalidToken_ReturnInvalid() {
+        // Arrange
+        String token = "nosuchtoken";
+        when(vTokens.findByToken(token)).thenReturn(Optional.empty());
+
+        // Act
+        String result = userService.validateVerificationToken(token);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("invalidToken", result);
     }
 }
