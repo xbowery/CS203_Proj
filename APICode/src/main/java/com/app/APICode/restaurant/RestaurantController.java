@@ -55,7 +55,8 @@ public class RestaurantController {
          */
         @Operation(summary = "Get Restaurant", description = "Get Restaurant by id", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Restaurant" })
-        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))) })
+        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))),
+                        @ApiResponse(responseCode = "404", description = "Restaurant does not exists"), })
         @GetMapping("/restaurants/{id}")
         public Restaurant getRestaurant(@PathVariable long id) {
                 return restaurantService.getRestaurantById(id);
@@ -63,7 +64,10 @@ public class RestaurantController {
 
         @Operation(summary = "Get Restaurant managed by User", description = "Get Restaurant that belongs to User according to Credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Restaurant" })
-        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))) })
+        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))),
+                        @ApiResponse(responseCode = "404", description = "User does not exists"),
+                        @ApiResponse(responseCode = "404", description = "Employee does not exists"),
+                        @ApiResponse(responseCode = "404", description = "Restaurant does not exists"), })
         @GetMapping("/restaurants/user/{username}")
         public Restaurant getRestaurant(@PathVariable(value = "username") String username) {
                 return restaurantService.getRestaurantByUsername(username);
@@ -79,7 +83,8 @@ public class RestaurantController {
          */
         @Operation(summary = "Add new restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Restaurant" })
-        @ApiResponses({ @ApiResponse(responseCode = "201", description = "Successful created new Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))), })
+        @ApiResponses({ @ApiResponse(responseCode = "201", description = "Successful created new Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))),
+                        @ApiResponse(responseCode = "409", description = "Duplicate Restaurant "), })
         @ResponseStatus(HttpStatus.CREATED)
         @PostMapping("/restaurants")
         public Restaurant addRestaurant(@Valid @RequestBody Restaurant restaurant) {
@@ -98,7 +103,8 @@ public class RestaurantController {
          */
         @Operation(summary = "Update Restaurant information", description = "Updates Restaurants infomation with the provided ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Restaurant" })
-        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful updated Restaurant information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))), })
+        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful updated Restaurant information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))),
+                        @ApiResponse(responseCode = "409", description = "Duplicate Restaurant"), })
         @PutMapping("/restaurants/{id}")
         public Restaurant updateRestaurant(@PathVariable long id, @Valid @RequestBody Restaurant updatedRestaurant) {
                 return restaurantService.updateRestaurant(id, updatedRestaurant);
@@ -113,7 +119,8 @@ public class RestaurantController {
          */
         @Operation(summary = "Delete Restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Restaurant" })
-        @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted Restaurant", content = @Content) })
+        @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted Restaurant", content = @Content),
+                        @ApiResponse(responseCode = "404", description = "Restaurant does not exists"), })
         @DeleteMapping("/restaurants/{id}")
         public void deleteRestaurant(@PathVariable long id) {
                 restaurantService.removeById(id);
