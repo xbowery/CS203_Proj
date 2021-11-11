@@ -8,6 +8,9 @@ const axios = require("axios").default;
 const Util = require("./util.js");
 const util = new Util();
 
+const TOKEN = process.env.ONEMAP_APIKEY;
+const ONEMAP_URI = "https://developers.onemap.sg";
+
 /**
  * Loads the main webpage to render the restaurants in a nice looking map using OneMap API
  *
@@ -29,8 +32,54 @@ module.exports.loadWebpage = async (req, res, next) => {
  * @param {*} next
  */
 module.exports.insertRestaurant = async (req, res, next) => {
-  await getCovidData();
-  res.json({ Success: true });
+  try {
+    const { name, location: loc, description } = req.body;
+    const latLong = await getLatLong(loc);
+    const region = await getRegion(latLong);
+    const _id = await Case.findOne({ region }, "_id").exec();
+    res.json(_id);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+/**
+ * Retrieve from the OneMap API the latitude and longitude of the restaurant. If there are no location found,
+ * we will ignore the insert. If found, we will use the first entry returned since it is likely the most accurate
+ *
+ * @param {*} loc
+ */
+const getLatLong = async (loc) => {
+  try {
+    const res = await axios.get(
+      `${ONEMAP_URI}/commonapi/search?searchVal=${loc}&returnGeom=Y&getAddrDetails=N`
+    );
+
+    const { found, results } = res.data;
+
+    if (found === 0) {
+      return;
+    }
+
+    return results[0];
+  } catch (err) {
+    console.error(err);
+    throw new Error(err);
+  }
+};
+
+const getRegion = async (latLong) => {
+  try {
+    const { LATITUDE: lat, LONGITUDE: long } = latLong;
+    const res = await axios.get(
+      `${ONEMAP_URI}/privateapi/popapi/getPlanningarea?token=${TOKEN}&lat=${lat}&lng=${long}`
+    );
+    return res.data[0].pln_area_n;
+  } catch (err) {
+    console.error(err);
+    throw new Error(err);
+  }
 };
 
 /**
@@ -43,11 +92,13 @@ const getCovidData = async () => {
     await updateDBCovidFigures(calcAggOutput.sz.aggregatedObj);
   } catch (err) {
     console.error(err);
+    throw new Error(err);
   }
 };
 
 /**
  * To iterate through the object and update the database accordingly.
+ * A bulkWrite function call is used to optimise database saving.
  *
  * @param {*} figures
  */

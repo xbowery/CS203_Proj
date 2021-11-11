@@ -36,6 +36,9 @@ app.use(cors());
 
 //Routes with the default path added
 app.use("/public", express.static(process.cwd() + "/public"));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.use("/", router);
 
 mongoose.connection.on("error", (err) => {
