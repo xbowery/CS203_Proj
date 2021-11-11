@@ -1,7 +1,6 @@
 package com.app.APICode.user;
 
 import com.app.APICode.verificationtoken.VerificationToken;
-import com.app.APICode.passwordresettoken.PasswordResetToken;
 import com.app.APICode.user.message.ChangePasswordMessage;
 
 import java.util.List;
@@ -37,80 +36,12 @@ public interface UserService {
 
     /**
      * Gets the User associated with the given "email" If no User found, throw a
-     * {@link UserNotFoundException}
+     * {@link EmailNotFoundException}
      * 
      * @param email a String containing the email
-     * @return an User object
      */
     User getUserByEmail(String email);
-
-    /**
-     * Get the User associated with the specified "verificationToken"
-     * 
-     * @param verificationToken a String containing the token
-     * @return an User object
-     */
-    User getUserByVerificationToken(String verificationToken);
-
-    /**
-     * Gets the VerificationToken object specified by the given "verificationToken"
-     * 
-     * @param VerificationToken a String containing the token
-     * @return a VerificationToken object
-     */
-    VerificationToken getVerificationToken(String verificationToken);
-
-    /**
-     * Saves a VerificationToken for the specified "user" with the specified
-     * "token".
-     * 
-     * @param user  a User Object
-     * @param token a string containing the token
-     */
-    void createVerificationTokenForUser(User user, String token);
-
-    /**
-     * Updates an existing VerificationToken specified by
-     * "existingVerificationToken" with a new token
-     * 
-     * @param existingVerificationToken
-     * @return
-     */
-    VerificationToken generateNewVerificationToken(String existingVerificationToken);
-
-    /**
-     * Validates and return the status of the VerificationToken specified by "token"
-     * 
-     * @param token
-     * @return a string of the status of the VerificationToken
-     */
-    String validateVerificationToken(String token);
-
-    /**
-     * Creates a PasswordReset entry for the specified "User" with the specified
-     * "token".
-     * 
-     * @param user  an User Object
-     * @param token a String containing the token for Password Reset
-     */
-    void createPasswordResetTokenForUser(User user, String token);
-
-    /**
-     * Gets the PasswordResetToken specified by the "token"
-     * 
-     * @param token a String containing the token.
-     * @return a PasswordResetToken object
-     */
-    PasswordResetToken getPasswordResetToken(String token);
-
-    /**
-     * Get the User associated the the specified Password Reset "token"
-     * 
-     * @param token a String containing the token for Password Reset
-     * @return a User Object
-     */
-    User getUserByPasswordResetToken(String token);
-
+    
     /**
      * Creates a new user with the given "user" and "isAdmin" to determine the role
      * of the new user. If new email or username exists, throw a
@@ -130,7 +61,7 @@ public interface UserService {
      * @param user     a UserDTO object containning the new info to be updated
      * @return an updated UserDTO
      */
-    UserDTO updateUserByUsername(String username, UserDTO user);
+    void updateUserByUsername(String username, UserDTO user);
 
     /**
      * Updates the User password with the given "email". If no User is found, throw

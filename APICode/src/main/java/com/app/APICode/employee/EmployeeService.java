@@ -2,7 +2,8 @@ package com.app.APICode.employee;
 
 import java.util.List;
 
-import com.app.APICode.user.User;
+import com.app.APICode.ctest.Ctest;
+import com.app.APICode.user.UserDTO;
 
 public interface EmployeeService {
     /**
@@ -12,7 +13,7 @@ public interface EmployeeService {
      * @param username a string containing the Business owner's username
      * @return a list of User
      */
-    List<User> getAllEmployeesByBusinessOwner(String username);
+    List<UserDTO> getAllEmployeesByBusinessOwner(String username);
 
     /**
      * Gets an employee with the specified "username"
@@ -21,6 +22,8 @@ public interface EmployeeService {
      * @return an Employee object
      */
     Employee getEmployeeByUsername(String username);
+
+    Employee getEmployeeDetailsByUsername(String requesterUsername, String employeeUsername);
 
     /**
      * Creates an Employee object for the user with specified "username" with the
@@ -50,4 +53,14 @@ public interface EmployeeService {
      * 
      */
     void deleteEmployee(String username);
+
+    /**
+     * Gets all {@link Ctest} for employees working in the business with the
+     * specified business's owner "username"
+     * 
+     * @param username
+     * @return
+     */
+    List<Ctest> getAllEmployeesCtest(String username);
+    
 }

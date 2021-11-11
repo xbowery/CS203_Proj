@@ -1,5 +1,6 @@
 package com.app.APICode.crowdlevel;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,9 +63,9 @@ public class CrowdLevelController {
         @ApiResponse(responseCode = "404", description = "Restaurant does not exist", content = @Content),
         @ApiResponse(responseCode = "404", description = "Cannot find CrowdLevel with the following Restaurant name", content = @Content)
     })
-    @GetMapping("/restaurants/{username}/crowdLevel")
-    public List<CrowdLevel> getCrowdLevelByRestaurant(@PathVariable (value = "username") String username) {
-        return crowdLevelService.listCrowdLevelByEmployee(username);
+    @GetMapping("/restaurants/crowdLevel")
+    public List<CrowdLevel> getCrowdLevelByRestaurant(Principal principal) {
+        return crowdLevelService.listCrowdLevelByEmployee(principal.getName());
     }
 
     /**
@@ -80,31 +81,10 @@ public class CrowdLevelController {
         @ApiResponse(responseCode = "404", description = "Restaurant does not exist", content = @Content) 
     })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/restaurants/{id}/crowdLevel")
-    public CrowdLevel addCrowdLevel(@PathVariable Long id, @Valid @RequestBody CrowdLevel crowdLevel) {
-        return crowdLevelService.addCrowdLevel(id, crowdLevel);
-    }
-
-    /**
-     * Update crowd level
-     * If there is no crowd level with the given datetime, throw CrowdLevelNotFoundException
-     * @param crowdLevelDateTime the datetime of the measure
-     * @param newCrowdLevel a CrowdLevel object containing the new crowd level to be updated
-     * @return the updated CrowdLevel object
-     */
-    @Operation(summary = "Update the crowd level object", description = "Update the specific crowd level object by provided ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-        "Crowd Levels" })
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Successful updated Crowd Level object", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CrowdLevel.class)))),
-        @ApiResponse(responseCode = "404", description = "Restaurant does not exist", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Cannot find CrowdLevel with the following id", content = @Content)
-    })
-    @PutMapping("/restaurants/{id}/crowdLevel/{crowdLevelId}")
-    public CrowdLevel updateCrowdLevel(@PathVariable Long id,
-    @PathVariable Long crowdLevelId, @RequestBody CrowdLevel newCrowdLevel){
-        return crowdLevelService.updateCrowdLevel(id, crowdLevelId, newCrowdLevel);
-    }
-
+    @PostMapping("/restaurants/crowdLevel")
+    public CrowdLevel addCrowdLevel(Principal principal, @Valid @RequestBody CrowdLevel crowdLevel) {
+        return crowdLevelService.addCrowdLevel(principal.getName(), crowdLevel);
+    } 
 }
 
 

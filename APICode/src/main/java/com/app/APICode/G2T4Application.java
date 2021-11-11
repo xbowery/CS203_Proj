@@ -44,13 +44,6 @@ public class G2T4Application {
 		user.setEnabled(true);
 		users.save(user);
 
-		// Business owner
-		// User business_owner = new User("user2@test.com", "BusinessOne", "Business", "One",
-		// 		encoder.encode("testing12345"), false, "ROLE_BUSINESS");
-		// business_owner.setEnabled(true);
-		// users.save(business_owner);
-
-
 		// Restaurant
 		RestaurantRepository restaurants = ctx.getBean(RestaurantRepository.class);
 		Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast Food Chain", 50);

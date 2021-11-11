@@ -49,20 +49,13 @@ class UserService {
     const request = `restaurants/user/${username}`
     return api.get(request)
   }
-  getCrowdLevels() {
-    return api.get('restaurants/crowdLevels')
-  }
-  getCrowdLevel(username) {
-    const request = `restaurants/${username}/crowdLevel`
+  getCrowdLevel() {
+    const request = `restaurants/crowdLevel`
     return api.get(request)
   }
-  postCrowdLevel(id, crowdLevel) {
-    const request = `restaurants/${id}/crowdLevel`
+  postCrowdLevel(crowdLevel) {
+    const request = `restaurants/crowdLevel`
     return api.post(request, crowdLevel)
-  }
-  updateCrowdLevel(restaurantId, crowdLevelId, crowdLevel) {
-    const request = `/restaurants/${restaurantId}/crowdLevel/${crowdLevelId}`
-    return api.put(request, crowdLevel)
   }
   getCtests() {
     const request = `/users/employee/ctests`

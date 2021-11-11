@@ -1,18 +1,15 @@
 package com.app.APICode.ctest;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import com.app.APICode.employee.Employee;
-import com.app.APICode.employee.EmployeeForbiddenException;
-import com.app.APICode.employee.EmployeeNotFoundException;
 import com.app.APICode.employee.EmployeeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CtestServiceImpl implements CtestService {
@@ -55,12 +52,18 @@ public class CtestServiceImpl implements CtestService {
     }
 
     @Override
-    public Ctest deleteCtestByCtestIdAndUsername(String username, Long ctestId) {
+    @Transactional
+    public void deleteCtestByCtestIdAndUsername(String username, Long ctestId) {
         Employee employee = employees.getEmployeeByUsername(username);
-        return ctests.findByIdAndEmployeeId(ctestId, employee.getId()).map(ctest -> {
-            ctests.delete(ctest);
-            return ctest;
-        }).orElseThrow(() -> new CtestNotFoundException(ctestId));
+
+        Long employeeId = employee.getId();
+        
+        if (ctests.existsByIdAndEmployeeId(ctestId, employeeId)) {
+            ctests.deleteById(ctestId);
+            return;
+        }
+
+        throw new CtestNotFoundException(ctestId);
     }
 
     @Override
@@ -80,29 +83,9 @@ public class CtestServiceImpl implements CtestService {
         } else {
             return new java.sql.Date(Calendar.getInstance().getTime().getTime());
         }
-        Calendar c = Calendar.getInstance();
-        c.setTime(latestTest);
-        c.add(Calendar.DATE, testFrequency);
-        return new Date(c.getTimeInMillis());
-    }
-
-    @Override
-    public List<Ctest> getAllEmployeesCtest(String username) {
-        List<Ctest> allCtests = new ArrayList<Ctest>();
-
-        Employee owner = employees.getEmployeeByUsername(username);
-        if (owner == null) {
-            throw new EmployeeNotFoundException(username);
-        } else if (!(StringUtils.collectionToCommaDelimitedString(owner.getUser().getAuthorities()).split("_")[1].equals("BUSINESS"))) {
-            throw new EmployeeForbiddenException("You are forbidden from processing this request.");
-        }
-
-        List<Employee> employees = owner.getRestaurant().getEmployees();
-        for (Employee e : employees) {
-            if(e.getCtests().size() > 0){
-                allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
-            }
-        }
-        return allCtests;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(latestTest);
+        calendar.add(Calendar.DATE, testFrequency);
+        return  new Date(calendar.getTimeInMillis());
     }
 }

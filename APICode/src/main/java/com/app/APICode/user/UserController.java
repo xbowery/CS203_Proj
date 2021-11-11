@@ -107,9 +107,10 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Requester does not have enough privilege", content = @Content),
             @ApiResponse(responseCode = "409", description = "Conflicting email", content = @Content), })
     @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/users")
-    public UserDTO updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
-        return userService.updateUserByUsername(principal.getName(), newUserInfo);
+    public void updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
+        userService.updateUserByUsername(principal.getName(), newUserInfo);
     }
 
     /**
@@ -122,6 +123,7 @@ public class UserController {
     @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content),
             @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content), })
     @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
@@ -137,6 +139,7 @@ public class UserController {
     @Operation(summary = "Reset Password", description = "Resets user's password by their email", tags = { "User" })
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
         String email = "";
@@ -168,21 +171,6 @@ public class UserController {
     }
 
     /**
-     * Function to call to confirm a user's registration
-     * 
-     * @param token registration token
-     * @return registration confirmation
-     */
-    @Operation(summary = "Get user's registration", description = "Get registration confirmation of User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-            "User" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful retrieval of registration confirmation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
-    @GetMapping("/registrationConfirm")
-    public String confirmRegistration(@RequestParam("token") final String token) {
-        return userService.validateVerificationToken(token);
-    }
-
-    /**
      * Retrieve the user information by username and change the password of the user
      * 
      * @param message message displayed to user upon password change
@@ -193,7 +181,7 @@ public class UserController {
     @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful change password"),
             @ApiResponse(responseCode = "400", description = "New password and Confirm Password or Current Password does not match"), })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("users/password")
+    @PostMapping("/users/password")
     public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
         userService.changePasswordByUsername(principal.getName(), message);
     }

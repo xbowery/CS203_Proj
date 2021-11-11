@@ -93,5 +93,4 @@ public class CrowdLevel {
         this.noOfCustomers = noOfCustomers;
         this.restaurant = restaurant;
     }
-
 }

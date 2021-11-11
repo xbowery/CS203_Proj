@@ -60,9 +60,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    // public List<Restaurant> listRestaurants() {
-    //     return restaurants.findAll();
-    // }
+
     public List<RestaurantDTO> listRestaurants() {
         List<Restaurant> restaurantsList = restaurants.findAll();
         return restaurantsList.stream().map(this::convertToRestaurantDTO).collect(Collectors.toList());
@@ -92,9 +90,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant updateRestaurant(long id, Restaurant updatedRestaurant) {
         Restaurant restaurant = restaurants.findById(id).orElse(null);
-        if (restaurant == null)
+        if (restaurant == null) 
             throw new RestaurantNotFoundException(updatedRestaurant.getId());
-
+        
         restaurant.setName(updatedRestaurant.getName());
         restaurant.setLocation(updatedRestaurant.getLocation());
         restaurant.setCuisine(updatedRestaurant.getCuisine());
@@ -108,11 +106,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional
     public void removeById(long id) {
-        try {
+        if(restaurants.existsById(id)) {
             restaurants.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new RestaurantNotFoundException(id);
+            return;
         }
+        throw new RestaurantNotFoundException(id);
     }
 
     public Restaurant getRestaurantByUsername(String username) {

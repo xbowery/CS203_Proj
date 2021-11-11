@@ -13,4 +13,5 @@ public interface MeasureRepository extends JpaRepository<Measure, Long> {
 
         void deleteByMeasureType(String measureType);
 
+        boolean existsByMeasureType(String measureType);
 }

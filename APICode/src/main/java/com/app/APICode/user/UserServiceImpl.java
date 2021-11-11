@@ -1,8 +1,5 @@
 package com.app.APICode.user;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,28 +9,21 @@ import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.notification.NotificationService;
-
-import com.app.APICode.passwordresettoken.PasswordResetToken;
-import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private UserRepository users;
-
-    private VerificationTokenRepository vTokens;
-
-    private PasswordResetTokenRepository pTokens;
 
     private NotificationService notificationService;
   
@@ -49,12 +39,9 @@ public class UserServiceImpl implements UserService {
     public static final String TOKEN_VALID = "valid";
 
     @Autowired
-    public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
-            PasswordResetTokenRepository pTokens, EmailerServiceImpl emailerService, RandomPassword randomPasswordGenerator,
-            BCryptPasswordEncoder encoder, NotificationService notificationService) {
+    public UserServiceImpl(UserRepository users, EmailerServiceImpl emailerService,
+            RandomPassword randomPasswordGenerator, BCryptPasswordEncoder encoder, NotificationService notificationService) {
         this.users = users;
-        this.vTokens = vTokens;
-        this.pTokens = pTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
@@ -76,11 +63,13 @@ public class UserServiceImpl implements UserService {
         return UserDTO.convertToUserDTO(user);
     }
 
-    @Override 
+    @Override
     public UserDTO getUserDetailsByUsername(String requesterUsername, String username) {
         User requester = users.findByUsername(requesterUsername).orElse(null);
 
-        if (!(requesterUsername.equals(username)) && !((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1]).equals("ADMIN"))) {
+        if (!(requesterUsername.equals(username))
+                && !((StringUtils.collectionToCommaDelimitedString(requester.getAuthorities()).split("_")[1])
+                        .equals("ADMIN"))) {
             throw new UserForbiddenException("You are forbidden from processing this request.");
         }
 
@@ -109,76 +98,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         User user = users.findByEmail(email).orElse(null);
         if (user == null) {
-            throw new UserNotFoundException(email);
+            throw new EmailNotFoundException(email);
         }
         return user;
-    }
-
-    @Override
-    public User getUserByVerificationToken(String verificationToken) {
-        final VerificationToken token = vTokens.findByToken(verificationToken).orElse(null);
-        if (token != null) {
-            return token.getUser();
-        }
-        return null;
-    }
-
-    @Override
-    public VerificationToken getVerificationToken(final String VerificationToken) {
-        return vTokens.findByToken(VerificationToken).orElse(null);
-    }
-
-    @Override
-    public void createVerificationTokenForUser(final User user, final String token) {
-        final VerificationToken myToken = new VerificationToken(token, user);
-        vTokens.save(myToken);
-    }
-
-    @Override
-    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
-        VerificationToken vToken = vTokens.findByToken(existingVerificationToken).orElse(null);
-        vToken.updateToken(UUID.randomUUID().toString());
-        vToken = vTokens.save(vToken);
-        return vToken;
-    }
-
-    /**
-     * Add logic to validate verification token by calculating the expiry date of
-     * token.
-     */
-    @Override
-    public String validateVerificationToken(String token) {
-        final VerificationToken vToken = vTokens.findByToken(token).orElse(null);
-        if (vToken == null) {
-            return TOKEN_INVALID;
-        }
-
-        final User user = vToken.getUser();
-        final Calendar cal = Calendar.getInstance();
-        if ((vToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            vTokens.delete(vToken);
-            return TOKEN_EXPIRED;
-        }
-        user.setEnabled(true);
-        users.save(user);
-
-        return TOKEN_VALID;
-    }
-
-    @Override
-    public void createPasswordResetTokenForUser(final User user, final String token) {
-        final PasswordResetToken myToken = new PasswordResetToken(token, user);
-        pTokens.save(myToken);
-    }
-
-    @Override
-    public PasswordResetToken getPasswordResetToken(final String token) {
-        return pTokens.findByToken(token);
-    }
-
-    @Override
-    public User getUserByPasswordResetToken(final String token) {
-        return pTokens.findByToken(token).getUser();
     }
 
     /**
@@ -224,9 +146,9 @@ public class UserServiceImpl implements UserService {
         // user.getEmail());
         // }
 
+        final VerificationToken vToken = new VerificationToken(token, user);
+        user.setvToken(vToken);
         User savedUser = users.save(user);
-        VerificationToken vToken = new VerificationToken(token, user);
-        vTokens.save(vToken);
 
         String notificationText = String.format("Welcome to Swisshack, %s!", savedUser.getUsername());
         notificationService.addNewNotification(notificationText, savedUser);
@@ -235,7 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUserByUsername(String username, UserDTO newUserInfo) {
+    public void updateUserByUsername(String username, UserDTO newUserInfo) {
         User user = getUserByUsername(username);
 
         if (!((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN"))
@@ -260,21 +182,9 @@ public class UserServiceImpl implements UserService {
             String email = newUserInfo.getEmail();
             users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
         }
-        else{
+        else {
             users.setUserInfoByUsername(firstName, lastName, isVaccinated, newUserInfo.getUsername());
         }
-
-
-
-        // user.setPassword(encoder.encode(newUserInfo.getPassword()));
-        // user.setUsername(newUserInfo.getUsername());
-        // user.setIsVaccinated(newUserInfo.getIsVaccinated());
-        // user.setAuthorities(newUserInfo.getAuthorities());
-
-
-        User savedUser = getUserByUsername(newUserInfo.getUsername());
-        return convertToUserDTO(savedUser);
-
     }
 
     @Override
@@ -286,9 +196,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createTempPassword(String email) throws EmailNotFoundException {
-        if (users.findByEmail(email) == null) {
-            throw new EmailNotFoundException(email);
+    public void createTempPassword(String email) {
+        try {
+            getUserByEmail(email);
+        } catch (EmailNotFoundException e) {
+            throw new NoContentResponse();
         }
 
         String tempPassword = randomPasswordGenerator.generatePassayPassword();
@@ -309,30 +221,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String username) {
-        User user = getUserByUsername(username);
-
-        try {
-            final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
-            if (verificationToken != null) {
-                vTokens.delete(verificationToken);
-            }
-
+        if (users.existsByUsername(username)) {
             users.deleteByUsername(username);
-        } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(username);
+            return;
         }
+        throw new UserNotFoundException(username);
     }
 
     @Override
     public void changePasswordByUsername(String username, ChangePasswordMessage message) {
-        if(!message.getNewPassword().equals(message.getCfmPassword())) {
-            throw new InvalidChangePasswordException("New Password and Confirm Password");
+        if (!message.getNewPassword().equals(message.getCfmPassword())) {
+            throw new InvalidChangePasswordException("New Password and Confirm Password does not match.");
         }
 
         User user = getUserByUsername(username);
-        if(!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidChangePasswordException("Current Password");
+        if (!encoder.matches(message.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidChangePasswordException("Current Password does not match.");
+        }
+
+        if (message.getCurrentPassword().equals(message.getCfmPassword())) {
+            throw new InvalidChangePasswordException("Please change to a new password instead.");
         }
 
         String encodedPassword = encoder.encode(message.getNewPassword());

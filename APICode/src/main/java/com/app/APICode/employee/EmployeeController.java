@@ -7,7 +7,7 @@ import javax.validation.Valid;
 
 import com.app.APICode.employee.message.RequestMessage;
 import com.app.APICode.employee.message.UsernameMessage;
-import com.app.APICode.user.User;
+import com.app.APICode.user.UserDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -108,21 +108,38 @@ public class EmployeeController {
                 return employeeService.approveEmployee(message.getUsername());
         }
 
-        /**
-         * Get user by username set its authorities to "ROLE_USER" get the employee set
-         * the employee restraunt to null set the user employee to null
-         * 
-         * return the deleted user
-         * 
-         * @param username username of employee
-         * @return deleted employee
-         */
-        @Operation(summary = "Delete Employee information", description = "Delete Employee information by the Owner or the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-                        "Employee" })
-        @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted Employee data", content = @Content), })
-        @ResponseStatus(HttpStatus.NO_CONTENT)
-        @DeleteMapping("/users/employee/{username}")
-        public void deleteEmployee(@PathVariable(value = "username") String username) {
-                employeeService.deleteEmployee(username);
-        }
+    /**
+     * Get user by username set its authorities to "ROLE_USER" get the employee set
+     * the employee restaurant to null set the user employee to null
+     * 
+     * return the deleted user
+     * 
+     * @param username username of employee
+     * @return deleted employee
+     */
+    @Operation(summary = "Delete Employee information", description = "Delete Employee information by the Owner or the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful deleted Employee data", content = @Content), })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/users/employee/{username}")
+    public void deleteEmployee(@PathVariable(value = "username") String username) {
+        employeeService.deleteEmployee(username);
+    }
+
+    /**
+     * List latest ctests of employees in a particular business
+     * 
+     * @param principal name of the user logged in currently
+     * @return list of ctest of employees in a particular business
+     */
+    @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/employee/{username}/ctests")
+    public List<Ctest> getAllEmployeesCtest(@PathVariable String username) {
+        return employeeService.getAllEmployeesCtest(username);
+    }
 }
