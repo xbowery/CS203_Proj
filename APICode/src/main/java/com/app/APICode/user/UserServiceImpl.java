@@ -97,11 +97,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         User user = users.findByEmail(email).orElse(null);
         if (user == null) {
             throw new EmailNotFoundException(email);
         }
+        return user;
     }
 
     @Override
@@ -265,7 +266,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createTempPassword(String email) {
         try {
-            getUserByEmail(email);
+            User user = getUserByEmail(email);
         } catch (EmailNotFoundException e) {
             throw new NoContentResponse();
         }
