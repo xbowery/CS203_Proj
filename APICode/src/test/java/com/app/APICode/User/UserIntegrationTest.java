@@ -11,7 +11,6 @@ import com.app.APICode.templates.LoginDetails;
 import com.app.APICode.templates.TokenDetails;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
-import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -51,9 +50,6 @@ public class UserIntegrationTest {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
-
-    @Autowired
-    private VerificationTokenRepository vTokens;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -455,46 +451,6 @@ public class UserIntegrationTest {
 
         assertEquals(204, registerUser1Response.getStatusCode());
         assertEquals(409, registerUser2Response.getStatusCode());
-    }
-
-    @Test
-    public void invalidVerificationToken() throws Exception {
-        URI uriRegistrationConfirmation = new URI(baseUrl + port + "/api/v1/registrationConfirm");
-
-        RequestSpecification request = RestAssured.given();
-
-        Response invalidTokenResponse = request.get(uriRegistrationConfirmation + "?token=1234");
-
-        assertEquals(200, invalidTokenResponse.getStatusCode());
-        assertEquals("invalidToken", invalidTokenResponse.getBody().asString());
-    }
-
-    @Test
-    public void validVerificationToken() throws Exception {
-        URI uriRegistrationConfirmation = new URI(baseUrl + port + "/api/v1/registrationConfirm");
-        URI uriRegister = new URI(baseUrl + port + "/api/v1/register");
-
-        String newUserDetails = "{\r\n" + "  \"email\": \"testuser6@test.com\",\r\n"
-                + "  \"username\": \"testuser6\",\r\n" + "  \"firstName\": \"Test6\",\r\n"
-                + "  \"lastName\": \"User\",\r\n" + "  \"password\": \"password123\"\r\n" + "}";
-
-        RequestSpecification request = RestAssured.given();
-
-        request.header("Content-Type", "application/json");
-
-        Response registerUserResponse = request.body(newUserDetails).post(uriRegister);
-
-        User user = users.findByUsername("testuser6").orElse(null);
-
-        String vToken = (vTokens.findByUser(user).orElse(null)).getToken();
-
-        Response validTokenResponse = request.get(uriRegistrationConfirmation + "?token=" + vToken);
-
-        assertEquals(204, registerUserResponse.getStatusCode());
-        assertNotNull(user);
-        assertNotNull(vToken);
-        assertEquals(200, validTokenResponse.getStatusCode());
-        assertEquals("valid", validTokenResponse.getBody().asString());
     }
 
     @Test
