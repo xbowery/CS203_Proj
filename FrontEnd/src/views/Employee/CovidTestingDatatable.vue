@@ -47,7 +47,7 @@
                           :items="dropdown_type"
                           v-model="editedItem.type"
                           :error-messages="errors[0]"
-                          label="Select Type of Test"
+                          label="Select type of test"
                           required
                         ></v-select>
                       </validation-provider>
