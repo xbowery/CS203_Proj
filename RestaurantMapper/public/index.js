@@ -30,12 +30,14 @@ onemap.removeLayer(map, removeLayer);
 
 //Setup configuration for REST API Services (Your Access Token)
 //Our Documentation @  https://docs.onemap.sg
-// onemap.config(
-//   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjgxNjEsInVzZXJfaWQiOjgxNjEsImVtYWlsIjoieWluZ2tlYXR3b25AZ21haWwuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNjM2NTI1Nzk0LCJleHAiOjE2MzY5NTc3OTQsIm5iZiI6MTYzNjUyNTc5NCwianRpIjoiOWZjMzg0Njc2NTViM2RjMjc5ZGYxN2U1NWY4ZjFiZjEifQ.KYtmL1fJ-RBzisSM-9co064qA7CtUll-pteib4-_jwA"
-// );
+onemap.config(
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjgxNjEsInVzZXJfaWQiOjgxNjEsImVtYWlsIjoieWluZ2tlYXR3b25AZ21haWwuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNjM2NTI1Nzk0LCJleHAiOjE2MzY5NTc3OTQsIm5iZiI6MTYzNjUyNTc5NCwianRpIjoiOWZjMzg0Njc2NTViM2RjMjc5ZGYxN2U1NWY4ZjFiZjEifQ.KYtmL1fJ-RBzisSM-9co064qA7CtUll-pteib4-_jwA"
+);
 
 axios
-  .get("http://localhost:3002/api/v1/restaurants")
+  .get(
+    "https://swisshack-restaurantmapper.azurewebsites.net/api/v1/restaurants"
+  )
   .then((res) => {
     addPinsToMap(res.data);
   })

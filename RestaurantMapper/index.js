@@ -8,11 +8,8 @@ const app = express();
 
 const mongoose = require("mongoose");
 
-// Set DEV tools
-if (process.env.NODE_ENV !== "test") {
-  mongoose.set("debug", true);
-  app.use(morgan("tiny"));
-}
+mongoose.set("debug", true);
+app.use(morgan("tiny"));
 
 // Connect to the MongoDB interface and logs for current and future errors
 mongoose
@@ -30,7 +27,7 @@ mongoose
   );
 
 // Basic Configuration
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 80;
 
 app.use(cors());
 
