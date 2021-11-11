@@ -1,13 +1,15 @@
 package com.app.APICode.restaurant;
 
 public class RestaurantDTO {
-        private String name;
-        private String location;
-        private String cuisine;
-        private String description;
-        private int maxCapacity;
-        private String crowdLevel;
-        private String imageUrl;
+
+    private long id;
+    private String name;
+    private String location;
+    private String cuisine;
+    private String description;
+    private int maxCapacity;
+    private String crowdLevel;
+    private String imageUrl;
 
     /**
      * Reduce information contained in the Restaurant class for transmission
@@ -17,6 +19,7 @@ public class RestaurantDTO {
      */
     public static RestaurantDTO convertToRestaurantDTO (Restaurant restaurant) {
         RestaurantDTO restaurantDTO = new RestaurantDTO();
+        restaurantDTO.id = restaurant.getId();
         restaurantDTO.name = restaurant.getName();
         restaurantDTO.location = restaurant.getLocation();
         restaurantDTO.cuisine = restaurant.getCuisine();
@@ -70,5 +73,13 @@ public class RestaurantDTO {
 
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
