@@ -49,12 +49,7 @@
         <v-row class="match-height">
           <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
             <v-card>
-              <v-img
-                class="misc-tree"
-                :src="getImgUrl(item)"
-                align="center"
-                justify="center"
-              ></v-img>
+              <v-img class="misc-tree" :src="getImgUrl(item)" align="center" justify="center" height="200"></v-img>
               <v-card-title class="subheading font-weight-bold">
                 {{ item.name }}
               </v-card-title>
@@ -171,9 +166,9 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number
     },
-    getImgUrl(item){
+    getImgUrl(item) {
       return require(`@/assets/images/misc/${item.imageUrl}`)
-    }
+    },
   },
 }
 </script>
