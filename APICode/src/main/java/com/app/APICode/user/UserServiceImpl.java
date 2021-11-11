@@ -97,11 +97,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         User user = users.findByEmail(email).orElse(null);
         if (user == null) {
             throw new EmailNotFoundException(email);
         }
+        return user;
     }
 
     @Override

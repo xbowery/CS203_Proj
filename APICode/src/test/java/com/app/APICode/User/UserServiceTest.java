@@ -124,16 +124,6 @@ public class UserServiceTest {
     //     verify(users).findByUsername(user2.getUsername());
     // }
 
-    // @Test
-    // void getUser_ValidUser_ReturnUser() {
-
-    // }
-
-    // @Test
-    // void getUser_InvalidUser_ReturnNull() {
-
-    // }
-
     @Test
     void deleteUser_ValidUser_ReturnNull() {
         // Arrange
@@ -162,5 +152,63 @@ public class UserServiceTest {
 
         //Assert
         assertEquals(notFoundException.getMessage(), "Could not find user with username: " + username);
+    }
+
+    @Test
+    void getUserByUsername_ValidUser_ReturnUser() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
+        when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+
+        // Act
+        User userReceived = userService.getUserByUsername(user.getUsername());
+
+        // Assert
+        assertEquals(user.getUsername(), userReceived.getUsername());
+        verify(users).findByUsername(user.getUsername());
+    }
+
+    @Test
+    void getUserByUsername_InvalidUser_ReturnNull() {
+        // Arrange
+        String username = "username";
+        when(users.findByUsername(username)).thenReturn(Optional.empty());
+
+        // Act
+        UserNotFoundException notFoundException = assertThrows(UserNotFoundException.class, () -> {
+            userService.getUserByUsername(username);
+        });
+
+        // Assert
+        assertEquals(notFoundException.getMessage(), "Could not find user with username: " + username);
+        verify(users).findByUsername(username);
+    }
+
+    @Test
+    void getUserByEmail_ValidUser_ReturnUser() {
+        User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
+        when(users.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        // Act
+        User userReceived = userService.getUserByEmail(user.getEmail());
+
+        // Assert
+        assertEquals(user.getEmail(), userReceived.getEmail());
+        verify(users).findByEmail(user.getEmail());
+    }
+
+    @Test
+    void getUserByEmail_InvalidUser_ReturnNull() {
+        String email = "nosuchuser@test.com";
+        when(users.findByEmail(email)).thenReturn(Optional.empty());
+
+        // Act
+        EmailNotFoundException notFoundException = assertThrows(EmailNotFoundException.class, () -> {
+            userService.getUserByEmail(email);
+        });
+
+        // Assert
+        assertEquals(notFoundException.getMessage(), "This email does not exist: " + email);
+        verify(users).findByEmail(email);
     }
 }
