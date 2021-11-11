@@ -1,8 +1,10 @@
 package com.app.APICode.employee;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantNotFoundException;
@@ -97,8 +99,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = user.getEmployee();
 
         user.setAuthorities("ROLE_EMPLOYEE");
-
-        Employee employee = user.getEmployee();
         employee.setStatus("Approved");
 
         users.save(user);

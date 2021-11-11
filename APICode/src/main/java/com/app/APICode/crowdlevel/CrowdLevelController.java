@@ -36,19 +36,6 @@ public class CrowdLevelController {
     }
 
     /**
-     * List the latest crowd levels by datetime and restaurant in the system
-     * @return list of latest crowd levels
-     */
-    @Operation(summary = "Get all restaurants latest crowd levels", description = "Get all latest crowd levels for all restaurants", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-        "Crowd Levels" })
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CrowdLevel.class)))) })
-    @GetMapping("restaurants/crowdLevels")
-    public List<CrowdLevel> getCrowdLevels(){
-        return crowdLevelService.listAllCrowdLevels();
-    }
-
-    /**
      * Search for the crowd level of a restaurant with the given restaurant id
      * 
      * @param id restaurant id

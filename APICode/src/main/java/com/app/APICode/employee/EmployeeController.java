@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.app.APICode.ctest.Ctest;
 import com.app.APICode.employee.message.RequestMessage;
 import com.app.APICode.employee.message.UsernameMessage;
 import com.app.APICode.user.UserDTO;
@@ -48,7 +49,7 @@ public class EmployeeController {
         @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
         @ResponseStatus(HttpStatus.OK)
         @GetMapping("/employees")
-        public List<User> getEmployees(Principal principal) {
+        public List<UserDTO> getEmployees(Principal principal) {
                 return employeeService.getAllEmployeesByBusinessOwner(principal.getName());
         }
 
