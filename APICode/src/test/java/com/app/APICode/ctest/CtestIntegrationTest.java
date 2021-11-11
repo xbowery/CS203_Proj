@@ -385,7 +385,7 @@ public class CtestIntegrationTest {
 
     @Test
     void getNextCtestEmployee_Has1Ctest_Success() throws URISyntaxException {
-        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/next");
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/newemployee/ctests/next");
 
         RequestSpecification request = RestAssured.given();
 
@@ -401,7 +401,7 @@ public class CtestIntegrationTest {
 
     @Test
     void getNextCtestEmployee_HasMultipleCtests_Success() throws URISyntaxException {
-        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/next");
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/employee2/ctests/next");
 
         RequestSpecification request = RestAssured.given();
 
@@ -417,7 +417,7 @@ public class CtestIntegrationTest {
 
     @Test
     void getNextCtestEmployee_HasNoCtests_Success() throws URISyntaxException {
-        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/ctests/next");
+        URI uriCtest = new URI(baseUrl + port + "/api/v1/users/employee/employee3/ctests/next");
 
         RequestSpecification request = RestAssured.given();
 
