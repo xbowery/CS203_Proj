@@ -51,7 +51,7 @@ public class MeasureServiceImpl implements MeasureService {
 
         if (measure == null)
             throw new MeasureNotFoundException(updatedMeasure.getMeasureType());
-
+            
         measure.setDateUpdated(LocalDate.now());
         measure.setMeasureType(updatedMeasure.getMeasureType());
         measure.setMaxCapacity(updatedMeasure.getMaxCapacity());
@@ -63,11 +63,11 @@ public class MeasureServiceImpl implements MeasureService {
     @Override
     @Transactional
     public void deleteMeasure(String measureType) {
-        try {
+        if (measures.existsByMeasureType(measureType)) {
             measures.deleteByMeasureType(measureType);
-        } catch (EmptyResultDataAccessException e) {
-            throw new MeasureNotFoundException(measureType);
+            return;
         }
+        throw new MeasureNotFoundException(measureType);
     }
 
 }

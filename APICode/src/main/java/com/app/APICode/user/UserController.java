@@ -70,7 +70,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/users/{username}")
     public UserDTO getUser(Principal principal, @PathVariable String username) {
-       return userService.getUserDetailsByUsername(principal.getName(), username);
+        return userService.getUserDetailsByUsername(principal.getName(), username);
     }
 
     /**
@@ -101,11 +101,12 @@ public class UserController {
     @Operation(summary = "Update user information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
+            @ApiResponse(responseCode = "204", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
     @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/users")
-    public UserDTO updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
-        return userService.updateUserByUsername(principal.getName(), newUserInfo);
+    public void updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
+        userService.updateUserByUsername(principal.getName(), newUserInfo);
     }
 
     /**
@@ -117,6 +118,7 @@ public class UserController {
     @Operation(summary = "Delete User", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
     @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content) })
     @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
@@ -130,7 +132,9 @@ public class UserController {
      * @param payload the request parameter
      */
     @Operation(summary = "Reset Password", description = "Resets user's password by their email", tags = { "User" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Successful reset password for User", content = @Content) })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/forgotPassword")
     public void resetPassword(@RequestBody Map<String, String> payload) {
         String email = "";
@@ -138,10 +142,6 @@ public class UserController {
             email = payload.get("email");
         } catch (Exception e) {
             throw new RuntimeException("Invalid request");
-        }
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException(email);
         }
         userService.createTempPassword(email);
     }
@@ -163,19 +163,8 @@ public class UserController {
         userService.addUser(newUser, isAdmin);
     }
 
-    /**
-     * Function to call to confirm a user's registration
-     * 
-     * @param token
-     * @return
-     */
-    @GetMapping("/registrationConfirm")
-    public String confirmRegistration(@RequestParam("token") final String token) {
-        return userService.validateVerificationToken(token);
-    }
-
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("users/password")
+    @PostMapping("/users/password")
     public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
         userService.changePasswordByUsername(principal.getName(), message);
     }

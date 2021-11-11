@@ -125,7 +125,9 @@ export default {
 
     async handlePostCrowdlevel(newCrowd) {
       try {
-        await UserService.postCrowdLevel(this.restaurant.id, newCrowd)
+        console.log(newCrowd)
+        const res = await UserService.postCrowdLevel(newCrowd)
+        console.log(res)
       } catch (error) {
         console.error(error)
       }
@@ -133,7 +135,7 @@ export default {
 
     async handleGetCrowdlevel() {
       try {
-        const res = await UserService.getCrowdLevel(this.username)
+        const res = await UserService.getCrowdLevel()
         this.items = res.data
         if (this.items.length != 0) {
           var latestCrowd = this.items[0]

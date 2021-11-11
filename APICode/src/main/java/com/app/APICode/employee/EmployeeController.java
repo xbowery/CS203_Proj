@@ -8,7 +8,7 @@ import javax.validation.Valid;
 import com.app.APICode.ctest.Ctest;
 import com.app.APICode.employee.message.RequestMessage;
 import com.app.APICode.employee.message.UsernameMessage;
-import com.app.APICode.user.User;
+import com.app.APICode.user.UserDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +50,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/employees")
-    public List<User> getEmployees(Principal principal) {
+    public List<UserDTO> getEmployees(Principal principal) {
         return employeeService.getAllEmployeesByBusinessOwner(principal.getName());
     }
 
@@ -67,9 +67,9 @@ public class EmployeeController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Employee.class))), })
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/users/employee")
-    public Employee getEmployee(Principal principal) {
-        return employeeService.getEmployeeByUsername(principal.getName());
+    @GetMapping("/users/employee/{username}")
+    public Employee getEmployee(Principal principal, @PathVariable String username) {
+        return employeeService.getEmployeeDetailsByUsername(principal.getName(), username);
     }
 
     /**
@@ -79,7 +79,7 @@ public class EmployeeController {
      * 
      * 
      * @param username    username of employee
-     * @param restrauntId id of the restraunt the employee wants to apply to
+     * @param restaurantId id of the restaurant the employee wants to apply to
      * @param designation Designation of the employee
      * @return the newly added employee
      */
@@ -113,7 +113,7 @@ public class EmployeeController {
 
     /**
      * Get user by username set its authorities to "ROLE_USER" get the employee set
-     * the employee restraunt to null set the user employee to null
+     * the employee restaurant to null set the user employee to null
      * 
      * return the deleted user
      * 
@@ -128,5 +128,21 @@ public class EmployeeController {
     @DeleteMapping("/users/employee/{username}")
     public void deleteEmployee(@PathVariable(value = "username") String username) {
         employeeService.deleteEmployee(username);
+    }
+
+    /**
+     * List latest ctests of employees in a particular business
+     * 
+     * @param principal name of the user logged in currently
+     * @return list of ctest of employees in a particular business
+     */
+    @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "Employee" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/employee/{username}/ctests")
+    public List<Ctest> getAllEmployeesCtest(@PathVariable String username) {
+        return employeeService.getAllEmployeesCtest(username);
     }
 }

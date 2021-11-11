@@ -85,7 +85,7 @@ public class User implements UserDetails {
     @Schema(description = "Employee details of User.")
     private Employee employee;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private VerificationToken vToken;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -209,5 +209,13 @@ public class User implements UserDetails {
 
     public void addNotification(Notification notification) {
         notifications.add(notification);
+    }
+
+    public VerificationToken getvToken() {
+        return vToken;
+    }
+
+    public void setvToken(VerificationToken vToken) {
+        this.vToken = vToken;
     }
 }

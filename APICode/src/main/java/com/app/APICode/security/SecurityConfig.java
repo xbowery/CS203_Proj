@@ -44,22 +44,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.GET, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
+                .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.PUT, "/users", "/users/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.PUT, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
+                .antMatchers(HttpMethod.DELETE, "/users/employee/ctests/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
+                .antMatchers(HttpMethod.DELETE, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/users/*").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/users/employee", "/users/password").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
+                .antMatchers(HttpMethod.POST, "/users/employee/**").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE")
 
                 .antMatchers(HttpMethod.GET, "/notifications").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
                 .antMatchers(HttpMethod.PUT, "/notifications", "/notifications/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
 
                 .antMatchers(HttpMethod.POST, "/refreshToken").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/restaurants", "/restaurants/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/restaurants/crowdLevel").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.GET, "/restaurants", "/restaurants/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/restaurants/user/*").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.PUT, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.POST, "/restaurants", "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
                 .antMatchers(HttpMethod.DELETE, "/restaurants/**").hasAnyRole("ADMIN", "BUSINESS")
 
-                .antMatchers(HttpMethod.GET, "/employee").hasAnyRole("ADMIN", "BUSINESS")
-                .antMatchers(HttpMethod.POST, "/employee").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.GET, "/employees").hasAnyRole("ADMIN", "BUSINESS")
+                .antMatchers(HttpMethod.POST, "/employees").hasAnyRole("ADMIN", "BUSINESS")
 
                 .antMatchers(HttpMethod.GET, "/measures", "/measures/*").hasAnyRole("ADMIN", "BUSINESS", "EMPLOYEE", "USER")
                 .antMatchers(HttpMethod.PUT, "/measures").hasRole("ADMIN")
