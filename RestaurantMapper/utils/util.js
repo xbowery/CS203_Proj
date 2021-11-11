@@ -64,7 +64,7 @@ function Util() {
           name,
           loc,
           description,
-          caseNo: region.numCase,
+          numCase: region[0].numCase,
         },
         geometry,
       };

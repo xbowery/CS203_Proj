@@ -1,6 +1,12 @@
-# Restaurant backend microservice
+# Restaurant Mapper microservice
 
-Just a backend API built using [express.js](https://expressjs.com/).
+![Screenshot of restaurant mapper](webpage.png)
+
+## About
+
+This is a project built for G2T4, CS203 project. 
+
+It is a microservice built using [express.js](https://expressjs.com/) and uses the [OneMap API](https://www.onemap.gov.sg/docs/).
 
 ## Installation
 
@@ -12,23 +18,20 @@ npm start
 npm start-windows
 ```
 
-## About
+## Getting Started
 
-This is a project built for G2T4, CS203 project.
+The main website can be accessed at the root of the website.
 
-## API Documentation
+### API Documentation
 
 The following endpoints are available and exposed for users to retrieve related, current and relevant news.
 
 The prefix for all the API URI is `/api/v1`.
 
-| Method | Endpoint     | Body               | Description                       |
-| ------ | ------------ | ------------------ | --------------------------------- |
-| POST   | /restaurants | Restaurant in JSON | Need to have an API key to insert |
-
-## Testing
-
-To run the test suites, run the command `npm test`. Both unit and integration tests will run.
+| Method | Endpoint     | Body               | Description                                                    |
+| ------ | ------------ | ------------------ | -------------------------------------------------------------- |
+| GET    | /restaurants | NIL                | Retrieve all the restaurant data as a FeatureCollection object |
+| POST   | /restaurants | Restaurant in JSON | The Java backend will send a restaurant DTO in JSON            |
 
 ## Production
 

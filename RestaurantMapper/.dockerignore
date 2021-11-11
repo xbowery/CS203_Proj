@@ -3,5 +3,3 @@ Dockerfile
 .gitignore
 README.md
 node_modules
-tests
-coverage

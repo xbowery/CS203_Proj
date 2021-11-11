@@ -9,7 +9,6 @@ const mapper = require("./utils/mapper.js");
 const Util = require("./utils/util.js");
 const util = new Util();
 
-const TOKEN = process.env.ONEMAP_APIKEY;
 const ONEMAP_URI = "https://developers.onemap.sg";
 
 /**
@@ -24,11 +23,19 @@ module.exports.loadWebpage = async (req, res, next) => {
   res.sendFile(process.cwd() + "/views/index.html");
 };
 
+/**
+ * Obtain restaurants in geoJSON format for the front-end to parse
+ * Ref: https://datatracker.ietf.org/doc/html/rfc7946
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 module.exports.getRestaurants = async (req, res, next) => {
   try {
     const allRestaurants = await Restaurant.find().populate("region");
     const featureCollection = util.createFeatureCollection(allRestaurants);
-    res.json(featureCollection);
+    res.status(200).json(featureCollection);
   } catch (err) {
     console.error(err);
     next(err);
@@ -87,7 +94,7 @@ module.exports.insertRestaurant = async (req, res, next) => {
  * Insert the restaurant into the DB
  */
 const insertRestaurantIntoDB = async (restaurant) => {
-  const { name, loc, region, location } = restaurant;
+  const { name, loc, region } = restaurant;
   return await Restaurant.findOneAndUpdate(
     {
       name,
