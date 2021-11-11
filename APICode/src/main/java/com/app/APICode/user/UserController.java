@@ -188,12 +188,10 @@ public class UserController {
      * @param message message displayed to user upon password change
      * @return user with updated password
      */
-    @Operation(summary = "Change User password", tags = { "User" })
-    @ApiResponses({ 
-        @ApiResponse(responseCode = "204", description = "Successful change password"),
-        @ApiResponse(responseCode = "400", description = "New password and Confirm Password does not match", content = @Content), 
-        @ApiResponse(responseCode = "400", description = "Current password does not match", content = @Content), 
-    })
+    @Operation(summary = "Change User password", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "User" })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful change password"),
+            @ApiResponse(responseCode = "400", description = "New password and Confirm Password or Current Password does not match"), })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("users/password")
     public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
