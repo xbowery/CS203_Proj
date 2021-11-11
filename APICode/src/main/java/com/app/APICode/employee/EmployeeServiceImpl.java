@@ -81,7 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         user.setAuthorities("ROLE_EMPLOYEE");
 
         Employee employee = user.getEmployee();
-        employee.setStatus("Active");
+        employee.setStatus("Approved");
 
         users.save(user);
         return employee;
