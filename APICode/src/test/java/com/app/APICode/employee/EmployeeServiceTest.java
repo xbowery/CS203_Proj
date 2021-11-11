@@ -6,25 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.atMost;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import com.app.APICode.ctest.CtestRepository;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantNotFoundException;
-import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.restaurant.RestaurantService;
-import com.app.APICode.restaurant.RestaurantServiceImpl;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
-import com.app.APICode.user.UserRepository;
 import com.app.APICode.user.UserService;
 
 import org.junit.jupiter.api.Test;
@@ -149,7 +142,7 @@ public class EmployeeServiceTest {
     void getEmployeeDetails_InvalidBusinessOwner_ReturnException() {
         // Arrange
         Restaurant testRestaurant = new Restaurant("Subway", "SMU SCIS", "Western", "Fast food chain", 50);
-        Restaurant restaurant = new Restaurant("McDonalds","Raffles City","Western","Fast food chain",50);
+        Restaurant restaurant = new Restaurant("McDonalds", "Raffles City", "Western", "Fast food chain", 50);
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "", false, "ROLE_USER");
         Employee owner = new Employee(user, "Business Owner");
         owner.setRestaurant(restaurant);
@@ -172,12 +165,11 @@ public class EmployeeServiceTest {
         });
 
         // Assert
-        assertEquals(notAllowedException.getMessage(),
-        "You are unauthorised to perform this action.");
+        assertEquals(notAllowedException.getMessage(), "You are unauthorised to perform this action.");
         verify(users).getUserByUsername(user.getUsername());
         verify(users).getUserByUsername(user1.getUsername());
-
     }
+
     @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() {
         // Arrange
@@ -192,8 +184,7 @@ public class EmployeeServiceTest {
         when(users.save(any(User.class))).thenReturn(user);
         when(users.getUserByUsername(any(String.class))).thenReturn(user);
         when(restaurants.getRestaurantById(any(Long.class))).thenReturn(restaurant);
-        when(notifications.addNewEmployeeApprovalNotification(any(String.class), any(Long.class), any(String.class)))
-                .thenReturn(null);
+        when(notifications.addNewEmployeeApprovalNotification(any(String.class), any(Long.class))).thenReturn(null);
         // Act
         Employee savedEmployee = employeeService.addEmployeeToBusiness(user.getUsername(), "Manager", businessId);
 

@@ -119,4 +119,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         user.setEmployee(null);
         users.save(user);
     }
+
+    @Override
+    public List<Ctest> getAllEmployeesCtest(String username) {
+        List<Ctest> allCtests = new ArrayList<Ctest>();
+
+        Employee owner = getEmployeeByUsername(username);
+        List<Employee> employees = owner.getRestaurant().getEmployees();
+        for (Employee e : employees) {
+            if(e.getCtests().size() > 0){
+                allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
+            }
+        }
+        return allCtests;
+    }
+
+    
 }
