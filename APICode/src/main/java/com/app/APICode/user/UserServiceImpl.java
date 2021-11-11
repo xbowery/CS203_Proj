@@ -12,8 +12,6 @@ import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.emailer.EmailerServiceImpl;
-import com.app.APICode.passwordresettoken.PasswordResetToken;
-import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
@@ -33,8 +31,6 @@ public class UserServiceImpl implements UserService {
 
     private VerificationTokenRepository vTokens;
 
-    private PasswordResetTokenRepository pTokens;
-
     EmailerServiceImpl emailerService;
 
     RandomPassword randomPasswordGenerator;
@@ -47,11 +43,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository users, VerificationTokenRepository vTokens,
-            PasswordResetTokenRepository pTokens, EmailerServiceImpl emailerService, RandomPassword randomPasswordGenerator,
+            EmailerServiceImpl emailerService, RandomPassword randomPasswordGenerator,
             BCryptPasswordEncoder encoder) {
         this.users = users;
         this.vTokens = vTokens;
-        this.pTokens = pTokens;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
@@ -120,8 +115,7 @@ public class UserServiceImpl implements UserService {
     public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
         VerificationToken vToken = vTokens.findByToken(existingVerificationToken).orElse(null);
         vToken.updateToken(UUID.randomUUID().toString());
-        vToken = vTokens.save(vToken);
-        return vToken;
+        return vTokens.save(vToken);
     }
 
     /**
@@ -159,22 +153,6 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         users.save(user);
         return TOKEN_VALID;
-    }
-
-    @Override
-    public void createPasswordResetTokenForUser(final User user, final String token) {
-        final PasswordResetToken myToken = new PasswordResetToken(token, user);
-        pTokens.save(myToken);
-    }
-
-    @Override
-    public PasswordResetToken getPasswordResetToken(final String token) {
-        return pTokens.findByToken(token);
-    }
-
-    @Override
-    public User getUserByPasswordResetToken(final String token) {
-        return pTokens.findByToken(token).getUser();
     }
 
     /**

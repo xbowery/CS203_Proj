@@ -1,6 +1,5 @@
 package com.app.APICode.task;
 
-import com.app.APICode.passwordresettoken.PasswordResetTokenRepository;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,12 +15,9 @@ public class TokenPurgingTask {
     
     VerificationTokenRepository vTokens;
 
-    PasswordResetTokenRepository pTokens;
-
     @Autowired
-    public TokenPurgingTask(VerificationTokenRepository vTokens, PasswordResetTokenRepository pTokens) {
+    public TokenPurgingTask(VerificationTokenRepository vTokens) {
         this.vTokens = vTokens;
-        this.pTokens = pTokens;
     }
 
     @Scheduled(cron = "${purging.cron.expression}")
@@ -29,6 +25,5 @@ public class TokenPurgingTask {
         Date now = Date.from(Instant.now());
 
         vTokens.deleteAllExpiredSince(now);
-        pTokens.deleteAllExpiredSince(now);
     }
 }
