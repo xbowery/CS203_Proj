@@ -199,6 +199,7 @@ export default {
     deleteItemConfirm() {
       const deletedRestaurant = this.items[this.editedIndex]
       this.items.splice(this.editedIndex, 1)
+      console.log(deletedRestaurant.id)
       this.handleDeleteRestaurant(deletedRestaurant.id)
 
       if (!this.message) {
