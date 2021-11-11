@@ -113,7 +113,7 @@ public class UserServiceTest {
         User user2 = user;
         user2.setEmail("usertest@test.com");
         ReflectionTestUtils.setField(user2, "id", 1L);
-        
+
         when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         // Act
@@ -122,29 +122,31 @@ public class UserServiceTest {
 
         // Assert
         verify(users).findByUsername(user.getUsername());
-        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(), user2.getUsername());
+        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(),
+                user2.getUsername());
     }
 
-    // @Test
-    // void updateUser_ExistingEmail_ReturnException() {
-    //     // Arrange
-    //     User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
-    //     User user2 = new User("user2@test.com", "user2", "User", "one", "", false, "ROLE_USER");
-    //     ReflectionTestUtils.setField(user2, "id", 1L);
+    @Test
+    void updateUser_ExistingEmail_ReturnException() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        User updatedUser = new User("user2@test.com", "user1", "User", "one", "", false, "ROLE_USER");
 
-    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-    //     when(users.findByUsername(user2.getUsername())).thenReturn(Optional.of(user2));
+        User existingUser = new User("user2@test.com", "existingUser", "User", "one", "", false, "ROLE_USER");
 
-    //     // Act
-    //     user2.setEmail("user@test.com");
-    //     UserOrEmailExistsException existsException = assertThrows(UserOrEmailExistsException.class, () -> {
-    //         userService.updateUserByUsername(user2.getUsername(), UserDTO.convertToUserDTO(user2));
-    //     });
+        when(users.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(users.findByEmail(anyString())).thenReturn(Optional.of(existingUser));
 
-    //     assertEquals(existsException.getMessage(), "This email already exists.");
-    //     verify(users).findByUsername(user.getUsername());
-    //     verify(users).findByUsername(user2.getUsername());
-    // }
+        // Act
+        UserOrEmailExistsException existsException = assertThrows(UserOrEmailExistsException.class, () -> {
+            userService.updateUserByUsername(user.getUsername(), UserDTO.convertToUserDTO(updatedUser));
+        });
+
+        // Assert
+        assertEquals(existsException.getMessage(), "This email already exists.");
+        verify(users).findByUsername(user.getUsername());
+        verify(users).findByEmail(existingUser.getEmail());
+    }
 
     @Test
     void deleteUser_ValidUser_ReturnNull() {
@@ -154,25 +156,25 @@ public class UserServiceTest {
         when(users.existsByUsername(username)).thenReturn(true);
         when(users.findByUsername(username)).thenReturn(Optional.of(user));
 
-        //Act
+        // Act
         userService.deleteUser(username);
-        
-        //Assert 
+
+        // Assert
         verify(users).deleteByUsername(username);
     }
-    
+
     @Test
     void deleteUser_InvalidUser_ReturnError() {
-         // Arrange
-         User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
-         String username = user.getUsername();
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        String username = user.getUsername();
 
-         //Act
-         UserNotFoundException notFoundException = assertThrows(UserNotFoundException.class, () -> {
+        // Act
+        UserNotFoundException notFoundException = assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUser(username);
         });
 
-        //Assert
+        // Assert
         assertEquals(notFoundException.getMessage(), "Could not find user with username: " + username);
     }
 
@@ -281,19 +283,20 @@ public class UserServiceTest {
 
     // @Test
     // void validateVerificationToken_ExpiredToken_ReturnExpired() {
-    //     // Arrange
-    //     User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
-    //     VerificationToken vToken = new VerificationToken("expiredToken", user);
-    //     vToken.setExpiryDate(new Date(System.currentTimeMillis()));
-    //     when(vTokens.save(any(VerificationToken.class))).thenReturn(vToken);
+    // // Arrange
+    // User user = new User("user@test.com", "user1", "User", "One", "", false,
+    // "ROLE_USER");
+    // VerificationToken vToken = new VerificationToken("expiredToken", user);
+    // vToken.setExpiryDate(new Date(System.currentTimeMillis()));
+    // when(vTokens.save(any(VerificationToken.class))).thenReturn(vToken);
 
-    //     // Act
-    //     String result = userService.validateVerificationToken(vToken.getToken());
+    // // Act
+    // String result = userService.validateVerificationToken(vToken.getToken());
 
-    //     // Assert
-    //     assertNotNull(result);
-    //     assertEquals("expired", result);
-    //     verify(vTokens).save(vToken);
+    // // Assert
+    // assertNotNull(result);
+    // assertEquals("expired", result);
+    // verify(vTokens).save(vToken);
     // }
 
     @Test
