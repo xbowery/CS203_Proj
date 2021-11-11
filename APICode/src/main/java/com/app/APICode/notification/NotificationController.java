@@ -60,7 +60,7 @@ public class NotificationController {
      * 
      * @param principal
      */
-    @Operation(summary = "Update all notification status to read", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+    @Operation(summary = "Update single notification status to read", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Notification" })
     @ApiResponse(responseCode = "200", description = "Successful update a single notification to indicate as 'read'")
     @PutMapping("/notifications/{notificationId}")
