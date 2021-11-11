@@ -19,6 +19,7 @@ class UserService {
   }
   readAllNotification() {
     return api.put(`/notifications/all`)
+  }
   getUserDetails(username) {
     const request = `/users/${username}`
     return api.get(request)
