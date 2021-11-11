@@ -46,7 +46,7 @@
         </v-toolbar>
       </template>
       <template v-slot:default="props">
-        <v-row>
+        <v-row class="match-height">
           <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
             <v-card>
               <v-img
