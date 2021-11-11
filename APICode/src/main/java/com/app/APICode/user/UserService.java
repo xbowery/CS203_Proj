@@ -39,7 +39,7 @@ public interface UserService {
      * 
      * @param email a String containing the email
      */
-    User getUserByEmail(String email);
+    void getUserByEmail(String email);
 
     /**
      * Gets the VerificationToken object specified by the given "verificationToken"
