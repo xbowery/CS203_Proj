@@ -135,7 +135,10 @@ public class CtestController {
     @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
         "Employee" })
         @ApiResponses({
-                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))), })
+                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))), 
+                @ApiResponse(responseCode = "404", description = "Cannot find Employee with the following username", content = @Content), 
+                @ApiResponse(responseCode = "403", description = "Employee does not have the privilege", content = @Content), 
+        })
         @ResponseStatus(HttpStatus.OK)
         @GetMapping("/users/employee/allctests")
         public List<Ctest> getAllEmployeesCtest(Principal principal) {
