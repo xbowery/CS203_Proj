@@ -18,6 +18,7 @@
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.boot.test.context.SpringBootTest;
 // import org.springframework.boot.web.server.LocalServerPort;
+// import org.springframework.test.context.ActiveProfiles;
 
 // import io.restassured.RestAssured;
 // import io.restassured.config.JsonConfig;
@@ -33,8 +34,12 @@
 // import javax.mail.internet.MimeMessage;
 
 // @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// @ActiveProfiles("test")
 // @TestInstance(Lifecycle.PER_CLASS)
 // public class EmailerIntegrationTest {
+    
+//     @LocalServerPort
+//     private int port;
 
 //     private final String baseUrl = "http://localhost:";
     
@@ -69,8 +74,8 @@
 // 	}
 
 //     @Test
-//     public void sendEmail_CorrectRegisterPayload_User() throws Exception {
-//         URI uri = new URI(baseUrl + 8080 + "/api/v1/register");
+//     void sendEmail_CorrectRegisterPayload_User() throws Exception {
+//         URI uri = new URI(baseUrl + port + "/api/v1/register");
 
 //         String newUserDetails = "{\r\n" +
 //         "  \"email\": \"duke@spring.io\",\r\n" +
