@@ -10,6 +10,7 @@ import java.util.Date;
 import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.crowdlevel.CrowdLevelRepository;
 import com.app.APICode.ctest.Ctest;
+import com.app.APICode.ctest.CtestRepository;
 import com.app.APICode.ctest.CtestServiceImpl;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
@@ -101,7 +102,7 @@ public class G2T4Application {
 		notifications.addNewNotification(
 				"You have a pending employee request from John Doe. Please review it under your Employee List.", admin);
 		
-    //Measures
+    	//Measures
 		MeasureRepository measures = ctx.getBean(MeasureRepository.class);
 		Measure testMeasureRestaurant = new Measure("Restaurant", 2, true, false);
 		measures.save(testMeasureRestaurant);
@@ -111,6 +112,12 @@ public class G2T4Application {
 		measures.save(testMeasureEvents);
 		Measure testMeasureGathering = new Measure("Gathering", 2, true, true);
 		measures.save(testMeasureGathering);
+
+		//Ctests
+		CtestRepository ctests = ctx.getBean(CtestRepository.class);
+		Ctest testCtest = new Ctest("ART", date, "Negative");
+		testCtest.setEmployee(employee1.getEmployee());
+		ctests.save(testCtest);
 	}
 
 }
