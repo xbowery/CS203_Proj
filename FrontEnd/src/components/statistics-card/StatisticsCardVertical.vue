@@ -42,7 +42,7 @@ export default {
     icon: { type: String, default: '' },
     color: { type: String, default: '' },
     subtitle: { type: String, default: '' },
-    statistics: { type: String, default: '' },
+    statistics: { type: Number, default: 0 },
     change: { type: String, default: '' },
   },
   setup() {

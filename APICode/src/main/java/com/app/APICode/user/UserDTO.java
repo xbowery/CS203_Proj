@@ -1,5 +1,7 @@
 package com.app.APICode.user;
 
+import com.app.APICode.employee.Employee;
+
 import org.springframework.util.StringUtils;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +35,9 @@ public class UserDTO {
     @Schema(description = "Vaccination Status of User.", required = true, hidden = true)
     private boolean isVaccinated ;
 
+    @Schema(description = "Employee details of User")
+    private Employee employee;
+
     /**
      * Reduce information contained in the User class for transmission
      * 
@@ -50,6 +55,7 @@ public class UserDTO {
         userDTO.isVaccinated = user.getIsVaccinated();
         if (user.getEmployee() != null) {
             userDTO.company = user.getEmployee().getRestaurant().getName();
+            userDTO.employee = user.getEmployee();
         }
         userDTO.role = StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1];
         return userDTO;
@@ -126,4 +132,17 @@ public class UserDTO {
     public void setIsVaccinated(boolean isVaccinated){
         this.isVaccinated = isVaccinated;
     }
+
+    public void setVaccinated(boolean isVaccinated) {
+        this.isVaccinated = isVaccinated;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+    
 }

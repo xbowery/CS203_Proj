@@ -71,13 +71,13 @@ export default {
     try {
       const res = await UserService.getEmployees(this.username)
       this.items = res.data
-      this.total_users = this.items.length.toString(10)
+      this.total_users = this.items.length
       this.items.forEach(item => {
         if (item.employee.status == 'Pending') this.pending_users += 1
         // else if (item.employee.status == 'Active') this.active_users += 1
       })
 
-      this.active_users = (this.total_users - this.pending_users).toString(10)
+      this.active_users = (this.total_users - this.pending_users)
     } catch (error) {
       console.log(error)
     }
