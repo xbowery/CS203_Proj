@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.app.APICode.ctest.Ctest;
 import com.app.APICode.employee.message.RequestMessage;
 import com.app.APICode.employee.message.UsernameMessage;
 import com.app.APICode.user.User;
@@ -55,9 +54,9 @@ public class EmployeeController {
     }
 
     /**
-     * Search for employee with the given username If there is no user with the
-     * given username, throw a UserNotFoundException If there is no employee with
-     * the given username, throw a EmployeeNotFoundException
+     * Search for employee with the given username 
+     * If there is no user with the given username, throw a UserNotFoundException 
+     * If there is no employee with the given username, throw a EmployeeNotFoundException
      * 
      * @param username username of employee
      * @return employee with the given username
@@ -73,12 +72,10 @@ public class EmployeeController {
     }
 
     /**
-     * Add new employee with POST request to
-     * "/users/{username}/employee/{restaurantId}" If there is no user with the
-     * given username, throw a UserNotFoundException
+     * Add new employee with POST request to "/users/{username}/employee/{restaurantId}" 
+     * If there is no user with the given username, throw a UserNotFoundException
      * 
-     * 
-     * @param username    username of employee
+     * @param username username of employee
      * @param restrauntId id of the restraunt the employee wants to apply to
      * @param designation Designation of the employee
      * @return the newly added employee
@@ -95,8 +92,8 @@ public class EmployeeController {
     }
 
     /**
-     * Change the Employee status to "Active" Change the User authorities to
-     * "ROLE_EMPLOYEE"
+     * Change the Employee status to "Active" 
+     * Change the User authorities to "ROLE_EMPLOYEE"
      * 
      * @param username username of employee
      * @return employee with the given username
