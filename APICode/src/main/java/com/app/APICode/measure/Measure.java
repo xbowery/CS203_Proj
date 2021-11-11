@@ -30,7 +30,6 @@ public class Measure {
     @Schema(description = "If the specified measure requires vaccination.", example = "true", required = true)
     private boolean vaccinationStatus;
 
-    // indicates whether mask needs to be worn at the venue
     @NotNull(message = "Mask status should not be null")
     @Schema(description = "If the specified measure requires mask", example = "false")
     private boolean maskStatus;

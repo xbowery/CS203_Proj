@@ -1,12 +1,12 @@
 <template>
   <v-card height = "405">
     <v-card-title class="align-start">
-      <span>Overview of Employees' COVID-19 tests</span>
+      <span>Overview of Customers for Past 7 Days</span>
       <v-spacer></v-spacer>
     </v-card-title>
 
     <v-card-text class="d-flex justify-center">
-      <apexchart type="pie" width="500" height="400" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="bar" width="500" height="300" :options="chartOptions" :series="series"></apexchart>
     </v-card-text>
   </v-card>
 </template>
@@ -16,6 +16,7 @@
 import VueApexCharts from 'vue-apexcharts'
 import UserService from '@/services/user.service'
 import { mapGetters } from 'vuex'
+import { getCurrentInstance } from '@vue/composition-api'
 
 export default {
   components: {
@@ -31,47 +32,125 @@ export default {
   data() {
     return {
       items: [],
-      pending_count: 0,
-      negative_count: 0,
-      positive_count:0,
-      series: [],
-      chartOptions: {
-        chart: {
-          width: 380,
-          type: 'pie',
-        },
-        labels: ['Pending', 'Negative', 'Positive'],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: 'bottom',
-              },
-            },
-          },
-        ],
-      },
+      series: [{
+        name: 'Max number of customers',
+        data:[]
+      }],
+      
     }
   },
 
-  async mounted() {
-    try {
-      const res = await UserService.getEmployeesCtests(this.user.username)
-      this.items = res.data
-      console.log(this.items)
-      this.items.forEach(item => {
-        if (item.result == 'Pending') this.pending_count += 1
-        else if (item.result == 'Negative') this.negative_count +=1
-        else this.positive_count += 1
-      })
+  mounted() {
+    this.getDays()  
+    this.getCrowdLevel()
+    this.getColors()
+  },
+  methods:{
+    async getCrowdLevel(){
+      try {
+        const res = await UserService.getCrowdLevel(this.user.username)
+        console.log(res.data)
+        this.chartOptions.xaxis.categories.forEach(day => {
+          var currentDay = day
+          var currentMax = 0
+          var maxElement = ''
+          res.data.forEach(element => {
+            if(currentDay === this.dateToString(element.datetime) && element.noOfCustomers > currentMax){
+                currentMax = element.noOfCustomers
+                maxElement = element
+            }
+          });
+          this.series[0].data.push(currentMax)
+          this.getColor(maxElement)
+        })
 
-      this.series.push(this.pending_count, this.negative_count, this.positive_count)
-    } catch (error) {
-      console.error(error)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    getDays(){
+      var today = new Date()
+      for(let i = 6; i >= 0; --i){
+        var tempDate = new Date(today.getTime() - i*24*60*60*1000)
+        var dd = tempDate.getDate()
+        var mm = tempDate.getMonth() + 1
+        tempDate = dd + '/' + mm 
+        if(dd < 10){
+          tempDate = '0' + dd + '/' + mm 
+        }
+        this.chartOptions.xaxis.categories.push(tempDate)
+      }
+    },
+    dateToString(date){
+      return date.substring(8,10) + '/' + date.substring(5,7)
+    },
+
+    getColor(element){
+        if(element.latestCrowd === 'Low'){
+          this.chartOptions.colors.push(this.colors.success)  
+        } else if(element.latestCrowd === 'Medium'){
+          this.chartOptions.colors.push(this.colors.pending)  
+        } else if (element.latestCrowd === 'High'){
+          this.chartOptions.colors.push(this.colors.error)  
+        } else{
+          this.chartOptions.colors.push(this.colors.success)  
+        }
+        console.log(element.latestCrowd)
+      }
+      // this.chartOptions.colors = colors
+    },
+  setup() {
+    const ins = getCurrentInstance()?.proxy
+    const $vuetify = ins && ins.$vuetify ? ins.$vuetify : null
+
+    const colors = {
+      success: $vuetify.theme.currentTheme.success,
+      error: $vuetify.theme.currentTheme.error,
+      pending: $vuetify.theme.currentTheme.warning,
+    }
+
+    const chartOptions = {
+        colors: [
+          // $vuetify.theme.currentTheme.primary,
+          // $vuetify.theme.currentTheme.primary,
+          // $vuetify.theme.currentTheme.primary,
+          // $vuetify.theme.currentTheme.primary,
+          // $vuetify.theme.currentTheme.primary,
+          // $vuetify.theme.currentTheme.primary,
+          // $vuetify.theme.currentTheme.primary,
+        ],
+        chart: {
+          width: 380,
+          type: 'bar',
+        },
+        plotOptions: {
+        bar: {
+          columnWidth: '40%',
+          distributed: true,
+          borderRadius: 8,
+          startingShape: 'rounded',
+          endingShape: 'rounded',
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        legend: {
+          show: false,
+        },
+        xaxis:{
+          categories:[],
+          axisBorder: {
+            show: false,
+          },
+        },
+        
+      }
+
+    return {
+      chartOptions,
+      colors
     }
   },
 }

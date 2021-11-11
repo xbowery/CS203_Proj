@@ -30,12 +30,11 @@ public class NotificationController {
     /**
      * GET a list of all notifications associated with the user
      * 
-     * @return list of all {@link Notfication}
+     * @return list of all {@link Notification}
      */
     @Operation(summary = "List all of current users notifications", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Notification" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Notification.class)))), })
+    @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Notification.class))))
     @GetMapping("/notifications")
     public List<Notification> getNotifications(Principal principal) {
         return notificationService.getNotificationsByUsername(principal.getName());
@@ -60,9 +59,11 @@ public class NotificationController {
      * 
      * @param principal
      */
-    @Operation(summary = "Update all notification status to read", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+    @Operation(summary = "Update single notification status to read", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "Notification" })
-    @ApiResponse(responseCode = "200", description = "Successful update a single notification to indicate as 'read'")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful update a single notification to indicate as 'read'"),
+            @ApiResponse(responseCode = "404", description = "Notification does not exist", content = @Content), })
     @PutMapping("/notifications/{notificationId}")
     public void readSingleNotification(Principal principal,
             @PathVariable(value = "notificationId") Long notificationId) {

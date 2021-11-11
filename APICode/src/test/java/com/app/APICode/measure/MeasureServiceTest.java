@@ -53,7 +53,7 @@ public class MeasureServiceTest {
         });
 
         //Assert
-        assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measureType);
+        assertEquals(notFoundException.getMessage(),"Could not find measure with measure type: " + measureType);
         
         verify(measures).findByMeasureType(measureType);
 
@@ -128,7 +128,7 @@ public class MeasureServiceTest {
         });
 
         //Assert
-        assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measure.getMeasureType());
+        assertEquals(notFoundException.getMessage(),"Could not find measure with measure type: " + measure.getMeasureType());
         
         verify(measures).findByMeasureType(measure.getMeasureType());
     }
@@ -158,7 +158,7 @@ public class MeasureServiceTest {
         });
 
         //Assert
-        assertEquals(notFoundException.getMessage(),"Could not find measure on: " + measureType);
+        assertEquals(notFoundException.getMessage(),"Could not find measure with measure type: " + measureType);
         
 
     }

@@ -47,7 +47,7 @@
                           :items="dropdown_type"
                           v-model="editedItem.type"
                           :error-messages="errors[0]"
-                          label="Select Type of Test"
+                          label="Select type of test"
                           required
                         ></v-select>
                       </validation-provider>
@@ -120,13 +120,13 @@
     <v-data-table :headers="headers" :items="items" :search="search" class="table-rounded" hide-default-footer>
       <template v-slot:top>
         <v-toolbar flat>
-          <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-dialog v-model="dialogDelete" max-width="600px">
             <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this Covid Test?</v-card-title>
+              <v-card-title class="text-h5 justify-center">Are you sure you want to delete this Covid Test?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                <v-btn color="error"  @click="closeDelete">Cancel</v-btn>
+                <v-btn color="success" @click="deleteItemConfirm">OK</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>

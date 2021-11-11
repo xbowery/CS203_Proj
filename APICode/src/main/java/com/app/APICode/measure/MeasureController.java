@@ -28,78 +28,95 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "Covid Measures", description = "Covid Measures API")
 public class MeasureController {
-    private MeasureService measureService;
+        private MeasureService measureService;
 
-    public MeasureController(MeasureService measureService) {
-        this.measureService = measureService;
-    }
+        public MeasureController(MeasureService measureService) {
+                this.measureService = measureService;
+        }
 
-    /**
-     * List all measures in the system
-     * 
-     * @return list of all measures
-     */
-    @Operation(summary = "List all Measures", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-            "Covid Measures" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), })
-    @GetMapping("/measures")
-    public List<Measure> getAllMeasures() {
-        return measureService.listMeasures();
-    }
+        /**
+         * List all measures in the system
+         * 
+         * @return list of all measures
+         */
+        @Operation(summary = "List all Measures", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+                        "Covid Measures" })
+        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), })
+        @GetMapping("/measures")
+        public List<Measure> getAllMeasures() {
+                return measureService.listMeasures();
+        }
 
-    @GetMapping("/measures/{measureType}")
-    public Measure getMeasure(@PathVariable @NotNull String measureType) {
-        return measureService.getMeasure(measureType);
-    }
+        /**
+         * List all measures according to a measure type
+         * 
+         * @param measureType
+         * @return list of all measures under the measure type
+         */
+        @Operation(summary = "List specific Measure(s)", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+                        "Covid Measures" })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), 
+                @ApiResponse(responseCode = "404", description = "Measure does not exist", content = @Content), 
+})
+        @GetMapping("/measures/{measureType}")
+        public Measure getMeasure(@PathVariable @NotNull String measureType) {
+                return measureService.getMeasure(measureType);
+        }
 
-    /**
-     * Add a new measure with POST request to "/measures"
-     * 
-     * @param measure
-     * @return the newly added measure
-     */
-    @Operation(summary = "Add new measure", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-            "Covid Measures" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Successful created new Measure", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), })
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/measures")
-    public Measure addMeasure(@Valid @RequestBody Measure measure) {
-        return measureService.addMeasure(measure);
-    }
+        /**
+         * Add a new measure with POST request to "/measures"
+         * 
+         * @param measure
+         * @return the newly added measure
+         */
+        @Operation(summary = "Add new measure", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+                        "Covid Measures" })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "201", description = "Successful created new Measure", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), 
+                @ApiResponse(responseCode = "409", description = "Conflicting Measure", content = @Content), 
+        })
+        @ResponseStatus(HttpStatus.CREATED)
+        @PostMapping("/measures")
+        public Measure addMeasure(@Valid @RequestBody Measure measure) {
+                return measureService.addMeasure(measure);
+        }
 
-    /**
-     * Update the info of a measure If there is no measure with the given
-     * creationDateTime, throw MeasureNotFoundException
-     * 
-     * @param updatedMeasure a Measure object containing the new measure info to be
-     * @return the updated Measure object
-     */
-    @Operation(summary = "Update Measures information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-            "Covid Measures" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful updated Measures information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), })
-    @PutMapping("/measures")
-    public Measure updateMeasure(@Valid @RequestBody Measure updatedMeasure) {
-        return measureService.updateMeasure(updatedMeasure);
-    }
+        /**
+         * Update the info of a measure If there is no measure with the given
+         * creationDateTime, throw MeasureNotFoundException
+         * 
+         * @param updatedMeasure a Measure object containing the new measure info to be
+         * @return the updated Measure object
+         */
+        @Operation(summary = "Update Measures information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+                        "Covid Measures" })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "200", description = "Successful updated Measures information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), 
+                @ApiResponse(responseCode = "404", description = "Measure does not exist", content = @Content), 
+        })
+        @PutMapping("/measures")
+        public Measure updateMeasure(@Valid @RequestBody Measure updatedMeasure) {
+                return measureService.updateMeasure(updatedMeasure);
+        }
 
-    /**
-     * Remove a measure with the DELETE request to "/measures/{measureType}" If
-     * there is no measure with the given creationDateTime, throw a
-     * MeasureNotFoundException
-     * 
-     * @param measureType the type of the measure
-     */
-    @Operation(summary = "Delete Measures", description = "Delete Covid Measures by the Type", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-            "Covid Measures" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Successful deleted Covid Measures", content = @Content) })
-    @Transactional
-    @DeleteMapping("/measures/{measureType}")
-    public void deleteMeasure(@PathVariable @NotNull String measureType) {
-        measureService.deleteMeasure(measureType);
-    }
+        /**
+         * Remove a measure with the DELETE request to "/measures/{measureType}" If
+         * there is no measure with the given creationDateTime, throw a
+         * MeasureNotFoundException
+         * 
+         * @param measureType the type of the measure
+         */
+        @Operation(summary = "Delete Measures", description = "Delete Covid Measures by the Type", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+                        "Covid Measures" })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "204", description = "Successful deleted Covid Measures", content = @Content), 
+                @ApiResponse(responseCode = "404", description = "Measure does not exist", content = @Content), 
+        })
+        @Transactional
+        @DeleteMapping("/measures/{measureType}")
+        public void deleteMeasure(@PathVariable @NotNull String measureType) {
+                measureService.deleteMeasure(measureType);
+        }
 
 }

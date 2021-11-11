@@ -46,8 +46,10 @@ public class Employee {
     @Schema(description = "List of Covid Testing records.")
     private List<Ctest> ctests;
 
+    @Schema(description = "Employee Designation")
     private String designation;
 
+    @Schema(description = "Employee current status")
     private String status;
     public Employee() {
     }

@@ -185,69 +185,6 @@ public class EmployeeIntegrationTest {
     }
 
     @Test
-    public void getEmployee_ValidUsername_Success() throws Exception {
-        User user1 = new User("pendingemployee2@test.com", "user6", "User", "six", encoder.encode("testing23456"), false, "ROLE_USER");
-        Employee employee = new Employee(user1, "HR Manager");
-        Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
-        employee.setRestaurant(testRestaurant);
-        user1.setEmployee(employee);
-        user1.setAuthorities("ROLE_EMPLOYEE");
-
-        users.save(user1);
-
-        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user1.getUsername());
-
-        given().headers(
-            "Authorization",
-            "Bearer " + tokenGeneratedBusinessOwner,
-            "Content-Type", "application/json"
-        ).when()
-        .get(uri)
-        .then()
-        .statusCode(200)
-        .body("designation", equalTo("HR Manager"));
-    }
-
-    @Test
-    public void getEmployee_InvalidUsername_Failure() throws Exception {
-        User user1 = new User("user11@test.com", "user11", "User", "eleven", encoder.encode("testing23456"), false, "ROLE_USER");
-        users.save(user1);
-
-        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user1.getUsername());
-
-        given().headers(
-            "Authorization",
-            "Bearer " + tokenGeneratedBusinessOwner,
-            "Content-Type", "application/json"
-        ).when()
-        .get(uri)
-        .then()
-        .statusCode(404);
-    }
-
-    @Test 
-    public void getEmployee_InvalidRestaurant_Failure() throws Exception {
-        User user1 = new User("pendingemployee10@test.com", "user12", "User", "twelve", encoder.encode("testing23456"), false, "ROLE_USER");
-        Employee employee = new Employee(user1, "HR Manager");
-        Restaurant testRestaurant2 = restaurants.findById(testRestaurant2ID).orElse(null);
-        employee.setRestaurant(testRestaurant2);
-        user1.setEmployee(employee);
-        user1.setAuthorities("ROLE_EMPLOYEE");
-
-        users.save(user1);
-
-        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/" + user1.getUsername());
-
-        given().headers(
-            "Authorization",
-            "Bearer " + tokenGeneratedBusinessOwner,
-            "Content-Type", "application/json"
-        ).when()
-        .get(uri)
-        .then()
-        .statusCode(403);
-    }
-    @Test
     public void addEmployee_NewUsername_ReturnSavedEmployee() throws Exception {
         URI uri = new URI(baseUrl + port + "/api/v1/users/employee");
 
@@ -319,7 +256,7 @@ public class EmployeeIntegrationTest {
         request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
         Response updateEmployeeResponse = request.body(requestMessage).put(uri);
         assertEquals(200, updateEmployeeResponse.getStatusCode());
-        assertEquals("Active", JsonPath.from(updateEmployeeResponse.getBody().asString()).get("status"));
+        assertEquals("Approved", JsonPath.from(updateEmployeeResponse.getBody().asString()).get("status"));
     }
 
     @Test 

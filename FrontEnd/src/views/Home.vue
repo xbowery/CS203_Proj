@@ -7,7 +7,7 @@
           <v-row>
             <v-col cols="8" sm="6">
               <v-card-title class="page-title flex-nowrap text-2xl">
-                <span class="text-no-wrap">Hello </span>
+                <span class="text-no-wrap">Welcome to Swisshack, </span>
                 <span class="text-no-wrap font-weight-bold mx-1"> {{ user.username }} </span>
                 <span>🎉</span>
               </v-card-title>

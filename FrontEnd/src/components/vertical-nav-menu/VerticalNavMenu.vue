@@ -65,7 +65,7 @@
         v-if="isAdmin"
         title="Measures List"
         :to="{ name: 'MeasuresList' }"
-        :icon="icons.mdiFood"
+        :icon="icons.mdiFormatListBulletedSquare"
       ></nav-menu-link>
     </v-list>
   </v-navigation-drawer>
@@ -81,6 +81,7 @@ import {
   mdiTable,
   mdiFileOutline,
   mdiFormSelect,
+  mdiFormatListBulletedSquare,
   mdiAccountCogOutline,
   mdiFood,
   mdiAccountCog,
@@ -128,6 +129,7 @@ export default {
         mdiTable,
         mdiFileOutline,
         mdiFormSelect,
+        mdiFormatListBulletedSquare,
         mdiAccountCogOutline,
         mdiFood,
         mdiAccountCog,

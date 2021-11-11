@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @Configuration
 @OpenAPIDefinition(
     info = @Info(
-        title = "CS203 Project API",
+        title = "Swiss Hack",
         version = "0.0.2-alpha",
         description = "An API to experience the New Normal",
         contact = @Contact(

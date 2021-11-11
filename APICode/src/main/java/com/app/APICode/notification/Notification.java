@@ -19,15 +19,18 @@ public class Notification {
     private @Id @GeneratedValue Long id;
 
     @NotNull(message = "datetime cannot be null")
+    @Schema(description = "Date and time that the notification was created", required = true)
     private LocalDateTime datetime;
 
     @NotNull(message = "text cannot be null")
+    @Schema(description = "Text in the notification", required = true)
     private String text;
 
     // @NotNull(message = "link cannot be null")
     // private URL link;
 
     @NotNull(message = "seen cannot be null")
+    @Schema(description = "Boolean value if the notification has been seen by user", required = true)
     private boolean isSeen = false;
 
     @ManyToOne

@@ -233,7 +233,7 @@ public class EmployeeServiceTest {
 
         // Assert
         assertNotNull(approvedEmployee);
-        assertEquals("Active", approvedEmployee.getStatus());
+        assertEquals("Approved", approvedEmployee.getStatus());
 
     }
 

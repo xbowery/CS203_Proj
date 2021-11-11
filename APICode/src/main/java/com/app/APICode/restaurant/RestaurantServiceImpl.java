@@ -22,13 +22,31 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Autowired
     public RestaurantServiceImpl(RestaurantRepository restaurants) {
         this.restaurants = restaurants;
+        //mock data
         Restaurant astons = new Restaurant("Astons", "Cathay", "Western", "Western steakhouse", 50);
         Restaurant dianXiaoEr = new Restaurant("Dian Xiao Er", "Hillion", "Chinese", 
         "Chinese dining experience in an ancient Inn", 50);
+        Restaurant mcDonalds = new Restaurant("McDonalds","Raffles City", "Western", "Fast food chain",50);
+        Restaurant saizeriya = new Restaurant("Saizeriya","Hillion","Italian","Italian Restaurant",50);
+        Restaurant poulet = new Restaurant("Poulet","ION Orchard","French","Modern French restaurant",50);
+        Restaurant jumbo = new Restaurant("Jumbo Seafood","Jewel Changi Airport","Seafood","Seafood restaurant",100);
+        Restaurant sakaesushi = new Restaurant("Sakae Sushi","Junction 8","Japanese","Japanese restaurant",50);
+
         astons.setImageUrl("restaurant.jpg");
         dianXiaoEr.setImageUrl("dianXiaoEr.jpg");
+        mcDonalds.setImageUrl("mcdonalds.jpg");
+        saizeriya.setImageUrl("saizeriya.jpg");
+        poulet.setImageUrl("poulet.jpg");
+        jumbo.setImageUrl("jumbo.jpg");
+        sakaesushi.setImageUrl("sakaesushi.jpg");
+        
         restaurants.save(astons);
         restaurants.save(dianXiaoEr);
+        restaurants.save(mcDonalds);
+        restaurants.save(saizeriya);
+        restaurants.save(poulet);
+        restaurants.save(jumbo);
+        restaurants.save(sakaesushi);
     }
 
     // To break circular dependency

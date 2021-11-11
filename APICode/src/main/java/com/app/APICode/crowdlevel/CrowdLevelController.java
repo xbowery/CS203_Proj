@@ -16,7 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @Tag(name = "Crowd Level", description = "Crowd Level API")
@@ -34,6 +41,15 @@ public class CrowdLevelController {
      * @param id restaurant id
      * @return crowd level of restaurant
      */
+    @Operation(summary = "Get the specific restaurants crowd levels", description = "Get all crowd levels for one specific restaurants by the specified restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Crowd Levels" })
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Successful retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CrowdLevel.class)))),
+        @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Employee does not exist", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Restaurant does not exist", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Cannot find CrowdLevel with the following Restaurant name", content = @Content)
+    })
     @GetMapping("/restaurants/crowdLevel")
     public List<CrowdLevel> getCrowdLevelByRestaurant(Principal principal) {
         return crowdLevelService.listCrowdLevelByEmployee(principal.getName());
@@ -45,11 +61,17 @@ public class CrowdLevelController {
      * @param id restaurant id
      * @return the newly added CrowdLevel object
      */
+    @Operation(summary = "Add a new crowd level object", description = "Add a new crowd level entry by restaurant ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Crowd Levels" })
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Successful created new Crowd Level object", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CrowdLevel.class)))),
+        @ApiResponse(responseCode = "404", description = "Restaurant does not exist", content = @Content) 
+    })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/restaurants/crowdLevel")
     public CrowdLevel addCrowdLevel(Principal principal, @Valid @RequestBody CrowdLevel crowdLevel) {
         return crowdLevelService.addCrowdLevel(principal.getName(), crowdLevel);
-    }
+    } 
 }
 
 

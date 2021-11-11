@@ -5,11 +5,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.crowdlevel.CrowdLevelRepository;
 import com.app.APICode.ctest.Ctest;
+import com.app.APICode.ctest.CtestRepository;
 import com.app.APICode.ctest.CtestServiceImpl;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.measure.*;
@@ -47,7 +52,24 @@ public class G2T4Application {
 		// testRestaurant.setCrowdLevel();
 		testRestaurant = restaurants.save(testRestaurant);
 		System.out.println("[Add restaurant]:" + testRestaurant.getName());
-		
+
+		//Crowd Level of restaurant
+		CrowdLevel day1 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 11).getTime(), "Medium", 30, testRestaurant);
+		CrowdLevel day2 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 10).getTime(), "High", 40, testRestaurant);
+		CrowdLevel day3 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 9).getTime(), "Medium", 30, testRestaurant);
+		CrowdLevel day4 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 8).getTime(), "Low", 10, testRestaurant);
+		CrowdLevel day5 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 7).getTime(), "Medium", 30, testRestaurant);
+		CrowdLevel day6 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 6).getTime(), "Low", 20, testRestaurant);
+		List<CrowdLevel> chartData = new ArrayList<>();
+		chartData.add(day1);
+		chartData.add(day2);
+		chartData.add(day3);
+		chartData.add(day4);
+		chartData.add(day5);
+		chartData.add(day6);
+		testRestaurant.setCrowdLevel(chartData);
+		restaurants.save(testRestaurant);
+
 		//Business owner 
 		User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
 		businessOwner.setEnabled(true);
@@ -90,11 +112,8 @@ public class G2T4Application {
 
 		NotificationService notifications = ctx.getBean(NotificationService.class);
 		notifications.addNewNotification("Welcome to Swisshack, admin!", admin);
-		notifications.addNewNotification("Remember to do your next COVID-19 test which is due in 3 days!", admin);
-		notifications.addNewNotification(
-				"You have a pending employee request from John Doe. Please review it under your Employee List.", admin);
 		
-    //Measures
+    	//Measures
 		MeasureRepository measures = ctx.getBean(MeasureRepository.class);
 		Measure testMeasureRestaurant = new Measure("Restaurant", 2, true, false);
 		measures.save(testMeasureRestaurant);
@@ -104,6 +123,12 @@ public class G2T4Application {
 		measures.save(testMeasureEvents);
 		Measure testMeasureGathering = new Measure("Gathering", 2, true, true);
 		measures.save(testMeasureGathering);
+
+		//Ctests
+		CtestRepository ctests = ctx.getBean(CtestRepository.class);
+		Ctest testCtest = new Ctest("ART", date, "Negative");
+		testCtest.setEmployee(employee1.getEmployee());
+		ctests.save(testCtest);
 	}
 
 }
