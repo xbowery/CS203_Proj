@@ -67,7 +67,9 @@ public class UserController {
     @Operation(summary = "Get User", description = "Get user by username", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "403", description = "Requester does not have enough privilege", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content), })
     @GetMapping("/users/{username}")
     public UserDTO getUser(Principal principal, @PathVariable String username) {
         return userService.getUserDetailsByUsername(principal.getName(), username);
@@ -82,7 +84,8 @@ public class UserController {
      */
     @Operation(summary = "Add new user", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Successful created new User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))), })
+            @ApiResponse(responseCode = "201", description = "Successful created new User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "409", description = "Conflicting email", content = @Content), })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
     public UserDTO addUser(@Valid @RequestBody User user) {
@@ -101,7 +104,9 @@ public class UserController {
     @Operation(summary = "Update user information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))), })
+            @ApiResponse(responseCode = "200", description = "Successful updated User information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Requester does not have enough privilege", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Conflicting email", content = @Content), })
     @Transactional
     @PutMapping("/users")
     public UserDTO updateUser(Principal principal, @Valid @RequestBody UserDTO newUserInfo) {
@@ -115,7 +120,8 @@ public class UserController {
      * @param username username of user
      */
     @Operation(summary = "Delete User", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content) })
+    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content), })
     @Transactional
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
@@ -140,10 +146,6 @@ public class UserController {
         } catch (Exception e) {
             throw new RuntimeException("Invalid request");
         }
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException(email);
-        }
         userService.createTempPassword(email);
     }
 
@@ -156,7 +158,9 @@ public class UserController {
      * @return the newly created user
      */
     @Operation(summary = "Register User", tags = { "User" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful Registered User") })
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Successful created new User", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "409", description = "Conflicting email", content = @Content), })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/register")
     public void register(@Valid @RequestBody User newUser) {
@@ -170,22 +174,26 @@ public class UserController {
      * @param token
      * @return registration confirmation
      */
-    @Operation(summary = "Get user's registration", description = "Get registration confirmation of User", security = @SecurityRequirement(name = "bearerAuth"), tags = {"User" })
+    @Operation(summary = "Get user's registration", description = "Get registration confirmation of User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+            "User" })
     @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "Successful retrieval of registration confirmation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
+            @ApiResponse(responseCode = "200", description = "Successful retrieval of registration confirmation", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))) })
     @GetMapping("/registrationConfirm")
     public String confirmRegistration(@RequestParam("token") final String token) {
         return userService.validateVerificationToken(token);
     }
 
     /**
-     * Retrieve the user information by username and 
-     * change the password of the user
+     * Retrieve the user information by username and change the password of the user
      * 
      * @return user with updated password
      */
     @Operation(summary = "Change User password", tags = { "User" })
-    @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful change password") })
+    @ApiResponses({ 
+        @ApiResponse(responseCode = "204", description = "Successful change password"),
+        @ApiResponse(responseCode = "400", description = "New password and Confirm Password does not match", content = @Content), 
+        @ApiResponse(responseCode = "400", description = "Current password does not match", content = @Content), 
+    })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("users/password")
     public void changePassword(Principal principal, @Valid @RequestBody ChangePasswordMessage message) {
