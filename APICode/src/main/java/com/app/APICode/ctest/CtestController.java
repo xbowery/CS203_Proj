@@ -116,8 +116,8 @@ public class CtestController {
         @Operation(summary = "Get Next Covid Test date", description = "Get the next covid testing date using the usernam eof the employee", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "COVID-19 Test" })
         @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieved next covid test date", content = @Content) })
-        @GetMapping("/users/employee/ctests/next")
-        public Date getNextCtest(Principal principal) {
-                return ctests.getNextCtestByUsername(principal.getName());
+        @GetMapping("/users/employee/{username}/ctests/next")
+        public Date getNextCtest(@PathVariable(value = "username") String username) {
+                return ctests.getNextCtestByUsername(username);
         }
 }
