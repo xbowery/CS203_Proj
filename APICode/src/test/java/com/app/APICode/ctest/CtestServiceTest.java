@@ -38,6 +38,8 @@ public class CtestServiceTest {
 
     @Test
     void getAllCtests_validUsername_ReturnCtests() {
+        ctestService.setEmployees(employees);
+
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
@@ -65,6 +67,7 @@ public class CtestServiceTest {
 
     @Test
     void saveCtest_ValidUsername_ReturnCtest() {
+        ctestService.setEmployees(employees);
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
@@ -88,6 +91,7 @@ public class CtestServiceTest {
     
     @Test
     void updateCtest_ValidUsername_ReturnCtest() {
+        ctestService.setEmployees(employees);
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
@@ -119,6 +123,7 @@ public class CtestServiceTest {
 
     @Test
     void updateCtest_InvalidCtestId_ReturnException() {
+        ctestService.setEmployees(employees);
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
@@ -150,6 +155,7 @@ public class CtestServiceTest {
 
     @Test
     void deleteCtest_ValidCtestId_ReturnNull() {
+        ctestService.setEmployees(employees);
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
@@ -175,6 +181,7 @@ public class CtestServiceTest {
 
     @Test
     void deleteCtest_InvalidCtestId_ReturnException() {
+        ctestService.setEmployees(employees);
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
         Employee employee = new Employee(user, "HR Manager");
@@ -203,6 +210,7 @@ public class CtestServiceTest {
 
     @Test
     void getNextCtestDate_ValidUsername_ReturnDate() {
+        ctestService.setEmployees(employees);
         
         //Arrange
         User user = new User("pendingemployee2@test.com", "user6", "User", "six", "testing23456", false, "ROLE_USER");
