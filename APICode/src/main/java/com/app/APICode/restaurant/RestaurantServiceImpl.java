@@ -25,10 +25,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant astons = new Restaurant("Astons", "Cathay", "Western", "Western steakhouse", 50);
         Restaurant dianXiaoEr = new Restaurant("Dian Xiao Er", "Hillion", "Chinese", 
         "Chinese dining experience in an ancient Inn", 50);
+        Restaurant mcDonalds = new Restaurant("McDonalds","Raffles City", "Western", "Fast food chain",50);
         astons.setImageUrl("restaurant.jpg");
         dianXiaoEr.setImageUrl("dianXiaoEr.jpg");
+        mcDonalds.setImageUrl("mcdonalds.jpg");
         restaurants.save(astons);
         restaurants.save(dianXiaoEr);
+        restaurants.save(mcDonalds);
     }
 
     // To break circular dependency
