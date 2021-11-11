@@ -65,9 +65,7 @@ public class RestaurantController {
         @Operation(summary = "Get Restaurant managed by User", description = "Get Restaurant that belongs to User according to Credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Restaurant" })
         @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful retrieval of Restaurant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurant.class))),
-                        @ApiResponse(responseCode = "404", description = "User does not exists"),
-                        @ApiResponse(responseCode = "404", description = "Employee does not exists"),
-                        @ApiResponse(responseCode = "404", description = "Restaurant does not exists"), })
+                        @ApiResponse(responseCode = "404", description = "User, Employee and/or Restaurant does not exists"), })
         @GetMapping("/restaurants/user/{username}")
         public Restaurant getRestaurant(@PathVariable(value = "username") String username) {
                 return restaurantService.getRestaurantByUsername(username);
