@@ -1,8 +1,13 @@
 name: main APICode deployment
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - main
 
 env:
   AZURE_WEBAPP_NAME: swisshack
