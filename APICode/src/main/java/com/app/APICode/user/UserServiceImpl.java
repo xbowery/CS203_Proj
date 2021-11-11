@@ -111,9 +111,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createVerificationTokenForUser(final User user, final String token) {
+    public VerificationToken createVerificationTokenForUser(final User user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
-        vTokens.save(myToken);
+        return vTokens.save(myToken);
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserOrEmailExistsException;
 import com.app.APICode.user.UserRepository;
 import com.app.APICode.user.UserServiceImpl;
+import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
 
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,25 @@ public class UserServiceTest {
         assertEquals(existsException.getMessage(), "This email already exists. Please sign in instead.");
         verify(users).findByUsername(user.getUsername());
         verify(users, never()).save(user);
+    }
+
+    @Test
+    void addUser_ExistingUserEmail_ReturnNull() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        User user2 = user;
+        user2.setUsername("user2");
+        when(users.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+
+        // Act
+        UserOrEmailExistsException existsException = assertThrows(UserOrEmailExistsException.class, () -> {
+            userService.addUser(user2, true);
+        });
+
+        // Assert
+        assertEquals(existsException.getMessage(), "This email already exists. Please sign in instead.");
+        verify(users).findByUsername(user.getUsername());
+        verify(users, never()).save(user2);
     }
 
     @Test
@@ -211,5 +231,36 @@ public class UserServiceTest {
         // Assert
         assertEquals(notFoundException.getMessage(), "This email does not exist: " + email);
         verify(users).findByEmail(email);
+    }
+
+    // @Test
+    // void getToken_ValidVerificationToken_ReturnToken() {
+    //     // Arrange
+    //     User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
+    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+
+    //     // Act
+    //     String token = "validToken";
+    //     VerificationToken vTokenSaved = userService.createVerificationTokenForUser(user, token);
+    //     VerificationToken vToken = userService.getVerificationToken(token);
+
+    //     // Assert
+    //     assertNotNull(vToken);
+    //     verify(users).findByUsername(user.getUsername());
+    //     verify(vTokens).save(vToken);
+    // }
+
+    @Test
+    void getToken_InvalidVerificationToken_ReturnNull() {
+        // Arrange
+        String token = "nosuchtoken";
+        when(vTokens.findByToken(token)).thenReturn(Optional.empty());
+
+        // Act
+        VerificationToken vToken = vTokens.findByToken(token).orElse(null);
+
+        // Assert
+        assertNull(vToken);
+        verify(vTokens, never()).save(vToken);
     }
 }

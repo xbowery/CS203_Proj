@@ -56,7 +56,7 @@ public interface UserService {
      * @param user  a User Object
      * @param token a string containing the token
      */
-    void createVerificationTokenForUser(User user, String token);
+    VerificationToken createVerificationTokenForUser(User user, String token);
 
     /**
      * Updates an existing VerificationToken specified by
