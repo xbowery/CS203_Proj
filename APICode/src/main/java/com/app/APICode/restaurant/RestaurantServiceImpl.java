@@ -136,7 +136,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             }
         }
         if(owner == null){
-            throw new RestrauntOwnerNotFoundException(id);
+            throw new RestaurantOwnerNotFoundException(id);
         }
         return owner;
     }
