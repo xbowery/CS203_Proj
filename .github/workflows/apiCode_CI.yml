@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - "*"
+    paths:
+      - APICode/**
   pull_request:
     types: [opened, reopened]
+    paths:
+      - APICode/**
 
 env:
   AZURE_WEBAPP_NAME: swisshack
