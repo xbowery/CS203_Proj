@@ -13,4 +13,13 @@ public interface CtestService {
     void deleteCtestByCtestIdAndUsername(String username, Long ctestId);
 
     Date getNextCtestByUsername(String username);
+
+    /**
+     * Gets all {@link Ctest} for employees working in the business with the
+     * specified business's owner "username"
+     * 
+     * @param username
+     * @return
+     */
+    List<Ctest> getAllEmployeesCtest(String username);
 }

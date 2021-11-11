@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="match-height">
     <v-col cols="12" md="4" sm="6">
       <dashboard-user :username="user.username"></dashboard-user>
     </v-col>
@@ -15,20 +15,18 @@
       <v-row class="match-height">
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="totalNumEmployees.change"
             :color="totalNumEmployees.color"
             :icon="totalNumEmployees.icon"
-            :statistics="employee_count"
+            :statistics="employee_count.toString(10)"
             :stat-title="totalNumEmployees.statTitle"
             :subtitle="totalNumEmployees.subtitle"
           ></statistics-card-vertical>
         </v-col>
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesPending.change"
             :color="employeesPending.color"
             :icon="employeesPending.icon"
-            :statistics="pending_count"
+            :statistics="pending_count.toString(10)"
             :stat-title="employeesPending.statTitle"
             :subtitle="employeesPending.subtitle"
           ></statistics-card-vertical>
@@ -38,7 +36,7 @@
             :change="employeesPostive.change"
             :color="employeesPostive.color"
             :icon="employeesPostive.icon"
-            :statistics="positive_count"
+            :statistics="positive_count.toString(10)"
             :stat-title="employeesPostive.statTitle"
             :subtitle="employeesPostive.subtitle"
           ></statistics-card-vertical>
@@ -46,10 +44,9 @@
 
         <v-col cols="12" sm="6">
           <statistics-card-vertical
-            :change="employeesNegative.change"
             :color="employeesNegative.color"
             :icon="employeesNegative.icon"
-            :statistics="negative_count"
+            :statistics="negative_count.toString(10)"
             :stat-title="employeesNegative.statTitle"
             :subtitle="employeesNegative.subtitle"
           ></statistics-card-vertical>
@@ -71,7 +68,7 @@ import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardV
 // demos
 import DashboardUser from './DashboardUser.vue'
 import CrowdLevel from './CrowdLevel.vue'
-import DashboardDailyOverview from './DashboardDailyOverview.vue'
+import DashboardDailyOverview from './DashboardOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
 import { mapGetters } from 'vuex'
 import UserService from '@/services/user.service'
@@ -94,7 +91,7 @@ export default {
   data() {
     return {
       items: [],
-      employee_count: '',
+      employee_count: 0,
       pending_count: 0,
       positive_count: 0,
       negative_count: 0,
@@ -104,9 +101,9 @@ export default {
   async mounted() {
     try {
       console.log(this.user.username)
-      const res = await UserService.getEmployeesCtests(this.user.username)
+      const res = await UserService.getEmployeesCtests()
       this.items = res.data
-      this.employee_count = this.items.length
+      this.employee_count = this.items.length.toString(10)
 
       this.items.forEach(item => {
         if (item.result == 'Pending') this.pending_count += 1
@@ -116,10 +113,6 @@ export default {
     } catch (error) {
       console.error(error)
     }
-  },
-
-  methods: {
-    set_numbers() {},
   },
 
   setup() {

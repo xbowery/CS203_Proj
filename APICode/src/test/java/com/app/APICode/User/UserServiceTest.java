@@ -14,6 +14,8 @@ import java.util.Optional;
 
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.user.EmailNotFoundException;
+import com.app.APICode.notification.Notification;
+import com.app.APICode.notification.NotificationService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
 import com.app.APICode.user.UserNotFoundException;
@@ -46,6 +48,9 @@ public class UserServiceTest {
     @Mock
     private VerificationTokenRepository vTokens;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -53,17 +58,23 @@ public class UserServiceTest {
     void addUser_NewUsername_ReturnSavedUser() {
         // Arrange
         User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        String text = String.format("Welcome to Swisshack, %s!", user.getUsername());
+        Notification mockNotification = new Notification(text, user);
 
         when(users.findByUsername(any(String.class))).thenReturn(Optional.empty());
         when(users.save(any(User.class))).thenReturn(user);
+
+        when(notificationService.addNewNotification(anyString(), any(User.class))).thenReturn(mockNotification);
 
         // Act
         UserDTO savedUser = userService.addUser(user, true);
 
         // Assert
         assertNotNull(savedUser);
+
         verify(users).findByUsername(user.getUsername());
         verify(users).save(user);
+        verify(notificationService).addNewNotification(mockNotification.getText(), user);
     }
 
     @Test
@@ -245,23 +256,4 @@ public class UserServiceTest {
         assertNull(vToken);
         verify(vTokens, never()).save(vToken);
     }
-
-    // @Test
-    // void validateVerificationToken_ExpiredToken_ReturnExpired() {
-    // // Arrange
-    // User user = new User("user@test.com", "user1", "User", "One", "", false,
-    // "ROLE_USER");
-    // VerificationToken vToken = new VerificationToken("expiredToken", user);
-    // vToken.setExpiryDate(new Date(System.currentTimeMillis()));
-    // when(vTokens.save(any(VerificationToken.class))).thenReturn(vToken);
-
-    // // Act
-    // String result = userService.validateVerificationToken(vToken.getToken());
-
-    // // Assert
-    // assertNotNull(result);
-    // assertEquals("expired", result);
-    // verify(vTokens).save(vToken);
-    // }
-
 }

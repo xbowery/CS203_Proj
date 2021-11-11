@@ -2,10 +2,23 @@ package com.app.APICode.notification;
 
 import java.util.List;
 
-public interface NotificationService {
-    Notification addNewEmployeeApprovalNotification(String username, Long restaurantId, String designation);
+import com.app.APICode.user.User;
 
-    Notification upcomingCtestNotification(Long user_id);
+public interface NotificationService {
+    Notification addNewEmployeeApprovalNotification(String username, Long restaurantId);
+
+    int generateCtestNotification();
+
+    boolean checkAndGenerateNotifications(User user);
 
     List<Notification> getNotificationsByUsername(String username);
+
+    List<Notification> markAllNotificationsRead(String username);
+
+    Notification markSingleNotificationRead(String username, Long id);
+
+    List<Notification> filterUnreadNotifications(List<Notification> notifications);
+
+    Notification addNewNotification(String notificationText, User user);
+
 }

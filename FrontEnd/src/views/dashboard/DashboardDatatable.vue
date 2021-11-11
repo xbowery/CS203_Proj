@@ -23,23 +23,6 @@
       class="table-rounded"
       hide-default-footer
     >
-      <!-- name -->
-      <!-- <template #[`item.full_name`]="{ item }">
-        <div class="d-flex flex-column">
-          <span class="d-block font-weight-semibold text--primary text-truncate">{{ item.firstName }}</span>
-          <small>{{ item.post }}</small>
-        </div>
-      </template> -->
-
-      <!-- <template #[`item.salary`]="{ item }">
-        {{ `$${item.salary}` }}
-      </template> -->
-      <!-- status -->
-      <!-- <template #[`item.status`]="{ item }">
-        <v-chip small :color="statusColor[status[item.status]]" class="font-weight-medium">
-          {{ status[item.status] }}
-        </v-chip>
-      </template> -->
     </v-data-table>
   </v-card>
 </template>
@@ -78,10 +61,6 @@ export default {
               }
             })
           }
-          // var curDate = ''
-          // this.getNextDate(user.username).then(function(result){
-          //   curDate = result
-          // })
           var dict = {
             id: user.id,
             full_name: user.firstName + ' ' + user.lastName,
@@ -100,7 +79,6 @@ export default {
     async getNextDate(username) {
       try {
         const res = await UserService.getNextCtest(username)
-        console.log(res.data)
         return res.data
       } catch (error) {
         console.log(error)

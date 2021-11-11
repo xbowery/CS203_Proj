@@ -43,6 +43,7 @@ export default {
   methods: {
     submit() {
       this.handlePostEmployee()
+      console.log(this.user)
     },
 
     async handlePostEmployee() {

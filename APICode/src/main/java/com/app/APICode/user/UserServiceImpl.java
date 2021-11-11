@@ -5,7 +5,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+
 import com.app.APICode.emailer.EmailerServiceImpl;
+import com.app.APICode.notification.NotificationService;
 import com.app.APICode.user.message.ChangePasswordMessage;
 import com.app.APICode.utility.RandomPassword;
 import com.app.APICode.verificationtoken.VerificationToken;
@@ -22,7 +25,10 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository users;
 
+    private NotificationService notificationService;
+  
     EmailerServiceImpl emailerService;
+
 
     RandomPassword randomPasswordGenerator;
 
@@ -34,11 +40,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository users, EmailerServiceImpl emailerService,
-            RandomPassword randomPasswordGenerator, BCryptPasswordEncoder encoder) {
+            RandomPassword randomPasswordGenerator, BCryptPasswordEncoder encoder, NotificationService notificationService) {
         this.users = users;
         this.emailerService = emailerService;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.encoder = encoder;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -74,6 +81,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllUsers() {
+        return users.findAll();
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         User user = users.findByUsername(username).orElse(null);
         if (user == null) {
@@ -93,7 +105,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Add logic to avoid adding users with the same email or username Return null
-     * if there exists a user with the same email or username
+     * if there exists a user with the same email or username. Then create a
+     * notification.
      * 
      * @param user    a User object
      * @param isAdmin boolean value to determine if user is admin or not
@@ -136,6 +149,9 @@ public class UserServiceImpl implements UserService {
         final VerificationToken vToken = new VerificationToken(token, user);
         user.setvToken(vToken);
         User savedUser = users.save(user);
+
+        String notificationText = String.format("Welcome to Swisshack, %s!", savedUser.getUsername());
+        notificationService.addNewNotification(notificationText, savedUser);
 
         return convertToUserDTO(savedUser);
     }

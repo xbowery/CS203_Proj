@@ -26,11 +26,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name = "COVID-19 Test", description = "COVID-19 Test API")
 public class CtestController {
-    private CtestService ctests;
+        private CtestService ctests;
 
-    public CtestController(CtestService ctests) {
-        this.ctests = ctests;
-    }
+        public CtestController(CtestService ctests) {
+                this.ctests = ctests;
+        }
 
     /**
      * Search for employee with the given username If there is no user with the
@@ -124,5 +124,21 @@ public class CtestController {
         @GetMapping("/users/employee/ctests/next")
         public Date getNextCtest(Principal principal) {
                 return ctests.getNextCtestByUsername(principal.getName());
+        }
+
+     /**
+     * List latest ctests of employees in a particular business
+     * 
+     * @param principal name of the user logged in currently
+     * @return list of ctest of employees in a particular business
+     */
+    @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
+        "Employee" })
+        @ApiResponses({
+                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Ctest.class)))), })
+        @ResponseStatus(HttpStatus.OK)
+        @GetMapping("/users/employee/allctests")
+        public List<Ctest> getAllEmployeesCtest(Principal principal) {
+                return ctests.getAllEmployeesCtest(principal.getName());
         }
 }

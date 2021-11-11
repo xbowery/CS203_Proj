@@ -204,7 +204,11 @@ public class User implements UserDetails {
     }
 
     public List<Notification> getNotifications() {
-        return this.notifications;
+        return notifications;
+    }
+
+    public void addNotification(Notification notification) {
+        notifications.add(notification);
     }
 
     public VerificationToken getvToken() {
