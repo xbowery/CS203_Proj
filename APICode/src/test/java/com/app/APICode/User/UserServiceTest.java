@@ -17,6 +17,7 @@ import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
+import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserOrEmailExistsException;
 import com.app.APICode.user.UserRepository;
 import com.app.APICode.user.UserServiceImpl;
@@ -133,13 +134,33 @@ public class UserServiceTest {
 
     // }
 
-    // @Test
-    // void deleteUser_ValidUser_ReturnNull() {
+    @Test
+    void deleteUser_ValidUser_ReturnNull() {
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        String username = user.getUsername();
+        when(users.existsByUsername(username)).thenReturn(true);
+        when(users.findByUsername(username)).thenReturn(Optional.of(user));
 
-    // }
+        //Act
+        userService.deleteUser(username);
+        
+        //Assert 
+        verify(users).deleteByUsername(username);
+    }
     
-    // @Test
-    // void deleteUser_InvalidUser_ReturnError() {
+    @Test
+    void deleteUser_InvalidUser_ReturnError() {
+         // Arrange
+         User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+         String username = user.getUsername();
 
-    // }
+         //Act
+         UserNotFoundException notFoundException = assertThrows(UserNotFoundException.class, () -> {
+            userService.deleteUser(username);
+        });
+
+        //Assert
+        assertEquals(notFoundException.getMessage(), "Could not find user with username: " + username);
+    }
 }
