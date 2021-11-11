@@ -382,7 +382,7 @@ public class UserIntegrationTest {
     public void deleteUsers_AdminUser_Success() throws Exception {
         URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
 
-        User testUser = new User("testing@test.com", "test2", "test2", null, encoder.encode("password123"), true, "ROLE_USER");
+        User testUser = new User("testing123@test.com", "testing123", "test2", null, encoder.encode("password123"), true, "ROLE_USER");
         testUser.setEnabled(true);
         String savedUsername = users.save(testUser).getUsername();
 
@@ -394,7 +394,23 @@ public class UserIntegrationTest {
 
         User savedUser = users.findByUsername(savedUsername).orElse(null);
 
-        assertEquals(200, deleteUserResponse.getStatusCode());
+        assertEquals(204, deleteUserResponse.getStatusCode());
+        assertNull(savedUser);
+    }
+
+    @Test
+    public void deleteNonExistingUser_AdminUser_Success() throws Exception {
+        URI uriUsers = new URI(baseUrl + port + "/api/v1/users");
+
+        RequestSpecification request = RestAssured.given();
+
+        request.header("Authorization", "Bearer " + tokenGeneratedAdmin).header("Content-Type", "application/json");
+
+        Response deleteUserResponse = request.delete(uriUsers + "/nosuchuser");
+
+        User savedUser = users.findByUsername("nosuchuser").orElse(null);
+
+        assertEquals(404, deleteUserResponse.getStatusCode());
         assertNull(savedUser);
     }
 

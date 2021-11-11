@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -288,19 +289,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String username) {
-        User user = getUserByUsername(username);
-        
-        try {
+        if(users.existsByUsername(username)) {
+            User user = users.findByUsername(username).orElse(null);
             final VerificationToken verificationToken = vTokens.findByUser(user).orElse(null);
             if (verificationToken != null) {
                 vTokens.delete(verificationToken);
             }
-
             users.deleteByUsername(username);
-        } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(username);
+            return;
         }
+        throw new UserNotFoundException(username);
     }
 
     @Override

@@ -118,6 +118,7 @@ public class UserController {
     @Operation(summary = "Delete User", security = @SecurityRequirement(name = "bearerAuth"), tags = { "User" })
     @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted User", content = @Content) })
     @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/{username}")
     public void deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
