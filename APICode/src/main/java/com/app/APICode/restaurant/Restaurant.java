@@ -162,6 +162,14 @@ public class Restaurant {
         this.imageURL = imageURl;
     }
 
+    public void setCrowdLevel(List<CrowdLevel> crowdLevel){
+        this.crowdLevel = crowdLevel;
+    }
+
+    public List<CrowdLevel> getCrowdLevel(){
+        return this.crowdLevel;
+    }
+
     // public CrowdLevel getCrowdLevel() {
     //     return crowdLevel.getCrowdLevel();
     // }

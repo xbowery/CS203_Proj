@@ -5,7 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.crowdlevel.CrowdLevelRepository;
@@ -55,7 +59,24 @@ public class G2T4Application {
 		// testRestaurant.setCrowdLevel();
 		testRestaurant = restaurants.save(testRestaurant);
 		System.out.println("[Add restaurant]:" + testRestaurant.getName());
-		
+
+		//Crowd Level of restaurant
+		CrowdLevel day1 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 11).getTime(), "Medium", 30, testRestaurant);
+		CrowdLevel day2 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 10).getTime(), "High", 40, testRestaurant);
+		CrowdLevel day3 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 9).getTime(), "Medium", 30, testRestaurant);
+		CrowdLevel day4 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 8).getTime(), "Low", 10, testRestaurant);
+		CrowdLevel day5 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 7).getTime(), "Medium", 30, testRestaurant);
+		CrowdLevel day6 = new CrowdLevel(new GregorianCalendar(2021, Calendar.NOVEMBER, 6).getTime(), "Low", 20, testRestaurant);
+		List<CrowdLevel> chartData = new ArrayList<>();
+		chartData.add(day1);
+		chartData.add(day2);
+		chartData.add(day3);
+		chartData.add(day4);
+		chartData.add(day5);
+		chartData.add(day6);
+		testRestaurant.setCrowdLevel(chartData);
+		restaurants.save(testRestaurant);
+
 		//Business owner 
 		User businessOwner = new User("user2@test.com", "BusinessOne", "Business", "One", encoder.encode("testing12345"), false,"ROLE_BUSINESS");
 		businessOwner.setEnabled(true);
