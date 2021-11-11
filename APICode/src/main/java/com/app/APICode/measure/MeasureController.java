@@ -55,7 +55,10 @@ public class MeasureController {
          */
         @Operation(summary = "List specific Measure(s)", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Covid Measures" })
-        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Measure.class)))), 
+                @ApiResponse(responseCode = "404", description = "Measure does not exist", content = @Content), 
+})
         @GetMapping("/measures/{measureType}")
         public Measure getMeasure(@PathVariable @NotNull String measureType) {
                 return measureService.getMeasure(measureType);
@@ -69,7 +72,10 @@ public class MeasureController {
          */
         @Operation(summary = "Add new measure", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Covid Measures" })
-        @ApiResponses({ @ApiResponse(responseCode = "201", description = "Successful created new Measure", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "201", description = "Successful created new Measure", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), 
+                @ApiResponse(responseCode = "409", description = "Conflicting Measure", content = @Content), 
+        })
         @ResponseStatus(HttpStatus.CREATED)
         @PostMapping("/measures")
         public Measure addMeasure(@Valid @RequestBody Measure measure) {
@@ -85,7 +91,10 @@ public class MeasureController {
          */
         @Operation(summary = "Update Measures information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Covid Measures" })
-        @ApiResponses({ @ApiResponse(responseCode = "200", description = "Successful updated Measures information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "200", description = "Successful updated Measures information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Measure.class))), 
+                @ApiResponse(responseCode = "404", description = "Measure does not exist", content = @Content), 
+        })
         @PutMapping("/measures")
         public Measure updateMeasure(@Valid @RequestBody Measure updatedMeasure) {
                 return measureService.updateMeasure(updatedMeasure);
@@ -100,7 +109,10 @@ public class MeasureController {
          */
         @Operation(summary = "Delete Measures", description = "Delete Covid Measures by the Type", security = @SecurityRequirement(name = "bearerAuth"), tags = {
                         "Covid Measures" })
-        @ApiResponses({ @ApiResponse(responseCode = "204", description = "Successful deleted Covid Measures", content = @Content) })
+        @ApiResponses({ 
+                @ApiResponse(responseCode = "204", description = "Successful deleted Covid Measures", content = @Content), 
+                @ApiResponse(responseCode = "404", description = "Measure does not exist", content = @Content), 
+        })
         @Transactional
         @DeleteMapping("/measures/{measureType}")
         public void deleteMeasure(@PathVariable @NotNull String measureType) {
