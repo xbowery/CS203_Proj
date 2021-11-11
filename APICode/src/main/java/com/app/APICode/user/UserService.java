@@ -1,9 +1,8 @@
 package com.app.APICode.user;
 
-import com.app.APICode.verificationtoken.VerificationToken;
-import com.app.APICode.user.message.ChangePasswordMessage;
-
 import java.util.List;
+
+import com.app.APICode.user.message.ChangePasswordMessage;
 
 public interface UserService {
     /**

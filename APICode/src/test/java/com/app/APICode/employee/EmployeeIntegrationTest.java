@@ -1,19 +1,22 @@
 package com.app.APICode.employee;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static io.restassured.RestAssured.given;
+import static io.restassured.config.RedirectConfig.redirectConfig;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.app.APICode.user.User;
-import com.app.APICode.user.UserRepository;
 import com.app.APICode.ctest.Ctest;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
 import com.app.APICode.templates.LoginDetails;
 import com.app.APICode.templates.TokenDetails;
+import com.app.APICode.user.User;
+import com.app.APICode.user.UserRepository;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,11 +24,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -36,10 +38,6 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import static io.restassured.config.RedirectConfig.redirectConfig;
-import static org.hamcrest.Matchers.equalTo;
-
-import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -62,12 +60,6 @@ public class EmployeeIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    private String tokenGeneratedAdmin;
-
-    private String tokenGeneratedEmployee;
-
-    private String tokenGeneratedUser;
 
     private String tokenGeneratedBusinessOwner;
 
@@ -120,36 +112,6 @@ public class EmployeeIntegrationTest {
         owner.setRestaurant(testRestaurant);
         businessOwner.setEmployee(owner);
         users.save(businessOwner);
-    }
-
-    @BeforeEach
-    void getAdminRequestToken() throws URISyntaxException {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
-        
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        tokenGeneratedAdmin = result.getBody().getAccessToken();
-    }
-
-    @BeforeEach
-    void getEmployeeRequestToken() throws URISyntaxException {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
-        
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("user5", "testing23456"), TokenDetails.class);
-
-        tokenGeneratedEmployee = result.getBody().getAccessToken();
-    }
-
-    @BeforeEach
-    void getUserRequestToken() throws URISyntaxException {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
-        
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        tokenGeneratedUser = result.getBody().getAccessToken();
     }
 
     @BeforeEach

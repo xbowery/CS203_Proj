@@ -1,10 +1,5 @@
 package com.app.APICode;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,15 +10,19 @@ import com.app.APICode.crowdlevel.CrowdLevel;
 import com.app.APICode.crowdlevel.CrowdLevelRepository;
 import com.app.APICode.ctest.Ctest;
 import com.app.APICode.ctest.CtestRepository;
-import com.app.APICode.ctest.CtestServiceImpl;
 import com.app.APICode.employee.Employee;
-import com.app.APICode.measure.*;
-import com.app.APICode.notification.Notification;
-import com.app.APICode.notification.NotificationRepository;
+import com.app.APICode.measure.Measure;
+import com.app.APICode.measure.MeasureRepository;
 import com.app.APICode.notification.NotificationService;
 import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.restaurant.RestaurantRepository;
-import com.app.APICode.user.*;
+import com.app.APICode.user.User;
+import com.app.APICode.user.UserRepository;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class G2T4Application {

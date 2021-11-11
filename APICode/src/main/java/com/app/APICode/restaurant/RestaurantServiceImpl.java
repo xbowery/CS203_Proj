@@ -6,10 +6,8 @@ import java.util.stream.Collectors;
 import com.app.APICode.employee.Employee;
 import com.app.APICode.employee.EmployeeService;
 import com.app.APICode.user.User;
-import com.app.APICode.user.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

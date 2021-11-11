@@ -1,6 +1,7 @@
 package com.app.APICode.ctest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static io.restassured.config.RedirectConfig.redirectConfig;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,8 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,6 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.path.json.config.JsonPathConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import static io.restassured.config.RedirectConfig.redirectConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -62,8 +62,6 @@ public class CtestIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    private String tokenGeneratedAdmin;
 
     private String tokenGeneratedEmployee1;
 
@@ -145,16 +143,6 @@ public class CtestIntegrationTest {
         owner.setRestaurant(testRestaurant);
         businessOwner.setEmployee(owner);
         users.save(businessOwner);
-    }
-
-    @BeforeEach
-    void getAdminRequestToken() throws URISyntaxException {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
-        
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        tokenGeneratedAdmin = result.getBody().getAccessToken();
     }
 
     @BeforeEach

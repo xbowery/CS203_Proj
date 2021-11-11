@@ -2,14 +2,10 @@ package com.app.APICode.crowdlevel;
 
 import java.util.List;
 
-import com.app.APICode.employee.Employee;
-import com.app.APICode.employee.EmployeeNotFoundException;
 import com.app.APICode.restaurant.Restaurant;
-import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.restaurant.RestaurantService;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserForbiddenException;
-import com.app.APICode.user.UserNotFoundException;
 import com.app.APICode.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;

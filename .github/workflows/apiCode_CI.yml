@@ -4,9 +4,19 @@ on:
   push:
     branches:
       - "*"
+    paths:
+      - APICode/**
   pull_request:
     types: [opened, reopened]
+    paths:
+      - APICode/**
 
+env:
+  AZURE_WEBAPP_NAME: swisshack
+  AZURE_MYSQL_DB_HOST: ${{ secrets.MYSQL_URL }}
+  AZURE_MYSQL_DB_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+  AZURE_MYSQL_DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  
 jobs:
   backend:
     name: Backend CI
@@ -22,5 +32,5 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: maven
-    - name: Build with Maven
-      run: ./mvnw -B package --file pom.xml
+    - name: Build & Test with Maven
+      run: mvn -B -U verify --file pom.xml

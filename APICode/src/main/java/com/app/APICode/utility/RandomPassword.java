@@ -6,7 +6,6 @@ import java.util.List;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
-import org.passay.LengthRule;
 import org.passay.PasswordData;
 import org.passay.PasswordGenerator;
 import org.passay.PasswordValidator;

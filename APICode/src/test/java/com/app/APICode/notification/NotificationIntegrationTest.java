@@ -1,5 +1,20 @@
 package com.app.APICode.notification;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.config.RedirectConfig.redirectConfig;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.is;
+
+import java.net.URI;
+
+import javax.transaction.Transactional;
+
+import com.app.APICode.security.jwt.JWTHelper;
+import com.app.APICode.user.User;
+import com.app.APICode.user.UserRepository;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,28 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.JsonConfig;
 import io.restassured.path.json.config.JsonPathConfig;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-import static org.hamcrest.Matchers.*;
-import static io.restassured.RestAssured.*;
-import static io.restassured.config.RedirectConfig.redirectConfig;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.net.URI;
-
-import javax.transaction.Transactional;
-
-import com.app.APICode.security.jwt.JWTHelper;
-import com.app.APICode.user.User;
-import com.app.APICode.user.UserRepository;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
 public class NotificationIntegrationTest {
     @LocalServerPort

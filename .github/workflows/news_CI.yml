@@ -1,0 +1,42 @@
+name: News API deployment
+
+on: 
+  push:
+    branches:
+      - "*"
+    paths:
+      - NewsMicroservice/**
+  pull_request:
+    types: [opened, reopened]
+    paths:
+      - NewsMicroservice/**
+
+defaults:
+  run:
+    working-directory: ./NewsMicroservice
+
+env:
+  AZURE_WEBAPP_NAME: swisshack-newsapi
+
+jobs:
+  build:
+    name: News API CI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: 'NewsMicroservice/package-lock.json'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Runs all the test
+        run: npm test
