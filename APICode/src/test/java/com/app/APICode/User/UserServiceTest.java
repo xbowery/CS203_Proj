@@ -5,16 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
 import java.util.Optional;
 
-import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.user.EmailNotFoundException;
 import com.app.APICode.user.User;
@@ -113,7 +109,7 @@ public class UserServiceTest {
         User user2 = user;
         user2.setEmail("usertest@test.com");
         ReflectionTestUtils.setField(user2, "id", 1L);
-        
+
         when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         // Act
@@ -122,28 +118,33 @@ public class UserServiceTest {
 
         // Assert
         verify(users).findByUsername(user.getUsername());
-        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(), user2.getUsername());
+        verify(users).setUserInfoByUsername(user2.getFirstName(), user2.getLastName(), user2.getEmail(),
+                user2.getUsername());
     }
 
     // @Test
     // void updateUser_ExistingEmail_ReturnException() {
-    //     // Arrange
-    //     User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
-    //     User user2 = new User("user2@test.com", "user2", "User", "one", "", false, "ROLE_USER");
-    //     ReflectionTestUtils.setField(user2, "id", 1L);
+    // // Arrange
+    // User user = new User("user@test.com", "user1", "User", "one", "", false,
+    // "ROLE_USER");
+    // User user2 = new User("user2@test.com", "user2", "User", "one", "", false,
+    // "ROLE_USER");
+    // ReflectionTestUtils.setField(user2, "id", 1L);
 
-    //     when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-    //     when(users.findByUsername(user2.getUsername())).thenReturn(Optional.of(user2));
+    // when(users.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+    // when(users.findByUsername(user2.getUsername())).thenReturn(Optional.of(user2));
 
-    //     // Act
-    //     user2.setEmail("user@test.com");
-    //     UserOrEmailExistsException existsException = assertThrows(UserOrEmailExistsException.class, () -> {
-    //         userService.updateUserByUsername(user2.getUsername(), UserDTO.convertToUserDTO(user2));
-    //     });
+    // // Act
+    // user2.setEmail("user@test.com");
+    // UserOrEmailExistsException existsException =
+    // assertThrows(UserOrEmailExistsException.class, () -> {
+    // userService.updateUserByUsername(user2.getUsername(),
+    // UserDTO.convertToUserDTO(user2));
+    // });
 
-    //     assertEquals(existsException.getMessage(), "This email already exists.");
-    //     verify(users).findByUsername(user.getUsername());
-    //     verify(users).findByUsername(user2.getUsername());
+    // assertEquals(existsException.getMessage(), "This email already exists.");
+    // verify(users).findByUsername(user.getUsername());
+    // verify(users).findByUsername(user2.getUsername());
     // }
 
     @Test
@@ -152,27 +153,26 @@ public class UserServiceTest {
         User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
         String username = user.getUsername();
         when(users.existsByUsername(username)).thenReturn(true);
-        when(users.findByUsername(username)).thenReturn(Optional.of(user));
 
-        //Act
+        // Act
         userService.deleteUser(username);
-        
-        //Assert 
+
+        // Assert
         verify(users).deleteByUsername(username);
     }
-    
+
     @Test
     void deleteUser_InvalidUser_ReturnError() {
-         // Arrange
-         User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
-         String username = user.getUsername();
+        // Arrange
+        User user = new User("user@test.com", "user1", "User", "one", "", false, "ROLE_USER");
+        String username = user.getUsername();
 
-         //Act
-         UserNotFoundException notFoundException = assertThrows(UserNotFoundException.class, () -> {
+        // Act
+        UserNotFoundException notFoundException = assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUser(username);
         });
 
-        //Assert
+        // Assert
         assertEquals(notFoundException.getMessage(), "Could not find user with username: " + username);
     }
 
@@ -235,21 +235,6 @@ public class UserServiceTest {
     }
 
     @Test
-    void getToken_ValidVerificationToken_ReturnToken() {
-        // Arrange
-        User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
-        VerificationToken vToken = new VerificationToken("validToken", user);
-        when(vTokens.findByToken(vToken.getToken())).thenReturn(Optional.of(vToken));
-
-        // Act
-        VerificationToken vTokenObtained = userService.getVerificationToken(vToken.getToken());
-
-        // Assert
-        assertNotNull(vTokenObtained);
-        verify(vTokens).findByToken(vToken.getToken());
-    }
-
-    @Test
     void getToken_InvalidVerificationToken_ReturnNull() {
         // Arrange
         String token = "nosuchtoken";
@@ -263,50 +248,22 @@ public class UserServiceTest {
         verify(vTokens, never()).save(vToken);
     }
 
-    @Test
-    void validateVerificationToken_ValidToken_ReturnValid() {
-        // Arrange
-        User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
-        VerificationToken vToken = new VerificationToken("validToken", user);
-        when(vTokens.findByToken(vToken.getToken())).thenReturn(Optional.of(vToken));
-
-        // Act
-        String result = userService.validateVerificationToken(vToken.getToken());
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("valid", result);
-        verify(vTokens).findByToken(vToken.getToken());
-    }
-
     // @Test
     // void validateVerificationToken_ExpiredToken_ReturnExpired() {
-    //     // Arrange
-    //     User user = new User("user@test.com", "user1", "User", "One", "", false, "ROLE_USER");
-    //     VerificationToken vToken = new VerificationToken("expiredToken", user);
-    //     vToken.setExpiryDate(new Date(System.currentTimeMillis()));
-    //     when(vTokens.save(any(VerificationToken.class))).thenReturn(vToken);
+    // // Arrange
+    // User user = new User("user@test.com", "user1", "User", "One", "", false,
+    // "ROLE_USER");
+    // VerificationToken vToken = new VerificationToken("expiredToken", user);
+    // vToken.setExpiryDate(new Date(System.currentTimeMillis()));
+    // when(vTokens.save(any(VerificationToken.class))).thenReturn(vToken);
 
-    //     // Act
-    //     String result = userService.validateVerificationToken(vToken.getToken());
+    // // Act
+    // String result = userService.validateVerificationToken(vToken.getToken());
 
-    //     // Assert
-    //     assertNotNull(result);
-    //     assertEquals("expired", result);
-    //     verify(vTokens).save(vToken);
+    // // Assert
+    // assertNotNull(result);
+    // assertEquals("expired", result);
+    // verify(vTokens).save(vToken);
     // }
 
-    @Test
-    void validateVerificationToken_InvalidToken_ReturnInvalid() {
-        // Arrange
-        String token = "nosuchtoken";
-        when(vTokens.findByToken(token)).thenReturn(Optional.empty());
-
-        // Act
-        String result = userService.validateVerificationToken(token);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("invalidToken", result);
-    }
 }

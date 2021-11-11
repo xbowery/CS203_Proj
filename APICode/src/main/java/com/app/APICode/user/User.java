@@ -70,7 +70,7 @@ public class User implements UserDetails {
 
     @Schema(description = "If the user account is enabled.", required = true, hidden = true)
     private boolean enabled = false;
-    
+
     @Schema(description = "If the user account has expired.", required = true, hidden = true)
     private boolean accountNonExpired = false;
 
@@ -85,7 +85,7 @@ public class User implements UserDetails {
     @Schema(description = "Employee details of User.")
     private Employee employee;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private VerificationToken vToken;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -203,7 +203,15 @@ public class User implements UserDetails {
         this.employee = employee;
     }
 
-    public List<Notification> getNotifications(){
+    public List<Notification> getNotifications() {
         return this.notifications;
+    }
+
+    public VerificationToken getvToken() {
+        return vToken;
+    }
+
+    public void setvToken(VerificationToken vToken) {
+        this.vToken = vToken;
     }
 }
