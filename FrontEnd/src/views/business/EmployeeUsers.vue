@@ -50,9 +50,9 @@ export default {
   data() {
     return {
       items: [],
-      total_users: '',
-      active_users: '',
-      pending_users: '',
+      total_users: 0,
+      active_users: 0,
+      pending_users: 0,
     }
   },
 
@@ -72,7 +72,6 @@ export default {
       const res = await UserService.getEmployees(this.username)
       this.items = res.data
       this.total_users = this.items.length.toString(10)
-
       this.items.forEach(item => {
         if (item.employee.status == 'Pending') this.pending_users += 1
         // else if (item.employee.status == 'Active') this.active_users += 1
