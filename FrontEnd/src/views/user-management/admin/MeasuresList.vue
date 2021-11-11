@@ -126,13 +126,8 @@ export default {
     defaultItem: new Measure(),
   }),
 
-  async mounted() {
-    try {
-      const res = await UserService.getMeasures()
-      this.items = res.data
-    } catch (error) {
-      console.error(error)
-    }
+  mounted() {
+    this.getMeasures()
   },
 
   watch: {
@@ -162,6 +157,15 @@ export default {
   },
 
   methods: {
+    async getMeasures(){
+      try {
+        const res = await UserService.getMeasures()
+        this.items = res.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     editItem(item) {
       this.dialog = true
       this.editedIndex = this.items.indexOf(item)
@@ -218,6 +222,7 @@ export default {
     async handleEditMeasure(measure) {
       try {
         const res = await UserService.updateMeasure(measure)
+        this.getMeasures()
         console.log(res.data)
       } catch (error) {
         this.message = error.response?.data?.message || error.message || error.toString()

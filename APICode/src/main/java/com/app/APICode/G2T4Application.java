@@ -119,9 +119,6 @@ public class G2T4Application {
 
 		NotificationService notifications = ctx.getBean(NotificationService.class);
 		notifications.addNewNotification("Welcome to Swisshack, admin!", admin);
-		notifications.addNewNotification("Remember to do your next COVID-19 test which is due in 3 days!", admin);
-		notifications.addNewNotification(
-				"You have a pending employee request from John Doe. Please review it under your Employee List.", admin);
 		
     	//Measures
 		MeasureRepository measures = ctx.getBean(MeasureRepository.class);
