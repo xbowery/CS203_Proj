@@ -24,6 +24,14 @@ module.exports.loadWebpage = async (req, res, next) => {
   res.sendFile(process.cwd() + "/views/index.html");
 };
 
+module.exports.getRestaurants = async (req, res, next) => {
+  try {
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
 /**
  * This function allows the backend to insert a new restaurant into the collection of restaurants
  * to be displayed in the map.
@@ -35,6 +43,11 @@ module.exports.loadWebpage = async (req, res, next) => {
 module.exports.insertRestaurant = async (req, res, next) => {
   try {
     const { name, location: loc, description } = req.body;
+
+    if (!name || !loc || !description) {
+      throw new Error("Missing restaurant fields");
+    }
+
     const { LATITUDE: lat, LONGITUDE: long } = await getLatLong(loc);
     const region = mapper.getSubzoneAtPoint([long, lat]).properties.name;
 
