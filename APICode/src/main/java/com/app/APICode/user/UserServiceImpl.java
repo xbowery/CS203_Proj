@@ -253,16 +253,24 @@ public class UserServiceImpl implements UserService {
         // user.setEmail(newUserInfo.getEmail());
         // user.setFirstName(newUserInfo.getFirstName());
         // user.setLastName(newUserInfo.getLastName());
-
-        String email = newUserInfo.getEmail();
         String firstName = newUserInfo.getFirstName();
         String lastName = newUserInfo.getLastName();
+        boolean isVaccinated = newUserInfo.getIsVaccinated();
+        if(((StringUtils.collectionToCommaDelimitedString(user.getAuthorities()).split("_")[1]).equals("ADMIN"))){
+            String email = newUserInfo.getEmail();
+            users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
+        }
+        else{
+            users.setUserInfoByUsername(firstName, lastName, isVaccinated, newUserInfo.getUsername());
+        }
+
+
 
         // user.setPassword(encoder.encode(newUserInfo.getPassword()));
         // user.setUsername(newUserInfo.getUsername());
         // user.setIsVaccinated(newUserInfo.getIsVaccinated());
         // user.setAuthorities(newUserInfo.getAuthorities());
-        users.setUserInfoByUsername(firstName, lastName, email, newUserInfo.getUsername());
+
 
         User savedUser = getUserByUsername(newUserInfo.getUsername());
         return convertToUserDTO(savedUser);
