@@ -13,4 +13,6 @@ public interface CtestService {
     void deleteCtestByCtestIdAndUsername(String username, Long ctestId);
 
     Date getNextCtestByUsername(String username);
+
+    List<Ctest> getAllEmployeesCtest(String username);
 }

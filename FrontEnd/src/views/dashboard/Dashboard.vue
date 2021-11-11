@@ -17,7 +17,7 @@
           <statistics-card-vertical
             :color="totalNumEmployees.color"
             :icon="totalNumEmployees.icon"
-            :statistics="employee_count.toString(10)"
+            :statistics="employee_count"
             :stat-title="totalNumEmployees.statTitle"
             :subtitle="totalNumEmployees.subtitle"
           ></statistics-card-vertical>
@@ -26,7 +26,7 @@
           <statistics-card-vertical
             :color="employeesPending.color"
             :icon="employeesPending.icon"
-            :statistics="pending_count.toString(10)"
+            :statistics="pending_count"
             :stat-title="employeesPending.statTitle"
             :subtitle="employeesPending.subtitle"
           ></statistics-card-vertical>
@@ -36,7 +36,7 @@
             :change="employeesPostive.change"
             :color="employeesPostive.color"
             :icon="employeesPostive.icon"
-            :statistics="positive_count.toString(10)"
+            :statistics="positive_count"
             :stat-title="employeesPostive.statTitle"
             :subtitle="employeesPostive.subtitle"
           ></statistics-card-vertical>
@@ -46,7 +46,7 @@
           <statistics-card-vertical
             :color="employeesNegative.color"
             :icon="employeesNegative.icon"
-            :statistics="negative_count.toString(10)"
+            :statistics="negative_count"
             :stat-title="employeesNegative.statTitle"
             :subtitle="employeesNegative.subtitle"
           ></statistics-card-vertical>
@@ -103,7 +103,7 @@ export default {
       console.log(this.user.username)
       const res = await UserService.getEmployeesCtests()
       this.items = res.data
-      this.employee_count = this.items.length.toString(10)
+      this.employee_count = this.items.length
 
       this.items.forEach(item => {
         if (item.result == 'Pending') this.pending_count += 1

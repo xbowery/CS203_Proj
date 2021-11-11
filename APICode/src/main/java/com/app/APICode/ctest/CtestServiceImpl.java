@@ -1,15 +1,19 @@
 package com.app.APICode.ctest;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import com.app.APICode.employee.Employee;
+import com.app.APICode.employee.EmployeeForbiddenException;
+import com.app.APICode.employee.EmployeeNotFoundException;
 import com.app.APICode.employee.EmployeeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 public class CtestServiceImpl implements CtestService {
@@ -37,6 +41,7 @@ public class CtestServiceImpl implements CtestService {
     public Ctest saveCtestByUsername(String username, Ctest ctest) {
         Employee employee = employees.getEmployeeByUsername(username);
         ctest.setEmployee(employee);
+        System.out.println(ctest.getDate());
         return ctests.save(ctest);
     }
 
@@ -87,5 +92,25 @@ public class CtestServiceImpl implements CtestService {
         calendar.setTime(latestTest);
         calendar.add(Calendar.DATE, testFrequency);
         return  new Date(calendar.getTimeInMillis());
+    }
+
+    @Override
+    public List<Ctest> getAllEmployeesCtest(String username) {
+        List<Ctest> allCtests = new ArrayList<Ctest>();
+
+        Employee owner = employees.getEmployeeByUsername(username);
+        if (owner == null) {
+            throw new EmployeeNotFoundException(username);
+        } else if (!(StringUtils.collectionToCommaDelimitedString(owner.getUser().getAuthorities()).split("_")[1].equals("BUSINESS"))) {
+            throw new EmployeeForbiddenException("You are forbidden from processing this request.");
+        }
+
+        List<Employee> employees = owner.getRestaurant().getEmployees();
+        for (Employee e : employees) {
+            if(e.getCtests().size() > 0){
+                allCtests.add(e.getCtests().get(e.getCtests().size() - 1));
+            }
+        }
+        return allCtests;
     }
 }

@@ -43,13 +43,11 @@ export default {
   mounted() {
     this.getDays()  
     this.getCrowdLevel()
-    this.getColors()
   },
   methods:{
     async getCrowdLevel(){
       try {
         const res = await UserService.getCrowdLevel(this.user.username)
-        console.log(res.data)
         this.chartOptions.xaxis.categories.forEach(day => {
           var currentDay = day
           var currentMax = 0
@@ -76,14 +74,13 @@ export default {
         var dd = tempDate.getDate()
         var mm = tempDate.getMonth() + 1
         tempDate = dd + '/' + mm 
-        if(dd < 10){
-          tempDate = '0' + dd + '/' + mm 
-        }
         this.chartOptions.xaxis.categories.push(tempDate)
       }
     },
     dateToString(date){
-      return date.substring(8,10) + '/' + date.substring(5,7)
+      var curDate = new Date(date).toLocaleString('en-US', { timeZone: 'Asia/Singapore' })
+      var str = curDate.split("/")
+      return str[1] + '/' + str[0]
     },
 
     getColor(element){
@@ -96,7 +93,6 @@ export default {
         } else{
           this.chartOptions.colors.push(this.colors.success)  
         }
-        console.log(element.latestCrowd)
       }
       // this.chartOptions.colors = colors
     },
