@@ -140,53 +140,35 @@ public class Restaurant {
         return this.employees;
     }
 
-    public void setcurrentCrowdLevel(String currentCrowdLevel){
+    public void setcurrentCrowdLevel(String currentCrowdLevel) {
         this.currentCrowdLevel = currentCrowdLevel;
     }
-    public String getcurrentCrowdLevel(){
+
+    public String getcurrentCrowdLevel() {
         return this.currentCrowdLevel;
     }
 
-    public int getTestFrequency(){
+    public int getTestFrequency() {
         return this.testFrequency;
     }
 
-    public void setTestFrequency(int testFrequency){
+    public void setTestFrequency(int testFrequency) {
         this.testFrequency = testFrequency;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return this.imageURL;
     }
-    public void setImageUrl(String imageURl){
+
+    public void setImageUrl(String imageURl) {
         this.imageURL = imageURl;
     }
 
-    public void setCrowdLevel(List<CrowdLevel> crowdLevel){
+    public void setCrowdLevel(List<CrowdLevel> crowdLevel) {
         this.crowdLevel = crowdLevel;
     }
 
-    public List<CrowdLevel> getCrowdLevel(){
+    public List<CrowdLevel> getCrowdLevel() {
         return this.crowdLevel;
     }
-
-    // public CrowdLevel getCrowdLevel() {
-    //     return crowdLevel.getCrowdLevel();
-    // }
-
-    // public void setCrowdLevel(CrowdLevel crowdLevel) {
-    //     this.crowdLevel = crowdLevel;
-    // }
-
-    // public void setCrowdLevel() {
-    //     double utilization = (double)this.currentCapacity/this.maxCapacity;
-    //     if (utilization <= 0.4) {
-    //         this.crowdLevel = "Low";
-    //     } else if (utilization <= 0.7)  {
-    //         this.crowdLevel = "Medium";
-    //     } else {
-    //         this.crowdLevel = "High";
-    //     }
-    // }
-
 }
