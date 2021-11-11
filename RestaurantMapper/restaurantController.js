@@ -71,19 +71,18 @@ module.exports.insertRestaurant = async (req, res, next) => {
  * Insert the restaurant into the DB
  */
 const insertRestaurantIntoDB = async (restaurant) => {
-  const { name, loc, region } = restaurant;
+  const { name, loc, region, location } = restaurant;
   return await Restaurant.findOneAndUpdate(
     {
       name,
       loc,
       region,
     },
-    {
-      restaurant,
-    },
+    restaurant,
     {
       new: true,
       upsert: true,
+      runValidators: true,
     }
   );
 };
