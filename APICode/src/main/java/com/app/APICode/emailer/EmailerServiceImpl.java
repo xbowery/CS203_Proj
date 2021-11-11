@@ -68,11 +68,11 @@ public class EmailerServiceImpl implements EmailerService {
 
     private String getSubjectMessage(Map<String, Object> variables) {
         if ((Boolean) variables.get("isRegisterConfirmation") != false) {
-            return "COVID Suisse Account Registration Confirmation Link";
+            return "SwissHack Account Registration Confirmation Link";
         } else if ((Boolean) variables.get("isResendConfirmation") != false) {
-            return "COVID Suisse Account Resend Registration Confirmation Link";
+            return "SwissHack Account Resend Registration Confirmation Link";
         } else if ((Boolean) variables.get("requestPasswordChange") != false) {
-            return "COVID Suisse Account Request for Password Reset";
+            return "SwissHack Account Request for Password Reset";
         }
         return "";
     }
