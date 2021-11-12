@@ -88,7 +88,6 @@ export default {
       if (this.user.email) {
         try {
           await this.$store.dispatch('auth/forgetPassword', this.user.email)
-          console.log('success')
           // this.$router.push('/')
         } catch (error) {
           this.message = error.response?.data?.message || error.message || error.toString()
