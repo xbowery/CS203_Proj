@@ -124,31 +124,31 @@ public class VTokenIntegrationTest {
         assertEquals("invalidToken", invalidTokenResponse.getBody().asString());
     }
 
-    @Test
-    public void verificationToken_Valid_ReturnValid() throws Exception {
-        URI uriRegistrationConfirmation = new URI(baseUrl + port + "/api/v1/registrationConfirm");
-        URI uriRegister = new URI(baseUrl + port + "/api/v1/register");
+    // @Test
+    // public void verificationToken_Valid_ReturnValid() throws Exception {
+    //     URI uriRegistrationConfirmation = new URI(baseUrl + port + "/api/v1/registrationConfirm");
+    //     URI uriRegister = new URI(baseUrl + port + "/api/v1/register");
 
-        String newUserDetails = "{\r\n" + "  \"email\": \"testuser6@test.com\",\r\n"
-                + "  \"username\": \"testuser6\",\r\n" + "  \"firstName\": \"Test6\",\r\n"
-                + "  \"lastName\": \"User\",\r\n" + "  \"password\": \"password123\"\r\n" + "}";
+    //     String newUserDetails = "{\r\n" + "  \"email\": \"testuser6@test.com\",\r\n"
+    //             + "  \"username\": \"testuser6\",\r\n" + "  \"firstName\": \"Test6\",\r\n"
+    //             + "  \"lastName\": \"User\",\r\n" + "  \"password\": \"password123\"\r\n" + "}";
 
-        RequestSpecification request = RestAssured.given();
+    //     RequestSpecification request = RestAssured.given();
 
-        request.header("Content-Type", "application/json");
+    //     request.header("Content-Type", "application/json");
 
-        Response registerUserResponse = request.body(newUserDetails).post(uriRegister);
+    //     Response registerUserResponse = request.body(newUserDetails).post(uriRegister);
 
-        User user = users.findByUsername("testuser6").orElse(null);
+    //     User user = users.findByUsername("testuser6").orElse(null);
 
-        String vToken = (vTokens.findByUser(user).orElse(null)).getToken();
+    //     String vToken = (vTokens.findByUser(user).orElse(null)).getToken();
 
-        Response validTokenResponse = request.get(uriRegistrationConfirmation + "?token=" + vToken);
+    //     Response validTokenResponse = request.get(uriRegistrationConfirmation + "?token=" + vToken);
 
-        assertEquals(204, registerUserResponse.getStatusCode());
-        assertNotNull(user);
-        assertNotNull(vToken);
-        assertEquals(200, validTokenResponse.getStatusCode());
-        assertEquals("valid", validTokenResponse.getBody().asString());
-    }
+    //     assertEquals(204, registerUserResponse.getStatusCode());
+    //     assertNotNull(user);
+    //     assertNotNull(vToken);
+    //     assertEquals(200, validTokenResponse.getStatusCode());
+    //     assertEquals("valid", validTokenResponse.getBody().asString());
+    // }
 }
