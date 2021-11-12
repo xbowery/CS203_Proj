@@ -34,6 +34,16 @@
               label="Sort by"
             ></v-select>
             <v-spacer></v-spacer>
+            <v-btn
+              class="mx-2"
+              fab
+              small
+              color="accent"
+              href="https://swisshack-restaurantmapper.azurewebsites.net"
+              target="_blank"
+            >
+              <v-icon> {{ icons.mdiMapOutline }} </v-icon>
+            </v-btn>
             <v-btn-toggle v-model="sortDesc" mandatory>
               <v-btn large depressed color="blue" :value="false">
                 <v-icon>{{ icons.mdiArrowUp }}</v-icon>
@@ -107,12 +117,12 @@
 
 <script>
 import UserService from '@/services/user.service'
-import { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown } from '@mdi/js'
+import { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown, mdiMapOutline } from '@mdi/js'
 // import imgPath from '@/assets/image/misc'
 export default {
   setup() {
     return {
-      icons: { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown },
+      icons: { mdiChevronRight, mdiChevronLeft, mdiMagnify, mdiArrowUp, mdiArrowDown, mdiMapOutline },
       // imgPath
     }
   },
