@@ -1,4 +1,4 @@
-name: News API deployment
+name: News API CI
 
 on: 
   push:

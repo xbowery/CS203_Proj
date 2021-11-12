@@ -1,0 +1,19 @@
+name: Vue CI
+
+on: 
+  push:
+    branches:
+      - "*"
+    paths:
+      - FrontEnd/**
+      - RestaurantMapper/**
+  pull_request:
+    types: [opened, reopened]
+    paths:
+      - FrontEnd/**
+      - RestaurantMapper/**
+jobs:
+  explore:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "CS203 is fun!🎉"
