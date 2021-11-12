@@ -64,7 +64,7 @@ public class Restaurant {
     private List<CrowdLevel> crowdLevel;
 
     @Schema(description = "String containing the url to the cover image of the restaurant")
-    private String imageURL;
+    private String imageURL = "about.jpg";
 
     public Restaurant() {
     }

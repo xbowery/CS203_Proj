@@ -1,10 +1,12 @@
 package com.app.APICode.user;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerServiceImpl;
 import com.app.APICode.notification.NotificationService;
@@ -142,17 +144,17 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> dataModel = emailerService.getDataModel();
         dataModel.put("isRegisterConfirmation", true);
-        dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + token);
+        dataModel.put("token", "https://happy-stone-0f3668c00.azurestaticapps.net/RegisterConfirmation?token=" + token);
 
-        // try {
-        // emailerService.sendMessage(user.getEmail(), dataModel);
-        // } catch (MessagingException e) {
-        // System.out.println("Error occurred while trying to send an email to: " +
-        // user.getEmail());
-        // } catch (IOException e) {
-        // System.out.println("Error occurred while trying to send an email to: " +
-        // user.getEmail());
-        // }
+        try {
+            emailerService.sendMessage(user.getEmail(), dataModel);
+        } catch (MessagingException e) {
+            System.out.println("Error occurred while trying to send an email to: " +
+            user.getEmail());
+        } catch (IOException e) {
+            System.out.println("Error occurred while trying to send an email to: " +
+            user.getEmail());
+        }
 
         final VerificationToken vToken = new VerificationToken(token, user);
         user.setvToken(vToken);
@@ -180,9 +182,6 @@ public class UserServiceImpl implements UserService {
                 throw new UserOrEmailExistsException("This email already exists.");
             }
         }
-        // user.setEmail(newUserInfo.getEmail());
-        // user.setFirstName(newUserInfo.getFirstName());
-        // user.setLastName(newUserInfo.getLastName());
         String firstName = newUserInfo.getFirstName();
         String lastName = newUserInfo.getLastName();
         boolean isVaccinated = newUserInfo.getIsVaccinated();
@@ -216,15 +215,15 @@ public class UserServiceImpl implements UserService {
         dataModel.put("requestPasswordChange", true);
         dataModel.put("password", tempPassword);
 
-        // try {
-        // emailerService.sendMessage(email, dataModel);
-        // } catch (MessagingException e) {
-        // System.out.println("Error occurred while trying to send an email to: " +
-        // email);
-        // } catch (IOException e) {
-        // System.out.println("Error occurred while trying to send an email to: " +
-        // email);
-        // }
+        try {
+            emailerService.sendMessage(email, dataModel);
+        } catch (MessagingException e) {
+            System.out.println("Error occurred while trying to send an email to: " +
+                email);
+        } catch (IOException e) {
+            System.out.println("Error occurred while trying to send an email to: " +
+                email);
+        }
         updatePasswordByEmail(email, tempPassword);
     }
 

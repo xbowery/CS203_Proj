@@ -1,8 +1,11 @@
 package com.app.APICode.verificationtoken;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.mail.MessagingException;
 
 import com.app.APICode.emailer.EmailerService;
 import com.app.APICode.user.User;
@@ -67,17 +70,17 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
             Map<String, Object> dataModel = emailerService.getDataModel();
             dataModel.put("isResendConfirmation", true);
-            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + newVToken);
+            dataModel.put("token", "https://happy-stone-0f3668c00.azurestaticapps.net/RegisterConfirmation?token=" + newVToken);
 
-            // try {
-            // emailerService.sendMessage(user.getEmail(), dataModel);
-            // } catch (MessagingException e) {
-            // System.out.println("Error occurred while trying to send an email to: " +
-            // user.getEmail());
-            // } catch (IOException e) {
-            // System.out.println("Error occurred while trying to send an email to: " +
-            // user.getEmail());
-            // }
+            try {
+                emailerService.sendMessage(user.getEmail(), dataModel);
+            } catch (MessagingException e) {
+                System.out.println("Error occurred while trying to send an email to: " +
+                user.getEmail());
+            } catch (IOException e) {
+                System.out.println("Error occurred while trying to send an email to: " +
+                user.getEmail());
+            }
             
             return TOKEN_EXPIRED;
         }
