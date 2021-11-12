@@ -1,5 +1,6 @@
 import { axiosInstance as api, post } from './api'
 import newsapi from '@/services/newsApi'
+import mapperApi from '@/services/restaurantMapperApi'
 
 const JSON_HEADER = {
   headers: {
@@ -98,7 +99,12 @@ class UserService {
   deleteUser(user) {
     return api.delete(`users/${user.username}`, JSON_HEADER)
   }
-  postRestaurant(restaurant) {
+  async postRestaurant(restaurant) {
+    try {
+      await mapperApi.post('restaurants', restaurant, JSON_HEADER)
+    } catch (err) {
+      console.error(err)
+    }
     return api.post(
       'restaurants',
       {
@@ -149,7 +155,7 @@ class UserService {
     const request = `/users/employee/allctests`
     return api.get(request)
   }
-  
+
   changePassword(changePasswordMessage) {
     return post('/users/password', changePasswordMessage)
   }
