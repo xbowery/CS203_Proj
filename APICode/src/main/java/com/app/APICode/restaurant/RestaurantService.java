@@ -15,7 +15,7 @@ public interface RestaurantService {
 
     /**
      * Gets the Restaurant associated with the given id.
-     * If no Restaurant found, throw a {@link RestaurantNotFoundException}
+     * <p>If no Restaurant found, throw a {@link RestaurantNotFoundException}.
      * 
      * @param id restaurant id
      * @return a Restaurant object
@@ -24,8 +24,8 @@ public interface RestaurantService {
 
     /**
      * Gets the Restaurant associated with the given "username", to find the Restaurant to which Employee belongs to.
-     * If no Restaurant found, throw a
-     * {@link RestaurantNotFoundException}
+     * <p>If no Restaurant found, throw a
+     * {@link RestaurantNotFoundException}.
      * 
      * @param username a String containing the username
      * @return a Restaurant object
@@ -33,8 +33,9 @@ public interface RestaurantService {
     Restaurant getRestaurantByUsername(String username);
 
     /**
-     * Creates a new restaurant with the given name and location. If name or location already exists, throw a
-     * {@link RestaurantDuplicateException}
+     * Creates a new restaurant with the given name and location. 
+     * <p>If Restaurant with given name and location already exists, throw a
+     * {@link RestaurantDuplicateException}.
      * 
      * @param restaurant a Restaurant object
      * @return the newly added Restaurant object
@@ -42,7 +43,8 @@ public interface RestaurantService {
     Restaurant addRestaurant(Restaurant restaurant);
 
     /**
-     * Updates the Restaurant info with the given Restaurant object by id. If no Restaurant exists with the given id,
+     * Updates the Restaurant info with the given Restaurant object by id. 
+     * <p>If no Restaurant exists with the given id,
      * throw a {@link RestaurantNotFoundException}
      * 
      * @param id restaurant id
@@ -52,7 +54,8 @@ public interface RestaurantService {
     Restaurant updateRestaurant(long id, Restaurant restaurant);
 
     /**
-     * Deletes the Restaurant with the given id. If Restaurant does not exist, throw a
+     * Deletes the Restaurant with the given id. 
+     * <p>If Restaurant does not exist, throw a
      * {@link RestaurantNotFoundException}
      * 
      * @param id restaurant id
@@ -60,7 +63,8 @@ public interface RestaurantService {
     void removeById(long id);
 
     /**
-     * Gets the User who is the Restaurant Owner associated with the given id. If no User found, throw a
+     * Gets the User who is the Restaurant Owner associated with the given id. 
+     * <p>If no User found, throw a
      * {@link RestaurantOwnerNotFoundException}
      * 
      * @param id restaurant id

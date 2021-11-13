@@ -30,7 +30,7 @@ public interface EmployeeService {
      * "designation" working in a business specified by "businessId"
      * 
      * @param username     a string containing the username of the new Employee
-     * @param designationa a string containing the designation of the new Employee
+     * @param designation a string containing the designation of the new Employee
      * @param businessId   a long containing the Restaurant ID
      * @return an Employee object
      */

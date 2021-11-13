@@ -15,8 +15,9 @@ public interface UserService {
     List<User> getAllUsers();
 
     /**
-     * Gets the User details by the specified "username". If the principal does not
-     * match the specified "username", throw a {@link UserForbiddenException}
+     * Gets the User details by the specified "username". 
+     * <p>If the principal does not
+     * match the specified "username", throw a {@link UserForbiddenException}.
      * 
      * @param requesterUsername the username for verification
      * @param username          a String containing the username to be retrieved
@@ -25,8 +26,9 @@ public interface UserService {
     UserDTO getUserDetailsByUsername(String requesterUsername, String username);
 
     /**
-     * Gets the User associated with the given "username" If no User found, throw a
-     * {@link UserNotFoundException}
+     * Gets the User associated with the given "username".
+     * <p>If no User found, throw a
+     * {@link UserNotFoundException}.
      * 
      * @param username a String containing the username
      * @return an User object
@@ -34,8 +36,8 @@ public interface UserService {
     User getUserByUsername(String username);
 
     /**
-     * Gets the User associated with the given "email" If no User found, throw a
-     * {@link EmailNotFoundException}
+     * Gets the User associated with the given "email". <p> If no User found, throw a
+     * {@link EmailNotFoundException}.
      * 
      * @param email a String containing the email
      */
@@ -43,8 +45,8 @@ public interface UserService {
     
     /**
      * Creates a new user with the given "user" and "isAdmin" to determine the role
-     * of the new user. If new email or username exists, throw a
-     * {@link UserOrEmailExistsException}
+     * of the new user. <p>If new email or username exists, throw a
+     * {@link UserOrEmailExistsException}.
      * 
      * @param user    a User object
      * @param isAdmin boolean value to determine if user is admin or not
@@ -53,8 +55,8 @@ public interface UserService {
     UserDTO addUser(User user, Boolean isAdmin);
 
     /**
-     * Updates the User info with the given "username". If new email or username
-     * exists, throw a {@link UserOrEmailExistsException}
+     * Updates the User info with the given "username". <p>If new email or username
+     * exists, throw a {@link UserOrEmailExistsException}.
      * 
      * @param username a string containing the username of the User
      * @param user     a UserDTO object containning the new info to be updated
@@ -63,8 +65,8 @@ public interface UserService {
     void updateUserByUsername(String username, UserDTO user);
 
     /**
-     * Updates the User password with the given "email". If no User is found, throw
-     * a {@link UserNotFoundException}
+     * Updates the User password with the given "email". <p>If no User is found, throw
+     * a {@link UserNotFoundException}.
      * 
      * @param email    a string containing the email of the User
      * @param password a string containing the plaintext password
@@ -73,8 +75,8 @@ public interface UserService {
     User updatePasswordByEmail(String email, String password);
 
     /**
-     * Generates a new password for the user with the given "email" If no user is
-     * found, throw a {@link EmailNotFoundException}
+     * Generates a new password for the user with the given "email". <p> If no user is
+     * found, throw a {@link EmailNotFoundException}.
      * 
      * @param email a string containing the email of the User
      * 
@@ -82,8 +84,8 @@ public interface UserService {
     void createTempPassword(String email);
 
     /**
-     * Deletes the user with the given "username". If user does not exists, throw a
-     * {@link UserNotFoundException}
+     * Deletes the user with the given "username". <p>If user does not exists, throw a
+     * {@link UserNotFoundException}.
      * 
      * @param username
      */
@@ -99,10 +101,10 @@ public interface UserService {
 
     /**
      * Updates the password of the user specified by "username" with password
-     * details specfied in "message". If password in User object does not match with
+     * details specfied in "message". <p>If password in User object does not match with
      * the current password specified in message, throw a
-     * InvalidChangePasswordException. If the new password and confirm new password
-     * does not match, throw a InvalidChangePasswordException.
+     * {@link InvalidChangePasswordException}. <p>If the new password and confirm new password
+     * does not match, throw a {@link InvalidChangePasswordException}.
      * 
      * @param username a string containing the username of the User
      * @param message  a ChangePasswordMessage object containing the current
