@@ -68,13 +68,6 @@ public class NotificationServiceImpl implements NotificationService {
         return addNewNotification(notificationText, owner);
     }
 
-    /**
-     * Cron task to automatically check for employees and users who need to do their
-     * tests When the number of days <= 3, a new notification will be created at
-     * midnight. The days and cron schedule is customisable from the properties file
-     * 
-     * @return int number of notifications generated
-     */
     @Override
     @Scheduled(cron = "${notification.cron.ctest}")
     public int generateCtestNotification() {
@@ -88,14 +81,6 @@ public class NotificationServiceImpl implements NotificationService {
         return atomicInteger.get();
     }
 
-    /**
-     * Check if the last test done is more than the predefined limit for
-     * notifications. Returns true if yes and a notification is created. Else,
-     * returns false.
-     * 
-     * @param user
-     * @return
-     */
     @Override
     public boolean checkAndGenerateNotifications(User user) {
         Date nextCtestDate = ctests.getNextCtestByUsername(user.getUsername());
@@ -110,45 +95,22 @@ public class NotificationServiceImpl implements NotificationService {
         return false;
     }
 
-    /**
-     * Saves a new notification with the given string for the given user.
-     * 
-     * @param notificationText notification details
-     * @param user             the user to save as
-     * @return Notification the notification saved
-     */
     @Override
     public Notification addNewNotification(String notificationText, User user) {
         Notification newNotification = new Notification(notificationText, user);
         return notifications.save(newNotification);
     }
 
-    /**
-     * This function will fetch all the notification of a user and filter them to
-     * only display the ones which are not read yet
-     */
     @Override
     public List<Notification> getNotificationsByUsername(String username) {
         User user = users.getUserByUsername(username);
         return filterUnreadNotifications(user.getNotifications());
     }
 
-    /**
-     * Internal function to filter the notifications to only return unread ones
-     * 
-     * @param notificationsList
-     * @return List<Notification>
-     */
     public List<Notification> filterUnreadNotifications(List<Notification> notifications) {
         return notifications.stream().filter(n -> !n.isSeen()).collect(Collectors.toList());
     }
 
-    /**
-     * Function which will change all of the notification of a user to a state of
-     * read: true
-     * 
-     * @param username the username of the user
-     */
     @Transactional
     @Override
     public List<Notification> markAllNotificationsRead(String username) {
@@ -157,13 +119,6 @@ public class NotificationServiceImpl implements NotificationService {
         return user.getNotifications();
     }
 
-    /**
-     * Function which will only mark a single notification as read, using the
-     * notification ID. It will also ensure the notification belongs to the user.
-     * 
-     * @param username username of user
-     * @param id       notification ID
-     */
     @Override
     public Notification markSingleNotificationRead(String username, Long notifId) {
         User user = users.getUserByUsername(username);
