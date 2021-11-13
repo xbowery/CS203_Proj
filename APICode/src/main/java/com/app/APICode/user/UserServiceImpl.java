@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> dataModel = emailerService.getDataModel();
         dataModel.put("isRegisterConfirmation", true);
-        dataModel.put("token", "https://happy-stone-0f3668c00.azurestaticapps.net/RegisterConfirmation?token=" + token);
+        dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + token);
 
         try {
             emailerService.sendMessage(user.getEmail(), dataModel);

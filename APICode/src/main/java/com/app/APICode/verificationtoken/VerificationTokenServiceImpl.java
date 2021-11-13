@@ -70,7 +70,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
             Map<String, Object> dataModel = emailerService.getDataModel();
             dataModel.put("isResendConfirmation", true);
-            dataModel.put("token", "https://happy-stone-0f3668c00.azurestaticapps.net/RegisterConfirmation?token=" + newVToken);
+            dataModel.put("token", "http://localhost:3000/RegisterConfirmation?token=" + newVToken);
 
             try {
                 emailerService.sendMessage(user.getEmail(), dataModel);
