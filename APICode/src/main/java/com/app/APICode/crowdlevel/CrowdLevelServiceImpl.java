@@ -22,7 +22,8 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
     private UserService userService;
 
     @Autowired
-    public CrowdLevelServiceImpl(CrowdLevelRepository crowdlevels, RestaurantService restaurantService, UserService userService) {
+    public CrowdLevelServiceImpl(CrowdLevelRepository crowdlevels, RestaurantService restaurantService,
+            UserService userService) {
         this.crowdlevels = crowdlevels;
         this.restaurantService = restaurantService;
         this.userService = userService;
@@ -37,11 +38,6 @@ public class CrowdLevelServiceImpl implements CrowdLevelService {
         }
 
         Restaurant restaurant = user.getEmployee().getRestaurant();
-
-        List<CrowdLevel> crowdLevel = crowdlevels.findByRestaurant(restaurant);
-        if(crowdLevel.size() == 0){
-            throw new CrowdLevelNotFoundException(restaurant.getName());
-        }
 
         return crowdlevels.findByRestaurant(restaurant);
     }

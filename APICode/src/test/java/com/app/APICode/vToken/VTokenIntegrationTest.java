@@ -5,10 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
-import com.app.APICode.templates.LoginDetails;
-import com.app.APICode.templates.TokenDetails;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserRepository;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
@@ -18,16 +15,13 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -42,12 +36,11 @@ import io.restassured.specification.RequestSpecification;
 @TestInstance(Lifecycle.PER_CLASS)
 public class VTokenIntegrationTest {
 
-    
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
-                    .withConfiguration(GreenMailConfiguration.aConfig().withUser("duke", "springboot"))
-                    .withPerMethodLifecycle(false);
-                    
+            .withConfiguration(GreenMailConfiguration.aConfig().withUser("duke", "springboot"))
+            .withPerMethodLifecycle(false);
+
     @LocalServerPort
     private int port;
 
@@ -62,13 +55,6 @@ public class VTokenIntegrationTest {
     @Autowired
     private VerificationTokenRepository vTokens;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private String tokenGeneratedAdmin;
-
-    private String tokenGeneratedUser;
-
     @BeforeAll
     public static void initClass() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -78,6 +64,7 @@ public class VTokenIntegrationTest {
                 .jsonConfig(JsonConfig.jsonConfig().numberReturnType(JsonPathConfig.NumberReturnType.DOUBLE))
                 .redirect(redirectConfig().followRedirects(false));
     }
+
     @BeforeAll
     void setupDB() {
         User admin = new User("admin@test.com", "admin", "admin1", null, encoder.encode("goodpassword"), true,
@@ -94,26 +81,6 @@ public class VTokenIntegrationTest {
                 true, "ROLE_USER");
         testUser.setEnabled(true);
         users.save(testUser);
-    }
-
-    @BeforeEach
-    void getAdminRequestToken() throws URISyntaxException {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
-
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("admin", "goodpassword"), TokenDetails.class);
-
-        tokenGeneratedAdmin = result.getBody().getAccessToken();
-    }
-
-    @BeforeEach
-    void getUserRequestToken() throws URISyntaxException {
-        URI uriLogin = new URI(baseUrl + port + "/api/v1/login");
-
-        ResponseEntity<TokenDetails> result = restTemplate.postForEntity(uriLogin,
-                new LoginDetails("test1", "password123"), TokenDetails.class);
-
-        tokenGeneratedUser = result.getBody().getAccessToken();
     }
 
     @AfterAll

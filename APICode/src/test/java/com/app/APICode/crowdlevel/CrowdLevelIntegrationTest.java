@@ -178,7 +178,7 @@ public class CrowdLevelIntegrationTest {
 
         Response getCrowdLevelResponse = request.get(uriCrowdLevel);
 
-        assertEquals(404, getCrowdLevelResponse.getStatusCode());
+        assertEquals(200, getCrowdLevelResponse.getStatusCode());
     }
 
     @Test
