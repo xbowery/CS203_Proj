@@ -10,9 +10,8 @@ public interface CrowdLevelService {
      * Retrieves a list of CrowdLevel with the specified business's
      * owner "username".
      * 
-     * <p> If associated User is not a Business owner, throw a {@link UserForbiddenException}.
-     * <p> If no CrowdLevel is found, throw a {@link CrowdLevelNotFoundException}.
-     * 
+     * If associated User is not a Business owner, throw a {@link UserForbiddenException}.
+     *  
      * @param username a string containing the Business owner's username
      * @return a list of {@link CrowdLevel}
      */
