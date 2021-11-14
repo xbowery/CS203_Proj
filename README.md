@@ -27,7 +27,7 @@ Furthermore, individuals face an uphill battle in keeping up with the latest new
 
 Our web application, Swisshack, would be a one-stop solution to help food and beverage businesses and consumers adapt to the changing safe management measures and restrictions. 
 
-With changing safe management measures and restrictions as we gradually adapt to the new normal, users will be able to keep up to date with the latest news and government directives on food and beverage or covid-19 related matters. Users would also be able to discover restaurants and their updated crowd levels in real time so that consumers like us would be informed of restaurants with high crowds to reduce exposure.
+With changing safe management measures and restrictions as we gradually adapt to the new normal, users will be able to keep up to date with the latest news and government directives on food and beverage or COVID-19 related matters. Users would also be able to discover restaurants and their updated crowd levels in real time so that consumers like us would be informed of restaurants with high crowds to reduce exposure.
 
 For a business owner, Swisshack will be an easy-to-use platform for him to keep track of his business’s employees from vaccination status to covid testing results or even review his weekly crowd levels.
 
