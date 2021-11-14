@@ -5,15 +5,15 @@ import java.util.List;
 public interface MeasureService {
 
     /**
-     * Gets all measures in the DB
+     * Gets all measures in the database
      * 
      * @return list of {@link Measure}
      */
     List<Measure> listMeasures();
 
     /**
-     * Get a specific measure by its type. 
-     * <p> If no Measure is found, throw a {@link MeasureNotFoundException}.
+     * Get a specific {@link Measure} by its type. 
+     * <p> If no {@link Measure} is found, throw a {@link MeasureNotFoundException}.
      * 
      * @param measureType string containing the type of measure
      * @return a {@link Measure} specified by the provided type
@@ -21,7 +21,7 @@ public interface MeasureService {
     Measure getMeasure(String measureType);
 
     /**
-     * Adds a new measure to DB.
+     * Adds a new {@link Measure} to the database.
      * <p> If measure type already exists, throw a {@link MeasureDuplicateException}.
      * 
      * @param measure a new {@link Measure} to be persisted
@@ -30,8 +30,8 @@ public interface MeasureService {
     Measure addMeasure(Measure measure);
 
     /**
-     * Updates a measure that exists in DB.
-     * <p> If no Measure of the measure type is found, throw a {@link MeasureNotFoundException}.
+     * Updates a {@link Measure} that exists in the database.
+     * <p> If no {@link Measure} of the measure type is found, throw a {@link MeasureNotFoundException}.
      * 
      * @param measure Contains the updated {@link Measure}
      * @return the updated {@link Measure}
@@ -40,7 +40,7 @@ public interface MeasureService {
 
     /**
      * Deletes measures based on the provided type.
-     * <p> If no Measure of the measure type is found, throw a {@link MeasureNotFoundException}.
+     * <p> If no {@link Measure} of the measure type is found, throw a {@link MeasureNotFoundException}.
      * 
      * @param measureType a String containing the measure Type
      */

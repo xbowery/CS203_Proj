@@ -10,7 +10,7 @@ import com.app.APICode.user.UserDTO;
 public interface EmployeeService {
     /**
      * Gets all employees that work in the business with the specified business's
-     * owner "username"
+     * <p> owner "username"
      * 
      * @param username a string containing the Business owner's username
      * @return a list of {@link UserDTO}
@@ -18,8 +18,8 @@ public interface EmployeeService {
     List<UserDTO> getAllEmployeesByBusinessOwner(String username);
 
     /**
-     * Gets an Employee with the specified "username"
-     * <p> If no Employee is found, throw a {@link EmployeeNotFoundException}.
+     * Gets an {@link Employee} with the specified "username"
+     * <p> If no {@link Employee} is found, throw a {@link EmployeeNotFoundException}.
      * 
      * @param username a string containing the username of the Employee
      * @return an {@link Employee} object
@@ -27,7 +27,7 @@ public interface EmployeeService {
     Employee getEmployeeByUsername(String username);
 
     /**
-     * Gets an Employee with the specified "username", if the requester is authorised.
+     * Gets an {@link Employee} with the specified "username", if the requester is authorised.
      * <p> If the requester is not a business owner, throw a {@link EmployeeNotAllowedException}.
      * 
      * @param requesterUsername a String containing the username of the requester
@@ -37,9 +37,9 @@ public interface EmployeeService {
     Employee getEmployeeDetailsByUsername(String requesterUsername, String employeeUsername);
 
     /**
-     * Creates an Employee object for the user with specified "username" with the
+     * Creates an {@link Employee} object for the {@link User} with specified "username" with the
      * "designation" working in a business specified by "businessId".
-     * <p> If Restaurant is not found with associated "businessId", throw a {@link RestaurantNotFoundException}.
+     * <p> If {@link Restaurant} is not found with associated "businessId", throw a {@link RestaurantNotFoundException}.
      * 
      * @param username     a string containing the username of the new Employee
      * @param designation a string containing the designation of the new Employee
@@ -49,7 +49,7 @@ public interface EmployeeService {
     Employee addEmployeeToBusiness(String username, String designation, long businessId);
 
     /**
-     * Updates the role of the User to an Employee when the Business Owner approves
+     * Updates the role of the {@link User} to an {@link Employee} when the Business Owner approves
      * the request.
      * 
      * @param username a string containing the username of the new Employee
@@ -58,9 +58,9 @@ public interface EmployeeService {
     Employee approveEmployee(String username);
 
     /**
-     * Deletes the Employee object linked with the User specified by "Username".
-     * Downgrades user's role to a normal User
-     * <p>If User with associated "username" is not an Employee, throw a {@link EmployeeNotFoundException}.
+     * Deletes the {@link Employee} object linked with the {@link User} specified by "Username".
+     * Downgrades user's role to a normal {@link User}
+     * <p>If {@link User} with associated "username" is not an {@link Employee}, throw a {@link EmployeeNotFoundException}.
      * 
      * @param username a string containing the username of the new Employee
      * 

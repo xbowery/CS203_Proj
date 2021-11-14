@@ -20,6 +20,10 @@ public class TokenPurgingTask {
         this.vTokens = vTokens;
     }
 
+    /**
+     * Function to periodically remove any expired tokens from the database
+     * daily at 7am using a CRON job scheduler
+     */
     @Scheduled(cron = "${purging.cron.expression}")
     public void purgeExpiredTokens() {
         Date now = Date.from(Instant.now());

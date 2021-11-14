@@ -55,9 +55,9 @@ public class EmployeeController {
 	}
 
 	/**
-	 * Search for employee with the given username If there is no user with the
-	 * given username, throw a UserNotFoundException If there is no employee with
-	 * the given username, throw a EmployeeNotFoundException
+	 * Search for {@link Employee} with the given username. 
+	 * <p> If there is no {@link User} with the given username, throw a UserNotFoundException. 
+	 * <p> If there is no {@link Employee} with the given username, throw a EmployeeNotFoundException
 	 * 
 	 * @param principal {@link Principal} object containing the username of the user logged in currently
 	 * @return {@link Employee} object with the given username
@@ -75,8 +75,7 @@ public class EmployeeController {
 
 	/**
 	 * Add new employee with POST request. 
-	 * If there is no user with the
-	 * given username, throw a UserNotFoundException
+	 * <p> If there is no {@link User} with the given username, throw a UserNotFoundException.
 	 * 
 	 * @param {@link Principal} object containing the username of the user logged in currently
 	 * @param message {@link RequestMessage} object containing the request for User to join a Business
@@ -94,8 +93,8 @@ public class EmployeeController {
 	}
 
 	/**
-	 * Change the {@link Employee} status to "Active" Change the {@link User} authorities to
-	 * "ROLE_EMPLOYEE"
+	 * Change the {@link Employee} status to "Active" 
+	 * <p> Change the {@link User} authorities to "ROLE_EMPLOYEE"
 	 * 
 	 * @param {@link Principal} object containing the username of the user logged in currently
 	 * @return employee with the given username
@@ -112,8 +111,8 @@ public class EmployeeController {
 
 	/**
 	 * Get the {@link User} object by username and set its authorities to "ROLE_USER" 
-	 * Get the {@link Employee} object from the {@link User} and set
-	 * the restaurant attribute to null. Also sets the employee attribute to null
+	 * <p> Get the {@link Employee} object from the {@link User} and set
+	 * <p> the restaurant attribute to null. Also sets the employee attribute to null
 	 * 
 	 * 
 	 * @param username username of employee

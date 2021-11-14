@@ -17,6 +17,9 @@ public class RandomPassword {
     PasswordGenerator generator;
     PasswordValidator validator;
 
+    /**
+     * Constructor for the RandomPassword class
+     */
     public RandomPassword() {
         rules = new ArrayList<>();
         
