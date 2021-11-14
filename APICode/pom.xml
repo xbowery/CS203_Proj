@@ -164,6 +164,16 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>3.0.0</version>
+              <configuration>
+                  <source>1.8</source>
+                  <target>1.8</target>
+				  <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+              </configuration>
+          </plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.5</version>

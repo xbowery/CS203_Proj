@@ -24,11 +24,22 @@ public class AuthenticationController {
 
     private JWTRefreshToken jwtRefreshToken;
 
+    /**
+     * Initialises a new {@link AuthenticationController} class
+     * 
+     * @param jwtRefreshToken {@link JWTRefreshToken} object containing the JWT refresh token
+     */
     @Autowired
     public AuthenticationController(JWTRefreshToken jwtRefreshToken) {
         this.jwtRefreshToken = jwtRefreshToken;
     }
 
+    /**
+     * Login to get JWT Access Token
+     * 
+     * @param credential {@link CredentialMessage} object
+     * @return an {@link AccessTokenMessage} object
+     */
     @Operation(summary = "Login", description = "Login to get JWT Access Token", tags = { "Authentication" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful login", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenMessage.class))),
@@ -41,7 +52,8 @@ public class AuthenticationController {
     /**
      * Refreshes the JWT token
      * 
-     * @param RefreshTokenMessage containing the refreshToken
+     * @param refreshToken a {@link RefreshTokenMessage} containing the refreshToken
+     * @return an AccessTokenMessage to authenticate the user
      */
     @Operation(summary = "Refreshes JWT token", description = "Get a new JWT Access Token with Refresh Token", tags = {
             "Authentication" })

@@ -8,7 +8,7 @@ public interface NotificationService {
     /**
      * Creates a new notification with the given username and restaurant id.
      * 
-     * @param username     employee username
+     * @param username username of the employee
      * @param restaurantId
      * @return the newly added {@link Notification} object
      */
@@ -16,10 +16,10 @@ public interface NotificationService {
 
     /**
      * Cron task to automatically check for employees and users who need to do their
-     * tests When the number of days <= 3, a new notification will be created at
+     * tests. When the number of days is less than or equal to 3, a new notification will be created at
      * midnight. The days and cron schedule is customisable from the properties file
      * 
-     * @return int number of notifications generated
+     * @return number of notifications generated (integer)
      */
     int generateCtestNotification();
 

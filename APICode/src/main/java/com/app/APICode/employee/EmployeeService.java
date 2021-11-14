@@ -31,7 +31,7 @@ public interface EmployeeService {
      * <p> If the requester is not a business owner, throw a {@link EmployeeNotAllowedException}.
      * 
      * @param requesterUsername a String containing the username of the requester
-     * @param username a string containing the username of the Employee
+     * @param employeeUsername a string containing the username of the Employee
      * @return an {@link Employee} object
      */
     Employee getEmployeeDetailsByUsername(String requesterUsername, String employeeUsername);

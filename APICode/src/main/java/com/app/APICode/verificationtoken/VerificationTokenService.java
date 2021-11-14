@@ -6,7 +6,7 @@ public interface VerificationTokenService {
     /**
      * Gets the VerificationToken object specified by the given "verificationToken".
      * 
-     * @param VerificationToken a String containing the token
+     * @param verificationToken a String containing the token
      * @return a {@link VerificationToken} object
      */
     VerificationToken getVerificationToken(String verificationToken);

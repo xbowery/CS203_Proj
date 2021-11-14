@@ -67,7 +67,6 @@ public interface UserService {
      * 
      * @param username a string containing the username of the User
      * @param user     a {@link UserDTO} object containning the new info to be updated
-     * @return an updated {@link UserDTO}
      */
     void updateUserByUsername(String username, UserDTO user);
 

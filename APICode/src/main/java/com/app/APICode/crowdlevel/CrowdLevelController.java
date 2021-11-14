@@ -33,9 +33,10 @@ public class CrowdLevelController {
     }
 
     /**
+     *
      * Search for the crowd level of a restaurant with the given restaurant id
-     * 
-     * @param id restaurant id
+     *
+     * @param principal {@link Principal} object containing the username of the user logged in currently
      * @return crowd level of restaurant
      */
     @Operation(summary = "Get the specific restaurants crowd levels", description = "Get all crowd levels for one specific restaurants by the specified restaurant", security = @SecurityRequirement(name = "bearerAuth"), tags = {
@@ -55,7 +56,7 @@ public class CrowdLevelController {
     /**
      * Add a new crowd level with POST request to "/restaurant/{id}/crowdLevel"
      * 
-     * @param id restaurant id
+     * @param principal {@link Principal} object containing the username of the user logged in currently
      * @return the newly added CrowdLevel object
      */
     @Operation(summary = "Add a new crowd level object", description = "Add a new crowd level entry by restaurant ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
