@@ -143,7 +143,7 @@ public class EmployeeIntegrationTest {
         .get(uri)
         .then()
         .statusCode(200)
-        .body("size()", equalTo(3));
+        .body("size()", equalTo(2));
     }
 
     @Test
