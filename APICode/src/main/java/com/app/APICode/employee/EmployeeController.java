@@ -127,20 +127,4 @@ public class EmployeeController {
     public void deleteEmployee(@PathVariable(value = "username") String username) {
         employeeService.deleteEmployee(username);
     }
-
-    /**
-     * List latest ctests of employees in a particular business
-     * 
-     * @param principal name of the user logged in currently
-     * @return list of ctest of employees in a particular business
-     */
-    @Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {
-            "Employee" })
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successful Retrieval", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Employee.class)))), })
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/users/employee/{username}/ctests")
-    public List<Ctest> getAllEmployeesCtest(@PathVariable String username) {
-        return employeeService.getAllEmployeesCtest(username);
-    }
 }
