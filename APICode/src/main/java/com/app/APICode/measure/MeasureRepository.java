@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 public interface MeasureRepository extends JpaRepository<Measure, Long> {
 
-        Optional<Measure> findByMeasureType(String measureType);
+	Optional<Measure> findByMeasureType(String measureType);
 
-        void deleteByMeasureType(String measureType);
+	void deleteByMeasureType(String measureType);
 
-        boolean existsByMeasureType(String measureType);
+	boolean existsByMeasureType(String measureType);
 }
