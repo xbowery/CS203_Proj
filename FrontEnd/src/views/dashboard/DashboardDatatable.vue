@@ -35,7 +35,7 @@ export default {
   data: () => ({
     items: [],
     processedItems: [],
-    currentDate:'10',
+    currentDate: '10',
   }),
   props: {
     username: String,
@@ -45,12 +45,12 @@ export default {
     this.getTableData()
   },
 
-  methods:{
-    async getTableData(){
+  methods: {
+    async getTableData() {
       try {
         const res = await UserService.getEmployees(this.username)
         this.items = res.data
-        this.items.forEach(async (user) => {
+        this.items.forEach(async user => {
           if (user.employee.ctests.length > 0) {
             var latestDate = user.employee.ctests[0].date
             var latestResult = user.employee.ctests[0].result
@@ -84,7 +84,6 @@ export default {
         console.log(error)
       }
     },
-    
   },
 
   setup() {

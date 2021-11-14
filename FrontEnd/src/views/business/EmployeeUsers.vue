@@ -39,7 +39,6 @@
   </v-row>
 </template>
 <script>
-
 import { mdiPoll, mdiLabelVariantOutline, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 import { mapGetters } from 'vuex'
@@ -77,7 +76,7 @@ export default {
         // else if (item.employee.status == 'Active') this.active_users += 1
       })
 
-      this.active_users = (this.total_users - this.pending_users)
+      this.active_users = this.total_users - this.pending_users
     } catch (error) {
       console.log(error)
     }

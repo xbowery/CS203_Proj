@@ -34,7 +34,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .app-navigation-menu {
   .v-list-item {
     padding-left: 22px;

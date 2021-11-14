@@ -25,10 +25,10 @@
       <v-form class="multi-col-validation mt-6">
         <v-row>
           <v-col md="6" cols="12">
-            <v-text-field v-model="user.username" :disabled=true label="Username" dense outlined></v-text-field>
+            <v-text-field v-model="user.username" :disabled="true" label="Username" dense outlined></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field v-model="user.email" :disabled=true label="E-mail" dense outlined></v-text-field>
+            <v-text-field v-model="user.email" :disabled="true" label="E-mail" dense outlined></v-text-field>
           </v-col>
 
           <v-col md="6" cols="12">
@@ -40,13 +40,18 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-text-field v-model="user.role" :disabled=true dense label="Role" outlined></v-text-field>
+            <v-text-field v-model="user.role" :disabled="true" dense label="Role" outlined></v-text-field>
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-select :items="dropdown_vaccinated" v-model="user.isVaccinated" dense outlined label="Vaccinated?"></v-select>
+            <v-select
+              :items="dropdown_vaccinated"
+              v-model="user.isVaccinated"
+              dense
+              outlined
+              label="Vaccinated?"
+            ></v-select>
           </v-col>
-
 
           <!-- alert
           <v-col cols="12">
@@ -84,7 +89,7 @@ import TokenService from '@/services/token.service'
 
 export default {
   data: () => ({
-    dropdown_vaccinated: [{text: true}, { text: false}],
+    dropdown_vaccinated: [{ text: true }, { text: false }],
   }),
 
   props: {
@@ -93,28 +98,28 @@ export default {
       default: () => {},
     },
   },
-  async beforeMount(){
-     const username = TokenService.getUser().username
-      const res = await UserService.getUserDetails(username)
-      this.user = res.data
+  async beforeMount() {
+    const username = TokenService.getUser().username
+    const res = await UserService.getUserDetails(username)
+    this.user = res.data
   },
-  methods:{
-    async updateUser(){
+  methods: {
+    async updateUser() {
       try {
         const res = await UserService.updateUser(this.user)
         console.log(res.data)
       } catch (error) {
         console.error(error)
       }
-    }
+    },
   },
   setup(props) {
     const accountDataLocale = ref(JSON.parse(JSON.stringify(props.accountData)))
-    
+
     const resetForm = () => {
       accountDataLocale.value = JSON.parse(JSON.stringify(props.accountData))
     }
-    const user = ""
+    const user = ''
     return {
       user,
       accountDataLocale,

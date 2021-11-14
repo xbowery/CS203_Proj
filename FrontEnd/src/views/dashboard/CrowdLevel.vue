@@ -15,16 +15,16 @@
         </v-row>
 
         <v-row justify="center" align="center">
-          <v-col  cols="6" md="4" justify="center" align="center">
+          <v-col cols="6" md="4" justify="center" align="center">
             <v-btn depressed color="success" large @click="increment(1)">+1</v-btn>
           </v-col>
-          <v-col  cols="6" md="4" justify="center" align="center"> 
+          <v-col cols="6" md="4" justify="center" align="center">
             <v-btn small color="error" large @click="increment(-1)">-1</v-btn>
           </v-col>
         </v-row>
 
         <v-row justify="center" align="center">
-          <v-col  cols="6" md="4" justify="center" align="center">
+          <v-col cols="6" md="4" justify="center" align="center">
             <v-btn depressed color="success" large @click="increment(2)">+2</v-btn>
           </v-col>
           <v-col cols="6" md="4" justify="center" align="center">
@@ -35,7 +35,6 @@
         <v-row justify="center" align="center">
           <v-btn depressed color="primary" large @click="reset()">Reset</v-btn>
         </v-row>
-
       </v-container>
     </v-item-group>
   </v-card>
@@ -90,7 +89,7 @@ export default {
   },
 
   methods: {
-    reset(){
+    reset() {
       this.increment(-1 * this.updatedCrowd.noOfCustomers)
     },
 
@@ -106,7 +105,7 @@ export default {
         newCrowd.latestCrowd = this.getNewCrowd(this.updatedCrowd.noOfCustomers + count)
         this.handlePostCrowdlevel(newCrowd)
         //then a new get request
-      
+
         this.handleGetCrowdlevel()
         this.renderComponent = false
         this.renderComponent = true

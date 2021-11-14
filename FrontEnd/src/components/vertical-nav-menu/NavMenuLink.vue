@@ -35,7 +35,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .alternate-icon-small {
   font-size: 14px;
   height: 14px;

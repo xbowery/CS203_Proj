@@ -22,7 +22,8 @@
                 {{ item[header.value] }}
               </v-list-item-content> -->
               <v-list-item-content v-if="typeof item[header.value] == 'number'">
-                {{ item[header.value] }}</v-list-item-content>
+                {{ item[header.value] }}</v-list-item-content
+              >
               <v-list-item-content class="align-end" v-if="item[header.value] == true"> Yes </v-list-item-content>
               <v-list-item-content class="align-end" v-if="item[header.value] == false"> No </v-list-item-content>
             </v-list-item>
@@ -157,7 +158,7 @@ export default {
   },
 
   methods: {
-    async getMeasures(){
+    async getMeasures() {
       try {
         const res = await UserService.getMeasures()
         this.items = res.data

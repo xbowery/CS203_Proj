@@ -1,5 +1,5 @@
 <template>
-  <v-card height = "405">
+  <v-card height="405">
     <v-card-title class="align-start">
       <span>Overview of Customers for Past 7 Days</span>
       <v-spacer></v-spacer>
@@ -10,7 +10,6 @@
     </v-card-text>
   </v-card>
 </template>
-
 
 <script>
 import VueApexCharts from 'vue-apexcharts'
@@ -32,20 +31,21 @@ export default {
   data() {
     return {
       items: [],
-      series: [{
-        name: 'Max number of customers',
-        data:[]
-      }],
-      
+      series: [
+        {
+          name: 'Max number of customers',
+          data: [],
+        },
+      ],
     }
   },
 
   mounted() {
-    this.getDays()  
+    this.getDays()
     this.getCrowdLevel()
   },
-  methods:{
-    async getCrowdLevel(){
+  methods: {
+    async getCrowdLevel() {
       try {
         const res = await UserService.getCrowdLevel(this.user.username)
         this.chartOptions.xaxis.categories.forEach(day => {
@@ -53,49 +53,48 @@ export default {
           var currentMax = 0
           var maxElement = ''
           res.data.forEach(element => {
-            if(currentDay === this.dateToString(element.datetime) && element.noOfCustomers > currentMax){
-                currentMax = element.noOfCustomers
-                maxElement = element
+            if (currentDay === this.dateToString(element.datetime) && element.noOfCustomers > currentMax) {
+              currentMax = element.noOfCustomers
+              maxElement = element
             }
-          });
+          })
           this.series[0].data.push(currentMax)
           this.getColor(maxElement)
         })
-
       } catch (error) {
         console.error(error)
       }
     },
 
-    getDays(){
+    getDays() {
       var today = new Date()
-      for(let i = 6; i >= 0; --i){
-        var tempDate = new Date(today.getTime() - i*24*60*60*1000)
+      for (let i = 6; i >= 0; --i) {
+        var tempDate = new Date(today.getTime() - i * 24 * 60 * 60 * 1000)
         var dd = tempDate.getDate()
         var mm = tempDate.getMonth() + 1
-        tempDate = dd + '/' + mm 
+        tempDate = dd + '/' + mm
         this.chartOptions.xaxis.categories.push(tempDate)
       }
     },
-    dateToString(date){
+    dateToString(date) {
       var curDate = new Date(date).toLocaleString('en-US', { timeZone: 'Asia/Singapore' })
-      var str = curDate.split("/")
+      var str = curDate.split('/')
       return str[1] + '/' + str[0]
     },
 
-    getColor(element){
-        if(element.latestCrowd === 'Low'){
-          this.chartOptions.colors.push(this.colors.success)  
-        } else if(element.latestCrowd === 'Medium'){
-          this.chartOptions.colors.push(this.colors.pending)  
-        } else if (element.latestCrowd === 'High'){
-          this.chartOptions.colors.push(this.colors.error)  
-        } else{
-          this.chartOptions.colors.push(this.colors.success)  
-        }
+    getColor(element) {
+      if (element.latestCrowd === 'Low') {
+        this.chartOptions.colors.push(this.colors.success)
+      } else if (element.latestCrowd === 'Medium') {
+        this.chartOptions.colors.push(this.colors.pending)
+      } else if (element.latestCrowd === 'High') {
+        this.chartOptions.colors.push(this.colors.error)
+      } else {
+        this.chartOptions.colors.push(this.colors.success)
       }
-      // this.chartOptions.colors = colors
     },
+    // this.chartOptions.colors = colors
+  },
   setup() {
     const ins = getCurrentInstance()?.proxy
     const $vuetify = ins && ins.$vuetify ? ins.$vuetify : null
@@ -107,46 +106,45 @@ export default {
     }
 
     const chartOptions = {
-        colors: [
-          // $vuetify.theme.currentTheme.primary,
-          // $vuetify.theme.currentTheme.primary,
-          // $vuetify.theme.currentTheme.primary,
-          // $vuetify.theme.currentTheme.primary,
-          // $vuetify.theme.currentTheme.primary,
-          // $vuetify.theme.currentTheme.primary,
-          // $vuetify.theme.currentTheme.primary,
-        ],
-        chart: {
-          width: 380,
-          type: 'bar',
-        },
-        plotOptions: {
+      colors: [
+        // $vuetify.theme.currentTheme.primary,
+        // $vuetify.theme.currentTheme.primary,
+        // $vuetify.theme.currentTheme.primary,
+        // $vuetify.theme.currentTheme.primary,
+        // $vuetify.theme.currentTheme.primary,
+        // $vuetify.theme.currentTheme.primary,
+        // $vuetify.theme.currentTheme.primary,
+      ],
+      chart: {
+        width: 380,
+        type: 'bar',
+      },
+      plotOptions: {
         bar: {
           columnWidth: '40%',
           distributed: true,
           borderRadius: 8,
           startingShape: 'rounded',
           endingShape: 'rounded',
-          },
         },
-        dataLabels: {
-          enabled: false,
-        },
-        legend: {
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: [],
+        axisBorder: {
           show: false,
         },
-        xaxis:{
-          categories:[],
-          axisBorder: {
-            show: false,
-          },
-        },
-        
-      }
+      },
+    }
 
     return {
       chartOptions,
-      colors
+      colors,
     }
   },
 }

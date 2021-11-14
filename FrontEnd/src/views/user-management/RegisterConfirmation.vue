@@ -73,7 +73,7 @@
     </div>
 
     <!-- background triangle shape  -->
-    <img class="auth-mask-bg" height=100% :src="require('@/assets/images/misc/f&b background.jpg')" />
+    <img class="auth-mask-bg" height="100%" :src="require('@/assets/images/misc/f&b background.jpg')" />
   </div>
 </template>
 
