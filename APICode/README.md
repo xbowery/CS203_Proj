@@ -20,7 +20,7 @@ To see the code coverage results from the JaCoCo plugin in the application, run 
 mvn test
 ```
 
-### Javadocs Generation
+### Documentation
 
 The application also has a plugin to automatically generate the Javadoc for all source files. Run the following command:
 
