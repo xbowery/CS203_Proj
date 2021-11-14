@@ -9,7 +9,7 @@ npm install
 npm start
 
 # If you are in windows
-npm start_windows
+npm start windows
 ```
 
 ## About
