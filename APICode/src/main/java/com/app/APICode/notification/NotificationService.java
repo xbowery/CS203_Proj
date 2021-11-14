@@ -8,18 +8,18 @@ public interface NotificationService {
     /**
      * Creates a new notification with the given username and restaurant id.
      * 
-     * @param username     employee username
+     * @param username username of the employee
      * @param restaurantId
-     * @return the newly added Notification object
+     * @return the newly added {@link Notification} object
      */
     Notification addNewEmployeeApprovalNotification(String username, Long restaurantId);
 
     /**
      * Cron task to automatically check for employees and users who need to do their
-     * tests When the number of days <= 3, a new notification will be created at
+     * tests. When the number of days is less than or equal to 3, a new notification will be created at
      * midnight. The days and cron schedule is customisable from the properties file
      * 
-     * @return int number of notifications generated
+     * @return number of notifications generated (integer)
      */
     int generateCtestNotification();
 
@@ -35,7 +35,10 @@ public interface NotificationService {
 
     /**
      * This function will fetch all the notification of a user and filter them to
-     * only display the ones which are not read yet
+     * only display the ones which are not read yet.
+     * 
+     * @param username a String containing User's username
+     * @return a list of {@link Notification}
      */
     List<Notification> getNotificationsByUsername(String username);
 
@@ -43,24 +46,28 @@ public interface NotificationService {
      * Function which will change all of the notification of a user to a state of
      * read: true
      * 
-     * @param username the username of the user
+     * @param username the username of the user * 
+     * @return a list of {@link Notification}
+     * 
      */
     List<Notification> markAllNotificationsRead(String username);
 
     /**
      * Function which will only mark a single notification as read, using the
      * notification ID. It will also ensure the notification belongs to the user.
+     * <p> If no Notification is found, throw a {@link NotificationNotFoundException}.
      * 
      * @param username username of user
      * @param id       notification ID
+     * @return a {@link Notification}
      */
     Notification markSingleNotificationRead(String username, Long id);
 
     /**
-     * Internal function to filter the notifications to only return unread ones
+     * Internal function to filter the notifications to only return unread ones.
      * 
-     * @param notificationsList
-     * @return List<Notification>
+     * @param notifications a list of {@link Notification}
+     * @return a list of {@link Notification}
      */
     List<Notification> filterUnreadNotifications(List<Notification> notifications);
 

@@ -6,32 +6,38 @@ import com.app.APICode.user.message.ChangePasswordMessage;
 
 public interface UserService {
     /**
-     * Retrieves all users registered
+     * Retrieves all users registered but converted to the UserDTO entity.
      * 
-     * @return a list of UserDTO
+     * @return a list of {@link UserDTO}
      */
     List<UserDTO> listUsers();
 
+    /**
+     * Retrieves all users registered.
+     * 
+     * @return a list of {@link User}
+     */
     List<User> getAllUsers();
 
     /**
      * Gets the User details by the specified "username". 
      * <p>If the principal does not
      * match the specified "username", throw a {@link UserForbiddenException}.
+     * <p> If no User is found, throw a {@link UserNotFoundException}.
      * 
      * @param requesterUsername the username for verification
      * @param username          a String containing the username to be retrieved
-     * @return
+     * @return a {@link UserDTO} object
      */
     UserDTO getUserDetailsByUsername(String requesterUsername, String username);
 
     /**
      * Gets the User associated with the given "username".
-     * <p>If no User found, throw a
+     * <p>If no User is found, throw a
      * {@link UserNotFoundException}.
      * 
      * @param username a String containing the username
-     * @return an User object
+     * @return a {@link User} object
      */
     User getUserByUsername(String username);
 
@@ -40,6 +46,7 @@ public interface UserService {
      * {@link EmailNotFoundException}.
      * 
      * @param email a String containing the email
+     * @return a {@link User} object
      */
     User getUserByEmail(String email);
     
@@ -50,7 +57,7 @@ public interface UserService {
      * 
      * @param user    a User object
      * @param isAdmin boolean value to determine if user is admin or not
-     * @return the newly added User object
+     * @return the newly added {@link User} object
      */
     UserDTO addUser(User user, Boolean isAdmin);
 
@@ -59,8 +66,7 @@ public interface UserService {
      * exists, throw a {@link UserOrEmailExistsException}.
      * 
      * @param username a string containing the username of the User
-     * @param user     a UserDTO object containning the new info to be updated
-     * @return an updated UserDTO
+     * @param user     a {@link UserDTO} object containning the new info to be updated
      */
     void updateUserByUsername(String username, UserDTO user);
 
@@ -70,15 +76,15 @@ public interface UserService {
      * 
      * @param email    a string containing the email of the User
      * @param password a string containing the plaintext password
-     * @return an updated User object
+     * @return an updated {@link User} object
      */
     User updatePasswordByEmail(String email, String password);
 
     /**
      * Generates a new password for the user with the given "email". <p> If no user is
-     * found, throw a {@link EmailNotFoundException}.
+     * found with associated "email", throw a {@link NoContentResponse}.
      * 
-     * @param email a string containing the email of the User
+     * @param email a string containing the email of the {@link User}
      * 
      */
     void createTempPassword(String email);
@@ -87,15 +93,15 @@ public interface UserService {
      * Deletes the user with the given "username". <p>If user does not exists, throw a
      * {@link UserNotFoundException}.
      * 
-     * @param username
+     * @param username a String containing User's username
      */
     void deleteUser(String username);
 
     /**
-     * Save/update the given "user"
+     * Save/update the given "user".
      * 
-     * @param user a User object containing the new/updated user info
-     * @return the new/updated User object
+     * @param user a {@link User} object containing the new/updated user info
+     * @return the new/updated {@link User} object
      */
     User save(User user);
 

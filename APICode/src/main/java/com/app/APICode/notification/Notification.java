@@ -26,9 +26,6 @@ public class Notification {
     @Schema(description = "Text in the notification", required = true)
     private String text;
 
-    // @NotNull(message = "link cannot be null")
-    // private URL link;
-
     @NotNull(message = "seen cannot be null")
     @Schema(description = "Boolean value if the notification has been seen by user", required = true)
     private boolean isSeen = false;
@@ -43,7 +40,6 @@ public class Notification {
     }
 
     public Notification(String text, User user) {
-        // this.link = link;
         this.text = text;
         this.user = user;
         datetime = LocalDateTime.now();

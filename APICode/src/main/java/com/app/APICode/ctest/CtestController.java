@@ -37,7 +37,7 @@ public class CtestController {
 	 * given username, throw a UserNotFoundException If there is no employee with
 	 * the given username, throw a EmployeeNotFoundException
 	 * 
-	 * @param username username of employee
+	 * @param {@link Principal} object containing the username of the user logged in currently
 	 * @return list of the ctests done by the employee
 	 */
 	@Operation(summary = "Get all Tests Results", description = "Get all Covid-19 Test results by their credentials", security = @SecurityRequirement(name = "bearerAuth"), tags = {
@@ -52,7 +52,7 @@ public class CtestController {
 	/**
 	 * Add a new ctest with POST request to "/employee/ctests"
 	 * 
-	 * @param username username of employee
+	 * @param {@link Principal} object containing the username of the user logged in currently
 	 * @param ctest    a new ctest object to be added
 	 * @return the newly added ctest object
 	 */
@@ -70,7 +70,7 @@ public class CtestController {
 	 * Updates the info an employee's ctest If there is no employee with the given
 	 * username, throw a EmployeeNotFoundException
 	 * 
-	 * @param username username of employee
+	 * @param {@link Principal} object containing the username of the user logged in currently
 	 * @param ctestId  a long value (Ctest)
 	 * @param newCtest a Ctest object containing the new Ctest info to be updated
 	 * @return the updated Ctest object
@@ -92,7 +92,7 @@ public class CtestController {
 	 * user, throw a EmployeeNotFoundException If there is no Ctest with the given
 	 * "id", throw a CtestNotFoundException
 	 * 
-	 * @param username username of employee
+	 * @param {@link Principal} object containing the username of the user logged in currently
 	 * @param ctestId  a long value (Ctest)
 	 */
 	@Operation(summary = "Delete Test result", description = "Delete Covid-19 Test result by credentials and provided ID", security = @SecurityRequirement(name = "bearerAuth"), tags = {
@@ -129,7 +129,7 @@ public class CtestController {
 	/**
 	 * List latest ctests of employees in a particular business
 	 * 
-	 * @param principal name of the user logged in currently
+	 * @param principal {@link Principal} object containing the username of the user logged in currently
 	 * @return list of ctest of employees in a particular business
 	 */
 	@Operation(summary = "List all Ctests", description = "List all ctests of employees from the Restuarant that is owned by the User", security = @SecurityRequirement(name = "bearerAuth"), tags = {

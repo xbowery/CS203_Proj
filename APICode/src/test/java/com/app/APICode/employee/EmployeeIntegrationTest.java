@@ -143,7 +143,7 @@ public class EmployeeIntegrationTest {
         .get(uri)
         .then()
         .statusCode(200)
-        .body("size()", equalTo(3));
+        .body("size()", equalTo(2));
     }
 
     @Test
@@ -248,35 +248,4 @@ public class EmployeeIntegrationTest {
 
         assertEquals(404, addEmployeeResponse.getStatusCode());
     }
-
-    @Test
-    void getCtests_ValidBusinessOwner_ReturnSuccess() throws Exception {
-        User user1 = new User("pendingemployee11@test.com", "user13", "User", "thirteen", encoder.encode("testing23456"), false, "ROLE_USER");
-        Employee employee = new Employee(user1, "HR Manager");
-        Restaurant testRestaurant = restaurants.findById(testRestaurantID).orElse(null);
-        employee.setRestaurant(testRestaurant);
-
-        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-        Ctest ctest = new Ctest("PCR",date,"Negative");
-        ctest.setEmployee(employee);
-        List<Ctest> allctests = new ArrayList<Ctest>();
-        allctests.add(ctest);
-        
-        employee.setCtests(allctests);
-        user1.setEmployee(employee);
-        user1.setAuthorities("ROLE_EMPLOYEE");
-        users.save(user1);
-
-        URI uri = new URI(baseUrl + port + "/api/v1/users/employee/BusinessOne/ctests");
-        RequestSpecification request = RestAssured.given();
-    
-        request.header("Authorization", "Bearer " + tokenGeneratedBusinessOwner).header("Content-Type", "application/json");
-        Response getEmployeeResponse = request.get(uri);
-
-        assertEquals(200, getEmployeeResponse.getStatusCode());
-    }
-
-
-
-
 }

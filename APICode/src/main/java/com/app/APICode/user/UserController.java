@@ -95,9 +95,8 @@ public class UserController {
      * Search for user given the username and updates the relevant user details If
      * there is no user with the given username, throw a UserNotFoundException
      * 
-     * @param username    username of user
+     * @param principal {@link Principal} object containing the username of the user logged in currently
      * @param newUserInfo a User object containing the new user info to be updated
-     * @return the updated User object
      */
     @Operation(summary = "Update user information", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
@@ -155,8 +154,7 @@ public class UserController {
      * database If there is already an existing user with the given email or
      * username, throw a UserOrEmailExistsException
      * 
-     * @param newUser a User object containing the new user info to be saved
-     * @return the newly created user
+     * @param newUser a {@link User} object containing the new user info to be saved
      */
     @Operation(summary = "Register User", tags = { "User" })
     @ApiResponses({
@@ -172,8 +170,7 @@ public class UserController {
     /**
      * Retrieve the user information by username and change the password of the user
      * 
-     * @param message message displayed to user upon password change
-     * @return user with updated password
+     * @param message {@link ChangePasswordMessage} message displayed to user upon password change
      */
     @Operation(summary = "Change User password", security = @SecurityRequirement(name = "bearerAuth"), tags = {
             "User" })
