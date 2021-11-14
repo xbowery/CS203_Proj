@@ -3,6 +3,7 @@ package com.app.APICode.employee;
 import java.util.List;
 
 import com.app.APICode.ctest.Ctest;
+import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.user.UserDTO;
 
 public interface EmployeeService {
@@ -17,17 +18,27 @@ public interface EmployeeService {
 
     /**
      * Gets an employee with the specified "username"
+     * <p> If no Employee is found, throw a {@link EmployeeNotFoundException}.
      * 
      * @param username a string containing the username of the Employee
      * @return an Employee object
      */
     Employee getEmployeeByUsername(String username);
 
+    /**
+     * Gets an employee with the specified "username", if the requester is authorised.
+     * <p> If the requester is not a business owner, throw a {@link EmployeeNotAllowedException}.
+     * 
+     * @param requesterUsername a String containing the username of the requester
+     * @param username a string containing the username of the Employee
+     * @return an Employee object
+     */
     Employee getEmployeeDetailsByUsername(String requesterUsername, String employeeUsername);
 
     /**
      * Creates an Employee object for the user with specified "username" with the
-     * "designation" working in a business specified by "businessId"
+     * "designation" working in a business specified by "businessId".
+     * <p> If Restaurant is not found with associated "businessId", throw a {@link RestaurantNotFoundException}.
      * 
      * @param username     a string containing the username of the new Employee
      * @param designation a string containing the designation of the new Employee
@@ -48,6 +59,7 @@ public interface EmployeeService {
     /**
      * Deletes the Employee object linked with the User specified by "Username".
      * Downgrades user's role to a normal User
+     * <p>If User with associated "username" is not an Employee, throw a {@link EmployeeNotFoundException}.
      * 
      * @param username a string containing the username of the new Employee
      * 
@@ -56,10 +68,10 @@ public interface EmployeeService {
 
     /**
      * Gets all {@link Ctest} for employees working in the business with the
-     * specified business's owner "username"
+     * specified business's owner "username".
      * 
      * @param username
-     * @return
+     * @return a list of all employees' Ctest
      */
     List<Ctest> getAllEmployeesCtest(String username);
     
