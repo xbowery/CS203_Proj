@@ -107,6 +107,7 @@ public class NotificationServiceImpl implements NotificationService {
         return filterUnreadNotifications(user.getNotifications());
     }
 
+    @Override
     public List<Notification> filterUnreadNotifications(List<Notification> notifications) {
         return notifications.stream().filter(n -> !n.isSeen()).collect(Collectors.toList());
     }

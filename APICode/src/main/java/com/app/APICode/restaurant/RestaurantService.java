@@ -7,9 +7,9 @@ import com.app.APICode.user.User;
 public interface RestaurantService {
 
     /**
-     * Retrieves all restaurants registered
+     * Retrieves all restaurants registered.
      * 
-     * @return a list of RestaurantDTO
+     * @return a list of {@link RestaurantDTO} 
      */
     List<RestaurantDTO> listRestaurants();
 
@@ -18,7 +18,7 @@ public interface RestaurantService {
      * <p>If no Restaurant found, throw a {@link RestaurantNotFoundException}.
      * 
      * @param id restaurant id
-     * @return a Restaurant object
+     * @return a {@link Restaurant} object
      */
     Restaurant getRestaurantById(long id);
 
@@ -28,7 +28,7 @@ public interface RestaurantService {
      * {@link RestaurantNotFoundException}.
      * 
      * @param username a String containing the username
-     * @return a Restaurant object
+     * @return a {@link Restaurant} object
      */
     Restaurant getRestaurantByUsername(String username);
 
@@ -37,26 +37,26 @@ public interface RestaurantService {
      * <p>If Restaurant with given name and location already exists, throw a
      * {@link RestaurantDuplicateException}.
      * 
-     * @param restaurant a Restaurant object
-     * @return the newly added Restaurant object
+     * @param restaurant a {@link Restaurant} object
+     * @return the newly added {@link Restaurant} object
      */
     Restaurant addRestaurant(Restaurant restaurant);
 
     /**
      * Updates the Restaurant info with the given Restaurant object by id. 
      * <p>If no Restaurant exists with the given id,
-     * throw a {@link RestaurantNotFoundException}
+     * throw a {@link RestaurantNotFoundException}.
      * 
      * @param id restaurant id
-     * @param restaurant    a Restaurant object containning the new info to be updated
-     * @return an updated Restaurant object
+     * @param restaurant    a {@link Restaurant} object containning the new info to be updated
+     * @return an updated {@link Restaurant} object
      */
     Restaurant updateRestaurant(long id, Restaurant restaurant);
 
     /**
      * Deletes the Restaurant with the given id. 
      * <p>If Restaurant does not exist, throw a
-     * {@link RestaurantNotFoundException}
+     * {@link RestaurantNotFoundException}.
      * 
      * @param id restaurant id
      */
@@ -65,9 +65,10 @@ public interface RestaurantService {
     /**
      * Gets the User who is the Restaurant Owner associated with the given id. 
      * <p>If no User found, throw a
-     * {@link RestaurantOwnerNotFoundException}
+     * {@link RestaurantOwnerNotFoundException}.
      * 
      * @param id restaurant id
+     * @return a {@link User} object
      */
     User getRestaurantOwner(long id);
 }

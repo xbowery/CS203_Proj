@@ -11,7 +11,7 @@ public interface CtestService {
      * Retrieves a list of Ctest with the associated "username".
      * 
      * @param username 
-     * @return a list of Ctest
+     * @return a list of {@link Ctest}
      */
     List<Ctest> getAllCtestsByUsername(String username);
 
@@ -20,7 +20,7 @@ public interface CtestService {
      * 
      * @param username 
      * @param ctest a Ctest object containing the new ctest info
-     * @return the new Ctest object
+     * @return the new {@link Ctest} object
      */
     Ctest saveCtestByUsername(String username, Ctest ctest);
 
@@ -33,7 +33,7 @@ public interface CtestService {
      * @param username a string containing the username of the User
      * @param ctestId
      * @param newCtest Ctest object containing the new Ctest
-     * @return an updated Ctest object
+     * @return an updated {@link Ctest} object
      */
     Ctest updateCtestByCtestIdAndUsername(String username, Long ctestId, Ctest newCtest);
 
@@ -51,7 +51,7 @@ public interface CtestService {
      * Retrieves the date of next Ctest with the associated "username".
      * 
      * @param username a string containing the username of the User
-     * @return Date of next Ctest
+     * @return Date of next {@link Ctest}
      */
     Date getNextCtestByUsername(String username);
 
@@ -61,7 +61,7 @@ public interface CtestService {
      * <p>If given username is not a business owner, throw a {@link EmployeeForbiddenException}.
      * 
      * @param username restuarant owner's username
-     * @return a list of all employees' Ctest
+     * @return a list of all employees' {@link Ctest}
      */
     List<Ctest> getAllEmployeesCtest(String username);
 }

@@ -14,7 +14,7 @@ public interface CrowdLevelService {
      * <p> If no CrowdLevel is found, throw a {@link CrowdLevelNotFoundException}.
      * 
      * @param username a string containing the Business owner's username
-     * @return a list of CrowdLevel
+     * @return a list of {@link CrowdLevel}
      */
     List<CrowdLevel> listCrowdLevelByEmployee(String username);
 
@@ -23,7 +23,7 @@ public interface CrowdLevelService {
      * 
      * @param username     a string containing the username of the restaurant
      * @param crowdLevel   a CrowdLevel object
-     * @return a newly added CrowdLevel
+     * @return a newly added {@link CrowdLevel}
      */
     CrowdLevel addCrowdLevel(String username, CrowdLevel crowdLevel);
 }
