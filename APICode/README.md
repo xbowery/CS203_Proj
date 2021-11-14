@@ -2,7 +2,8 @@
 
 ## Project Requirements
 
-Java Development Kit (version 11.0 and above)
+- Java Development Kit (version 11.0 and above)
+- Maven (version 3.3 and above)
 
 ### Project Setup
 
