@@ -30,4 +30,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void setUserInfoByUsername(String firstname, String lastname, boolean isVaccinated, String username);
 
     boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

@@ -207,12 +207,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createTempPassword(String email) {
-        try {
-            getUserByEmail(email);
-        } catch (EmailNotFoundException e) {
-            throw new NoContentResponse();
+        if (!users.existsByEmail(email)) {
+            return;
         }
-
+        
         String tempPassword = randomPasswordGenerator.generatePassayPassword();
         Map<String, Object> dataModel = emailerService.getDataModel();
         dataModel.put("requestPasswordChange", true);
