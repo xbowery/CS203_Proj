@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation for the {@link Measure} service layer
+ */
 @Service
 public class MeasureServiceImpl implements MeasureService {
     private MeasureRepository measures;

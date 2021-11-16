@@ -13,6 +13,9 @@ import javax.persistence.OneToOne;
 
 import com.app.APICode.user.User;
 
+/**
+ * POJO that stores the {@link VerificationToken} of a new {@link User} upon registration.
+ */
 @Entity
 public class VerificationToken {
     

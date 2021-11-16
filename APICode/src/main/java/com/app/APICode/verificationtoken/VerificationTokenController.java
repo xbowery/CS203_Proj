@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Rest Controller that manages HTTP requests and updates data within {@link VerificationTokenService}
+ */
 @RestController
 @Tag(name = "Verification Token", description = "Verification Token for Registration API")
 public class VerificationTokenController {

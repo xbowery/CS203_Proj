@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class will help to automatically refresh and generate a new JWT 
+ * for a user should his/her initial JWT be expired
+ */
 @Component
 public class JWTRefreshToken {
 

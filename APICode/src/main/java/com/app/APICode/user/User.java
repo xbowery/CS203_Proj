@@ -29,6 +29,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores the details of a {@link User} in the application
+ */
 @Entity
 public class User implements UserDetails {
 

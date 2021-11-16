@@ -11,6 +11,9 @@ import org.passay.PasswordGenerator;
 import org.passay.PasswordValidator;
 import org.springframework.stereotype.Component;
 
+/**
+ * Component class that generates a strong random password
+ */
 @Component
 public class RandomPassword {
     List<CharacterRule> rules;

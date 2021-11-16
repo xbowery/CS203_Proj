@@ -2,6 +2,9 @@ package com.app.APICode.exception;
 
 import java.util.Date;
 
+/**
+ * Logging of errors thrown by the API
+ */
 public class ApiError {
     final private Date timestamp;
     final private int status;

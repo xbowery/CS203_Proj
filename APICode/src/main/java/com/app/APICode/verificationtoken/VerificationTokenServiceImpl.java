@@ -14,6 +14,9 @@ import com.app.APICode.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the {@link VerificationToken} service layer
+ */
 @Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
     

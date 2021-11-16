@@ -4,6 +4,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+/**
+ * Java class containing the attributes for the JSON data required for changing password
+ */
 public class ChangePasswordMessage {
     
     @NotNull

@@ -2,6 +2,9 @@ package com.app.APICode.employee.message;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Class containing the attributes for the JSON data for a user requesting to be an employee
+ */
 public class RequestMessage {
     
     @NotNull

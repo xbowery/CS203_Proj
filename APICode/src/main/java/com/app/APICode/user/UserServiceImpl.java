@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * Implementation of the {@link User} service layer
+ */
 @Service
 public class UserServiceImpl implements UserService {
 

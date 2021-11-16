@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+/**
+ * Implementation of the Emailer service layer
+ */
 @Service
 public class EmailerServiceImpl implements EmailerService {
 

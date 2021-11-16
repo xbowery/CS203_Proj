@@ -7,6 +7,9 @@ import com.app.APICode.restaurant.RestaurantNotFoundException;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserDTO;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link Employee}
+ */
 public interface EmployeeService {
     /**
      * Gets all employees that work in the business with the specified business's
@@ -28,7 +31,7 @@ public interface EmployeeService {
 
     /**
      * Gets an {@link Employee} with the specified "username", if the requester is authorised.
-     * <p> If the requester is not a business owner, throw a {@link EmployeeNotAllowedException}.
+     * <p> If the requester is not a business owner, throw a {@link EmployeeForbiddenException}.
      * 
      * @param requesterUsername a String containing the username of the requester
      * @param employeeUsername a string containing the username of the Employee

@@ -28,6 +28,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Rest Controller that manages HTTP requests and updates data within {@link UserService}
+ */
 @RestController
 @Tag(name = "User", description = "User API")
 public class UserController {

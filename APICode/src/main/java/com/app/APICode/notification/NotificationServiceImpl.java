@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the {@link Notification} service layer
+ */
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private NotificationRepository notifications;

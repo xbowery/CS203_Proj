@@ -159,13 +159,13 @@ public class EmployeeServiceTest {
         when(users.getUserByUsername(user1.getUsername())).thenReturn(user1);
 
         // Act
-        EmployeeNotAllowedException notAllowedException = assertThrows(EmployeeNotAllowedException.class, () -> {
+        EmployeeForbiddenException forbiddenException = assertThrows(EmployeeForbiddenException.class, () -> {
             employeeService.getEmployeeDetailsByUsername(user.getUsername(), user1.getUsername());
 
         });
 
         // Assert
-        assertEquals(notAllowedException.getMessage(), "You are unauthorised to perform this action.");
+        assertEquals(forbiddenException.getMessage(), "You are unauthorised to perform this action.");
         verify(users).getUserByUsername(user.getUsername());
         verify(users).getUserByUsername(user1.getUsername());
     }

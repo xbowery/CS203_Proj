@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.app.APICode.user.message.ChangePasswordMessage;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link User}
+ */
 public interface UserService {
     /**
      * Retrieves all users registered but converted to the UserDTO entity.

@@ -23,6 +23,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Rest Controller that manages HTTP requests and updates data within {@link CtestService}
+ */
 @RestController
 @Tag(name = "COVID-19 Test", description = "COVID-19 Test API")
 public class CtestController {

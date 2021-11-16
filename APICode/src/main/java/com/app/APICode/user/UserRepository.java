@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository layer to allow us to store {@link User} as persistent data through JPA.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     // define a derived query to find user by username

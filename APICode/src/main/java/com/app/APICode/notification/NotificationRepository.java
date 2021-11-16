@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository layer to allow us to store {@link Notification} as persistent data through JPA.
+ */
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 

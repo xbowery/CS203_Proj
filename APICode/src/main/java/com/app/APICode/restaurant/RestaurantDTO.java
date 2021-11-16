@@ -1,5 +1,8 @@
 package com.app.APICode.restaurant;
 
+/**
+ * A Data Transfer Object representing a {@link Restaurant} class
+ */
 public class RestaurantDTO {
 
     private long id;

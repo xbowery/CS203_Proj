@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.app.APICode.user.User;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link Notification}
+ */
 public interface NotificationService {
     /**
      * Creates a new notification with the given username and restaurant id.

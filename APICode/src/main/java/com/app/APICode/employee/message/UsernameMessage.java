@@ -2,6 +2,9 @@ package com.app.APICode.employee.message;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Class to get the username of the user from the JSON data
+ */
 public class UsernameMessage {
     
     @NotNull

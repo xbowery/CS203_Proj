@@ -2,6 +2,9 @@ package com.app.APICode.measure;
 
 import java.util.List;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link Measure}
+ */
 public interface MeasureService {
 
     /**

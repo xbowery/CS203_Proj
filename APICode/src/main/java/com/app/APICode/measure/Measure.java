@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores the details of a {@link Measure} in the application
+ */
 @Entity
 public class Measure {
     @Schema(description = "Unique identifier of the Restaurant.", example = "1", required = true)
