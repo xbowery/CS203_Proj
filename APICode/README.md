@@ -21,6 +21,8 @@ To see the code coverage results from the JaCoCo plugin in the application, run 
 mvn test
 ```
 
+The generated JaCoCo test results should be accessible at the `target\site\jacoco` directory
+
 ### Documentation
 
 The application also has a plugin to automatically generate the Javadoc for all source files. Run the following command:
@@ -29,4 +31,4 @@ The application also has a plugin to automatically generate the Javadoc for all 
 mvn javadoc:javadoc
 ```
 
-The generated Javadocs should be accessible at the `target\site\apidocs` directory
+The generated Javadoc should be accessible at the `target\site\apidocs` directory
