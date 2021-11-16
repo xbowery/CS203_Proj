@@ -246,6 +246,9 @@ public class NotificationServiceTest {
         User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
         user.setEnabled(true);
 
+        Employee employee = new Employee(user, "Employee");
+        user.setEmployee(employee);
+
         Date expiredDate = new Date(System.currentTimeMillis() + (3 * DAY_IN_MS));
         NotificationService spiedService = spy(notificationService);
 
@@ -268,6 +271,9 @@ public class NotificationServiceTest {
         User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
         user.setEnabled(true);
 
+        Employee employee = new Employee(user, "Employee");
+        user.setEmployee(employee);
+
         Date expiredDate = new Date(System.currentTimeMillis() + (4 * DAY_IN_MS));
         NotificationService spiedService = spy(notificationService);
 
@@ -289,8 +295,14 @@ public class NotificationServiceTest {
         User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
         user.setEnabled(true);
 
+        Employee employee = new Employee(user, "Employee");
+        user.setEmployee(employee);
+
         User user2 = new User("user2@test.com", "user2", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
         user2.setEnabled(true);
+
+        Employee employee2 = new Employee(user2, "Employee");
+        user2.setEmployee(employee2);
 
         List<User> usersList = new ArrayList<>();
         usersList.add(user);
@@ -318,6 +330,9 @@ public class NotificationServiceTest {
     void generateAnotherCtestNotification_RunsNormally_ReturnsInt() {
         User user = new User("user@test.com", "user", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
         user.setEnabled(true);
+
+        Employee employee = new Employee(user, "Employee");
+        user.setEmployee(employee);
 
         User user2 = new User("user2@test.com", "user2", "user", "mock", "testing123", false, "ROLE_EMPLOYEE");
         user2.setEnabled(true);
