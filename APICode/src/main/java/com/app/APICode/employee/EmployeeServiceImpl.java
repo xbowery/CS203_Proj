@@ -14,6 +14,9 @@ import com.app.APICode.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation for the {@link Employee} service layer
+ */
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -67,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = getEmployeeByUsername(employeeUsername);
 
         if (!(businessOwner.getRestaurant().equals(employee.getRestaurant()))) {
-            throw new EmployeeNotAllowedException("You are unauthorised to perform this action.");
+            throw new EmployeeForbiddenException("You are unauthorised to perform this action.");
         }
 
         return employee;

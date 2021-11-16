@@ -5,6 +5,9 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+/**
+ * Service interface layer that helps to send email
+ */
 public interface EmailerService {
 
     /**

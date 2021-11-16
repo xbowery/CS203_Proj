@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of the {@link Restaurant} service layer
+ */
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurants;

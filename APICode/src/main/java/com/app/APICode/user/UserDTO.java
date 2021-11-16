@@ -6,6 +6,9 @@ import org.springframework.util.StringUtils;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * A Data Transfer Object representing a {@link User} class
+ */
 public class UserDTO {
 
     @Schema(description = "Unique identifier of the User.", example = "1", required = true)

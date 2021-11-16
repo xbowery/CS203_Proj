@@ -6,6 +6,9 @@ import com.app.APICode.restaurant.Restaurant;
 import com.app.APICode.user.User;
 import com.app.APICode.user.UserForbiddenException;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link CrowdLevel}
+ */
 public interface CrowdLevelService {
 
     /**

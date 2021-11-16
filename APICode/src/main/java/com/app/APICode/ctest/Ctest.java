@@ -16,6 +16,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores the COVID testing results (Ctest) of an employee in the application
+ */
 @Entity
 public class Ctest {
     @Schema(description = "Unique identifier of the Covid-19 Test Result.", example = "1", required = true)

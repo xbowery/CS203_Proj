@@ -6,6 +6,9 @@ import java.util.List;
 import com.app.APICode.employee.EmployeeForbiddenException;
 import com.app.APICode.employee.EmployeeNotFoundException;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link Ctest}
+ */
 public interface CtestService {
      /**
      * Retrieves a list of Ctest with the associated "username".

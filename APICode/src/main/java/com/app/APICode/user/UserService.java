@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.app.APICode.user.message.ChangePasswordMessage;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link User}
+ */
 public interface UserService {
     /**
      * Retrieves all users registered but converted to the UserDTO entity.
@@ -82,7 +85,7 @@ public interface UserService {
 
     /**
      * Generates a new password for the user with the given "email". <p> If no user is
-     * found with associated "email", throw a {@link NoContentResponse}.
+     * found with associated "email", no content is shown.
      * 
      * @param email a string containing the email of the {@link User}
      * 

@@ -14,6 +14,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores the crowd levels of a restaurant in the application
+ */
 @Entity
 public class CrowdLevel {
     @Schema(description = "Unique identifier of the Crowd Level Information.", example = "1", required = true)

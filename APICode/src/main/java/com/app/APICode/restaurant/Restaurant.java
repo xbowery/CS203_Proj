@@ -16,6 +16,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores the details of a {@link Restaurant} in the application
+ */
 @Entity
 public class Restaurant {
 

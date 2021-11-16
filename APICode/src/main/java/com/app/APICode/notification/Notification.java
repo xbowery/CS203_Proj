@@ -14,6 +14,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores the details of a {@link Notification} in the application
+ */
 @Entity
 public class Notification {
     private @Id @GeneratedValue Long id;

@@ -3,6 +3,9 @@ package com.app.APICode.restaurant;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Exception thrown when a same {@link Restaurant} is found in the repository
+ */
 @ResponseStatus(HttpStatus.CONFLICT)
 public class RestaurantDuplicateException extends RuntimeException {
 

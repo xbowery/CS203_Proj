@@ -2,9 +2,12 @@ package com.app.APICode.verificationtoken;
 
 import com.app.APICode.user.User;
 
+/**
+ * Service interface layer that performs CRUD operations for {@link VerificationToken}
+ */
 public interface VerificationTokenService {
     /**
-     * Gets the VerificationToken object specified by the given "verificationToken".
+     * Gets the {@link VerificationToken} object specified by the given "verificationToken".
      * 
      * @param verificationToken a String containing the token
      * @return a {@link VerificationToken} object

@@ -17,6 +17,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Rest Controller that manages HTTP requests and updates data within {@link NotificationService}
+ */
 @RestController
 @Tag(name = "Notification", description = "Notification API")
 public class NotificationController {

@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * POJO that stores an {@link Employee} (with an updated {@link User} role) in the application.
+ */
 @Entity
 public class Employee {
 

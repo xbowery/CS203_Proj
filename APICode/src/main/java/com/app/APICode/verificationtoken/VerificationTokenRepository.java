@@ -11,6 +11,9 @@ import java.util.stream.Stream;
 
 import com.app.APICode.user.User;
 
+/**
+ * Repository layer to allow us to store {@link VerificationToken} as persistent data through JPA.
+ */
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
     

@@ -15,6 +15,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * Helper class for JWT
+ */
 public class JWTHelper {
     /**
      * Generates a JWT Access Token

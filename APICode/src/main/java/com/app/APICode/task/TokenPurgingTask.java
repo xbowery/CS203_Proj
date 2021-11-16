@@ -1,5 +1,6 @@
 package com.app.APICode.task;
 
+import com.app.APICode.verificationtoken.VerificationToken;
 import com.app.APICode.verificationtoken.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Date;
 
+/**
+ * Service task that periodically purges expired {@link VerificationToken} from 
+ * the {@link VerificationTokenRepository} at 7am daily
+ */
 @Service
 @Transactional
 public class TokenPurgingTask {
