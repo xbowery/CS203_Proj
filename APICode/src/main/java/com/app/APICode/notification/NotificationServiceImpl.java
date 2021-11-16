@@ -83,6 +83,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public boolean checkAndGenerateNotifications(User user) {
+        if (user.getEmployee() == null) {
+            return false;
+        }
+
         Date nextCtestDate = ctests.getNextCtestByUsername(user.getUsername());
         Date notificationDateThreshold = new Date(System.currentTimeMillis() + CTEST_NUM_ELAPSED_DAYS * DAY_IN_MS);
 
