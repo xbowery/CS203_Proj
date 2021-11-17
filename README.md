@@ -25,7 +25,7 @@ With the onset of the COVID-19 pandemic, the Food & Beverage (F&B) industry rema
  
 As such, F&B businesses have to quickly adapt to new changes and measures imposed by the Singapore Government, such as whether dining-in is allowed or not, and the maximum capacity allowed for dining-in. Additionally, employees will need to be managed accordingly, through routine administration of various mandatory PCR tests depending on their vaccination status. As the government strides towards achieving the new normal as part of our daily lives, there would inevitably be instances where employees are serving Quarantine Orders (QO) or Stay-Home Notices (SHN). Thus, we believe businesses would benefit should they be able to efficiently manage their human resources based on employees’ current statuses. 
 
-Furthermore, many individuals face an uphill battle in keeping up with the latest news. Hence, our group chose to target F&B businesses and individuals specifically to smoothen their transition towards the new normal in Singapore.
+Furthermore, many individuals face an uphill battle in keeping up with the latest news. Hence, our group chose to target **F&B businesses and individuals** specifically to smoothen their transition towards _the new normal_ in Singapore.
 
 ### Description of our solution
 
@@ -109,10 +109,38 @@ npm start windows
 
 Please visit the various READMEs in the respective subdirectories for detailed instructions on how to run the production code bases.
 
+## Deploying the application
+
+Note: Ensure that the email configuration in `application-dev.properties` has been properly configured before attempting to dockerise the application. Also, do ensure that Docker daemon has been started in your local machine before dockerising the application.
+
+### For local deployment
+
+The following steps are for local deployment of the application.
+
+```
+# Building the image
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=<image-name>
+
+# Running the container on localhost to make sure it works
+docker run -it -p 8080:8080 <image-name>:latest
+```
+
+### Pushing the Docker image to DockerHub
+
+Once the container is successfully running on localhost, run the following commands:
+
+```
+# Tagging the Docker image
+docker tag <image-name>:latest <dockerhub_id>/swisshack:1.0
+
+# Pushing the image to DockerHub
+docker push <dockerhub_id>/swisshack:1.0
+```
+
 ## Acknowledgements
 
 We would like to thank our CS203 professor, Mr Tan Pang Jin, for his guidance and patience. This project would definitely not be possible without his teachings and advice.
 
-Next, we are grateful for the various open source APIs which made our application possible. They include the [News API](https://newsapi.org/) service, [OneMap API](https://www.onemap.gov.sg/docs/) as well as [Covid-19 SITREP](https://covidsitrep.moh.gov.sg/) site for the various data.
+Next, we are grateful for the various open source APIs which made our application possible. They include the [News API](https://newsapi.org/) service, [OneMap API](https://www.onemap.gov.sg/docs/) as well as [COVID-19 SITREP](https://covidsitrep.moh.gov.sg/) site for the various data.
 
 Lastly, we would like to thank all the authors who made great blog posts and tutorials. They greatly helped us in our journey while creating this application.
