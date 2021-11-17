@@ -17,6 +17,11 @@ defaults:
 
 env:
   AZURE_WEBAPP_NAME: swisshack-newsapi
+  DB: ${{ secrets.DB }}
+  DB_TEST: ${{ secrets.TEST_DB }}
+  PORT: 3001
+  NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+  MOHRSS: https://www.moh.gov.sg/feeds/news-highlights
 
 jobs:
   build:
@@ -39,4 +44,4 @@ jobs:
         run: npm install
 
       - name: Runs all the test
-        run: npm test
+        run: npm run testprod
