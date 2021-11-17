@@ -5,6 +5,9 @@ Just a backend API built using [express.js](https://expressjs.com/), powered by 
 ## Installation
 
 ```bash
+# Copy and populate the .env file
+cp .env.example .env
+
 npm install
 npm start
 
