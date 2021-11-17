@@ -19,27 +19,29 @@ Group Project for SMU CS203 - Collaborative Software Development (G2T4)
 
 ## Description
 
-### Problem Overview
+### Description of problem
 
 With the onset of the COVID-19 pandemic, the Food & Beverage (F&B) industry remains one of the most disrupted sectors in the economy. F&B businesses are often subjected to many rounds of closures as well as changing safe management restrictions and rules, resulting in the volatility of their businesses.
+ 
+As such, F&B businesses have to quickly adapt to new changes and measures imposed by the Singapore Government, such as whether dining-in is allowed or not, and the maximum capacity allowed for dining-in. Additionally, employees will need to be managed accordingly, through routine administration of various mandatory PCR tests depending on their vaccination status. As the government strides towards achieving the new normal as part of our daily lives, there would inevitably be instances where employees are serving Quarantine Orders (QO) or Stay-Home Notices (SHN). Thus, we believe businesses would benefit should they be able to efficiently manage their human resources based on employees’ current statuses. 
 
-As such, businesses are required to quickly adapt to new changes and measures imposed by the Government, such as whether dine-in is allowed or not. Additionally, employees will need to be managed accordingly, through routine administration of various PCR tests depending on their vaccination status. As the government strides towards the new normal as part of our daily lives, there would inevitably be instances where employees are serving Quarantine Orders (QO) or Stay-Home Notices (SHN). Thus, we believe businesses would benefit should they be able to efficiently manage their human resources based on employees’ statuses. 
-
-Furthermore, individuals face an uphill battle in keeping up with the latest news. Hence, our group chose to target **F&B businesses and individuals** specifically to smoothen their transition towards _the new normal_ in Singapore.
+Furthermore, many individuals face an uphill battle in keeping up with the latest news. Hence, our group chose to target F&B businesses and individuals specifically to smoothen their transition towards the new normal in Singapore.
 
 ### Description of our solution
 
-Our web application, Swisshack, would be a one-stop solution to help food and beverage businesses and consumers adapt to the changing safe management measures and restrictions. 
+Our web application, Swisshack, is a one-stop solution to help F&B businesses and consumers adapt to the changing safe management measures and restrictions. We have identified 3 target audiences for our application - F&B Business Owners, Employees, as well as normal users (patrons/consumers).
 
-With changing safe management measures and restrictions as we gradually adapt to the new normal, users will be able to keep up to date with the latest news and government directives on food and beverage or COVID-19 related matters. Users would also be able to discover restaurants and their updated crowd levels in real time so that consumers like us would be informed of restaurants with high crowds to reduce exposure.
+With changing safe management measures and updated restrictions as we gradually adapt to the new normal, every Swisshack user will be able to keep up to date with the latest news and government directives on F&B or COVID-19 related matters. 
 
-For a business owner, Swisshack will be an easy-to-use platform for him to keep track of his business’s employees from vaccination status to covid testing results or even review his weekly crowd levels.
+For a business owner, Swisshack will be an easy-to-use platform for him/her to keep track of his/her employees' details from their vaccination statuses to COVID testing results. Swisshack also allows the business owner to review the overall crowd levels per day for his business for the past 7 days.
 
-Last but not the least, an employee will be able to manage his COVID testing schedules regularly and receive reminders to submit his self-swab test results if he has not completed them. 
+For an employee, he/she will also be able to manage his/her COVID testing schedule regularly and receive reminders to submit his self-swab test results if he/she has not completed them. Employees are also able to submit their COVID test results and review their COVID test history via Swisshack. 
+
+Users will also be able to discover restaurants and their updated crowd levels in real-time through Swisshack. This will assist them to make a more informed decision whether to visit a restaurant depending on its current crowd level. This functionality will allow users to reduce their exposure to high crowd levels should they initially decide to patronize a restaurant with a huge crowd.
 
 ## Deployed application site
 
-You may access the deployed site for our application [here](https://happy-stone-0f3668c00.azurestaticapps.net)
+You may access the deployed site for our application [here](https://happy-stone-0f3668c00.azurestaticapps.net) (Currently the deployed site is taken down due to costs, but do contact us if you want to site to be re-deployed.)
 
 ## Running the application locally
 
@@ -111,6 +113,6 @@ Please visit the various READMEs in the respective subdirectories for detailed i
 
 We would like to thank our CS203 professor, Mr Tan Pang Jin, for his guidance and patience. This project would definitely not be possible without his teachings and advice.
 
-Next, we are grateful for the various APIs which made our application possible. They include the [News API](https://newsapi.org/) service, [OneMap API](https://www.onemap.gov.sg/docs/) as well as [Covid-19 SITREP](https://covidsitrep.moh.gov.sg/) site for the various data.
+Next, we are grateful for the various open source APIs which made our application possible. They include the [News API](https://newsapi.org/) service, [OneMap API](https://www.onemap.gov.sg/docs/) as well as [Covid-19 SITREP](https://covidsitrep.moh.gov.sg/) site for the various data.
 
-Lastly, we would like to thank all the strangers and authors who made great blog posts and tutorials. They greatly helped us in our journey while creating this application.
+Lastly, we would like to thank all the authors who made great blog posts and tutorials. They greatly helped us in our journey while creating this application.

@@ -32,3 +32,5 @@ mvn javadoc:javadoc
 ```
 
 The generated Javadoc should be accessible at the `target\site\apidocs` directory
+
+To view the Swagger REST API documentation for the application, please visit this link [here](http://localhost:8080/api/v1/swagger-ui.html) when the application is being run locally.
