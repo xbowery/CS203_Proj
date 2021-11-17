@@ -4,7 +4,7 @@
 
 ## About
 
-This is a project built for G2T4, CS203 project. 
+This is a project built for G2T4, CS203 project.
 
 It is a microservice built using [express.js](https://expressjs.com/) and uses the [OneMap API](https://www.onemap.gov.sg/docs/).
 
@@ -24,7 +24,7 @@ The main website can be accessed at the root of the website.
 
 ### API Documentation
 
-The following endpoints are available and exposed for users to retrieve related, current and relevant news.
+The following endpoints are available and exposed for users to retrieve the restaurants in a specific object. This object can be parsed by the LeafletJS plugin to pin out restaurants on the Singapore map.
 
 The prefix for all the API URI is `/api/v1`.
 
